@@ -1,13 +1,77 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .homepage_bg {
+    background: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239C92AC' fill-opacity='0.05' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+    background-color: #F9FAFB;
+  }
+
+  .codeblock1 {
+    width: 372.95px;
+    height: 257.05px;
+    border-radius: 100%;
+    left: calc(50% - 186.475px);
+    top: calc(50% - 128.525px);
+    background: linear-gradient(123.77deg, #8a2be2 -6.46%, #ffa500 59.04%, #f8f8ff 124.53%);
+    opacity: 0.2;
+    filter: blur(34px);
+    transform: matrix(1, 0, -0.03, 1, 0, 0);
+  }
+
+  .codeblock2 {
+    width: 372.95px;
+    height: 257.05px;
+    border-radius: 100%;
+    left: calc(50% - 186.475px);
+    top: calc(50% - 128.525px);
+    background: linear-gradient(118.19deg, #1fa7ff -2.4%, #12d8fa 38.3%, #a6ffcb 91.83%);
+    opacity: 0.2;
+    filter: blur(34px);
+    transform: matrix(1, 0, -0.03, 1, 0, 0);
+  }
+
+  .max-w-maxContent {
+    max-width: 1260px;
+  }
+
+  .spinner {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: radial-gradient(farthest-side, #ffd60a 94%, #0000) top/9px 9px
+        no-repeat,
+      conic-gradient(#0000 30%, #ffd60a);
+    -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 9px), #000 0);
+    mask: radial-gradient(farthest-side, #0000 calc(100% - 9px), #000 0);
+    animation: spinner-c73pd2 1s infinite linear;
+  }
+
+  @keyframes spinner-c73pd2 {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  .yellow-gradient {
+    background: linear-gradient(118.41deg, #f1811c -1.9%, #fabe33 115.22%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+  }
+
+  .blue-gradient {
+    background: linear-gradient(117.95deg, #12d8fa -2.4%, #1fa7ff 52.25%, #a6ffcb 106.89%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+  }
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  @apply bg-richblack-900 text-richblack-5;
+  font-family: 'Inter', sans-serif;
 }
