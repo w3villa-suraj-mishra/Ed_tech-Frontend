@@ -1,12 +1,9 @@
 import { useEffect, useRef, useState } from "react"
 import { AiOutlineDown } from "react-icons/ai"
-import { motion, AnimatePresence } from "framer-motion"
-
 import CourseSubSectionAccordion from "./CourseSubSectionAccordion"
 
-export default function CourseAccordionBar({ course, isActive, handleActive }) {
+export default function CourseAccordionBar({ course, isActive, handleActive, courseId, isEnrolled }) {
   const contentRef = useRef(null)
-
   const [active, setActive] = useState(false)
   const [height, setHeight] = useState(0)
 
@@ -29,13 +26,12 @@ export default function CourseAccordionBar({ course, isActive, handleActive }) {
         <div className="flex items-center gap-3">
 
           {/* ICON */}
-          <motion.div
-            animate={{ rotate: active ? 180 : 0 }}
-            transition={{ duration: 0.3 }}
+          <div
+            style={{ transform: active ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }}
             className="flex items-center justify-center rounded-full bg-white/10 p-2 text-white group-hover:bg-blue-500/20"
           >
             <AiOutlineDown size={18} />
-          </motion.div>
+          </div>
 
           {/* TITLE */}
           <h3 className="text-lg font-semibold text-white group-hover:text-blue-400 transition-all">
@@ -43,40 +39,41 @@ export default function CourseAccordionBar({ course, isActive, handleActive }) {
           </h3>
         </div>
 
-        {/* LECTURE COUNT */}
-        <div className="text-sm font-medium text-yellow-400 bg-yellow-400/10 px-3 py-1 rounded-full">
-          {course?.subSection?.length || 0} Lectures
+        {/* LECTURE COUNT & DURATION */}
+        <div className="flex items-center gap-3">
+          <div className="text-sm font-medium text-yellow-400 bg-yellow-400/10 px-3 py-1 rounded-full">
+            {course?.subSection?.length || 0} Lectures
+          </div>
+          <div className="text-sm font-medium text-richblack-300">
+            {course?.totalDuration}
+          </div>
         </div>
       </div>
 
-      {/* CONTENT */}
-      <AnimatePresence initial={false}>
-        {active && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: height, opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="overflow-hidden"
-          >
-            <div
-              ref={contentRef}
-              className="px-6 pb-6 pt-2 flex flex-col gap-3"
-            >
-              {course?.subSection?.map((subSec, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ y: 10, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: i * 0.05 }}
-                >
-                  <CourseSubSectionAccordion subSec={subSec} />
-                </motion.div>
-              ))}
+      {/* CONTENT (Vanilla CSS Transition) */}
+      <div
+        style={{
+          maxHeight: active ? `${height}px` : "0px",
+          opacity: active ? 1 : 0,
+          transition: "max-height 0.4s ease, opacity 0.4s ease",
+          overflow: "hidden"
+        }}
+      >
+        <div
+          ref={contentRef}
+          className="px-6 pb-6 pt-2 flex flex-col gap-3"
+        >
+          {course?.subSection?.map((subSec, i) => (
+            <div key={i} style={{ transition: `transform 0.3s ease ${i * 0.05}s` }}>
+              <CourseSubSectionAccordion 
+                subSec={subSec} 
+                courseId={courseId}
+                sectionId={course._id}
+              />
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

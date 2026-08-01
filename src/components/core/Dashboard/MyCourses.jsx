@@ -28,16 +28,17 @@ useEffect(()=>{
     fetchCourses()
 },[])
   return (
-    <div>
-       <div>
-        <h1>My Courses</h1>
+    <div className="mx-auto w-11/12 max-w-[1000px] py-10">
+      <div className="mb-14 flex items-center justify-between">
+        <h1 className="text-3xl font-medium text-richblack-5">My Courses</h1>
         <Iconbtn
-        text="Add Course"
-        onclick={()=>navigate("/dashboard/add-course")}
-        />
-          <FaPlus/>
-       </div>
-       {courses && <CoursesTable courses={courses} setCourses={setCourses}/>}
+          text="Add Course"
+          onclick={() => navigate("/dashboard/add-course")}
+        >
+          <FaPlus />
+        </Iconbtn>
+      </div>
+      {courses && <CoursesTable courses={courses} setCourses={setCourses} />}
     </div>
   )
 }

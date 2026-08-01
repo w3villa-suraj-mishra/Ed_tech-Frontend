@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import Iconbtn from '../../../../Common/iconbtn'
 import { resetCourseState, setStep } from '../../../../../services/slices/courseSlice'
 import { COURSE_STATUS } from '../../../../../utils/constants'
@@ -18,6 +19,7 @@ const PublishCourse = () => {
       } = useForm()
     
       const dispatch = useDispatch()
+      const navigate = useNavigate()
       const { token } = useSelector((state) => state.auth)
       const { course } = useSelector((state) => state.course)
       const [loading, setLoading] = useState(false)
@@ -33,10 +35,9 @@ const PublishCourse = () => {
 
       }
 
-      const goToCourses=()=>{
+      const goToCourses = () => {
         dispatch(resetCourseState());
-        // navigate("/dashboard/my-courses")
-
+        navigate("/dashboard/my-courses");
       }
 
       const handleCoursePublish = async()=>{

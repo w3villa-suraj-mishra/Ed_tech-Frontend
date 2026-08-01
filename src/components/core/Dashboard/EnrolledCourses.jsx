@@ -1,90 +1,128 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import {getUserEnrolledCourses} from "../../../services/operations/profileAPI"
+import { getUserEnrolledCourses } from "../../../services/operations/profileAPI"
 import ProgressBar from '@ramonak/react-progress-bar'
 import { useNavigate } from "react-router-dom"
+import { BsPlayCircleFill, BsCameraVideoFill } from 'react-icons/bs'
+import { FiClock } from 'react-icons/fi'
 
 export default function EnrolledCourses() {
   const { token } = useSelector((state) => state.auth)
   const navigate = useNavigate()
 
   const [enrolledCourses, setEnrolledCourses] = useState(null)
+  
   const getEnrolledCourses = async () => {
     try {
       const res = await getUserEnrolledCourses(token);
-
       setEnrolledCourses(res);
     } catch (error) {
       console.log("Could not fetch enrolled courses.")
     }
   };
+
   useEffect(() => {
     getEnrolledCourses();
   }, [])
 
   return (
-    <>
-      <div className="text-3xl text-richblack-50">Enrolled Courses</div>
+    <div className="p-8">
+      <div className="flex items-center justify-between mb-10">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2">My Learning</h1>
+          <p className="text-richblack-300">Continue where you left off and keep up the progress.</p>
+        </div>
+      </div>
+
       {!enrolledCourses ? (
-        <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
-          <div className="spinner"></div>
+        <div className="flex h-[40vh] items-center justify-center">
+          <div className="w-12 h-12 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : !enrolledCourses.length ? (
-        <p className="grid h-[10vh] w-full place-content-center text-richblack-5">
-          You have not enrolled in any course yet.
-          {/* TODO: Modify this Empty State */}
-        </p>
+        <div className="bg-richblack-800 rounded-2xl p-12 text-center border border-richblack-700">
+          <p className="text-richblack-200 text-lg mb-6">You haven't enrolled in any courses yet.</p>
+          <button 
+            onClick={() => navigate('/catalog')}
+            className="px-6 py-3 bg-yellow-400 text-black font-bold rounded-xl hover:bg-yellow-300 transition-all"
+          >
+            Browse Catalog
+          </button>
+        </div>
       ) : (
-        <div className="my-8 text-richblack-5">
-          {/* Headings */}
-          <div className="flex rounded-t-lg bg-richblack-500 ">
-            <p className="w-[45%] px-5 py-3">Course Name</p>
-            <p className="w-1/4 px-2 py-3">Duration</p>
-            <p className="flex-1 px-2 py-3">Progress</p>
-          </div>
-          {/* Course Names */}
-          {enrolledCourses.map((course, i, arr) => (
-            <div
-              className={`flex items-center border border-richblack-700 ${
-                i === arr.length - 1 ? "rounded-b-lg" : "rounded-none"
-              }`}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {enrolledCourses.map((course, i) => (
+            <div 
               key={i}
+              className="bg-richblack-800 rounded-2xl overflow-hidden border border-richblack-700 hover:border-richblack-500 transition-all group flex flex-col"
             >
-              <div
-                className="flex w-[45%] cursor-pointer items-center gap-4 px-5 py-3"
-                onClick={() => {
-                  navigate(
-                    `/view-course/${course?._id}/section/${course.courseContent?.[0]?._id}/sub-section/${course.courseContent?.[0]?.subSection?.[0]?._id}`
-                  )
-                }}
-              >
+              {/* IMAGE / THUMBNAIL */}
+              <div className="relative h-48 overflow-hidden">
                 <img
                   src={course.thumbnail}
-                  alt="course_img"
-                  className="h-14 w-14 rounded-lg object-cover"
+                  alt={course.courseName}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="flex max-w-xs flex-col gap-2">
-                  <p className="font-semibold">{course.courseName}</p>
-                  <p className="text-xs text-richblack-300">
-                    {course.courseDescription.length > 50
-                      ? `${course.courseDescription.slice(0, 50)}...`
-                      : course.courseDescription}
-                  </p>
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                   <BsPlayCircleFill size={50} className="text-yellow-400" />
                 </div>
               </div>
-              <div className="w-1/4 px-2 py-3">{course?.totalDuration}</div>
-              <div className="flex w-1/5 flex-col gap-2 px-2 py-3">
-                <p>Progress: {course.progressPercentage || 0}%</p>
-                <ProgressBar
-                  completed={course.progressPercentage || 0}
-                  height="8px"
-                  isLabelVisible={false}
-                />
+
+              {/* CONTENT */}
+              <div className="p-6 flex flex-col flex-1">
+                <h3 className="text-xl font-bold text-white mb-2 line-clamp-1">{course.courseName}</h3>
+                <p className="text-sm text-richblack-300 mb-6 line-clamp-2 leading-relaxed">
+                  {course.courseDescription}
+                </p>
+
+                {/* PROGRESS */}
+                <div className="mt-auto space-y-4">
+                  <div className="flex items-center justify-between text-xs font-medium">
+                    <div className="flex items-center gap-2 text-richblack-200">
+                      <FiClock />
+                      <span>{course?.totalDuration || '0m'}</span>
+                    </div>
+                    <span className="text-yellow-400">{course.progressPercentage || 0}% Complete</span>
+                  </div>
+                  
+                  <div className="relative">
+                     <ProgressBar
+                      completed={course.progressPercentage || 0}
+                      height="6px"
+                      isLabelVisible={false}
+                      baseBgColor="#2C333F"
+                      bgColor="#FFD60A"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <button
+                      onClick={() => navigate(`/live-class/${course?._id}`)}
+                      className="w-full py-3 mt-2 rounded-xl bg-red-600/10 text-red-500 border border-red-500/20 font-bold text-sm hover:bg-red-600 hover:text-white transition-all flex items-center justify-center gap-2"
+                    >
+                      <BsCameraVideoFill size={16} />
+                      Join Live Session
+                    </button>
+                    <button
+                      onClick={() => {
+                        const firstSection = course.courseContent?.[0];
+                        const firstLecture = firstSection?.subSection?.[0];
+                        if (firstSection && firstLecture) {
+                          navigate(`/view-course/${course?._id}/section/${firstSection._id}/sub-section/${firstLecture._id}`)
+                        } else {
+                          navigate(`/view-course/${course?._id}`)
+                        }
+                      }}
+                      className="w-full py-3 rounded-xl bg-richblack-700 text-white font-bold text-sm group-hover:bg-yellow-400 group-hover:text-black transition-all"
+                    >
+                      Continue Learning
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           ))}
         </div>
       )}
-    </>
+    </div>
   )
 }

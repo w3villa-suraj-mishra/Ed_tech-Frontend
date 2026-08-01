@@ -10,6 +10,8 @@ import { HiClock } from 'react-icons/hi';
 import { FaCheck } from 'react-icons/fa6';
 import { FiEdit2 } from 'react-icons/fi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import { VscPlayCircle } from 'react-icons/vsc';
+import { BsCameraVideoFill } from 'react-icons/bs';
 
 export default function CoursesTable({ courses, setCourses }) {
   const dispatch = useDispatch();
@@ -21,10 +23,14 @@ export default function CoursesTable({ courses, setCourses }) {
   const [selectedCourses, setSelectedCourses] = useState([]); // Track selected courses
   const TRUNCATE_LENGTH = 30;
 
-  const handleCourseDelete = async () => {
+  const handleCourseDelete = async (courseId) => {
     setLoading(true);
-    for (const courseId of selectedCourses) {
+    if (courseId) {
       await deleteCourse({ courseId }, token);
+    } else {
+      for (const id of selectedCourses) {
+        await deleteCourse({ courseId: id }, token);
+      }
     }
     const result = await fetchInstructorCourses(token);
     if (result) {
@@ -47,15 +53,16 @@ export default function CoursesTable({ courses, setCourses }) {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-8 px-4 py-3 bg-richblack-800 rounded-xl border border-richblack-700">
         {/* "Select All" Checkbox */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <input
             type="checkbox"
             checked={selectAll}
             onChange={toggleSelectAll}
+            className="w-5 h-5 cursor-pointer accent-yellow-400 border-none rounded focus:ring-0"
           />
-          <div className="text-sm font-medium text-richblack-100 ">
+          <div className="text-sm font-semibold text-richblack-100 uppercase tracking-wider">
             Select All
           </div>
         </div>
@@ -65,132 +72,150 @@ export default function CoursesTable({ courses, setCourses }) {
           disabled={loading || selectedCourses.length === 0}
           onClick={() => {
             setConfirmationModal({
-              text1: "Do you want to delete selected courses?",
-              text2: "All the data related to these courses will be deleted.",
-              btn1Text: !loading ? "Delete" : "Loading...",
+              text1: "Delete Selected Courses?",
+              text2: "This will permanently remove all selected courses and their content.",
+              btn1Text: !loading ? "Delete All" : "Deleting...",
               btn2Text: "Cancel",
-              btn1Handler: !loading ? handleCourseDelete : () => {},
+              btn1Handler: !loading ? () => handleCourseDelete() : () => { },
               btn2Handler: () => setConfirmationModal(null),
             });
           }}
-          className={`px-4 py-2 text-white bg-red-600 rounded ${
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all duration-300 ${
             loading || selectedCourses.length === 0
-              ? 'opacity-50 cursor-not-allowed'
-              : 'hover:bg-red-700'
+              ? 'bg-richblack-700 text-richblack-400 cursor-not-allowed border border-richblack-600'
+              : 'bg-red-600 text-white hover:bg-red-700 hover:shadow-[0_0_15px_rgba(220,38,38,0.3)] active:scale-95'
           }`}
         >
-          Delete Selected
+          <RiDeleteBin6Line size={18} />
+          Delete Selected ({selectedCourses.length})
         </button>
       </div>
 
-      <Table className="rounded-xl border border-richblack-800">
-        <Thead>
-          <Tr className="flex gap-x-10 rounded-t-md border-b border-b-richblack-800 px-6 py-2">
-            <Th className="flex-1 text-left text-sm font-medium uppercase text-richblack-100">
-              Courses
-            </Th>
-            <Th className="text-left text-sm font-medium uppercase text-richblack-100">
-              Duration
-            </Th>
-            <Th className="text-left text-sm font-medium uppercase text-richblack-100">
-              Price
-            </Th>
-            <Th className="text-left text-sm font-medium uppercase text-richblack-100">
-              Actions
-            </Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {courses?.length === 0 ? (
-            <Tr>
-              <Td className="py-10 text-center text-2xl font-medium text-richblack-100">
-                No courses found
-              </Td>
-            </Tr>
-          ) : (
-            courses.map((course) => (
-              <Tr
-                key={course._id}
-                className="flex gap-x-10 border-b border-richblack-800 px-6 py-8"
-              >
-                <Td className="flex flex-1 gap-x-4">
-                  <img
-                    src={course.thumbnail}
-                    alt={course.courseName}
-                    className="h-[148px] w-[220px] rounded-lg object-cover"
-                  />
-                  <div className="flex flex-col justify-between">
-                    <p className="text-lg font-semibold text-richblack-5">
-                      {course.courseName}
-                    </p>
-                    <p className="text-xs text-richblack-300">
-                      {course.courseDescription.split(" ").length >
-                      TRUNCATE_LENGTH
-                        ? course.courseDescription
-                            .split(" ")
-                            .slice(0, TRUNCATE_LENGTH)
-                            .join(" ") + "..."
-                        : course.courseDescription}
-                    </p>
-                    <p className="text-[12px] text-white">Created:</p>
-                    {course.status === COURSE_STATUS.DRAFT ? (
-                      <p className="flex w-fit flex-row items-center gap-2 rounded-full bg-richblack-700 px-2 py-[2px] text-[12px] font-medium text-pink-100">
-                        <HiClock size={14} />
-                        Drafted
-                      </p>
-                    ) : (
-                      <p className="flex w-fit flex-row items-center gap-2 rounded-full bg-richblack-700 px-2 py-[2px] text-[12px] font-medium text-yellow-100">
-                        <div className="flex h-3 w-3 items-center justify-center rounded-full bg-yellow-100 text-richblack-700">
-                          <FaCheck size={8} />
-                        </div>
-                        Published
-                      </p>
-                    )}
-                  </div>
-                </Td>
-                <Td className="text-sm font-medium text-richblack-100">
-                  2hr 30min
-                </Td>
-                <Td className="text-sm font-medium text-richblack-100">
-                  ₹{course.price}
-                </Td>
-                <Td className="text-sm font-medium text-richblack-100">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-10">
+        {courses?.length === 0 ? (
+          <div className="col-span-full py-10 text-center text-2xl font-medium text-richblack-100">
+            No courses found
+          </div>
+        ) : (
+          courses.map((course) => (
+            <div
+              key={course._id}
+              className="group flex flex-col bg-richblack-800 border border-richblack-700 rounded-2xl overflow-hidden hover:border-yellow-400/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,214,10,0.1)]"
+            >
+              {/* CARD IMAGE */}
+              <div className="relative aspect-video overflow-hidden">
+                <img
+                  src={course.thumbnail || "https://res.cloudinary.com/dxgdsmdrl/image/upload/v1714470535/placeholder_course_image.jpg"}
+                  alt={course.courseName}
+                  onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/600x400/1e293b/a8b2d1?text=No+Image" }}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
                   <button
                     disabled={loading}
-                    onClick={() =>
-                      navigate(`/dashboard/edit-course/${course._id}`)
-                    }
-                    title="Edit"
-                    className="px-2 transition-all duration-200 hover:scale-110 hover:text-caribbeangreen-300"
+                    onClick={() => navigate(`/courses/${course._id}`)}
+                    className="p-3 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-yellow-400 hover:text-richblack-900 transition-all duration-200"
+                    title="Preview"
                   >
-                    <FiEdit2 size={20} />
+                    <VscPlayCircle size={24} />
+                  </button>
+                </div>
+                
+                {/* SELECT CHECKBOX */}
+                <div className="absolute top-4 left-4">
+                  <input
+                    type="checkbox"
+                    className="w-5 h-5 cursor-pointer accent-yellow-400 border-none rounded focus:ring-0"
+                    checked={selectedCourses.includes(course._id)}
+                    onChange={() => {
+                      if (selectedCourses.includes(course._id)) {
+                        setSelectedCourses(selectedCourses.filter((id) => id !== course._id));
+                      } else {
+                        setSelectedCourses([...selectedCourses, course._id]);
+                      }
+                    }}
+                  />
+                </div>
+
+                {/* STATUS BADGE */}
+                <div className="absolute top-4 right-4">
+                  {course.status === COURSE_STATUS.DRAFT ? (
+                    <span className="flex items-center gap-1.5 px-3 py-1 bg-pink-900/80 backdrop-blur-md text-pink-100 rounded-full text-xs font-semibold border border-pink-500/30">
+                      <HiClock size={14} />
+                      Draft
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1.5 px-3 py-1 bg-caribbeangreen-900/80 backdrop-blur-md text-caribbeangreen-100 rounded-full text-xs font-semibold border border-caribbeangreen-500/30">
+                      <FaCheck size={12} />
+                      Published
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* CARD CONTENT */}
+              <div className="p-6 flex flex-col flex-1 gap-4">
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-richblack-5 mb-2 group-hover:text-yellow-400 transition-colors line-clamp-1">
+                    {course.courseName}
+                  </h3>
+                  <p className="text-sm text-richblack-300 line-clamp-2 leading-relaxed">
+                    {course.courseDescription || "No description provided"}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-between pt-4 border-t border-richblack-700">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] uppercase tracking-wider text-richblack-400 font-bold">Duration</span>
+                    <span className="text-sm text-richblack-5 font-semibold">{course.totalDuration || "0m"}</span>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span className="text-[10px] uppercase tracking-wider text-richblack-400 font-bold">Price</span>
+                    <span className="text-lg text-yellow-400 font-black">₹{course.price}</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 pt-2">
+                  <button
+                    disabled={loading}
+                    onClick={() => navigate(`/live-class/${course._id}`)}
+                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-red-600 text-white font-semibold hover:bg-red-700 transition-all duration-300 active:scale-95 shadow-lg shadow-red-600/20"
+                    title="Start Live Class"
+                  >
+                    <BsCameraVideoFill size={16} />
+                    <span>Live</span>
+                  </button>
+                  <button
+                    disabled={loading}
+                    onClick={() => navigate(`/dashboard/edit-course/${course._id}`)}
+                    className="p-2.5 rounded-xl bg-richblack-700 text-white font-semibold hover:bg-caribbeangreen-600 transition-all duration-300 active:scale-95"
+                    title="Edit Course"
+                  >
+                    <FiEdit2 size={18} />
                   </button>
                   <button
                     disabled={loading}
                     onClick={() =>
                       setConfirmationModal({
-                        text1: "Do you want to delete this course?",
-                        text2:
-                          "All the data related to this course will be deleted.",
-                        btn1Text: !loading ? "Delete" : "Loading...",
+                        text1: "Delete Course?",
+                        text2: "This action cannot be undone.",
+                        btn1Text: "Delete",
                         btn2Text: "Cancel",
-                        btn1Handler: !loading
-                          ? () => handleCourseDelete(course._id)
-                          : () => {},
+                        btn1Handler: () => handleCourseDelete(course._id),
                         btn2Handler: () => setConfirmationModal(null),
                       })
                     }
+                    className="p-2.5 rounded-xl bg-richblack-700 text-richblack-200 hover:bg-red-600 hover:text-white transition-all duration-300 active:scale-95"
                     title="Delete"
-                    className="px-1 transition-all duration-200 hover:scale-110 hover:text-[#ff0000]"
                   >
-                    <RiDeleteBin6Line size={20} />
+                    <RiDeleteBin6Line size={18} />
                   </button>
-                </Td>
-              </Tr>
-            ))
-          )}
-        </Tbody>
-      </Table>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
 
       {confirmationModal && <ConfirmationModal modalData={confirmationModal} />}
     </>

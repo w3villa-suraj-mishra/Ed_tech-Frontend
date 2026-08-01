@@ -15,6 +15,7 @@ const {
   CREATE_SUBSECTION_API,
   UPDATE_SECTION_API,
   UPDATE_SUBSECTION_API,
+  UPDATE_LECTURE_DURATION_API,
   DELETE_SECTION_API,
   DELETE_SUBSECTION_API,
   GET_ALL_INSTRUCTOR_COURSES_API,
@@ -99,7 +100,8 @@ export const addCourseDetails = async (data, token) => {
     result = response?.data?.data
   } catch (error) {
     console.log("CREATE COURSE API ERROR............", error)
-    toast.error(error.message)
+    const errorMessage = error.response?.data?.message || error.message
+    toast.error(errorMessage)
   }
   toast.dismiss(toastId)
   return result
@@ -122,7 +124,8 @@ export const editCourseDetails = async (data, token) => {
     result = response?.data?.data
   } catch (error) {
     console.log("EDIT COURSE API ERROR............", error)
-    toast.error(error.message)
+    const errorMessage = error.response?.data?.message || error.message
+    toast.error(errorMessage)
   }
   toast.dismiss(toastId)
   return result
@@ -385,4 +388,20 @@ export const createRating = async (data, token) => {
   }
   toast.dismiss(toastId)
   return success
+}
+export const updateLectureDuration = async (data, token) => {
+  let result = null
+  try {
+    const response = await apiConnector("POST", UPDATE_LECTURE_DURATION_API, data, {
+      Authorization: `Bearer ${token}`,
+    })
+    console.log("UPDATE_LECTURE_DURATION_API RESPONSE............", response)
+    if (!response?.data?.success) {
+      throw new Error("Could Not Update Lecture Duration")
+    }
+    result = response?.data?.data
+  } catch (error) {
+    console.log("UPDATE_LECTURE_DURATION_API ERROR............", error)
+  }
+  return result
 }

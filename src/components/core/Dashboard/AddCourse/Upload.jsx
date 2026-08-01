@@ -45,6 +45,17 @@ export default function Upload({
     reader.onloadend = () => {
       setPreviewSource(reader.result)
     }
+
+    if (video) {
+      const videoElement = document.createElement("video")
+      videoElement.preload = "metadata"
+      videoElement.onloadedmetadata = () => {
+        window.URL.revokeObjectURL(videoElement.src)
+        const durationInSeconds = Math.floor(videoElement.duration)
+        setValue("lectureDuration", durationInSeconds)
+      }
+      videoElement.src = URL.createObjectURL(file)
+    }
   }
 
   useEffect(() => {

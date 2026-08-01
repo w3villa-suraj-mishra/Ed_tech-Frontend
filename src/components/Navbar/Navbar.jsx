@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { AiOutlineShoppingCart } from "react-icons/ai"
 import { VscSignOut } from "react-icons/vsc"
 import { logout } from "../../services/operations/authAPI"
+import { fetchCourseCategories } from "../../services/operations/courseDetailsAPI"
 
 const Navbar = () => {
   const { token } = useSelector((state) => state.auth)
@@ -18,15 +19,17 @@ const Navbar = () => {
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
 
   useEffect(() => {
-    api.get('/api/v1/categories')
-      .then(res => {
-        if (res.data && Array.isArray(res.data)) {
-          setCategories(res.data);
+    const getCategories = async () => {
+      try {
+        const res = await fetchCourseCategories();
+        if (res && Array.isArray(res)) {
+          setCategories(res);
         }
-      })
-      .catch(err => {
-        console.log("Backend not ready or error fetching categories", err);
-      });
+      } catch (err) {
+        console.log("Could not fetch categories", err);
+      }
+    };
+    getCategories();
   }, []);
 
   return (
@@ -65,7 +68,7 @@ const Navbar = () => {
                 categories.map((category, index) => (
                   <Link
                     key={index}
-                    to={`/catalog/${category.id || category.slug}`}
+                    to={`/catalog/${category.name.split(" ").join("-").toLowerCase()}`}
                     className="px-4 py-2 text-richblack-100 hover:bg-richblack-700 hover:text-indigo-300 transition-all duration-200"
                   >
                     {category.name}

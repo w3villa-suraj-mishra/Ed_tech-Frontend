@@ -1,39 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import api from '../api';
+import { useNavigate } from 'react-router-dom';
+import { getAllCourses, fetchCourseCategories } from '../services/operations/courseDetailsAPI';
 
 const Catalog = () => {
+  const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Premium mock data to fallback on if backend is not ready
-  const mockCourses = [
-    { id: 1, title: 'Full-Stack Web Development', category: 'Engineering', duration: '40 Hours', rating: '4.9', students: '12,340' },
-    { id: 2, title: 'Advanced Machine Learning', category: 'Data Science', duration: '35 Hours', rating: '4.8', students: '8,120' },
-    { id: 3, title: 'UI/UX Design Masterclass', category: 'Design', duration: '20 Hours', rating: '4.7', students: '5,430' },
-    { id: 4, title: 'Cloud Computing with AWS', category: 'Engineering', duration: '25 Hours', rating: '4.8', students: '9,210' },
-    { id: 5, title: 'Mobile App Development (React Native)', category: 'Engineering', duration: '30 Hours', rating: '4.6', students: '4,890' },
-    { id: 6, title: 'Data Analytics & Visualization', category: 'Data Science', duration: '18 Hours', rating: '4.7', students: '6,100' },
-  ];
-
   useEffect(() => {
-    // Simulate network delay for the premium skeleton effect
-    const fetchCourses = async () => {
+    const fetchData = async () => {
       try {
-        const response = await api.get('/api/v1/courses');
-        if (response.data && response.data.length > 0) {
-          setCourses(response.data);
-        } else {
-          setCourses(mockCourses);
+        const [coursesData, categoriesData] = await Promise.all([
+          getAllCourses(),
+          fetchCourseCategories()
+        ]);
+        
+        if (coursesData && coursesData.length > 0) {
+          setCourses(coursesData);
+        }
+        
+        if (categoriesData && categoriesData.length > 0) {
+          setCategories(categoriesData);
         }
       } catch (error) {
-        console.log("Backend not ready, falling back to premium mock data");
-        setCourses(mockCourses);
+        console.log("Error fetching catalog data", error);
       } finally {
-        setTimeout(() => setLoading(false), 1500);
+        setLoading(false);
       }
     };
 
-    fetchCourses();
+    fetchData();
   }, []);
 
   return (
@@ -46,9 +43,9 @@ const Catalog = () => {
           <input type="text" placeholder="Search for courses..." className="flex-1 px-6 py-4 rounded-full bg-richblack-800 border border-richblack-700 text-richblack-5 text-base shadow-sm outline-none transition-all focus:border-yellow-50 focus:ring-4 focus:ring-yellow-50/10" />
           <select className="px-6 py-5 rounded-full border border-richblack-700 text-richblack-5 text-base bg-richblack-800 outline-none cursor-pointer">
             <option>All Categories</option>
-            <option>Engineering</option>
-            <option>Data Science</option>
-            <option>Design</option>
+            {categories.map((cat, idx) => (
+              <option key={idx} value={cat._id}>{cat.name}</option>
+            ))}
           </select>
         </div>
       </div>
@@ -73,16 +70,23 @@ const Catalog = () => {
         ) : (
           // Actual Course Cards
           courses.map(course => (
-            <div key={course.id} className="bg-richblack-800 rounded-2xl overflow-hidden shadow-sm border border-richblack-700 transition-all hover:-translate-y-2 hover:shadow-xl flex flex-col">
+            <div
+              key={course._id}
+              onClick={() => navigate(`/courses/${course._id}`)}
+              className="bg-richblack-800 rounded-2xl overflow-hidden shadow-sm border border-richblack-700 transition-all hover:-translate-y-2 hover:shadow-xl flex flex-col cursor-pointer"
+            >
               <div className="h-52 bg-gradient-to-br from-richblack-700 to-richblack-900 relative flex justify-end items-start p-4">
-                <span className="bg-white/20 backdrop-blur-md text-white px-3 py-1.5 rounded-full text-xs font-semibold tracking-wider">{course.category}</span>
+                {course.thumbnail && (
+                   <img src={course.thumbnail} alt={course.courseName} className="absolute inset-0 w-full h-full object-cover opacity-80" />
+                )}
+                <span className="bg-white/20 backdrop-blur-md text-white px-3 py-1.5 rounded-full text-xs font-semibold tracking-wider relative z-10">{course.tag ? JSON.parse(course.tag)[0] : "New"}</span>
               </div>
               <div className="p-6 flex flex-col flex-1">
-                <h3 className="text-xl font-bold text-richblack-5 mb-6 leading-tight">{course.title}</h3>
+                <h3 className="text-xl font-bold text-richblack-5 mb-6 leading-tight">{course.courseName}</h3>
                 <div className="flex justify-between text-richblack-300 text-sm font-medium mb-6 pt-4 border-t border-richblack-700">
-                  <span>⏱ {course.duration}</span>
-                  <span>⭐ {course.rating}</span>
-                  <span>👥 {course.students}</span>
+                  <span>⏱ {course.courseContent?.length || 0} Sections</span>
+                  <span>💰 ₹{course.price}</span>
+                  <span>👥 Active</span>
                 </div>
                 <button className="mt-auto w-full py-4 bg-transparent text-yellow-50 border-2 border-yellow-50 rounded-lg text-base font-bold transition-all hover:bg-yellow-50 hover:text-richblack-900">
                   Enroll Now

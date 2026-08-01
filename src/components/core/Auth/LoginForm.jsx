@@ -14,6 +14,7 @@ import { setUser } from "../../../services/slices/profileSlice"
 
 import { ACCOUNT_TYPE } from "../../../utils/constants"
 import Tab from "../../Common/Tab"
+import { BASE_URL, endpoints } from "../../../services/apis"
 
 function LoginForm() {
   const navigate = useNavigate()
@@ -39,7 +40,7 @@ function LoginForm() {
     e.preventDefault()
 
     try {
-      const response = await axios.post("http://localhost:3000/login", {
+      const response = await axios.post(endpoints.LOGIN_API, {
         email,
         password,
         account_type: accountType
@@ -201,7 +202,7 @@ useEffect(() => {
             <button
               type="button"
               onClick={() => {
-                window.location.href = `http://localhost:3000/auth/google_oauth2?mode=login&role=${accountType}`
+                window.location.href = `${BASE_URL}/auth/google_oauth2?mode=login&role=${accountType}`
               }}
               className="flex w-full justify-center items-center gap-x-2 rounded-[8px] bg-yellow-50 py-[12px] px-[12px] font-medium text-richblack-900 hover:scale-95 transition-all duration-200"
             >
@@ -212,7 +213,7 @@ useEffect(() => {
             <button
               type="button"
               onClick={() => {
-                window.location.href = `http://localhost:3000/github-start?mode=login&role=${accountType}`
+                window.location.href = `${BASE_URL}/github-start?mode=login&role=${accountType}`
               }}
               className="flex w-full justify-center items-center gap-x-2 rounded-[8px] bg-yellow-50 py-[12px] px-[12px] font-medium text-richblack-900 hover:scale-95 transition-all duration-200"
             >

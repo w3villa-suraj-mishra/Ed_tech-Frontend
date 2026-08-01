@@ -47,17 +47,18 @@ const SubSectionModal = ({ modalData, setModalData, add = false, view = false, e
     if (currentValues.lectureDesc !== modalData.description)
       formData.append("description", currentValues.lectureDesc);
 
-    if (currentValues.lectureVideo !== modalData.videoUrl)
-      formData.append("video", currentValues.lectureVideo);
+    if (currentValues.lectureVideo !== modalData.videoUrl) {
+      formData.append("videoFile", currentValues.lectureVideo);
+      if (currentValues.lectureDuration) {
+        formData.append("duration", currentValues.lectureDuration);
+      }
+    }
 
     setLoading(true);
     const result = await updateSubSection(formData, token);
 
     if (result) {
-      const updatedCourseContent = course.courseContent.map((section) =>
-        section._id === modalData.sectionId ? result : section
-      );
-      dispatch(setCourse({ ...course, courseContent: updatedCourseContent }));
+      dispatch(setCourse(result));
     }
 
     setModalData(null);
@@ -81,15 +82,15 @@ const SubSectionModal = ({ modalData, setModalData, add = false, view = false, e
     formData.append("title", data.lectureTitle);
     formData.append("description", data.lectureDesc);
     formData.append("video", data.lectureVideo);
+    if (data.lectureDuration) {
+      formData.append("duration", data.lectureDuration);
+    }
 
     setLoading(true);
     const result = await createSubSection(formData, token);
 
     if (result) {
-      const updatedCourseContent = course.courseContent.map((section) =>
-        section._id === modalData ? result : section
-      );
-      dispatch(setCourse({ ...course, courseContent: updatedCourseContent }));
+      dispatch(setCourse(result));
     }
 
     setModalData(null);

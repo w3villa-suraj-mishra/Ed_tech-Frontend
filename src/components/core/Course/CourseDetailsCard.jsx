@@ -2,7 +2,6 @@ import React from 'react'
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import copy from 'copy-to-clipboard';
 import { toast } from 'react-hot-toast';
 import { BsFillCaretRightFill } from "react-icons/bs"
 import { FaShareSquare } from "react-icons/fa"
@@ -22,8 +21,9 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
   } = course
 
   const handleShare = () => {
-    copy(window.location.href)
-    toast.success("Link copied to clipboard")
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => toast.success("Link copied to clipboard"))
+      .catch(() => toast.error("Could not copy link"));
   }
 
   const handleAddToCart = () => {
@@ -74,18 +74,18 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
             <button
               className="w-full rounded-xl bg-gradient-to-r from-yellow-400 to-orange-500 py-3 font-semibold text-black transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
               onClick={
-                user && course?.studentsEnrolled.includes(user?._id)
+                user && course?.studentsEnrolled?.includes(user?._id)
                   ? () => navigate("/dashboard/enrolled-courses")
                   : handleBuyCourse
               }
             >
-              {user && course?.studentsEnrolled.includes(user?._id)
+              {user && course?.studentsEnrolled?.includes(user?._id)
                 ? "Go To Course"
                 : "Buy Now"}
             </button>
 
             {/* ADD TO CART */}
-            {(!user || !course?.studentsEnrolled.includes(user?._id)) && (
+            {(!user || !course?.studentsEnrolled?.includes(user?._id)) && (
               <button
                 onClick={handleAddToCart}
                 className="w-full rounded-xl border border-yellow-400/30 bg-transparent py-3 font-medium text-yellow-300 transition-all duration-300 hover:bg-yellow-400/10 hover:scale-[1.02]"
@@ -107,7 +107,12 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
             </p>
 
             <div className="flex flex-col gap-3 text-sm text-caribbeangreen-200">
-              {course?.instructions?.map((item, i) => {
+              {(Array.isArray(course?.instructions) 
+                ? course.instructions 
+                : typeof course?.instructions === 'string' 
+                  ? course.instructions.split(',').filter(i => i.trim())
+                  : []
+              ).map((item, i) => {
                 return (
                   <div
                     key={i}

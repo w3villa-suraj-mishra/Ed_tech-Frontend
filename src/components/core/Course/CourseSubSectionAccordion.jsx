@@ -1,27 +1,47 @@
 import React from "react"
-import { HiOutlineVideoCamera } from "react-icons/hi"
+import { HiOutlineVideoCamera, HiLockClosed } from "react-icons/hi"
+import { BsPlayFill } from "react-icons/bs"
+import { useNavigate } from "react-router-dom"
 
-function CourseSubSectionAccordion({ subSec }) {
+function CourseSubSectionAccordion({ subSec, isLocked = false, courseId, sectionId }) {
+  const navigate = useNavigate();
+
+  const handleLectureClick = () => {
+    if (!isLocked && courseId && sectionId && subSec?._id) {
+      navigate(`/view-course/${courseId}/section/${sectionId}/sub-section/${subSec._id}`);
+    }
+  };
+
   return (
-    <div className="group flex items-center justify-between rounded-xl px-3 py-3 transition-all duration-300 hover:bg-white/5 hover:shadow-sm">
+    <div 
+      onClick={handleLectureClick}
+      className={`group flex items-center justify-between rounded-xl px-3 py-3 transition-all duration-300 ${
+        isLocked ? 'opacity-60 cursor-not-allowed' : 'hover:bg-white/5 hover:shadow-sm cursor-pointer'
+    }`}>
 
-      {/* LEFT CONTENT */}
+      {/* LEFT: ICON + TITLE */}
       <div className="flex items-center gap-3">
 
-        {/* ICON */}
-        <div className="flex items-center justify-center rounded-lg bg-white/10 p-2 text-blue-400 transition-all duration-300 group-hover:bg-blue-500/20 group-hover:scale-105">
+        <div className={`flex items-center justify-center rounded-lg p-2 transition-all duration-300 ${
+          isLocked
+            ? 'bg-richblack-700 text-richblack-400'
+            : 'bg-white/10 text-blue-400 group-hover:bg-blue-500/20 group-hover:scale-105'
+        }`}>
           <HiOutlineVideoCamera size={18} />
         </div>
 
-        {/* TITLE */}
-        <p className="text-sm font-medium text-richblack-50 transition-all duration-300 group-hover:text-white">
+        <p className="text-sm font-medium text-richblack-50 transition-all duration-300 group-hover:text-white line-clamp-1">
           {subSec?.title}
         </p>
       </div>
 
-      {/* OPTIONAL RIGHT SIDE (future-ready UI space) */}
-      <div className="text-xs text-richblack-300 opacity-0 transition-all duration-300 group-hover:opacity-100">
-        ▶
+      {/* RIGHT: PLAY or LOCK icon */}
+      <div className="shrink-0 ml-2">
+        {isLocked ? (
+          <HiLockClosed size={16} className="text-richblack-400" />
+        ) : (
+          <BsPlayFill size={16} className="text-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+        )}
       </div>
     </div>
   )

@@ -14,7 +14,7 @@ import frameImg from "../../../assests/Images/frame.png"
 import axios from "axios"
 import { useEffect } from "react";
 import { apiConnector } from "../../../services/apiConnector";
-import { endpoints } from "../../../services/apis";
+import { endpoints, BASE_URL } from "../../../services/apis";
 
 function Signup() {
   const navigate = useNavigate()
@@ -258,7 +258,7 @@ function Signup() {
             <button
               type="button"
               onClick={() => {
-                window.location.href = `http://localhost:3000/auth/google_oauth2?mode=signup&role=${accountType}`
+                window.location.href = `${BASE_URL}/auth/google_oauth2?mode=signup&role=${accountType}`
               }}
               className="flex w-full justify-center items-center gap-x-2 rounded-[8px] bg-yellow-50 py-[12px] px-[12px] font-medium text-richblack-900 hover:scale-95 transition-all duration-200"
             >
@@ -269,7 +269,7 @@ function Signup() {
             <button
               type="button"
               onClick={() => {
-                window.location.href = `http://localhost:3000/github-start?mode=signup&role=${accountType}`
+                window.location.href = `${BASE_URL}/github-start?mode=signup&role=${accountType}`
               }}
               className="flex w-full justify-center items-center gap-x-2 rounded-[8px] bg-yellow-50 py-[12px] px-[12px] font-medium text-richblack-900 hover:scale-95 transition-all duration-200"
             >
