@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { getUserEnrolledCourses } from "../../../services/operations/profileAPI"
 import ProgressBar from '@ramonak/react-progress-bar'
 import { useNavigate } from "react-router-dom"
-import { BsPlayCircleFill, BsCameraVideoFill } from 'react-icons/bs'
+import { BsPlayCircleFill } from 'react-icons/bs'
 import { FiClock } from 'react-icons/fi'
 
 export default function EnrolledCourses() {
@@ -95,13 +95,6 @@ export default function EnrolledCourses() {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <button
-                      onClick={() => navigate(`/live-class/${course?._id}`)}
-                      className="w-full py-3 mt-2 rounded-xl bg-red-600/10 text-red-500 border border-red-500/20 font-bold text-sm hover:bg-red-600 hover:text-white transition-all flex items-center justify-center gap-2"
-                    >
-                      <BsCameraVideoFill size={16} />
-                      Join Live Session
-                    </button>
                     <button
                       onClick={() => {
                         const firstSection = course.courseContent?.[0];

@@ -11,7 +11,6 @@ import { FaCheck } from 'react-icons/fa6';
 import { FiEdit2 } from 'react-icons/fi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { VscPlayCircle } from 'react-icons/vsc';
-import { BsCameraVideoFill } from 'react-icons/bs';
 
 export default function CoursesTable({ courses, setCourses }) {
   const dispatch = useDispatch();
@@ -175,20 +174,11 @@ export default function CoursesTable({ courses, setCourses }) {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 pt-2">
-                  <button
-                    disabled={loading}
-                    onClick={() => navigate(`/live-class/${course._id}`)}
-                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-red-600 text-white font-semibold hover:bg-red-700 transition-all duration-300 active:scale-95 shadow-lg shadow-red-600/20"
-                    title="Start Live Class"
-                  >
-                    <BsCameraVideoFill size={16} />
-                    <span>Live</span>
-                  </button>
+                <div className="flex items-center justify-end gap-3 pt-2">
                   <button
                     disabled={loading}
                     onClick={() => navigate(`/dashboard/edit-course/${course._id}`)}
-                    className="p-2.5 rounded-xl bg-richblack-700 text-white font-semibold hover:bg-caribbeangreen-600 transition-all duration-300 active:scale-95"
+                    className="p-2.5 rounded-xl bg-richblack-700 text-white hover:bg-caribbeangreen-600 transition-all duration-300 active:scale-95"
                     title="Edit Course"
                   >
                     <FiEdit2 size={18} />

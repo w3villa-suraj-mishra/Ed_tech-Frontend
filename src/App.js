@@ -20,7 +20,6 @@ import AddCourse from "./components/core/Dashboard/AddCourse";
 import MyCourses from "./components/core/Dashboard/MyCourses";
 import VerifyOtp from "./pages/VerifyOtp.jsx";
 import OAuthSuccess from "./pages/OAuthSuccess.jsx";
-import LiveClass from "./pages/LiveClass.jsx";
 import CourseDetails from "./pages/CourseDetails.jsx";
 import ViewCourse from "./pages/ViewCourse.jsx";
 import VideoDetails from "./components/core/ViewCourse/videoDetails.jsx";
@@ -57,7 +56,6 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/live-class/:courseId" element={<LiveClass />} />
           <Route path="/student-dashboard" element={<StudentDashboard />} />
           <Route path="/instructor-dashboard" element={<InstructorDashboard />} />
           <Route path="/dashboard" element={<Dashboard />}>

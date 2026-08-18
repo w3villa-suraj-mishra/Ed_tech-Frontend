@@ -160,19 +160,6 @@ const InstructorDashboard = () => {
           {/* QUICK ACTIONS SIDEBAR */}
           <div className="space-y-6">
             <div className="bg-gradient-to-br from-[#0f172a] to-[#020617] p-[1px] rounded-3xl shadow-xl">
-              <div className="bg-richblack-800 rounded-3xl p-8">
-                <h2 className="text-xl font-bold text-white mb-6">Live Classes</h2>
-                <p className="text-richblack-300 text-sm mb-6 leading-relaxed">
-                  Host an interactive, real-time live session with your enrolled students using WebSockets.
-                </p>
-                <button 
-                  onClick={() => navigate('/live-class')}
-                  className="w-full py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold transition-all shadow-[0_0_20px_rgba(239,68,68,0.3)] hover:shadow-[0_0_25px_rgba(239,68,68,0.5)] flex justify-center items-center gap-2"
-                >
-                  <BsCollectionPlay size={20} />
-                  Start Live Session
-                </button>
-              </div>
             </div>
 
             <div className="bg-gradient-to-br from-indigo-500 to-purple-600 p-8 rounded-3xl shadow-xl relative overflow-hidden group">
