@@ -120,15 +120,7 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
               {filteredEnrolled.map((course) => (
                 <div
                   key={course._id}
-                  onClick={() => {
-                    const firstSection = course.courseContent?.[0];
-                    const firstLecture = firstSection?.subSection?.[0];
-                    if (firstSection && firstLecture) {
-                      navigate(`/view-course/${course?._id}/section/${firstSection._id}/sub-section/${firstLecture._id}`);
-                    } else {
-                      navigate(`/view-course/${course?._id}`);
-                    }
-                  }}
+                  onClick={() => navigate(`/courses/${course?._id}`)}
                   className="bg-[#12161F] border border-[#252C3A] hover:border-indigo-500/50 rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 flex flex-col justify-between"
                 >
                   <div>
@@ -148,25 +140,63 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
                   </div>
 
                   <div className="p-4 pt-0 space-y-3">
-                    <div className="flex items-center justify-between text-[11px] text-slate-400">
-                      <div className="flex items-center gap-1">
-                        <FiClock />
+                    <div className="flex items-center gap-4 text-[11px] text-slate-400">
+                      <div className="flex items-center gap-1.5">
+                        <FiClock size={13} />
                         <span>{course?.totalDuration || "0.0 Hours"}</span>
                       </div>
-                      <span>{course?.courseContent?.length || 0} Sections</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-3 h-3 rounded border border-slate-500 flex items-center justify-center text-[8px] font-bold">≡</span>
+                        <span>{course?.sections?.length || course?.courseContent?.length || 0} Sections</span>
+                      </div>
                     </div>
 
-                    <div className="space-y-1">
+                    <div className="space-y-1.5">
                       <div className="w-full bg-[#1C2230] h-1.5 rounded-full overflow-hidden">
                         <div
                           className="bg-indigo-500 h-full rounded-full"
                           style={{ width: `${course.progressPercentage || 0}%` }}
                         />
                       </div>
-                      <div className="flex justify-between text-[10px] text-slate-400 font-semibold">
-                        <span>{course.progressPercentage || 0}% Complete</span>
-                        <span className="text-indigo-400">Lifetime access</span>
+                      <div className="text-[11px] text-slate-400 font-medium">
+                        {course.progressPercentage || 0}% Complete
                       </div>
+                    </div>
+
+                    <div className="text-xs text-slate-400 font-medium">
+                      Lifetime access
+                    </div>
+
+                    <div className="flex items-center gap-1.5 text-xs">
+                      <span className="text-slate-600">★ ★ ★ ★ ★</span>
+                      <span className="text-slate-400 text-[11px] font-medium">0 (0)</span>
+                    </div>
+
+                    <div className="space-y-2 pt-1">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/dashboard/instructor-analytics`);
+                        }}
+                        className="w-full py-2 rounded-xl bg-richblack-800 border border-richblack-700 text-xs font-semibold text-slate-400 hover:bg-richblack-700 hover:text-white transition-all flex items-center justify-center gap-1.5"
+                      >
+                        <span className="text-[10px]">📊</span> Analytics
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const firstSection = course.courseContent?.[0];
+                          const firstLecture = firstSection?.subSection?.[0];
+                          if (firstSection && firstLecture) {
+                            navigate(`/view-course/${course?._id}/section/${firstSection._id}/sub-section/${firstLecture._id}`);
+                          } else {
+                            navigate(`/view-course/${course?._id}`);
+                          }
+                        }}
+                        className="w-full py-2.5 rounded-xl bg-richblack-800 border border-richblack-700 text-xs font-semibold text-white hover:bg-richblack-700 transition-all text-center"
+                      >
+                        Continue
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -240,23 +270,23 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
                       </div>
 
                       {/* PRICE */}
-                      <div className="flex items-baseline gap-2">
+                      <div className="flex items-baseline gap-2 flex-wrap">
                         {course?.pricing?.isOfferActive || (course?.originalPrice && Number(course?.originalPrice) > Number(course?.price)) ? (
                           <>
-                            <span className="text-xs text-slate-500 line-through">
+                            <span className="text-xs text-richblack-400 font-semibold line-through">
                               ₹{course?.pricing?.originalPrice || course?.originalPrice}
                             </span>
-                            <span className="text-lg font-black text-white">
+                            <span className="text-xl font-extrabold text-white">
                               ₹{course?.pricing?.finalPrice || course?.price}
                             </span>
                             {course?.pricing?.discountPercentage > 0 && (
-                              <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-1.5 py-0.5 rounded">
+                              <span className="text-xs bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded">
                                 {course?.pricing?.discountPercentage}% OFF
                               </span>
                             )}
                           </>
                         ) : (
-                          <span className="text-lg font-black text-white">₹{course?.price || 0}</span>
+                          <span className="text-xl font-extrabold text-white">₹{course?.price || 0}</span>
                         )}
                       </div>
 

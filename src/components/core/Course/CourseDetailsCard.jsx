@@ -96,10 +96,18 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
               </button>
             ) : user && course?.studentsEnrolled?.includes(user?._id || user?.id) ? (
               <button
-                className="w-full rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 py-3 font-semibold text-black transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
-                onClick={() => navigate("/dashboard/enrolled-courses")}
+                className="w-full rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 py-3 font-semibold text-black transition-all duration-300 hover:scale-[1.02] hover:shadow-lg flex items-center justify-center gap-2"
+                onClick={() => {
+                  const firstSection = course?.courseContent?.[0];
+                  const firstLecture = firstSection?.subSection?.[0];
+                  if (firstSection && firstLecture) {
+                    navigate(`/view-course/${courseId || course?._id || course?.id}/section/${firstSection._id}/sub-section/${firstLecture._id}`);
+                  } else {
+                    navigate(`/view-course/${courseId || course?._id || course?.id}`);
+                  }
+                }}
               >
-                Go To Course
+                <BsFillCaretRightFill /> Start / Continue Learning
               </button>
             ) : (
               <div className="space-y-3">

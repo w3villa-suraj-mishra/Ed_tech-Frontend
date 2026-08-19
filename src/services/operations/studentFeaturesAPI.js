@@ -24,7 +24,7 @@ export async function buyCourse(token, courses, userDetails, navigate, dispatch,
 
         if (orderResponse?.data?.isFree) {
             toast.success("Free Access Activated! Enjoy your learning.");
-            if (navigate) navigate("/dashboard/enrolled-courses");
+            if (navigate) navigate("/dashboard/courses");
             toast.dismiss(toastId);
             return;
         }

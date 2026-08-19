@@ -12,8 +12,10 @@ export default function RenderTotalAmount() {
   const dispatch = useDispatch()
 
   const handleBuyCourse = () => {
-    const courses = cart.map((course) => course._id)
-    buyCourse(token, courses, user, navigate, dispatch)
+    if (cart.length > 0) {
+      // Navigate to the course details page so the student can select their desired plan (Free, Silver, Gold)
+      navigate(`/courses/${cart[0]._id}`);
+    }
   }
 
   return (

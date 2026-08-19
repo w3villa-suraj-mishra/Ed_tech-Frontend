@@ -116,6 +116,7 @@ function App() {
             <Route path="global"              element={<GlobalDashboard />} />
             <Route path="my-profile"          element={<MyProfile />} />
             <Route path="cart"                element={<Cart />} />
+            <Route path="courses"             element={<CoursesPage defaultTab="your-courses" />} />
             <Route path="enrolled-courses"    element={<CoursesPage defaultTab="your-courses" />} />
             <Route path="buy-courses"         element={<CoursesPage defaultTab="buy-courses" />} />
             <Route path="settings"            element={<Settings />} />

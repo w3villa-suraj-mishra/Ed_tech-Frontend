@@ -92,7 +92,14 @@ const CourseDetails = () => {
 
       {/* HERO SECTION */}
       <div className="relative bg-gradient-to-br from-richblack-800 to-richblack-900 border-b border-richblack-700">
-        <div className="max-w-7xl mx-auto px-6 py-16 lg:pr-[400px]">
+        <div className="max-w-7xl mx-auto px-6 py-10 lg:pr-[400px]">
+
+          <button
+            onClick={() => navigate('/dashboard/courses')}
+            className="flex items-center gap-2 text-xs text-richblack-300 hover:text-white transition mb-6"
+          >
+            ← Back to My Courses
+          </button>
 
           {/* STATUS BADGE */}
           <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full mb-5

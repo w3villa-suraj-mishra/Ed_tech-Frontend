@@ -43,7 +43,7 @@ const VideoDetailsSidebar = ({ setReviewModal }) => {
       {/* HEADER */}
       <div className="p-5 border-b border-richblack-700 space-y-4">
         <button
-          onClick={() => navigate('/dashboard/enrolled-courses')}
+          onClick={() => navigate('/dashboard/courses')}
           className="flex items-center gap-2 text-sm text-richblack-300 hover:text-white transition"
         >
           <FiArrowLeft /> Back to My Courses
