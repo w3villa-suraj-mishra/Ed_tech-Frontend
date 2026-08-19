@@ -50,11 +50,11 @@ const CourseDetails = () => {
     );
   };
 
-  const handleBuyCourse = () => {
+  const handleBuyCourse = (plan = 'gold') => {
     if (!token) {
       setConfirmationModal({
         text1: 'You are not logged in!',
-        text2: 'Please login to purchase this course.',
+        text2: 'Please login to purchase or access this course.',
         btn1Text: 'Login',
         btn2Text: 'Cancel',
         btn1Handler: () => navigate('/login'),
@@ -62,7 +62,7 @@ const CourseDetails = () => {
       });
       return;
     }
-    buyCourse(token, [courseId], user, navigate, dispatch);
+    buyCourse(token, [courseId], user, navigate, dispatch, plan);
   };
 
   const getTotalLectures = () => {

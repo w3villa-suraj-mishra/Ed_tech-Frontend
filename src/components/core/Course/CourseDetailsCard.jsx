@@ -67,7 +67,7 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
             ₹ {CurrentPrice}
           </div>
 
-          {/* BUTTONS */}
+          {/* PLANS SELECTION */}
           <div className="flex flex-col gap-4">
             {user && (user?.accountType === ACCOUNT_TYPE.INSTRUCTOR || String(course?.instructorId || course?.instructor?._id || course?.instructor?.id) === String(user?._id || user?.id)) ? (
               <button
@@ -76,32 +76,79 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
               >
                 Edit Course
               </button>
+            ) : user && course?.studentsEnrolled?.includes(user?._id || user?.id) ? (
+              <button
+                className="w-full rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 py-3 font-semibold text-black transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+                onClick={() => navigate("/dashboard/enrolled-courses")}
+              >
+                Go To Course
+              </button>
             ) : (
-              <>
-                {/* BUY BUTTON */}
-                <button
-                  className="w-full rounded-xl bg-gradient-to-r from-yellow-400 to-orange-500 py-3 font-semibold text-black transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
-                  onClick={
-                    user && course?.studentsEnrolled?.includes(user?._id || user?.id)
-                      ? () => navigate("/dashboard/enrolled-courses")
-                      : handleBuyCourse
-                  }
-                >
-                  {user && course?.studentsEnrolled?.includes(user?._id || user?.id)
-                    ? "Go To Course"
-                    : "Buy Now"}
-                </button>
+              <div className="space-y-3">
+                <p className="text-xs font-semibold text-richblack-300 uppercase tracking-wider">Select Access Plan</p>
+                
+                {/* FREE PLAN */}
+                <div className="p-3 rounded-xl border border-richblack-700 bg-richblack-900/60 flex items-center justify-between">
+                  <div>
+                    <span className="font-bold text-white text-sm block">FREE</span>
+                    <span className="text-xs text-richblack-300">First 2 videos only</span>
+                  </div>
+                  <button
+                    onClick={() => handleBuyCourse('free')}
+                    className="px-3 py-1.5 rounded-lg bg-richblack-700 hover:bg-richblack-600 text-white font-medium text-xs transition"
+                  >
+                    Continue Free
+                  </button>
+                </div>
+
+                {/* SILVER PLAN */}
+                <div className="p-3 rounded-xl border border-blue-500/40 bg-blue-950/20 flex items-center justify-between">
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-bold text-blue-300 text-sm">SILVER</span>
+                      <span className="text-[10px] bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded">1 Year</span>
+                      <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">30% OFF</span>
+                    </div>
+                    <span className="text-xs text-richblack-300 block">Full course access</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-blue-400">₹{Math.round(CurrentPrice * 0.7)}</span>
+                      <span className="text-[11px] text-richblack-400 line-through">₹{CurrentPrice}</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleBuyCourse('silver')}
+                    className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white font-semibold text-xs shadow-md transition"
+                  >
+                    Buy Silver
+                  </button>
+                </div>
+
+                {/* GOLD PLAN */}
+                <div className="p-3 rounded-xl border border-yellow-500/40 bg-yellow-950/20 flex items-center justify-between">
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-bold text-yellow-400 text-sm">GOLD</span>
+                      <span className="text-[10px] bg-yellow-500/20 text-yellow-400 px-1.5 py-0.5 rounded">Lifetime</span>
+                    </div>
+                    <span className="text-xs text-richblack-300 block">Unlimited access</span>
+                    <span className="text-xs font-bold text-yellow-400">₹{CurrentPrice} (100%)</span>
+                  </div>
+                  <button
+                    onClick={() => handleBuyCourse('gold')}
+                    className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-black font-semibold text-xs shadow-md transition"
+                  >
+                    Buy Gold
+                  </button>
+                </div>
 
                 {/* ADD TO CART */}
-                {(!user || !course?.studentsEnrolled?.includes(user?._id || user?.id)) && (
-                  <button
-                    onClick={handleAddToCart}
-                    className="w-full rounded-xl border border-yellow-400/30 bg-transparent py-3 font-medium text-yellow-300 transition-all duration-300 hover:bg-yellow-400/10 hover:scale-[1.02]"
-                  >
-                    Add to Cart
-                  </button>
-                )}
-              </>
+                <button
+                  onClick={handleAddToCart}
+                  className="w-full mt-2 rounded-xl border border-yellow-400/30 bg-transparent py-2.5 font-medium text-yellow-300 text-xs transition-all hover:bg-yellow-400/10"
+                >
+                  Add to Cart
+                </button>
+              </div>
             )}
           </div>
 

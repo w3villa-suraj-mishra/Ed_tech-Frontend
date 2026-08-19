@@ -84,7 +84,29 @@ export default function EnrolledCourses() {
 
               {/* CONTENT */}
               <div className="p-6 flex flex-col flex-1">
-                <h3 className="text-xl font-bold text-white mb-2 line-clamp-1">{course.courseName}</h3>
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <h3 className="text-xl font-bold text-white line-clamp-1">{course.courseName}</h3>
+                  <span className={`text-xs px-2.5 py-0.5 rounded-full font-bold uppercase ${
+                    course.plan === 'gold' 
+                      ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                      : course.plan === 'silver'
+                        ? course.isExpired || course.status === 'expired'
+                          ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                          : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                        : 'bg-slate-500/20 text-slate-300 border border-slate-500/30'
+                  }`}>
+                    {course.plan || 'Free'}
+                  </span>
+                </div>
+                <div className="text-xs text-richblack-400 mb-3 space-y-0.5">
+                  <p>Access: <strong className="text-white capitalize">{course.plan === 'gold' ? 'Unlimited' : course.plan === 'silver' ? 'Full Course (1 Year)' : '2 Videos Only'}</strong></p>
+                  {course.plan === 'silver' && course.expiresAt && (
+                    <p className={course.isExpired || course.status === 'expired' ? 'text-red-400 font-semibold' : 'text-slate-300'}>
+                      {course.isExpired || course.status === 'expired' ? 'Expired On: ' : 'Expires On: '}
+                      {new Date(course.expiresAt).toLocaleDateString()}
+                    </p>
+                  )}
+                </div>
                 <p className="text-sm text-richblack-300 mb-6 line-clamp-2 leading-relaxed">
                   {course.courseDescription}
                 </p>

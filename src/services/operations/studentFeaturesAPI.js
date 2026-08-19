@@ -6,13 +6,13 @@ import { resetCart } from "../../services/slices/cartSlice";
 
 const { COURSE_PAYMENT_API, COURSE_VERIFY_API } = studentEndpoints;
 
-export async function buyCourse(token, courses, userDetails, navigate, dispatch) {
-    const toastId = toast.loading("Initiating Checkout...");
+export async function buyCourse(token, courses, userDetails, navigate, dispatch, plan = 'gold') {
+    const toastId = toast.loading("Processing...");
     try {
         const orderResponse = await apiConnector(
             "POST",
             COURSE_PAYMENT_API,
-            { courses },
+            { courses, plan },
             {
                 Authorization: `Bearer ${token}`,
             }
@@ -22,16 +22,23 @@ export async function buyCourse(token, courses, userDetails, navigate, dispatch)
             throw new Error(orderResponse?.data?.message || "Checkout creation failed");
         }
 
+        if (orderResponse?.data?.isFree) {
+            toast.success("Free Access Activated! Enjoy your learning.");
+            if (navigate) navigate("/dashboard/enrolled-courses");
+            toast.dismiss(toastId);
+            return;
+        }
+
         const { url } = orderResponse.data.data;
         if (url) {
-            toast.success("Redirecting to Stripe Gateway...");
+            toast.success("Redirecting to Gateway...");
             window.location.href = url;
         } else {
             throw new Error("No Checkout URL returned");
         }
     } catch (error) {
-        console.log("STRIPE PAYMENT ERROR.....", error);
-        toast.error(error.message || "Could not initiate payment");
+        console.log("PAYMENT ERROR.....", error);
+        toast.error(error.message || "Could not process plan checkout");
     }
     toast.dismiss(toastId);
 }

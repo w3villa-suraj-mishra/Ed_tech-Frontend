@@ -144,6 +144,8 @@ const VideoDetailsSidebar = ({ setReviewModal }) => {
                       <div className="mt-0.5 shrink-0">
                         {isDone ? (
                           <BsCheckCircleFill size={16} className="text-emerald-400" />
+                        ) : lecture.isUnlocked === false ? (
+                          <span className="text-xs text-yellow-500 font-bold">🔒</span>
                         ) : isActive ? (
                           <BsPlayFill size={16} className="text-yellow-400" />
                         ) : (
@@ -153,11 +155,23 @@ const VideoDetailsSidebar = ({ setReviewModal }) => {
 
                       {/* TEXT */}
                       <div className="flex-1 min-w-0">
-                        <p className={`text-sm leading-snug line-clamp-2 ${
-                          isActive ? 'text-yellow-50 font-semibold' : 'text-richblack-200'
-                        }`}>
-                          {lecture.title}
-                        </p>
+                        <div className="flex items-center justify-between gap-1">
+                          <p className={`text-sm leading-snug line-clamp-2 ${
+                            isActive ? 'text-yellow-50 font-semibold' : 'text-richblack-200'
+                          }`}>
+                            {lecture.title}
+                          </p>
+                          {lecture.isFreeVideo && (
+                            <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded shrink-0">
+                              Free
+                            </span>
+                          )}
+                          {lecture.isUnlocked === false && (
+                            <span className="text-[10px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded shrink-0">
+                              Locked
+                            </span>
+                          )}
+                        </div>
                         <p className="text-xs text-richblack-400 mt-0.5">
                           {lecture.duration || "00:00"}
                         </p>

@@ -211,13 +211,35 @@ const VideoDetails = () => {
             Your browser does not support the video tag.
           </video>
         ) : !videoLoading && (
-          <div className="flex h-full items-center justify-center flex-col gap-4">
-            <div className="w-20 h-20 rounded-full bg-richblack-800 flex items-center justify-center text-richblack-400">
-              <MdOutlineSlowMotionVideo size={48} />
-            </div>
-            <p className="text-richblack-300 font-medium">
-              {videoError ? "Unsupported video format or loading error" : "Select a lecture to start learning"}
-            </p>
+          <div className="flex h-full items-center justify-center flex-col gap-5 p-6 text-center">
+            {videoData && videoData.isUnlocked === false ? (
+              <div className="max-w-md bg-richblack-800 border border-yellow-500/30 rounded-2xl p-8 shadow-2xl space-y-4">
+                <div className="w-16 h-16 rounded-full bg-yellow-500/10 text-yellow-400 flex items-center justify-center mx-auto text-2xl font-bold">
+                  🔒
+                </div>
+                <h3 className="text-xl font-bold text-white">This video is locked</h3>
+                <p className="text-sm text-richblack-300 leading-relaxed">
+                  Upgrade to <strong className="text-blue-400">Silver</strong> to get full course access for 1 year, or upgrade to <strong className="text-yellow-400">Gold</strong> for unlimited/lifetime access.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                  <button
+                    onClick={() => navigate(`/courses/${courseId}`)}
+                    className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white font-semibold text-xs shadow-md transition"
+                  >
+                    Upgrade Access
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="w-20 h-20 rounded-full bg-richblack-800 flex items-center justify-center text-richblack-400">
+                  <MdOutlineSlowMotionVideo size={48} />
+                </div>
+                <p className="text-richblack-300 font-medium">
+                  {videoError ? "Unsupported video format or loading error" : "Select a lecture to start learning"}
+                </p>
+              </>
+            )}
           </div>
         )}
 
