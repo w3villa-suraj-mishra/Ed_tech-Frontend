@@ -496,3 +496,41 @@ export const updateCoursePricingDetails = async (courseId, pricingData, token) =
   toast.dismiss(toastId)
   return result
 }
+
+export const fetchCourseCertificate = async (courseId, token) => {
+  let result = null
+  try {
+    const response = await apiConnector("GET", `${courseEndpoints.GET_CERTIFICATE_API}?courseId=${courseId}`, null, {
+      Authorization: `Bearer ${token}`,
+    })
+    if (response?.data?.success) {
+      result = response.data.data
+    } else {
+      result = {
+        isLocked: true,
+        progressPercentage: response?.data?.progressPercentage || 0,
+        message: response?.data?.message || "Course incomplete"
+      }
+    }
+  } catch (error) {
+    console.log("FETCH COURSE CERTIFICATE ERROR............", error)
+    if (error.response?.data) {
+      result = {
+        isLocked: true,
+        progressPercentage: error.response.data.progressPercentage || 0,
+        message: error.response.data.message || "Course incomplete"
+      }
+    }
+  }
+  return result
+}
+
+export const verifyCertificateAPI = async (certificateId) => {
+  try {
+    const response = await apiConnector("GET", `${courseEndpoints.VERIFY_CERTIFICATE_API}/${certificateId}`)
+    return response?.data
+  } catch (error) {
+    console.log("VERIFY CERTIFICATE API ERROR............", error)
+    return { success: false, isValid: false, message: error.response?.data?.message || "Invalid certificate" }
+  }
+}

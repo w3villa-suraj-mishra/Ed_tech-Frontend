@@ -26,6 +26,7 @@ import HelpSupport from "./components/core/Dashboard/HelpSupport";
 import CoursesPage from "./components/core/Dashboard/CoursesPage";
 import ActiveCoursesPage from "./pages/ActiveCoursesPage.jsx";
 import CourseTakePlayer from "./pages/CourseTakePlayer.jsx";
+import CourseCertificatePage from "./pages/CourseCertificatePage.jsx";
 import VerifyOtp from "./pages/VerifyOtp.jsx";
 import OAuthSuccess from "./pages/OAuthSuccess.jsx";
 import CourseDetails from "./pages/CourseDetails.jsx";
@@ -136,6 +137,8 @@ function App() {
           <Route path="/auth/google_oauth2/callback" element={<OAuthCallbackForwarder />} />
           <Route path="/t/u/activeCourses"    element={<ActiveCoursesPage />} />
           <Route path="/s/courses/:courseId/take" element={<CourseTakePlayer />} />
+          <Route path="/s/courses/:courseId/certificate" element={<CourseCertificatePage />} />
+          <Route path="/certificate/verify/:certificateId" element={<CourseCertificatePage />} />
           <Route path="/courses/:courseId"    element={<CourseDetails />} />
           <Route path="/view-course/:courseId" element={<ViewCourse />}>
             <Route

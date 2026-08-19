@@ -51,6 +51,8 @@ export const courseEndpoints = {
   POST_COMMENT_API: BASE_URL + "/course/postComment",
   GET_COMMENTS_API: BASE_URL + "/course/getComments",
   DELETE_COMMENT_API: BASE_URL + "/course/deleteComment",
+  GET_CERTIFICATE_API: BASE_URL + "/course/getCertificate",
+  VERIFY_CERTIFICATE_API: BASE_URL + "/certificate/verify",
 }
 
 // RATINGS AND REVIEWS

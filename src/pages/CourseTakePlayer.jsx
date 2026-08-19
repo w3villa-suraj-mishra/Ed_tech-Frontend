@@ -41,6 +41,9 @@ const CourseTakePlayer = () => {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [currentLectureIndex, setCurrentLectureIndex] = useState(0);
 
+  // Certificate Modal State
+  const [showCertModal, setShowCertModal] = useState(false);
+
   // Dynamic Discussion & Rating State
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
@@ -423,17 +426,77 @@ const CourseTakePlayer = () => {
 
             <div className="p-4 border-t border-slate-200 bg-white">
               <button
-                disabled={progressPercentage < 100}
-                className={`w-full flex items-center gap-2 text-xs font-bold p-2.5 rounded-lg border transition ${
+                onClick={() => {
+                  if (progressPercentage >= 100) {
+                    navigate(`/s/courses/${courseId}/certificate`);
+                  } else {
+                    setShowCertModal(true);
+                  }
+                }}
+                className={`w-full flex items-center justify-between text-xs font-bold p-3 rounded-xl border transition ${
                   progressPercentage >= 100
-                    ? "border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100"
-                    : "border-slate-200 text-slate-400 cursor-not-allowed"
+                    ? "border-amber-400 bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-md hover:from-amber-600 hover:to-amber-700"
+                    : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
                 }`}
               >
-                <FiAward size={16} /> Certificate
+                <div className="flex items-center gap-2">
+                  <FiAward size={18} className={progressPercentage >= 100 ? "text-white animate-bounce" : "text-amber-500"} />
+                  <div className="text-left">
+                    <p className="font-extrabold line-clamp-1">
+                      {progressPercentage >= 100 ? "🏆 View Certificate" : "🔒 Certificate"}
+                    </p>
+                    <p className="text-[10px] font-normal opacity-80">
+                      {progressPercentage >= 100 ? "Unlocked & Ready" : "Complete course to unlock"}
+                    </p>
+                  </div>
+                </div>
+                <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-white/20 text-current">
+                  {progressPercentage}%
+                </span>
               </button>
             </div>
           </aside>
+        )}
+
+        {/* INCOMPLETE COURSE CERTIFICATE MODAL */}
+        {showCertModal && (
+          <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl p-6 md:p-8 max-w-sm w-full text-center space-y-6 shadow-2xl border border-slate-100 animate-in fade-in zoom-in duration-200">
+              <div className="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto text-amber-500 shadow-inner">
+                <FiLock size={30} />
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="text-lg font-extrabold text-slate-900">
+                  🔒 Certificate Locked
+                </h3>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Please complete the full course to unlock and receive your certificate.
+                </p>
+              </div>
+
+              {/* DYNAMIC PROGRESS INDICATOR */}
+              <div className="space-y-2 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <div className="flex justify-between text-xs font-bold text-slate-700">
+                  <span>Course Progress</span>
+                  <span className="text-indigo-600">{progressPercentage}%</span>
+                </div>
+                <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                  <div
+                    className="bg-indigo-600 h-full rounded-full transition-all duration-500"
+                    style={{ width: `${progressPercentage}%` }}
+                  />
+                </div>
+              </div>
+
+              <button
+                onClick={() => setShowCertModal(false)}
+                className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition-all duration-150"
+              >
+                Continue Course
+              </button>
+            </div>
+          </div>
         )}
 
         {/* MAIN PLAYER AREA */}
