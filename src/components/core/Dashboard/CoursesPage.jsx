@@ -240,11 +240,24 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
                       </div>
 
                       {/* PRICE */}
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-slate-500 line-through">
-                          ₹{Math.round((Number(course.price) || 0) * 1.7)}
-                        </span>
-                        <span className="text-lg font-black text-white">₹{course.price}</span>
+                      <div className="flex items-baseline gap-2">
+                        {course?.pricing?.isOfferActive || (course?.originalPrice && Number(course?.originalPrice) > Number(course?.price)) ? (
+                          <>
+                            <span className="text-xs text-slate-500 line-through">
+                              ₹{course?.pricing?.originalPrice || course?.originalPrice}
+                            </span>
+                            <span className="text-lg font-black text-white">
+                              ₹{course?.pricing?.finalPrice || course?.price}
+                            </span>
+                            {course?.pricing?.discountPercentage > 0 && (
+                              <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-1.5 py-0.5 rounded">
+                                {course?.pricing?.discountPercentage}% OFF
+                              </span>
+                            )}
+                          </>
+                        ) : (
+                          <span className="text-lg font-black text-white">₹{course?.price || 0}</span>
+                        )}
                       </div>
 
                       {/* ACTION BUTTONS (PREVIEW & ADD TO CART / BUY NOW) */}

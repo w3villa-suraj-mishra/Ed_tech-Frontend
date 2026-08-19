@@ -84,9 +84,9 @@ function CoursesInner() {
     setForm({
       courseName: c.courseName,
       courseDescription: c.courseDescription,
-      price: c.originalPrice || c.price,
-      discountType: c.discountType || 'none',
-      discountValue: c.discountValue || 0,
+      price: c.pricing?.originalPrice || c.originalPrice || c.price,
+      discountType: c.discountType || c.pricing?.discountType || 'none',
+      discountValue: c.discountValue ?? c.pricing?.discountValue ?? 0,
       offerStartAt: c.offerStartAt ? new Date(c.offerStartAt).toISOString().split('T')[0] : '',
       offerEndAt: c.offerEndAt ? new Date(c.offerEndAt).toISOString().split('T')[0] : '',
       tag: c.tag,
@@ -261,7 +261,19 @@ function CoursesInner() {
                   </td>
                   <td className="px-5 py-3.5 text-[#AFB2BF]">{c.instructor ? `${c.instructor.firstName} ${c.instructor.lastName}` : '—'}</td>
                   <td className="px-5 py-3.5 text-[#AFB2BF]">{c.Category?.name || c.category?.name || '—'}</td>
-                  <td className="px-5 py-3.5 text-[#AFB2BF]">₹{c.price ?? 0}</td>
+                  <td className="px-5 py-3.5 text-[#AFB2BF]">
+                    {c?.pricing?.isOfferActive || (c?.originalPrice && Number(c?.originalPrice) > Number(c?.price)) ? (
+                      <div className="flex flex-col">
+                        <span className="text-xs text-[#585D69] line-through">₹{c?.pricing?.originalPrice || c?.originalPrice}</span>
+                        <span className="font-bold text-[#FFD60A]">₹{c?.pricing?.finalPrice || c?.price}</span>
+                        {c?.pricing?.discountPercentage > 0 && (
+                          <span className="text-[10px] text-emerald-400 font-semibold">{c?.pricing?.discountPercentage}% OFF</span>
+                        )}
+                      </div>
+                    ) : (
+                      <span>₹{c.price ?? 0}</span>
+                    )}
+                  </td>
                   <td className="px-5 py-3.5"><StatusBadge status={c.status} /></td>
                   <td className="px-5 py-3.5 text-right">
                     <div className="flex items-center justify-end gap-2">
@@ -306,7 +318,7 @@ function CoursesInner() {
             </div>
             {form.discountType !== 'none' && (
               <div>
-                <AdminInput label={`Discount Value (${form.discountType === 'percentage' ? '%' : '₹'})`} type="number" value={form.discountValue ?? 0} onChange={setF('discountValue')} />
+                <AdminInput label={form.discountType === 'percentage' ? 'Discount Percentage (%)' : 'Fixed Offer Price (₹)'} type="number" value={form.discountValue ?? 0} onChange={setF('discountValue')} />
               </div>
             )}
           </div>
