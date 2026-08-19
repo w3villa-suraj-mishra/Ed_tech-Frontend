@@ -273,6 +273,16 @@ const ActiveCoursesPage = () => {
                       <p className="text-xs font-medium text-slate-400">
                         {instructorName}
                       </p>
+
+                      {/* DYNAMIC DATABASE COURSE RATING */}
+                      <div className="flex items-center gap-1.5 pt-1 text-xs">
+                        <span className="text-amber-500 font-bold flex items-center gap-1">
+                          ★ {course.averageRating || "0.0"}
+                        </span>
+                        <span className="text-slate-400 font-normal">
+                          ({course.ratingCount || 0} {course.ratingCount === 1 ? 'rating' : 'ratings'})
+                        </span>
+                      </div>
                     </div>
                   </div>
 

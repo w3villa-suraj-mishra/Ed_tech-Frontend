@@ -10,7 +10,7 @@ import {
   setCompletedLectures,
   updateCompletedLectures,
 } from "../services/slices/viewCourseSlice";
-import { markLectureAsComplete } from "../services/operations/courseDetailsAPI";
+import { markLectureAsComplete, fetchCourseReviews, createRating, postCommentAPI, fetchCourseComments, deleteCommentAPI } from "../services/operations/courseDetailsAPI";
 import {
   FiArrowLeft,
   FiMenu,
@@ -21,6 +21,7 @@ import {
   FiLock,
   FiAward,
   FiExternalLink,
+  FiTrash2
 } from "react-icons/fi";
 import { FaComments } from "react-icons/fa6";
 
@@ -31,6 +32,7 @@ const CourseTakePlayer = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.profile);
 
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -39,6 +41,36 @@ const CourseTakePlayer = () => {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [currentLectureIndex, setCurrentLectureIndex] = useState(0);
 
+  // Dynamic Discussion & Rating State
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
+  const [reviewsList, setReviewsList] = useState([]);
+  const [userRatingInput, setUserRatingInput] = useState(5);
+  const [reviewTextInput, setReviewTextInput] = useState("");
+
+  // Load reviews dynamically from API
+  const loadReviews = async () => {
+    if (!courseId) return;
+    const data = await fetchCourseReviews(courseId);
+    setReviewsList(data);
+
+    // If current logged-in user already submitted a review, populate form
+    if (user && data.length > 0) {
+      const myReview = data.find((r) => String(r.userId || r.user?.id || r.user?._id) === String(user._id || user.id));
+      if (myReview) {
+        setUserRatingInput(myReview.rating);
+        setReviewTextInput(myReview.review || "");
+      }
+    }
+  };
+
+  // Load comments dynamically from backend database
+  const loadComments = async () => {
+    if (!courseId) return;
+    const data = await fetchCourseComments(courseId);
+    setComments(data);
+  };
+
   const {
     courseSectionData,
     courseEntireData,
@@ -46,7 +78,7 @@ const CourseTakePlayer = () => {
     completedLectures,
   } = useSelector((state) => state.viewCourse);
 
-  // Fetch course details
+  // Fetch course details, reviews & comments
   useEffect(() => {
     const fetchCourseData = async () => {
       setLoading(true);
@@ -72,7 +104,6 @@ const CourseTakePlayer = () => {
             setCompletedLectures((courseData.completedVideos || []).map(String))
           );
 
-          // Default active section and current lecture
           if (courseData.courseContent && courseData.courseContent.length > 0) {
             const firstSec = courseData.courseContent[0];
             setActiveSectionId(firstSec._id);
@@ -89,7 +120,11 @@ const CourseTakePlayer = () => {
       setLoading(false);
     };
 
-    if (courseId) fetchCourseData();
+    if (courseId) {
+      fetchCourseData();
+      loadReviews();
+      loadComments();
+    }
   }, [courseId, token, dispatch]);
 
   const selectLecture = (secIndex, lecIndex, sectionId, lecture) => {
@@ -119,6 +154,47 @@ const CourseTakePlayer = () => {
     return false;
   };
 
+  // Persistent comment post
+  const handlePostComment = async () => {
+    if (!newComment.trim()) return;
+    const res = await postCommentAPI({ courseId, text: newComment }, token);
+    if (res) {
+      setNewComment("");
+      loadComments();
+    }
+  };
+
+  // Persistent comment deletion
+  const handleDeleteComment = async (commentId) => {
+    const success = await deleteCommentAPI(commentId, token);
+    if (success) {
+      loadComments();
+    }
+  };
+
+  // Dynamic rating submission (Upsert - 1 review per user)
+  const handleSubmitRating = async () => {
+    if (!userRatingInput) return;
+    const success = await createRating(
+      {
+        courseId,
+        rating: userRatingInput,
+        review: reviewTextInput,
+      },
+      token
+    );
+    if (success) {
+      loadReviews();
+    }
+  };
+
+  // Calculate dynamic average rating and review counts
+  const totalReviewsCount = reviewsList.length;
+  const avgRatingNum =
+    totalReviewsCount > 0
+      ? (reviewsList.reduce((acc, r) => acc + (r.rating || 0), 0) / totalReviewsCount).toFixed(1)
+      : 0;
+
   // Complete and Continue handler
   const handleCompleteAndContinue = async () => {
     if (!currentLecture) return;
@@ -137,7 +213,6 @@ const CourseTakePlayer = () => {
       }
     }
 
-    // Navigate to next lecture
     const currentSubSections =
       courseSectionData[currentSectionIndex]?.subSection || [];
     if (currentLectureIndex < currentSubSections.length - 1) {
@@ -206,7 +281,7 @@ const CourseTakePlayer = () => {
   const currentLocked = isLectureLocked(currentSectionIndex, currentLectureIndex);
 
   return (
-    <div className="min-h-screen bg-white text-slate-800 flex flex-col font-['Inter',sans-serif]">
+    <div className="h-screen bg-white text-slate-800 flex flex-col font-['Inter',sans-serif] overflow-hidden">
       {/* TOP HEADER */}
       <header className="h-16 border-b border-slate-200 bg-white flex items-center justify-between px-6 z-20 shrink-0 select-none">
         <div className="flex items-center gap-4">
@@ -234,7 +309,7 @@ const CourseTakePlayer = () => {
         <div className="flex items-center gap-3">
           <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-indigo-600 hover:bg-indigo-50 transition">
             <FaComments size={14} />
-            <span>Discuss (24)</span>
+            <span>Discuss ({comments.length})</span>
           </button>
 
           <button
@@ -262,8 +337,7 @@ const CourseTakePlayer = () => {
       <div className="flex-1 flex overflow-hidden">
         {/* LEFT CURRICULUM SIDEBAR */}
         {sidebarOpen && (
-          <aside className="w-80 border-r border-slate-200 bg-white flex flex-col shrink-0 select-none overflow-y-auto">
-            {/* PROGRESS SECTION */}
+          <aside className="w-80 border-r border-slate-200 bg-white flex flex-col shrink-0 select-none overflow-y-auto h-full">
             <div className="p-5 border-b border-slate-200 space-y-2">
               <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
                 <div
@@ -277,7 +351,6 @@ const CourseTakePlayer = () => {
               </p>
             </div>
 
-            {/* DISCUSSIONS LINK */}
             <div className="px-5 py-3 border-b border-slate-200">
               <button className="flex items-center justify-between w-full text-xs font-bold text-indigo-700 hover:underline">
                 <span className="flex items-center gap-2">
@@ -287,7 +360,6 @@ const CourseTakePlayer = () => {
               </button>
             </div>
 
-            {/* CURRICULUM SECTIONS */}
             <div className="flex-1 overflow-y-auto">
               {courseSectionData.map((section, sIdx) => {
                 const isOpen = activeSectionId === section._id;
@@ -349,7 +421,6 @@ const CourseTakePlayer = () => {
               })}
             </div>
 
-            {/* CERTIFICATE LINK */}
             <div className="p-4 border-t border-slate-200 bg-white">
               <button
                 disabled={progressPercentage < 100}
@@ -366,52 +437,277 @@ const CourseTakePlayer = () => {
         )}
 
         {/* MAIN PLAYER AREA */}
-        <main className="flex-1 bg-slate-900 flex flex-col justify-between overflow-y-auto">
+        <main className="flex-1 bg-white flex flex-col justify-between overflow-y-auto">
           {currentLocked ? (
-            /* LOCKED STATE */
-            <div className="flex-1 flex flex-col items-center justify-center text-white p-8 space-y-4">
-              <FiLock size={48} className="text-amber-400" />
+            <div className="flex-1 flex flex-col items-center justify-center text-slate-800 p-8 space-y-4">
+              <FiLock size={48} className="text-amber-500" />
               <h2 className="text-lg font-bold">This lesson is locked</h2>
-              <p className="text-xs text-slate-300 max-w-md text-center">
+              <p className="text-xs text-slate-600 max-w-md text-center">
                 Your Free plan allows access to the first 2 lessons. Upgrade to Silver or Gold to unlock the full course curriculum.
               </p>
               <button
                 onClick={() => navigate(`/courses/${courseId}`)}
-                className="px-5 py-2.5 bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold text-xs rounded-lg shadow transition"
+                className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-lg shadow transition"
               >
                 Upgrade Plan
               </button>
             </div>
           ) : currentLecture?.videoUrl ? (
-            /* VIDEO PLAYER */
-            <div className="flex-1 flex items-center justify-center bg-black">
-              <video
-                key={currentLecture._id}
-                src={currentLecture.videoUrl}
-                controls
-                autoPlay
-                className="w-full max-h-[calc(100vh-10rem)] object-contain"
-                onEnded={handleCompleteAndContinue}
-              />
+            <div className="w-full max-w-5xl mx-auto px-4 md:px-8 py-4 flex items-center justify-center">
+              <div className="w-full bg-black rounded-xl overflow-hidden shadow-lg border border-slate-200 flex items-center justify-center">
+                <video
+                  key={currentLecture._id}
+                  src={currentLecture.videoUrl}
+                  controls
+                  autoPlay
+                  className="w-full max-h-[calc(100vh-12rem)] object-contain rounded-xl"
+                  onEnded={handleCompleteAndContinue}
+                />
+              </div>
             </div>
           ) : (
-            /* NO VIDEO / PLACEHOLDER */
             <div className="flex-1 flex flex-col items-center justify-center text-slate-400 p-8 space-y-2">
               <FiPlayCircle size={48} />
               <p className="text-sm font-semibold">Select a lecture to start learning</p>
             </div>
           )}
 
-          {/* LESSON DETAILS BELOW PLAYER */}
-          <div className="p-6 bg-white border-t border-slate-200 space-y-2">
-            <h2 className="text-base font-bold text-slate-900">
-              {currentLecture?.title || "Lesson Overview"}
-            </h2>
-            <p className="text-xs text-slate-500 leading-relaxed max-w-4xl">
-              {currentLecture?.description ||
-                courseEntireData?.courseDescription ||
-                "No additional lesson description available."}
-            </p>
+          {/* LESSON DETAILS & DYNAMIC DISCUSSION / RATING */}
+          <div className="p-6 md:p-8 bg-white space-y-8 max-w-5xl mx-auto w-full font-['Inter',sans-serif]">
+            {/* LESSON TITLE & DESCRIPTION */}
+            <div className="space-y-2 pb-6 border-b border-slate-200">
+              <h2 className="text-2xl font-bold text-slate-800">
+                {currentLecture?.title || "Lesson Overview"}
+              </h2>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                {currentLecture?.description ||
+                  courseEntireData?.courseDescription ||
+                  "No additional lesson description available."}
+              </p>
+            </div>
+
+            {/* DISCUSSION SECTION - MATCHING TARGET SCREENSHOT 2 */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-bold text-slate-900">Discuss</h3>
+                <span className="text-xs font-medium text-slate-500">
+                  {comments.length} {comments.length === 1 ? 'Comment' : 'Comments'}
+                </span>
+              </div>
+
+              {/* MAIN DISCUSSION LAYOUT GRID (EDITOR + TRENDING TAGS SIDEBAR) */}
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                {/* LEFT: EDITOR & COMMENTS AREA (3 COLS ON DESKTOP) */}
+                <div className="lg:col-span-3 space-y-3">
+                  {/* RICH TEXT TOOLBAR */}
+                  <div className="flex items-center gap-4 text-slate-700 text-sm font-semibold border-b border-slate-200 pb-2 select-none">
+                    <button className="hover:text-indigo-600 font-bold px-1" title="Bold">B</button>
+                    <button className="hover:text-indigo-600 italic px-1" title="Italic">I</button>
+                    <button className="hover:text-indigo-600 underline px-1" title="Underline">U</button>
+                    <button className="hover:text-indigo-600 px-1" title="Bullet List">•</button>
+                    <button className="hover:text-indigo-600 px-1" title="Numbered List">☷</button>
+                    <button className="hover:text-indigo-600 px-1" title="Add Link">🔗</button>
+                  </div>
+
+                  {/* OPEN TEXTAREA (NO LARGE OUTER CARD CONTAINER) */}
+                  <textarea
+                    rows={4}
+                    placeholder="Write a comment..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    className="w-full bg-white border border-slate-300 rounded-md p-3 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-600 resize-none shadow-sm"
+                  />
+
+                  {/* ADD IMAGE & POST ACTIONS */}
+                  <div className="flex items-center justify-between pt-1">
+                    <button className="text-xs font-semibold text-slate-600 hover:text-indigo-600 flex items-center gap-1.5 transition border border-slate-200 px-3 py-1.5 rounded bg-white">
+                      <span>📷</span> Add Image
+                    </button>
+                    <button
+                      onClick={handlePostComment}
+                      className="px-6 py-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold text-xs rounded-md transition shadow-sm"
+                    >
+                      Post
+                    </button>
+                  </div>
+
+                  {/* DYNAMIC COMMENTS LIST FROM DATABASE */}
+                  <div className="space-y-4 pt-6">
+                    {comments.length === 0 ? (
+                      <p className="text-xs text-slate-400 py-2">
+                        No comments yet. Be the first to start the discussion!
+                      </p>
+                    ) : (
+                      comments.map((c) => {
+                        const commenterName = c.user
+                          ? `${c.user.firstName || ''} ${c.user.lastName || ''}`.trim()
+                          : c.user_name || "Student";
+                        const commenterImage = c.user?.image || c.userImage;
+                        const isMyComment = user && String(c.userId || c.user?.id || c.user?._id) === String(user.id || user._id);
+
+                        return (
+                          <div
+                            key={c.id || c._id}
+                            className="border-b border-slate-200 pb-4 flex items-start gap-3"
+                          >
+                            {commenterImage ? (
+                              <img
+                                src={commenterImage}
+                                alt={commenterName}
+                                className="w-9 h-9 rounded-full object-cover shrink-0"
+                              />
+                            ) : (
+                              <div className="w-9 h-9 rounded-full bg-slate-800 text-white font-bold flex items-center justify-center text-xs shrink-0">
+                                {commenterName[0] || "U"}
+                              </div>
+                            )}
+                            <div className="space-y-1 flex-1">
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs font-bold text-slate-900">
+                                  {commenterName}
+                                </span>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-[10px] text-slate-400">
+                                    {c.createdAt ? new Date(c.createdAt).toLocaleDateString() : 'Recently'}
+                                  </span>
+                                  {(isMyComment || user?.accountType === 'Admin') && (
+                                    <button
+                                      onClick={() => handleDeleteComment(c.id || c._id)}
+                                      className="text-slate-400 hover:text-red-500 transition p-1"
+                                      title="Delete comment"
+                                    >
+                                      <FiTrash2 size={13} />
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                              <p className="text-xs text-slate-600 leading-relaxed">
+                                {c.text}
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+
+                {/* RIGHT: TRENDING TAGS SIDEBAR WITH BORDER SEPARATION */}
+                <div className="lg:col-span-1 border border-slate-200 bg-white rounded-md p-5 space-y-3 shadow-sm h-fit">
+                  <h4 className="text-xs font-bold text-slate-700 text-center tracking-wider">
+                    Trending Tags
+                  </h4>
+                  <p className="text-[11px] text-slate-500 leading-relaxed text-center">
+                    Use <span className="font-semibold text-indigo-600">#hashtags</span> in your post to create one.
+                  </p>
+                  <div className="flex flex-wrap justify-center gap-1.5 pt-1">
+                    <span className="text-[11px] bg-slate-100 text-slate-700 font-medium px-2.5 py-1 rounded-md hover:bg-indigo-50 hover:text-indigo-600 cursor-pointer transition">
+                      #patterns
+                    </span>
+                    <span className="text-[11px] bg-slate-100 text-slate-700 font-medium px-2.5 py-1 rounded-md hover:bg-indigo-50 hover:text-indigo-600 cursor-pointer transition">
+                      #javascript
+                    </span>
+                    <span className="text-[11px] bg-slate-100 text-slate-700 font-medium px-2.5 py-1 rounded-md hover:bg-indigo-50 hover:text-indigo-600 cursor-pointer transition">
+                      #dsa
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* DYNAMIC COURSE RATING & REVIEWS SECTION */}
+            <div className="space-y-6 pt-8 border-t border-slate-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-bold text-slate-900">Course Rating & Reviews</h3>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-amber-500 font-bold text-sm">★ {avgRatingNum}</span>
+                    <span className="text-xs text-slate-400">({totalReviewsCount} {totalReviewsCount === 1 ? 'rating' : 'ratings'})</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* RATING FORM */}
+              <div className="bg-white border border-slate-200 rounded-xl p-5 space-y-4 shadow-sm">
+                <p className="text-xs font-bold text-slate-700">Rate this course:</p>
+
+                <div className="flex items-center gap-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setUserRatingInput(star)}
+                      className={`text-2xl transition-transform hover:scale-110 ${
+                        star <= userRatingInput ? "text-amber-400" : "text-slate-300"
+                      }`}
+                    >
+                      ★
+                    </button>
+                  ))}
+                </div>
+
+                <textarea
+                  rows={3}
+                  placeholder="Share your experience with this course..."
+                  value={reviewTextInput}
+                  onChange={(e) => setReviewTextInput(e.target.value)}
+                  className="w-full bg-white border border-slate-200 rounded-lg p-3 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                />
+
+                <div className="flex justify-end">
+                  <button
+                    onClick={handleSubmitRating}
+                    className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-lg transition shadow-sm"
+                  >
+                    Submit Review
+                  </button>
+                </div>
+              </div>
+
+              {/* DYNAMIC REVIEWS LIST FROM DATABASE */}
+              <div className="space-y-4 pt-2">
+                <h4 className="text-sm font-bold text-slate-800">Student Reviews ({totalReviewsCount})</h4>
+                {reviewsList.length === 0 ? (
+                  <p className="text-xs text-slate-400 py-4">No reviews submitted yet for this course.</p>
+                ) : (
+                  reviewsList.map((r) => {
+                    const reviewerName = r.user ? `${r.user.firstName || ''} ${r.user.lastName || ''}`.trim() : "Student";
+                    const reviewerImage = r.user?.image;
+
+                    return (
+                      <div key={r.id || r._id} className="bg-white border border-slate-200 rounded-xl p-4 space-y-2 shadow-sm">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2.5">
+                            {reviewerImage ? (
+                              <img src={reviewerImage} alt={reviewerName} className="w-8 h-8 rounded-full object-cover" />
+                            ) : (
+                              <div className="w-8 h-8 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs">
+                                {reviewerName[0] || 'U'}
+                              </div>
+                            )}
+                            <div>
+                              <p className="text-xs font-bold text-slate-800">{reviewerName}</p>
+                              <div className="flex items-center gap-1 text-amber-400 text-xs">
+                                {"★".repeat(r.rating || 5)}
+                                <span className="text-slate-300">{"★".repeat(5 - (r.rating || 5))}</span>
+                              </div>
+                            </div>
+                          </div>
+                          <span className="text-[10px] text-slate-400">
+                            {r.createdAt ? new Date(r.createdAt).toLocaleDateString() : 'Recently'}
+                          </span>
+                        </div>
+                        {r.review && (
+                          <p className="text-xs text-slate-600 leading-relaxed pt-1">
+                            {r.review}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
           </div>
         </main>
       </div>

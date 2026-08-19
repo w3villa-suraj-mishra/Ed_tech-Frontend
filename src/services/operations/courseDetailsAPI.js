@@ -3,7 +3,7 @@ import { toast } from "react-hot-toast"
 import { updateCompletedLectures } from "../../services/slices/viewCourseSlice"
 // import { setLoading } from "../../slices/profileSlice";
 import { apiConnector } from "../apiConnector"
-import { courseEndpoints } from "../apis"
+import { courseEndpoints, ratingsEndpoints } from "../apis"
 
 const {
   COURSE_DETAILS_API,
@@ -383,7 +383,7 @@ export const createRating = async (data, token) => {
     if (!response?.data?.success) {
       throw new Error("Could Not Create Rating")
     }
-    toast.success("Rating Created")
+    toast.success("Rating Saved Successfully")
     success = true
   } catch (error) {
     success = false
@@ -391,6 +391,68 @@ export const createRating = async (data, token) => {
     toast.error(error.message)
   }
   toast.dismiss(toastId)
+  return success
+}
+
+export const fetchCourseReviews = async (courseId) => {
+  try {
+    const response = await apiConnector("GET", `${ratingsEndpoints.REVIEWS_DETAILS_API}?courseId=${courseId}`)
+    if (!response?.data?.success) {
+      throw new Error("Could Not Fetch Reviews")
+    }
+    return response?.data?.data || []
+  } catch (error) {
+    console.log("FETCH COURSE REVIEWS ERROR............", error)
+    return []
+  }
+}
+
+export const postCommentAPI = async (data, token) => {
+  let result = null
+  try {
+    const response = await apiConnector("POST", courseEndpoints.POST_COMMENT_API, data, {
+      Authorization: `Bearer ${token}`,
+    })
+    if (!response?.data?.success) {
+      throw new Error("Could Not Post Comment")
+    }
+    toast.success("Comment posted")
+    result = response?.data?.data
+  } catch (error) {
+    console.log("POST COMMENT API ERROR............", error)
+    toast.error("Failed to post comment")
+  }
+  return result
+}
+
+export const fetchCourseComments = async (courseId) => {
+  try {
+    const response = await apiConnector("GET", `${courseEndpoints.GET_COMMENTS_API}?courseId=${courseId}`)
+    if (!response?.data?.success) {
+      throw new Error("Could Not Fetch Comments")
+    }
+    return response?.data?.data || []
+  } catch (error) {
+    console.log("FETCH COURSE COMMENTS ERROR............", error)
+    return []
+  }
+}
+
+export const deleteCommentAPI = async (commentId, token) => {
+  let success = false
+  try {
+    const response = await apiConnector("DELETE", courseEndpoints.DELETE_COMMENT_API, { commentId }, {
+      Authorization: `Bearer ${token}`,
+    })
+    if (!response?.data?.success) {
+      throw new Error("Could Not Delete Comment")
+    }
+    toast.success("Comment deleted")
+    success = true
+  } catch (error) {
+    console.log("DELETE COMMENT API ERROR............", error)
+    toast.error("Failed to delete comment")
+  }
   return success
 }
 export const updateLectureDuration = async (data, token) => {
