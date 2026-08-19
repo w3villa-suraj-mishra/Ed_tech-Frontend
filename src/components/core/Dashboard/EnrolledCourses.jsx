@@ -134,13 +134,7 @@ export default function EnrolledCourses() {
                   <div className="flex flex-col gap-2">
                     <button
                       onClick={() => {
-                        const firstSection = course.courseContent?.[0];
-                        const firstLecture = firstSection?.subSection?.[0];
-                        if (firstSection && firstLecture) {
-                          navigate(`/view-course/${course?._id}/section/${firstSection._id}/sub-section/${firstLecture._id}`)
-                        } else {
-                          navigate(`/view-course/${course?._id}`)
-                        }
+                        navigate('/t/u/activeCourses');
                       }}
                       className="w-full py-3 rounded-xl bg-richblack-700 text-white font-bold text-sm group-hover:bg-yellow-400 group-hover:text-black transition-all"
                     >

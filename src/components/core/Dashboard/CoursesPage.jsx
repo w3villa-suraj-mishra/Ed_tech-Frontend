@@ -185,13 +185,7 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          const firstSection = course.courseContent?.[0];
-                          const firstLecture = firstSection?.subSection?.[0];
-                          if (firstSection && firstLecture) {
-                            navigate(`/view-course/${course?._id}/section/${firstSection._id}/sub-section/${firstLecture._id}`);
-                          } else {
-                            navigate(`/view-course/${course?._id}`);
-                          }
+                          navigate('/t/u/activeCourses');
                         }}
                         className="w-full py-2.5 rounded-xl bg-richblack-800 border border-richblack-700 text-xs font-semibold text-white hover:bg-richblack-700 transition-all text-center"
                       >

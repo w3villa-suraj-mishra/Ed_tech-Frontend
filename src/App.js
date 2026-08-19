@@ -24,6 +24,8 @@ import Articles from "./components/core/Dashboard/Articles";
 import GuidedPath from "./components/core/Dashboard/GuidedPath";
 import HelpSupport from "./components/core/Dashboard/HelpSupport";
 import CoursesPage from "./components/core/Dashboard/CoursesPage";
+import ActiveCoursesPage from "./pages/ActiveCoursesPage.jsx";
+import CourseTakePlayer from "./pages/CourseTakePlayer.jsx";
 import VerifyOtp from "./pages/VerifyOtp.jsx";
 import OAuthSuccess from "./pages/OAuthSuccess.jsx";
 import CourseDetails from "./pages/CourseDetails.jsx";
@@ -99,7 +101,8 @@ function App() {
     <div className="min-h-screen bg-richblack-900">
       <ScrollToTop />
       <Toaster position="top-right" toastOptions={{ max: 1 }} />
-      <Navbar />
+      {!location.pathname.startsWith("/t/u/activeCourses") &&
+       !location.pathname.startsWith("/s/courses") && <Navbar />}
       <div className="main-content bg-richblack-900" style={{ flex: 1 }}>
         <Routes>
           <Route path="/"                     element={<Home />} />
@@ -131,6 +134,8 @@ function App() {
           <Route path="/verify-otp"           element={<VerifyOtp />} />
           <Route path="/oauth-success"        element={<OAuthSuccess />} />
           <Route path="/auth/google_oauth2/callback" element={<OAuthCallbackForwarder />} />
+          <Route path="/t/u/activeCourses"    element={<ActiveCoursesPage />} />
+          <Route path="/s/courses/:courseId/take" element={<CourseTakePlayer />} />
           <Route path="/courses/:courseId"    element={<CourseDetails />} />
           <Route path="/view-course/:courseId" element={<ViewCourse />}>
             <Route
@@ -140,7 +145,8 @@ function App() {
           </Route>
         </Routes>
       </div>
-      <Footer />
+      {!location.pathname.startsWith("/t/u/activeCourses") &&
+       !location.pathname.startsWith("/s/courses") && <Footer />}
     </div>
   );
 }
