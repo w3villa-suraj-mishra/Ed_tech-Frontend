@@ -5,6 +5,18 @@ const RequirementField = ({ name, label, register, errors, setValue, getValues }
   const [requirementList, setRequirementList] = useState([])
 
   useEffect(() => {
+    const val = getValues(name)
+    if (val) {
+      if (Array.isArray(val)) setRequirementList(val)
+      else if (typeof val === 'string') {
+        try {
+          const parsed = JSON.parse(val)
+          setRequirementList(Array.isArray(parsed) ? parsed : [parsed])
+        } catch {
+          setRequirementList([val])
+        }
+      }
+    }
     register(name, {
       required: true,
     })

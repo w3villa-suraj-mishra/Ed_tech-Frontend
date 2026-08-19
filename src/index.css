@@ -74,4 +74,94 @@
 body {
   @apply bg-richblack-900 text-richblack-5;
   font-family: 'Inter', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Universal Premium Light Mode Engine */
+html.light-mode-active,
+html.light-mode-active body,
+html.light-mode-active #root,
+html.light-mode-active main,
+html.light-mode-active section,
+html.light-mode-active div:not(.bg-yellow-50):not(.bg-[#FFD60A]):not(.bg-indigo-600) {
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+html.light-mode-active nav {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04) !important;
+}
+
+html.light-mode-active nav a,
+html.light-mode-active nav span,
+html.light-mode-active nav button {
+  color: #1E293B !important;
+}
+
+/* Force all dark backgrounds to light mode white/slate */
+html.light-mode-active .bg-richblack-900,
+html.light-mode-active .bg-richblack-800,
+html.light-mode-active .bg-richblack-700,
+html.light-mode-active .bg-[#000814],
+html.light-mode-active .bg-[#000C1E],
+html.light-mode-active .bg-[#161D29],
+html.light-mode-active .bg-[#090D16] {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+}
+
+/* Target all text elements */
+html.light-mode-active h1,
+html.light-mode-active h2,
+html.light-mode-active h3,
+html.light-mode-active h4,
+html.light-mode-active h5,
+html.light-mode-active h6,
+html.light-mode-active p,
+html.light-mode-active span:not(.bg-yellow-50):not(.bg-[#FFD60A]),
+html.light-mode-active .text-richblack-5,
+html.light-mode-active .text-richblack-25,
+html.light-mode-active .text-richblack-50,
+html.light-mode-active .text-richblack-100,
+html.light-mode-active .text-[#F1F2FF] {
+  color: #0F172A !important;
+}
+
+html.light-mode-active .text-richblack-300,
+html.light-mode-active .text-richblack-400,
+html.light-mode-active .text-[#AFB2BF],
+html.light-mode-active .text-[#8E95A5] {
+  color: #475569 !important;
+}
+
+/* Secondary CTA buttons (Book a Demo, Become an Instructor) */
+html.light-mode-active button.bg-richblack-800,
+html.light-mode-active a.bg-richblack-800,
+html.light-mode-active div.bg-richblack-800,
+html.light-mode-active button.bg-richblack-700,
+html.light-mode-active a.bg-richblack-700,
+html.light-mode-active div.bg-richblack-700,
+html.light-mode-active [class*="bg-richblack-800"],
+html.light-mode-active [class*="bg-richblack-700"] {
+  background-color: #E2E8F0 !important;
+  color: #0F172A !important;
+  border: 1px solid #CBD5E1 !important;
+}
+
+/* Primary Yellow Buttons (Learn More) */
+html.light-mode-active .bg-yellow-50,
+html.light-mode-active .bg-[#FFD60A],
+html.light-mode-active button.bg-yellow-50,
+html.light-mode-active a.bg-yellow-50 {
+  background-color: #FFD60A !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+
+html.light-mode-active [class*="border-richblack-"],
+html.light-mode-active .border-richblack-700,
+html.light-mode-active .border-[#2C333F] {
+  border-color: #E2E8F0 !important;
 }

@@ -69,29 +69,39 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
 
           {/* BUTTONS */}
           <div className="flex flex-col gap-4">
-
-            {/* BUY BUTTON */}
-            <button
-              className="w-full rounded-xl bg-gradient-to-r from-yellow-400 to-orange-500 py-3 font-semibold text-black transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
-              onClick={
-                user && course?.studentsEnrolled?.includes(user?._id)
-                  ? () => navigate("/dashboard/enrolled-courses")
-                  : handleBuyCourse
-              }
-            >
-              {user && course?.studentsEnrolled?.includes(user?._id)
-                ? "Go To Course"
-                : "Buy Now"}
-            </button>
-
-            {/* ADD TO CART */}
-            {(!user || !course?.studentsEnrolled?.includes(user?._id)) && (
+            {user && (user?.accountType === ACCOUNT_TYPE.INSTRUCTOR || String(course?.instructorId || course?.instructor?._id || course?.instructor?.id) === String(user?._id || user?.id)) ? (
               <button
-                onClick={handleAddToCart}
-                className="w-full rounded-xl border border-yellow-400/30 bg-transparent py-3 font-medium text-yellow-300 transition-all duration-300 hover:bg-yellow-400/10 hover:scale-[1.02]"
+                className="w-full rounded-xl bg-gradient-to-r from-yellow-400 to-orange-500 py-3 font-semibold text-black transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+                onClick={() => navigate(`/dashboard/edit-course/${courseId || course?.id}`)}
               >
-                Add to Cart
+                Edit Course
               </button>
+            ) : (
+              <>
+                {/* BUY BUTTON */}
+                <button
+                  className="w-full rounded-xl bg-gradient-to-r from-yellow-400 to-orange-500 py-3 font-semibold text-black transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+                  onClick={
+                    user && course?.studentsEnrolled?.includes(user?._id || user?.id)
+                      ? () => navigate("/dashboard/enrolled-courses")
+                      : handleBuyCourse
+                  }
+                >
+                  {user && course?.studentsEnrolled?.includes(user?._id || user?.id)
+                    ? "Go To Course"
+                    : "Buy Now"}
+                </button>
+
+                {/* ADD TO CART */}
+                {(!user || !course?.studentsEnrolled?.includes(user?._id || user?.id)) && (
+                  <button
+                    onClick={handleAddToCart}
+                    className="w-full rounded-xl border border-yellow-400/30 bg-transparent py-3 font-medium text-yellow-300 transition-all duration-300 hover:bg-yellow-400/10 hover:scale-[1.02]"
+                  >
+                    Add to Cart
+                  </button>
+                )}
+              </>
             )}
           </div>
 

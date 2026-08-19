@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
@@ -5,6 +6,7 @@ import { updateProfile } from "../../../../services/operations/SettingsAPI"
 import IconBtn from "../../../Common/iconbtn"
 
 const genders = ["Male", "Female", "Non-Binary", "Prefer not to say", "Other"]
+const LOCATIONIQ_KEY = "pk.21e378c598051d070ba51bb36833ddbb"
 
 export default function EditProfile() {
   const { user } = useSelector((state) => state.profile)
@@ -12,15 +14,89 @@ export default function EditProfile() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
+  const [addressInput, setAddressInput] = useState(user?.additionalDetails?.address || "")
+  const [suggestions, setSuggestions] = useState([])
+  const [coordinates, setCoordinates] = useState(
+    user?.additionalDetails?.latitude && user?.additionalDetails?.longitude
+      ? { lat: user.additionalDetails.latitude, lon: user.additionalDetails.longitude }
+      : null
+  )
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm()
 
+  const handleAddressChange = async (val) => {
+    setAddressInput(val)
+    if (val.trim().length > 2) {
+      try {
+        const res = await fetch(
+          `https://api.locationiq.com/v1/autocomplete.php?key=${LOCATIONIQ_KEY}&q=${encodeURIComponent(val)}&limit=5&format=json`
+        )
+        const data = await res.json()
+        if (Array.isArray(data)) {
+          setSuggestions(data)
+        }
+      } catch (err) {
+        console.log("LocationIQ auto-suggest error", err)
+      }
+    } else {
+      setSuggestions([])
+    }
+  }
+
+  const [locating, setLocating] = useState(false)
+
+  const handleUseCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser.")
+      return
+    }
+    setLocating(true)
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const lat = position.coords.latitude
+        const lon = position.coords.longitude
+        setCoordinates({ lat, lon })
+
+        try {
+          const res = await fetch(
+            `https://us1.locationiq.com/v1/reverse.php?key=${LOCATIONIQ_KEY}&lat=${lat}&lon=${lon}&format=json`
+          )
+          const data = await res.json()
+          if (data && data.display_name) {
+            setAddressInput(data.display_name)
+          }
+        } catch (err) {
+          console.log("Reverse geocoding error", err)
+        }
+        setLocating(false)
+      },
+      (error) => {
+        console.log("Geolocation error", error)
+        alert("Could not detect your current location.")
+        setLocating(false)
+      }
+    )
+  }
+
+  const selectSuggestion = (item) => {
+    setAddressInput(item.display_name)
+    setCoordinates({ lat: item.lat, lon: item.lon })
+    setSuggestions([])
+  }
+
   const submitProfileForm = async (data) => {
     try {
-      dispatch(updateProfile(token, data))
+      const payload = {
+        ...data,
+        address: addressInput,
+        latitude: coordinates?.lat,
+        longitude: coordinates?.lon,
+      }
+      dispatch(updateProfile(token, payload))
     } catch (error) {
       console.log("ERROR MESSAGE - ", error.message)
     }
@@ -120,6 +196,68 @@ export default function EditProfile() {
               defaultValue={user?.additionalDetails?.about}
             />
           </div>
+        </div>
+
+        {/* Address & LocationIQ Auto-Suggestion */}
+        <div className="flex flex-col gap-3 mt-6 relative">
+          <label className="text-sm text-richblack-300 font-medium flex items-center gap-2">
+            📍 Address (Auto-suggest powered by LocationIQ)
+          </label>
+          <div className="relative flex items-center">
+            <input
+              type="text"
+              value={addressInput}
+              onChange={(e) => handleAddressChange(e.target.value)}
+              placeholder="Start typing your street address or city..."
+              className="w-full rounded-lg border border-richblack-600 bg-richblack-800 px-4 py-3 pr-40 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm"
+            />
+            <button
+              type="button"
+              onClick={handleUseCurrentLocation}
+              disabled={locating}
+              className="absolute right-2 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-md transition-all flex items-center gap-1 shadow-sm active:scale-95 disabled:opacity-50"
+            >
+              {locating ? (
+                <>
+                  <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Locating...
+                </>
+              ) : (
+                <>
+                  🎯 Current Location
+                </>
+              )}
+            </button>
+            {suggestions.length > 0 && (
+              <div className="absolute top-full left-0 z-50 w-full mt-1 bg-richblack-800 border border-richblack-600 rounded-xl shadow-2xl overflow-hidden max-h-60 overflow-y-auto">
+                {suggestions.map((s, idx) => (
+                  <div
+                    key={idx}
+                    onClick={() => selectSuggestion(s)}
+                    className="p-3 text-xs text-slate-200 hover:bg-indigo-600 hover:text-white cursor-pointer border-b border-richblack-700 last:border-0 transition-colors"
+                  >
+                    📍 {s.display_name}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Interactive Map Preview */}
+          {coordinates && (
+            <div className="mt-4 rounded-2xl overflow-hidden border border-richblack-600 h-64 relative shadow-inner">
+              <iframe
+                title="Location Map"
+                width="100%"
+                height="100%"
+                frameBorder="0"
+                scrolling="no"
+                marginHeight="0"
+                marginWidth="0"
+                src={`https://maps.google.com/maps?q=${coordinates.lat},${coordinates.lon}&z=15&output=embed`}
+              />
+            </div>
+          )}
         </div>
       </div>
 

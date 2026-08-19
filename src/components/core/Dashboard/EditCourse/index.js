@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import RenderSteps from '../AddCourse/RenderSteps';
-import { getFullDetailsOfCourse } from '../../../../services/operations/courseDetailsAPI';
-import { setEditCourse } from '../../../../services/slices/courseSlice';
-import { setCourse } from '../../../../services/slices/courseSlice';
+import { getFullDetailsOfCourse, fetchCourseDetails } from '../../../../services/operations/courseDetailsAPI';
+import { setEditCourse, setCourse, setStep } from '../../../../services/slices/courseSlice';
 
 export default function EditCourse(){
 
@@ -17,15 +16,25 @@ export default function EditCourse(){
     useEffect(() => {
       ;(async () => {
         setLoading(true)
-        const result = await getFullDetailsOfCourse(courseId, token)
-        if (result?.courseDetails) {
+        let result = await getFullDetailsOfCourse(courseId, token)
+        let details = result?.courseDetails || result?.data?.courseDetails || result?.data || result
+        if (!details || typeof details !== 'object' || (!details._id && !details.id && !details.courseName)) {
+          const publicRes = await fetchCourseDetails(courseId)
+          details = publicRes?.data?.courseDetails || publicRes?.data?.data || publicRes?.data || publicRes
+        }
+
+        const validCourse = details?.courseDetails || details
+        if (validCourse && (validCourse._id || validCourse.id || validCourse.courseName)) {
           dispatch(setEditCourse(true))
-          dispatch(setCourse(result?.courseDetails))
+          dispatch(setCourse(validCourse))
+          dispatch(setStep(1))
+        } else {
+          dispatch(setCourse(null))
         }
         setLoading(false)
       })()
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [courseId])
   
     if (loading) {
       return (

@@ -15,15 +15,30 @@ export default function EnrolledCourses() {
   const getEnrolledCourses = async () => {
     try {
       const res = await getUserEnrolledCourses(token);
-      setEnrolledCourses(res);
+      if (res && Array.isArray(res)) {
+        const normalized = res.map(item => item.course ? item.course : item);
+        setEnrolledCourses(normalized);
+      } else {
+        setEnrolledCourses([]);
+      }
     } catch (error) {
       console.log("Could not fetch enrolled courses.")
     }
   };
 
   useEffect(() => {
-    getEnrolledCourses();
-  }, [])
+    const query = new URLSearchParams(window.location.search);
+    const sessionId = query.get("session_id");
+    if (sessionId && token) {
+      (async () => {
+        const { verifyPayment } = await import("../../../services/operations/studentFeaturesAPI");
+        await verifyPayment(sessionId, [], token, navigate, null);
+        getEnrolledCourses();
+      })();
+    } else if (token) {
+      getEnrolledCourses();
+    }
+  }, [token])
 
   return (
     <div className="p-8">

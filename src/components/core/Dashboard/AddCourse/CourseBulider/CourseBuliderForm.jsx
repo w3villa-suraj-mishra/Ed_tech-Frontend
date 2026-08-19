@@ -25,20 +25,21 @@ const CourseBuilderForm = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     let result;
+    const cId = course?._id || course?.id;
 
     if (editSectionName) {
       result = await updateSection(
         {
           sectionName: data.sectionName,
           sectionId: editSectionName,
-          courseId: course._id,
+          courseId: cId,
         }, token
       )
     }
     else {
       result = await createSection({
         sectionName: data.sectionName,
-        courseId: course._id,
+        courseId: cId,
       }, token)
     }
 

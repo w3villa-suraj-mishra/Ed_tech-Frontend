@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Common/Footer.jsx";
 import Home from "./pages/Home";
@@ -17,7 +17,13 @@ import Cart from "./components/core/Dashboard/Cart";
 import EnrolledCourses from "./components/core/Dashboard/EnrolledCourses";
 import Settings from "./components/core/Dashboard/Settings/Index";
 import AddCourse from "./components/core/Dashboard/AddCourse";
+import EditCourse from "./components/core/Dashboard/EditCourse";
 import MyCourses from "./components/core/Dashboard/MyCourses";
+import GlobalDashboard from "./components/core/Dashboard/GlobalDashboard";
+import Articles from "./components/core/Dashboard/Articles";
+import GuidedPath from "./components/core/Dashboard/GuidedPath";
+import HelpSupport from "./components/core/Dashboard/HelpSupport";
+import CoursesPage from "./components/core/Dashboard/CoursesPage";
 import VerifyOtp from "./pages/VerifyOtp.jsx";
 import OAuthSuccess from "./pages/OAuthSuccess.jsx";
 import CourseDetails from "./pages/CourseDetails.jsx";
@@ -29,47 +35,102 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserDetails } from "./services/operations/profileAPI";
 import { useNavigate } from "react-router-dom";
 
+// Admin pages
+import AdminIndex        from "./pages/admin/AdminIndex";
+import AdminLogin        from "./pages/admin/AdminLogin";
+import AdminSetup        from "./pages/admin/AdminSetup";
+import AdminDashboard    from "./pages/admin/AdminDashboard";
+import AdminUsers        from "./pages/admin/AdminUsers";
+import AdminCourses      from "./pages/admin/AdminCourses";
+import AdminCategories   from "./pages/admin/AdminCategories";
+import AdminEnrollments  from "./pages/admin/AdminEnrollments";
+import AdminReviews      from "./pages/admin/AdminReviews";
+import AdminLiveSessions from "./pages/admin/AdminLiveSessions";
+import AdminContacts     from "./pages/admin/AdminContacts";
+import { BASE_URL } from "./services/apis";
+
+const OAuthCallbackForwarder = () => {
+  useEffect(() => {
+    window.location.href = `${BASE_URL}/auth/google_oauth2/callback${window.location.search}`;
+  }, []);
+  return (
+    <div className="min-h-[calc(100vh-3.5rem)] flex items-center justify-center text-white">
+      <p className="text-xl">Completing login, please wait...</p>
+    </div>
+  );
+};
 
 function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { token } = useSelector((state) => state.auth);
+  const isAdminRoute = location.pathname.startsWith("/admin");
 
   useEffect(() => {
-    if (token) {
+    if (token && !isAdminRoute) {
       dispatch(getUserDetails(token, navigate));
     }
-  }, []);
+  }, [token, isAdminRoute, dispatch, navigate]);
+
+  // Admin routes render WITHOUT the public Navbar/Footer
+  if (isAdminRoute) {
+    return (
+      <>
+        <Toaster position="top-right" toastOptions={{ max: 1 }} />
+        <Routes>
+          <Route path="/admin"              element={<AdminIndex />} />
+          <Route path="/admin/login"        element={<AdminLogin />} />
+          <Route path="/admin/signup"       element={<AdminSetup />} />
+          <Route path="/admin/dashboard"    element={<AdminDashboard />} />
+          <Route path="/admin/users"        element={<AdminUsers />} />
+          <Route path="/admin/courses"      element={<AdminCourses />} />
+          <Route path="/admin/categories"   element={<AdminCategories />} />
+          <Route path="/admin/enrollments"  element={<AdminEnrollments />} />
+          <Route path="/admin/reviews"      element={<AdminReviews />} />
+          <Route path="/admin/live-sessions" element={<AdminLiveSessions />} />
+          <Route path="/admin/contacts"     element={<AdminContacts />} />
+        </Routes>
+      </>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-richblack-900">
       <ScrollToTop />
-      <Toaster position="top-right" />
+      <Toaster position="top-right" toastOptions={{ max: 1 }} />
       <Navbar />
       <div className="main-content bg-richblack-900" style={{ flex: 1 }}>
-        
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/catalog" element={<Catalog />} />
-          <Route path="/catalog/:categoryId" element={<Catalog />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/student-dashboard" element={<StudentDashboard />} />
+          <Route path="/"                     element={<Home />} />
+          <Route path="/catalog"              element={<Catalog />} />
+          <Route path="/catalog/:categoryId"  element={<Catalog />} />
+          <Route path="/about"                element={<About />} />
+          <Route path="/contact"              element={<Contact />} />
+          <Route path="/login"                element={<LoginForm />} />
+          <Route path="/signup"               element={<Signup />} />
+          <Route path="/student-dashboard"    element={<StudentDashboard />} />
           <Route path="/instructor-dashboard" element={<InstructorDashboard />} />
-          <Route path="/dashboard" element={<Dashboard />}>
-            <Route path="my-profile" element={<MyProfile />} />
-            <Route path="cart" element={<Cart />} />
-            <Route path="enrolled-courses" element={<EnrolledCourses />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="add-course" element={<AddCourse />} />
-            <Route path="my-courses" element={<MyCourses />} />
-            <Route path="instructor" element={<InstructorDashboard />} />
+          <Route path="/dashboard"            element={<Dashboard />}>
+            <Route index                      element={<GlobalDashboard />} />
+            <Route path="global"              element={<GlobalDashboard />} />
+            <Route path="my-profile"          element={<MyProfile />} />
+            <Route path="cart"                element={<Cart />} />
+            <Route path="enrolled-courses"    element={<CoursesPage defaultTab="your-courses" />} />
+            <Route path="buy-courses"         element={<CoursesPage defaultTab="buy-courses" />} />
+            <Route path="settings"            element={<Settings />} />
+            <Route path="add-course"          element={<AddCourse />} />
+            <Route path="edit-course/:courseId" element={<EditCourse />} />
+            <Route path="my-courses"          element={<MyCourses />} />
+            <Route path="instructor"          element={<InstructorDashboard />} />
+            <Route path="articles"            element={<Articles />} />
+            <Route path="guided-path"         element={<GuidedPath />} />
+            <Route path="help"                element={<HelpSupport />} />
           </Route>
-          <Route path="/verify-otp" element={<VerifyOtp/>} />
-          <Route path="/oauth-success" element={<OAuthSuccess />} />
-          <Route path="/courses/:courseId" element={<CourseDetails />} />
+          <Route path="/verify-otp"           element={<VerifyOtp />} />
+          <Route path="/oauth-success"        element={<OAuthSuccess />} />
+          <Route path="/auth/google_oauth2/callback" element={<OAuthCallbackForwarder />} />
+          <Route path="/courses/:courseId"    element={<CourseDetails />} />
           <Route path="/view-course/:courseId" element={<ViewCourse />}>
             <Route
               path="section/:sectionId/sub-section/:subSectionId"

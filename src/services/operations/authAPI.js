@@ -100,15 +100,30 @@ export function login(email, password, navigate) {
         throw new Error(response.data.message)
       }
 
+      const rawUser = response.data?.user || {}
+      const account_type = rawUser.accountType || rawUser.account_type || "Student"
+      const first_name = rawUser.firstName || rawUser.first_name || ""
+      const last_name = rawUser.lastName || rawUser.last_name || ""
+      const userImage = rawUser.image
+        ? rawUser.image
+        : `https://api.dicebear.com/5.x/initials/svg?seed=${first_name} ${last_name}`
+      
+      const fullUser = {
+        ...rawUser,
+        account_type,
+        accountType: account_type,
+        first_name,
+        last_name,
+        image: userImage
+      }
+
       toast.success("Login Successful")
       dispatch(setToken(response.data.token))
-      const userImage = response.data?.user?.image
-        ? response.data.user.image
-        : `https://api.dicebear.com/5.x/initials/svg?seed=${response.data.user.first_name} ${response.data.user.last_name}`
-      dispatch(setUser({ ...response.data.user, image: userImage }))
+      dispatch(setUser(fullUser))
       localStorage.setItem("token", response.data.token)
-      localStorage.setItem("user", JSON.stringify(response.data.user))
-      navigate("/dashboard/my-profile")
+      localStorage.setItem("user", JSON.stringify(fullUser))
+
+      navigate("/dashboard/global")
     } catch (error) {
       console.log("LOGIN API ERROR............", error)
       toast.error("Login Failed")

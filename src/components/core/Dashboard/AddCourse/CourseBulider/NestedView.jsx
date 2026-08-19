@@ -26,25 +26,31 @@ const NestedView = ({ handleChangeEditSectionName }) => {
   });
 
   const handleDeleteSection = async (sectionId) => {
-    const result = await deleteSection({ sectionId, courseId: course._id }, token);
+    const cId = course?._id || course?.id;
+    const result = await deleteSection({ sectionId, courseId: cId }, token);
     if (result) dispatch(setCourse(result));
     setConfirmationModal(null);
   }
 
   const handleDeleteSubSection = async (subSectionId, sectionId) => {
-    const result = await deleteSubSection({ subSectionId, sectionId, token });
+    const result = await deleteSubSection({ subSectionId, sectionId }, token);
     if (result) {
       dispatch(setCourse(result));
     }
     setConfirmationModal(null);
   }
 
+  const sectionsList = course?.courseContent || course?.sections || [];
+
   return (
     <div className='space-y-5'>
 
-      {course?.courseContent?.map((section) => (
+      {sectionsList?.map((section) => {
+        const sId = section._id || section.id;
+        const subList = section.subSection || section.subSections || [];
+        return (
         <details
-          key={section._id}
+          key={sId}
           open
           className='group rounded-2xl bg-gradient-to-br from-[#0f172a] to-[#020617] p-[1px] shadow-lg'
         >
@@ -60,7 +66,7 @@ const NestedView = ({ handleChangeEditSectionName }) => {
             <div className='flex items-center gap-4'>
 
               <button
-                onClick={() => handleChangeEditSectionName(section._id, section.sectionName)}
+                onClick={() => handleChangeEditSectionName(sId, section.sectionName)}
                 className='text-yellow-400 hover:scale-110 transition'
               >
                 <MdEdit />
@@ -72,7 +78,7 @@ const NestedView = ({ handleChangeEditSectionName }) => {
                   text2: "All lectures will be deleted",
                   btn1Text: "Delete",
                   btn2Text: "Cancel",
-                  btn1Handler: () => handleDeleteSection(section._id),
+                  btn1Handler: () => handleDeleteSection(sId),
                   btn2Handler: () => setConfirmationModal(null),
                 })}
                 className='text-pink-400 hover:scale-110 transition'
@@ -87,9 +93,11 @@ const NestedView = ({ handleChangeEditSectionName }) => {
           {/* SUBSECTIONS */}
           <div className='bg-richblack-900 px-6 py-4 space-y-3'>
 
-            {section?.subSection?.map((data) => (
+            {subList?.map((data) => {
+              const subId = data._id || data.id;
+              return (
               <div
-                key={data._id}
+                key={subId}
                 onClick={() => setViewSubSection(data)}
                 className='group flex items-center justify-between rounded-xl px-4 py-3 hover:bg-white/5 cursor-pointer transition'
               >
@@ -104,7 +112,7 @@ const NestedView = ({ handleChangeEditSectionName }) => {
                   className='flex items-center gap-3 opacity-70 group-hover:opacity-100'
                 >
                   <button
-                    onClick={() => setEditSubSection({ ...data, sectionId: section._id })}
+                    onClick={() => setEditSubSection({ ...data, sectionId: sId })}
                     className='text-yellow-400 hover:scale-110 transition'
                   >
                     <MdEdit />
@@ -116,7 +124,7 @@ const NestedView = ({ handleChangeEditSectionName }) => {
                       text2: "This lecture will be deleted",
                       btn1Text: "Delete",
                       btn2Text: "Cancel",
-                      btn1Handler: () => handleDeleteSubSection(data._id, section._id),
+                      btn1Handler: () => handleDeleteSubSection(subId, sId),
                       btn2Handler: () => setConfirmationModal(null),
                     })}
                     className='text-pink-400 hover:scale-110 transition'
@@ -125,11 +133,11 @@ const NestedView = ({ handleChangeEditSectionName }) => {
                   </button>
                 </div>
               </div>
-            ))}
+            )})}
 
             {/* ADD LECTURE */}
             <button
-              onClick={() => setAddSubSection(section._id)}
+              onClick={() => setAddSubSection(sId)}
               className='flex items-center gap-2 text-yellow-400 hover:text-yellow-300 transition mt-3'
             >
               <AiOutlinePlus />
@@ -137,7 +145,7 @@ const NestedView = ({ handleChangeEditSectionName }) => {
             </button>
           </div>
         </details>
-      ))}
+      )})}
 
       {/* MODALS */}
       {addSubSection ? (

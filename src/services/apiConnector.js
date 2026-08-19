@@ -6,7 +6,9 @@ export const axiosInstance = axios.create({});
 axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response && error.response.status === 401) {
+        // Do not redirect to login for unauthenticated public requests like contact form
+        const isPublicRoute = error.config?.url?.includes('/reach/contact') || error.config?.url?.includes('/login');
+        if (error.response && error.response.status === 401 && !isPublicRoute) {
             console.log("Session expired or user deleted. Redirecting to login...");
             localStorage.clear();
             window.location.href = "/login";

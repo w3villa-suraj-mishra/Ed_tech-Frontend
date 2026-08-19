@@ -6,7 +6,7 @@ import { getInstructorData } from '../services/operations/profileAPI';
 import { fetchInstructorCourses } from '../services/operations/courseDetailsAPI';
 
 const InstructorDashboard = () => {
-  const { user } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.profile);
   const { token } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);

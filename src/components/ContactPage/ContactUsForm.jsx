@@ -29,13 +29,14 @@ const ContactUsForm = () => {
     if(res?.data?.success){
       toast.success("Message sent successfully 🎉")
     } else {
-      toast.error("Failed to send message ❌")
+      toast.error(res?.data?.message || "Failed to send message ❌")
     }
 
     setLoading(false)
   } catch (error) {
-    console.log("ERROR MESSAGE - ", error.message)
-    toast.error("Something went wrong ❌")
+    console.log("ERROR MESSAGE - ", error)
+    const errMsg = error.response?.data?.message || error.message || "Something went wrong ❌"
+    toast.error(errMsg)
     setLoading(false)
   }
 }
@@ -124,7 +125,7 @@ const ContactUsForm = () => {
           {/* Country Code */}
           <select
             className="w-[90px] rounded-lg bg-richblack-800 border border-richblack-600 px-2 py-3 text-richblack-5 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            {...register("countrycode", { required: true })}
+            {...register("countrycode")}
           >
             {CountryCode.map((ele, i) => (
               <option key={i} value={ele.code}>

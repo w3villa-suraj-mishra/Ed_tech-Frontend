@@ -18,8 +18,16 @@ export default function ChipInput({
   const [chips, setChips] = useState([])
 
   useEffect(() => {
-    if (editCourse) {
-      setChips(course?.tag)
+    if (editCourse && course?.tag) {
+      let parsed = course.tag
+      if (typeof parsed === 'string') {
+        try {
+          parsed = JSON.parse(parsed)
+        } catch {
+          parsed = parsed.split(',').map(s => s.trim()).filter(Boolean)
+        }
+      }
+      setChips(Array.isArray(parsed) ? parsed : [String(parsed)])
     }
     register(name, { required: true, validate: (value) => value.length > 0 })
   }, [])

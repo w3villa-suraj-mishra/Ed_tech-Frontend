@@ -1,17 +1,49 @@
 import { ACCOUNT_TYPE } from "../utils/constants";
 export const sidebarLinks = [
   {
-    id: 1,
-    name: "My Profile",
-    path: "/dashboard/my-profile",
-    icon: "VscAccount",
+    id: 0,
+    name: "Dashboard",
+    path: "/dashboard/global",
+    icon: "VscDashboard",
+  },
+  {
+    id: 5,
+    name: "Your Courses",
+    path: "/dashboard/enrolled-courses",
+    type: ACCOUNT_TYPE.STUDENT,
+    icon: "VscMortarBoard",
+  },
+  {
+    id: 13,
+    name: "Buy Courses",
+    path: "/dashboard/buy-courses",
+    type: ACCOUNT_TYPE.STUDENT,
+    icon: "VscBook",
+  },
+  {
+    id: 10,
+    name: "Articles",
+    path: "/dashboard/articles",
+    icon: "VscBook",
+  },
+  {
+    id: 11,
+    name: "Guided Path",
+    path: "/dashboard/guided-path",
+    icon: "VscCompass",
+  },
+  {
+    id: 12,
+    name: "Help & Support",
+    path: "/dashboard/help",
+    icon: "VscQuestion",
   },
   {
     id: 2,
-    name: "Dashboard",
+    name: "Instructor Stats",
     path: "/dashboard/instructor",
     type: ACCOUNT_TYPE.INSTRUCTOR,
-    icon: "VscDashboard",
+    icon: "VscGraph",
   },
   {
     id: 3,
@@ -26,13 +58,6 @@ export const sidebarLinks = [
     path: "/dashboard/add-course",
     type: ACCOUNT_TYPE.INSTRUCTOR,
     icon: "VscAdd",
-  },
-  {
-    id: 5,
-    name: "Enrolled Courses",
-    path: "/dashboard/enrolled-courses",
-    type: ACCOUNT_TYPE.STUDENT,
-    icon: "VscMortarBoard",
   },
   {
     id: 6,

@@ -10,6 +10,7 @@ import { BsPlayCircle, BsClock, BsBook } from 'react-icons/bs';
 import { FiCheckCircle } from 'react-icons/fi';
 import { HiOutlineTag } from 'react-icons/hi';
 import toast from 'react-hot-toast';
+import { buyCourse } from '../services/operations/studentFeaturesAPI';
 
 const { COURSE_DETAILS_API } = courseEndpoints;
 
@@ -61,7 +62,7 @@ const CourseDetails = () => {
       });
       return;
     }
-    toast.success('Redirecting to payment... (Demo)');
+    buyCourse(token, [courseId], user, navigate, dispatch);
   };
 
   const getTotalLectures = () => {

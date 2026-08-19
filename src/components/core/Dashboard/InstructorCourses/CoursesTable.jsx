@@ -96,9 +96,11 @@ export default function CoursesTable({ courses, setCourses }) {
             No courses found
           </div>
         ) : (
-          courses.map((course) => (
+          courses.map((course) => {
+            const courseId = course._id || course.id;
+            return (
             <div
-              key={course._id}
+              key={courseId}
               className="group flex flex-col bg-richblack-800 border border-richblack-700 rounded-2xl overflow-hidden hover:border-yellow-400/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,214,10,0.1)]"
             >
               {/* CARD IMAGE */}
@@ -112,7 +114,7 @@ export default function CoursesTable({ courses, setCourses }) {
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
                   <button
                     disabled={loading}
-                    onClick={() => navigate(`/courses/${course._id}`)}
+                    onClick={() => navigate(`/courses/${courseId}`)}
                     className="p-3 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-yellow-400 hover:text-richblack-900 transition-all duration-200"
                     title="Preview"
                   >
@@ -125,12 +127,12 @@ export default function CoursesTable({ courses, setCourses }) {
                   <input
                     type="checkbox"
                     className="w-5 h-5 cursor-pointer accent-yellow-400 border-none rounded focus:ring-0"
-                    checked={selectedCourses.includes(course._id)}
+                    checked={selectedCourses.includes(courseId)}
                     onChange={() => {
-                      if (selectedCourses.includes(course._id)) {
-                        setSelectedCourses(selectedCourses.filter((id) => id !== course._id));
+                      if (selectedCourses.includes(courseId)) {
+                        setSelectedCourses(selectedCourses.filter((id) => id !== courseId));
                       } else {
-                        setSelectedCourses([...selectedCourses, course._id]);
+                        setSelectedCourses([...selectedCourses, courseId]);
                       }
                     }}
                   />
@@ -153,57 +155,84 @@ export default function CoursesTable({ courses, setCourses }) {
               </div>
 
               {/* CARD CONTENT */}
-              <div className="p-6 flex flex-col flex-1 gap-4">
+              <div className="p-5 flex flex-col flex-1 gap-3.5 bg-[#121826]">
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-richblack-5 mb-2 group-hover:text-yellow-400 transition-colors line-clamp-1">
+                  <h3 className="text-lg font-bold text-white mb-1.5 group-hover:text-yellow-400 transition-colors line-clamp-2 leading-snug">
                     {course.courseName}
                   </h3>
-                  <p className="text-sm text-richblack-300 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-richblack-300 line-clamp-2 leading-relaxed mb-3">
                     {course.courseDescription || "No description provided"}
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-richblack-700">
-                  <div className="flex flex-col">
-                    <span className="text-[10px] uppercase tracking-wider text-richblack-400 font-bold">Duration</span>
-                    <span className="text-sm text-richblack-5 font-semibold">{course.totalDuration || "0m"}</span>
+                {/* DURATION & SECTIONS META */}
+                <div className="flex items-center gap-4 text-xs text-richblack-300">
+                  <div className="flex items-center gap-1.5">
+                    <HiClock size={15} className="text-richblack-400" />
+                    <span>{course.totalDuration || "0.0 Hours"}</span>
                   </div>
-                  <div className="flex flex-col items-end">
-                    <span className="text-[10px] uppercase tracking-wider text-richblack-400 font-bold">Price</span>
-                    <span className="text-lg text-yellow-400 font-black">₹{course.price}</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-3.5 h-3.5 rounded border border-richblack-400 flex items-center justify-center text-[9px] font-bold">≡</span>
+                    <span>{course.sections?.length || course.courseContent?.length || 0} Sections</span>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-end gap-3 pt-2">
+                {/* PROGRESS BAR */}
+                <div className="flex flex-col gap-1.5 pt-1">
+                  <div className="w-full bg-richblack-700 h-1.5 rounded-full overflow-hidden">
+                    <div className="bg-yellow-400 h-full w-0" />
+                  </div>
+                  <span className="text-[11px] text-richblack-400 font-medium">0% Complete</span>
+                </div>
+
+                {/* LIFETIME ACCESS & RATING */}
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-xs text-richblack-300 font-medium">Lifetime access</span>
+                  <div className="flex items-center gap-1 text-xs text-richblack-400">
+                    <span className="text-yellow-500">★ ★ ★ ★ ★</span>
+                    <span className="ml-1 text-richblack-300 font-semibold">0 (0)</span>
+                  </div>
+                </div>
+
+                {/* ACTION BUTTONS (ANALYTICS, EDIT, DELETE) */}
+                <div className="flex flex-col gap-2 pt-2">
                   <button
-                    disabled={loading}
-                    onClick={() => navigate(`/dashboard/edit-course/${course._id}`)}
-                    className="p-2.5 rounded-xl bg-richblack-700 text-white hover:bg-caribbeangreen-600 transition-all duration-300 active:scale-95"
-                    title="Edit Course"
+                    onClick={() => navigate(`/dashboard/edit-course/${courseId}`)}
+                    className="w-full py-2.5 rounded-xl border border-richblack-600 bg-richblack-800 text-sm font-semibold text-richblack-200 hover:border-yellow-400 hover:text-yellow-400 transition-all duration-300 flex items-center justify-center gap-2"
                   >
-                    <FiEdit2 size={18} />
+                    <span>📊</span> Analytics
                   </button>
-                  <button
-                    disabled={loading}
-                    onClick={() =>
-                      setConfirmationModal({
-                        text1: "Delete Course?",
-                        text2: "This action cannot be undone.",
-                        btn1Text: "Delete",
-                        btn2Text: "Cancel",
-                        btn1Handler: () => handleCourseDelete(course._id),
-                        btn2Handler: () => setConfirmationModal(null),
-                      })
-                    }
-                    className="p-2.5 rounded-xl bg-richblack-700 text-richblack-200 hover:bg-red-600 hover:text-white transition-all duration-300 active:scale-95"
-                    title="Delete"
-                  >
-                    <RiDeleteBin6Line size={18} />
-                  </button>
+
+                  <div className="flex gap-2">
+                    <button
+                      disabled={loading}
+                      onClick={() => navigate(`/dashboard/edit-course/${courseId}`)}
+                      className="flex-1 py-2.5 rounded-xl bg-yellow-400 text-black font-bold text-sm hover:bg-yellow-300 transition-all duration-300 flex items-center justify-center gap-1.5 active:scale-95 shadow-md"
+                    >
+                      <FiEdit2 size={16} /> Edit
+                    </button>
+                    <button
+                      disabled={loading}
+                      onClick={() =>
+                        setConfirmationModal({
+                          text1: "Delete Course?",
+                          text2: "This action cannot be undone.",
+                          btn1Text: "Delete",
+                          btn2Text: "Cancel",
+                          btn1Handler: () => handleCourseDelete(courseId),
+                          btn2Handler: () => setConfirmationModal(null),
+                        })
+                      }
+                      className="px-4 py-2.5 rounded-xl bg-richblack-700 text-pink-300 hover:bg-red-600 hover:text-white transition-all duration-300 flex items-center justify-center active:scale-95 border border-richblack-600"
+                      title="Delete"
+                    >
+                      <RiDeleteBin6Line size={16} />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          ))
+          )})
         )}
       </div>
 

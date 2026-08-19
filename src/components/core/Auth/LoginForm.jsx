@@ -43,31 +43,40 @@ function LoginForm() {
       const response = await axios.post(endpoints.LOGIN_API, {
         email,
         password,
+        accountType: accountType,
         account_type: accountType
       })
 
-      const userImage = response.data?.user?.image
-        ? response.data.user.image
-        : `https://api.dicebear.com/9.x/initials/svg?seed=${response.data.user.first_name}${response.data.user.last_name}`
+      const userObj = response.data.user;
+      const account_type = userObj.accountType || userObj.account_type || "Student";
+      const first_name = userObj.firstName || userObj.first_name || "";
+      const last_name = userObj.lastName || userObj.last_name || "";
 
-      const userData = { ...response.data.user, image: userImage }
+      const userImage = userObj?.image
+        ? userObj.image
+        : `https://api.dicebear.com/9.x/initials/svg?seed=${first_name}${last_name}`;
 
-      localStorage.setItem("token", response.data.token)
-      localStorage.setItem("user", JSON.stringify(userData))
+      const userData = { 
+        ...userObj, 
+        account_type, 
+        accountType: account_type,
+        first_name, 
+        last_name,
+        image: userImage 
+      };
 
-      dispatch(setToken(response.data.token))
-      dispatch(setUser(userData))
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(userData));
 
-      toast.success("Login Successful")
+      dispatch(setToken(response.data.token));
+      dispatch(setUser(userData));
 
-      const role = response.data.user.account_type
+      toast.success("Login Successful");
 
-      if (role === "Student") {
-        navigate("/dashboard/my-profile")
-      } else if (role === "Instructor") {
-        navigate("/dashboard/instructor")
+      if (account_type === "Instructor") {
+        navigate("/dashboard/instructor");
       } else {
-        navigate("/")
+        navigate("/dashboard/my-profile");
       }
 
     } catch (error) {
