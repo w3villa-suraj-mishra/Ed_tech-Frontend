@@ -409,3 +409,28 @@ export const updateLectureDuration = async (data, token) => {
   }
   return result
 }
+
+export const updateCoursePricingDetails = async (courseId, pricingData, token) => {
+  const toastId = toast.loading("Updating pricing...")
+  let result = null
+  try {
+    const response = await apiConnector(
+      "PATCH",
+      `${courseEndpoints.UPDATE_COURSE_PRICING_API}/${courseId}/pricing`,
+      pricingData,
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    )
+    if (!response?.data?.success) {
+      throw new Error(response?.data?.message || "Could not update pricing")
+    }
+    toast.success("Course pricing updated successfully")
+    result = response?.data?.data
+  } catch (error) {
+    console.log("UPDATE_COURSE_PRICING_API ERROR...", error)
+    toast.error(error.response?.data?.message || error.message)
+  }
+  toast.dismiss(toastId)
+  return result
+}

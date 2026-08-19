@@ -41,7 +41,25 @@ const Course_Card = ({course, Height}) => {
                 {course?.ratingAndReviews?.length} Ratings
               </span>
             </div>
-            <p className="text-xl text-richblack-5">Rs. {course?.price}</p>
+            <div className="flex items-center gap-3">
+              {course?.pricing?.isOfferActive || (course?.originalPrice && Number(course?.originalPrice) > Number(course?.price)) ? (
+                <>
+                  <span className="text-sm text-richblack-400 line-through">
+                    Rs. {course?.pricing?.originalPrice || course?.originalPrice}
+                  </span>
+                  <span className="text-xl font-bold text-yellow-50">
+                    Rs. {course?.pricing?.finalPrice || course?.price}
+                  </span>
+                  {course?.pricing?.discountPercentage > 0 && (
+                    <span className="text-xs bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded">
+                      {course?.pricing?.discountPercentage}% OFF
+                    </span>
+                  )}
+                </>
+              ) : (
+                <p className="text-xl font-bold text-richblack-5">Rs. {course?.price}</p>
+              )}
+            </div>
           </div>
         </div>
       </Link>

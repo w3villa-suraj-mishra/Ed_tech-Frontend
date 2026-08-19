@@ -53,6 +53,7 @@ export const getCourses      = (p)       => api.get('/courses', { params: p });
 export const getCourse       = (id)      => api.get(`/courses/${id}`);
 export const updateCourse    = (id, fd)  => api.put(`/courses/${id}`, fd);
 export const updateCourseStatus = (id, s) => api.put(`/courses/${id}/status`, { status: s });
+export const updateCoursePricing = (id, d) => api.patch(`/courses/${id}/pricing`, d);
 export const deleteCourse    = (id)      => api.delete(`/courses/${id}`);
 
 // ── Enrollments ───────────────────────────────────────

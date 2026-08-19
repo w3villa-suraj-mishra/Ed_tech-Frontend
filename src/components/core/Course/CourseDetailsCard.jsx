@@ -63,8 +63,26 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
         <div className="px-4">
 
           {/* PRICE */}
-          <div className="pb-4 text-3xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
-            ₹ {CurrentPrice}
+          <div className="pb-4 flex items-baseline gap-3">
+            {course?.pricing?.isOfferActive || (course?.originalPrice && Number(course?.originalPrice) > Number(CurrentPrice)) ? (
+              <>
+                <span className="text-xl text-richblack-400 line-through">
+                  ₹ {course?.pricing?.originalPrice || course?.originalPrice}
+                </span>
+                <span className="text-3xl font-bold text-yellow-50">
+                  ₹ {course?.pricing?.finalPrice || CurrentPrice}
+                </span>
+                {course?.pricing?.discountPercentage > 0 && (
+                  <span className="text-xs bg-emerald-500/20 text-emerald-400 font-bold px-2.5 py-1 rounded-full">
+                    {course?.pricing?.discountPercentage}% OFF
+                  </span>
+                )}
+              </>
+            ) : (
+              <span className="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
+                ₹ {CurrentPrice}
+              </span>
+            )}
           </div>
 
           {/* PLANS SELECTION */}
@@ -111,8 +129,12 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
                     </div>
                     <span className="text-xs text-richblack-300 block">Full course access</span>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-blue-400">₹{Math.round(CurrentPrice * 0.7)}</span>
-                      <span className="text-[11px] text-richblack-400 line-through">₹{CurrentPrice}</span>
+                      <span className="text-xs font-bold text-blue-400">
+                        ₹{Math.round((course?.pricing?.finalPrice || CurrentPrice) * 0.7)}
+                      </span>
+                      <span className="text-[11px] text-richblack-400 line-through">
+                        ₹{course?.pricing?.finalPrice || CurrentPrice}
+                      </span>
                     </div>
                   </div>
                   <button
@@ -131,7 +153,7 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
                       <span className="text-[10px] bg-yellow-500/20 text-yellow-400 px-1.5 py-0.5 rounded">Lifetime</span>
                     </div>
                     <span className="text-xs text-richblack-300 block">Unlimited access</span>
-                    <span className="text-xs font-bold text-yellow-400">₹{CurrentPrice} (100%)</span>
+                    <span className="text-xs font-bold text-yellow-400">₹{course?.pricing?.finalPrice || CurrentPrice} (100%)</span>
                   </div>
                   <button
                     onClick={() => handleBuyCourse('gold')}

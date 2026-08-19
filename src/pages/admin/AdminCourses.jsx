@@ -4,7 +4,7 @@ import AdminModal from '../../components/admin/AdminModal';
 import DeleteConfirm from '../../components/admin/DeleteConfirm';
 import { AdminProtectedRoute, StatusBadge, Pagination, AdminInput, AdminSelect, AdminTextarea, TableSkeleton, EmptyState } from '../../components/admin/AdminUI';
 import {
-  getCourses, getCourse, updateCourse, updateCourseStatus, deleteCourse, getCategories,
+  getCourses, getCourse, updateCourse, updateCourseStatus, updateCoursePricing, deleteCourse, getCategories,
   createSection, updateSection, deleteSection,
   createSubSection, updateSubSection, deleteSubSection
 } from '../../services/admin/adminAPI';
@@ -81,7 +81,20 @@ function CoursesInner() {
   };
 
   const openEdit = (c) => {
-    setForm({ courseName: c.courseName, courseDescription: c.courseDescription, price: c.price, tag: c.tag, status: c.status, categoryId: c.categoryId, whatYouWillLearn: c.whatYouWillLearn, instructions: c.instructions });
+    setForm({
+      courseName: c.courseName,
+      courseDescription: c.courseDescription,
+      price: c.originalPrice || c.price,
+      discountType: c.discountType || 'none',
+      discountValue: c.discountValue || 0,
+      offerStartAt: c.offerStartAt ? new Date(c.offerStartAt).toISOString().split('T')[0] : '',
+      offerEndAt: c.offerEndAt ? new Date(c.offerEndAt).toISOString().split('T')[0] : '',
+      tag: c.tag,
+      status: c.status,
+      categoryId: c.categoryId,
+      whatYouWillLearn: c.whatYouWillLearn,
+      instructions: c.instructions
+    });
     setThumbnail(null);
     setEditModal(c);
   };
@@ -92,10 +105,17 @@ function CoursesInner() {
     setSaving(true);
     try {
       const fd = new FormData();
-      Object.entries(form).forEach(([k, v]) => { if (v !== undefined && v !== null) fd.append(k, v); });
+      Object.entries(form).forEach(([k, v]) => { if (v !== undefined && v !== null && !['discountType', 'discountValue', 'offerStartAt', 'offerEndAt'].includes(k)) fd.append(k, v); });
       if (thumbnail) fd.append('thumbnailImage', thumbnail);
       await updateCourse(editModal.id, fd);
-      toast.success('Course updated');
+      await updateCoursePricing(editModal.id, {
+        price: form.price,
+        discountType: form.discountType,
+        discountValue: form.discountValue,
+        offerStartAt: form.offerStartAt || null,
+        offerEndAt: form.offerEndAt || null
+      });
+      toast.success('Course & pricing updated');
       setEditModal(null);
       load();
     } catch (err) {
@@ -276,6 +296,26 @@ function CoursesInner() {
             <AdminInput label="Price (₹)" type="number" value={form.price ?? ''} onChange={setF('price')} />
             <AdminInput label="Tag" value={form.tag || ''} onChange={setF('tag')} />
           </div>
+          <div className="grid grid-cols-2 gap-3 p-3 bg-[#000814] rounded-xl border border-[#2C333F]">
+            <div>
+              <AdminSelect label="Discount Type" value={form.discountType || 'none'} onChange={setF('discountType')}>
+                <option value="none">No Discount</option>
+                <option value="percentage">Percentage (%)</option>
+                <option value="fixed">Fixed Amount (₹)</option>
+              </AdminSelect>
+            </div>
+            {form.discountType !== 'none' && (
+              <div>
+                <AdminInput label={`Discount Value (${form.discountType === 'percentage' ? '%' : '₹'})`} type="number" value={form.discountValue ?? 0} onChange={setF('discountValue')} />
+              </div>
+            )}
+          </div>
+          {form.discountType !== 'none' && (
+            <div className="grid grid-cols-2 gap-3 p-3 bg-[#000814] rounded-xl border border-[#2C333F]">
+              <AdminInput label="Offer Start Date" type="date" value={form.offerStartAt || ''} onChange={setF('offerStartAt')} onClick={(e) => e.target.showPicker && e.target.showPicker()} />
+              <AdminInput label="Offer End Date" type="date" value={form.offerEndAt || ''} onChange={setF('offerEndAt')} onClick={(e) => e.target.showPicker && e.target.showPicker()} />
+            </div>
+          )}
           <div className="grid grid-cols-2 gap-3">
             <AdminSelect label="Status" value={form.status || 'Draft'} onChange={setF('status')}>
               <option value="Draft">Draft</option>

@@ -56,9 +56,22 @@ export default function RenderCartCourses() {
               <RiDeleteBin6Line />
               <span>Remove</span>
             </button>
-            <p className="mb-6 text-3xl font-medium text-yellow-100">
-              ₹ {course?.price}
-            </p>
+            <div className="text-right">
+              {course?.pricing?.isOfferActive || (course?.originalPrice && Number(course?.originalPrice) > Number(course?.price)) ? (
+                <div>
+                  <span className="text-sm text-richblack-400 line-through block">
+                    ₹ {course?.pricing?.originalPrice || course?.originalPrice}
+                  </span>
+                  <span className="text-3xl font-medium text-yellow-100">
+                    ₹ {course?.pricing?.finalPrice || course?.price}
+                  </span>
+                </div>
+              ) : (
+                <p className="mb-6 text-3xl font-medium text-yellow-100">
+                  ₹ {course?.price}
+                </p>
+              )}
+            </div>
           </div>
         </div>
       ))}

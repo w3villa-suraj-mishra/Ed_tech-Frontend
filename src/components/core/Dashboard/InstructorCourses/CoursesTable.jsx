@@ -185,9 +185,27 @@ export default function CoursesTable({ courses, setCourses }) {
                   <span className="text-[11px] text-richblack-400 font-medium">0% Complete</span>
                 </div>
 
-                {/* LIFETIME ACCESS & RATING */}
+                {/* LIFETIME ACCESS & PRICE DISPLAY */}
                 <div className="flex flex-col gap-1.5">
-                  <span className="text-xs text-richblack-300 font-medium">Lifetime access</span>
+                  <div className="flex items-baseline gap-2">
+                    {course?.pricing?.isOfferActive || (course?.originalPrice && Number(course?.originalPrice) > Number(course?.price)) ? (
+                      <>
+                        <span className="text-xs text-richblack-400 line-through">
+                          ₹{course?.pricing?.originalPrice || course?.originalPrice}
+                        </span>
+                        <span className="text-base font-bold text-yellow-400">
+                          ₹{course?.pricing?.finalPrice || course?.price}
+                        </span>
+                        {course?.pricing?.discountPercentage > 0 && (
+                          <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-1.5 py-0.5 rounded">
+                            {course?.pricing?.discountPercentage}% OFF
+                          </span>
+                        )}
+                      </>
+                    ) : (
+                      <span className="text-base font-bold text-yellow-400">₹{course?.price || 0}</span>
+                    )}
+                  </div>
                   <div className="flex items-center gap-1 text-xs text-richblack-400">
                     <span className="text-yellow-500">★ ★ ★ ★ ★</span>
                     <span className="ml-1 text-richblack-300 font-semibold">0 (0)</span>
