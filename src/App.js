@@ -98,13 +98,15 @@ function App() {
     );
   }
 
+  const isPlayerRoute = location.pathname.startsWith("/s/courses");
+
   return (
-    <div className="min-h-screen bg-richblack-900">
+    <div className={`min-h-screen bg-richblack-900 ${isPlayerRoute ? "h-screen overflow-hidden flex flex-col" : ""}`}>
       <ScrollToTop />
       <Toaster position="top-right" toastOptions={{ max: 1 }} />
       {!location.pathname.startsWith("/t/u/activeCourses") &&
-       !location.pathname.startsWith("/s/courses") && <Navbar />}
-      <div className="main-content bg-richblack-900" style={{ flex: 1 }}>
+       !isPlayerRoute && <Navbar />}
+      <div className="main-content bg-richblack-900" style={{ flex: 1, minHeight: 0 }}>
         <Routes>
           <Route path="/"                     element={<Home />} />
           <Route path="/catalog"              element={<Catalog />} />
@@ -149,7 +151,7 @@ function App() {
         </Routes>
       </div>
       {!location.pathname.startsWith("/t/u/activeCourses") &&
-       !location.pathname.startsWith("/s/courses") && <Footer />}
+       !isPlayerRoute && <Footer />}
     </div>
   );
 }
