@@ -64,7 +64,16 @@ export const notificationEndpoints = {
   MARK_ALL_READ_API: BASE_URL + "/notifications/read-all",
   DELETE_NOTIFICATION_API: BASE_URL + "/notifications",
   PREFERENCES_API: BASE_URL + "/notifications/preferences",
-  ADMIN_CREATE_NOTIFICATION_API: BASE_URL + "/admin/create-notification"
+  ADMIN_CREATE_NOTIFICATION_API: BASE_URL + "/admin/create-notification",
+}
+
+// ARTICLE ENDPOINTS
+export const articleEndpoints = {
+  GET_ALL_ARTICLES_API: BASE_URL + "/articles",
+  GET_ADMIN_ARTICLES_API: BASE_URL + "/admin/articles",
+  CREATE_ARTICLE_API: BASE_URL + "/admin/articles",
+  UPDATE_ARTICLE_API: BASE_URL + "/admin/articles",
+  DELETE_ARTICLE_API: BASE_URL + "/admin/articles",
 }
 
 // RATINGS AND REVIEWS

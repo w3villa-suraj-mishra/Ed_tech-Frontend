@@ -129,10 +129,34 @@ export function EmptyState({ message = 'No records found.', action }) {
 }
 
 export function AdminProtectedRoute({ children }) {
-  const token = localStorage.getItem('adminToken');
-  if (!token) {
+  const adminToken = localStorage.getItem('adminToken') || localStorage.getItem('token');
+  const user = JSON.parse(localStorage.getItem('adminUser') || localStorage.getItem('user') || '{}');
+
+  if (!adminToken) {
     window.location.href = '/admin/login';
     return null;
   }
+  
+  if (user?.accountType !== 'Admin' && user?.accountType !== 'Superadmin') {
+    return (
+      <div className="min-h-screen bg-[#090D16] text-white flex flex-col items-center justify-center p-6 text-center">
+        <div className="w-16 h-16 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center text-3xl font-bold mb-4">✕</div>
+        <h2 className="text-xl font-bold mb-2">Admin Access Required</h2>
+        <p className="text-sm text-slate-400 max-w-md mb-6">
+          You are currently logged in as a <strong>{user?.accountType || 'Student/Instructor'}</strong>. Please log in with an Admin account to manage articles.
+        </p>
+        <button
+          onClick={() => {
+            localStorage.removeItem('adminToken');
+            window.location.href = '/admin/login';
+          }}
+          className="px-5 py-2.5 bg-[#FFD60A] text-[#000814] rounded-xl font-bold text-xs"
+        >
+          Go to Admin Login
+        </button>
+      </div>
+    );
+  }
+
   return children;
 }

@@ -9,6 +9,7 @@ const NAV = [
   { label: 'Categories',    path: '/admin/categories',     icon: '-',  superOnly: false },
   { label: 'Enrollments',   path: '/admin/enrollments',    icon: '-', superOnly: false },
   { label: 'Reviews',       path: '/admin/reviews',        icon: '-', superOnly: false },
+  { label: 'Articles',      path: '/admin/articles',       icon: '-', superOnly: false },
   // { label: 'Live Sessions', path: '/admin/live-sessions',  icon: '🎥', superOnly: false },
   { label: 'Contact Us',    path: '/admin/contacts',       icon: '-', superOnly: false },
 ];

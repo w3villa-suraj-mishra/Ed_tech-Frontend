@@ -51,6 +51,7 @@ import AdminEnrollments  from "./pages/admin/AdminEnrollments";
 import AdminReviews      from "./pages/admin/AdminReviews";
 import AdminLiveSessions from "./pages/admin/AdminLiveSessions";
 import AdminContacts     from "./pages/admin/AdminContacts";
+import AdminArticles     from "./pages/admin/AdminArticles";
 import { BASE_URL } from "./services/apis";
 
 const OAuthCallbackForwarder = () => {
@@ -92,6 +93,7 @@ function App() {
           <Route path="/admin/categories"   element={<AdminCategories />} />
           <Route path="/admin/enrollments"  element={<AdminEnrollments />} />
           <Route path="/admin/reviews"      element={<AdminReviews />} />
+          <Route path="/admin/articles"     element={<AdminArticles />} />
           <Route path="/admin/live-sessions" element={<AdminLiveSessions />} />
           <Route path="/admin/contacts"     element={<AdminContacts />} />
         </Routes>
