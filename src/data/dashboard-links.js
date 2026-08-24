@@ -21,18 +21,6 @@ export const sidebarLinks = [
     icon: "VscBook",
   },
   {
-    id: 10,
-    name: "Articles",
-    path: "/dashboard/articles",
-    icon: "VscBook",
-  },
-  {
-    id: 11,
-    name: "Guided Path",
-    path: "/dashboard/guided-path",
-    icon: "VscCompass",
-  },
-  {
     id: 14,
     name: "Notifications",
     path: "/dashboard/notifications",
