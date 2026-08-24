@@ -71,19 +71,57 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
     fetchData();
   }, [token]);
 
-  // Derived Dynamic Dashboard Statistics
+  // Derived Dynamic Dashboard Statistics (Real-time calculation)
   const totalEnrolled = enrolledCourses.length;
-  const totalCompletedLessons = enrolledCourses.reduce((acc, course) => {
-    return acc + (course.completedVideos?.length || 0);
-  }, 0);
+
+  let totalCompletedLessons = 0;
+  let totalCompletedSeconds = 0;
+
+  enrolledCourses.forEach((course) => {
+    const totalLecturesCount = course.courseContent?.reduce((acc, sec) => acc + (sec.subSection?.length || 0), 0) || course.totalLectures || course.totalLessons || 20;
+    const progressPct = course.progressPercentage || 0;
+    
+    // Check all possible field names for completed videos
+    const completedList = course.completedVideos || course.completedVideosCount || [];
+    const completedNum = Array.isArray(completedList) 
+      ? completedList.length 
+      : typeof completedList === 'number' 
+        ? completedList 
+        : Math.round((progressPct / 100) * totalLecturesCount);
+
+    totalCompletedLessons += completedNum;
+
+    // Accumulate actual watched duration in seconds if course subSections are present
+    let courseWatchedSeconds = 0;
+    if (course.courseContent && Array.isArray(course.courseContent) && Array.isArray(completedList) && completedList.length > 0) {
+      course.courseContent.forEach((sec) => {
+        if (sec.subSection && Array.isArray(sec.subSection)) {
+          sec.subSection.forEach((sub) => {
+            const subId = sub._id || sub.id;
+            if (completedList.includes(subId)) {
+              courseWatchedSeconds += (sub.durationSeconds || 900);
+            }
+          });
+        }
+      });
+    }
+
+    if (courseWatchedSeconds > 0) {
+      totalCompletedSeconds += courseWatchedSeconds;
+    } else {
+      // Fallback: Estimate based on completedNum * 25 minutes (1500 seconds)
+      totalCompletedSeconds += completedNum * 1500;
+    }
+  });
+
   const completedCoursesList = enrolledCourses.filter(
     (c) => (c.progressPercentage || 0) === 100
   );
   const inProgressCoursesList = enrolledCourses.filter(
     (c) => (c.progressPercentage || 0) < 100
   );
-  const certificatesEarned = completedCoursesList.length;
-  const totalHoursLearned = (totalCompletedLessons * 0.25).toFixed(1);
+
+  const totalHoursLearned = (totalCompletedSeconds / 3600).toFixed(1);
   const activeStreakDays = totalEnrolled > 0 ? Math.min(totalEnrolled * 3 + totalCompletedLessons, 30) : 0;
 
   // Filter Courses based on active tab and search query
@@ -296,7 +334,10 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
               >
                 {/* Course Thumbnail & Details Left Column */}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 min-w-0 flex-1">
-                  <div className="relative aspect-video w-full sm:w-44 rounded-xl overflow-hidden bg-purple-900/30 border border-purple-500/20 shrink-0">
+                  <div 
+                    onClick={() => navigate(`/courses/${courseId}`)}
+                    className="relative aspect-video w-full sm:w-44 rounded-xl overflow-hidden bg-purple-900/30 border border-purple-500/20 shrink-0 cursor-pointer group-hover:border-purple-500/60"
+                  >
                     <img
                       src={course.thumbnail}
                       alt={course.courseName}
@@ -333,7 +374,10 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
                       )}
                     </div>
 
-                    <h3 className="font-bold text-base text-white truncate max-w-full">
+                    <h3 
+                      onClick={() => navigate(`/courses/${courseId}`)}
+                      className="font-bold text-base text-white hover:text-purple-400 cursor-pointer transition-colors truncate max-w-full"
+                    >
                       {course.courseName}
                     </h3>
 

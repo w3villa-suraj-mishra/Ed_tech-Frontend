@@ -30,7 +30,8 @@ const CourseDetails = () => {
     const fetchCourseDetails = async () => {
       setLoading(true);
       try {
-        const response = await apiConnector('GET', `${COURSE_DETAILS_API}?courseId=${courseId}`);
+        const headers = token ? { Authorization: `Bearer ${token}` } : null;
+        const response = await apiConnector('GET', `${COURSE_DETAILS_API}?courseId=${courseId}`, null, headers);
         if (response?.data?.success) {
           setCourse(response.data.data);
         } else {
@@ -42,7 +43,7 @@ const CourseDetails = () => {
       setLoading(false);
     };
     if (courseId) fetchCourseDetails();
-  }, [courseId]);
+  }, [courseId, token]);
 
   const handleActive = (id) => {
     setIsActive(prev =>
