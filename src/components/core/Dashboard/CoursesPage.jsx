@@ -18,6 +18,7 @@ import { AiOutlineTrophy } from "react-icons/ai";
 
 const CoursesPage = ({ defaultTab = "your-courses" }) => {
   const { token } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.profile);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -275,7 +276,18 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
             const progressPct = course.progressPercentage || 0;
             const totalLecturesCount = course.courseContent?.reduce((acc, sec) => acc + (sec.subSection?.length || 0), 0) || course.totalLessons || 20;
             const completedCount = course.completedVideos?.length || Math.round((progressPct / 100) * totalLecturesCount);
-            const isEnrolled = enrolledCourses.some((c) => (c._id || c.id) === courseId);
+            
+            // Resolve course-specific user enrollment & plan
+            const enrollmentRecord = course.userEnrollment || enrolledCourses.find((c) => String(c._id || c.id) === String(courseId));
+            const isSilverExpired = enrollmentRecord?.plan === 'silver' && enrollmentRecord?.expiresAt && new Date(enrollmentRecord.expiresAt) <= new Date();
+            const currentPlan = isSilverExpired ? 'expired' : (enrollmentRecord?.plan || (course.studentsEnrolled?.includes(token ? user?._id || user?.id : null) ? 'gold' : 'free'));
+            const isEnrolled = currentPlan === 'silver' || currentPlan === 'gold' || currentPlan === 'free';
+            const formattedExpiryDate = enrollmentRecord?.expiresAt ? new Date(enrollmentRecord.expiresAt).toLocaleDateString('en-GB') : null;
+
+            const handlePlanBuy = (planType) => {
+              const { buyCourse } = require("../../../services/operations/studentFeaturesAPI");
+              buyCourse(token, [courseId], user, navigate, dispatch, planType);
+            };
 
             return (
               <div
@@ -294,9 +306,32 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
                   </div>
 
                   <div className="space-y-2 min-w-0 flex-1">
-                    <span className="inline-block text-[10px] font-extrabold uppercase bg-purple-900/40 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-md">
-                      {progressPct === 100 ? "COMPLETED" : "IN PROGRESS"}
-                    </span>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {/* DYNAMIC REAL USER ACCESS PLAN BADGE */}
+                      <span className={`inline-block text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-md border ${
+                        currentPlan === 'gold' ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-[0_0_8px_rgba(245,158,11,0.2)]' :
+                        currentPlan === 'silver' ? 'bg-blue-500/20 text-blue-300 border-blue-500/40 shadow-[0_0_8px_rgba(59,130,246,0.2)]' :
+                        currentPlan === 'expired' ? 'bg-red-500/20 text-red-400 border-red-500/40' :
+                        'bg-purple-900/40 text-purple-300 border-purple-500/30'
+                      }`}>
+                        {currentPlan === 'gold' ? 'GOLD • ACTIVE' :
+                         currentPlan === 'silver' ? 'SILVER • ACTIVE' :
+                         currentPlan === 'expired' ? 'SILVER • EXPIRED' :
+                         'FREE'}
+                      </span>
+
+                      {/* VALIDITY / EXPIRY DATE TEXT */}
+                      {currentPlan === 'silver' && formattedExpiryDate && (
+                        <span className="text-[10px] text-blue-300 font-semibold bg-blue-950/60 px-2 py-0.5 rounded border border-blue-500/20">
+                          Valid Until: {formattedExpiryDate}
+                        </span>
+                      )}
+                      {currentPlan === 'gold' && (
+                        <span className="text-[10px] text-amber-300 font-semibold bg-amber-950/60 px-2 py-0.5 rounded border border-amber-500/20">
+                          Lifetime Access
+                        </span>
+                      )}
+                    </div>
 
                     <h3 className="font-bold text-base text-white truncate max-w-full">
                       {course.courseName}
@@ -337,28 +372,69 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2 w-full sm:w-auto">
-                    {isEnrolled ? (
+                  <div className="flex items-center gap-2 w-full sm:w-auto flex-wrap sm:flex-nowrap">
+                    {/* DYNAMIC ACTION BUTTONS PER REQUIREMENT */}
+                    {currentPlan === 'gold' ? (
                       <button
                         onClick={() => navigate(`/s/courses/${courseId}/take`)}
-                        className="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-purple-600/20 text-purple-300 border border-purple-500/30 text-xs font-bold hover:bg-purple-600 hover:text-white transition-all flex items-center justify-center gap-2 shadow-[0_0_12px_rgba(168,85,247,0.2)]"
+                        className="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 to-yellow-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold hover:bg-amber-500 hover:text-black transition-all flex items-center justify-center gap-1.5"
                       >
                         <span>Continue Learning</span>
                         <VscPlay className="text-[10px]" />
                       </button>
+                    ) : currentPlan === 'silver' ? (
+                      <div className="flex items-center gap-2 flex-1 sm:flex-none">
+                        <button
+                          onClick={() => navigate(`/s/courses/${courseId}/take`)}
+                          className="px-3.5 py-2 rounded-xl bg-purple-600/20 text-purple-300 border border-purple-500/30 text-xs font-bold hover:bg-purple-600 hover:text-white transition-all flex items-center gap-1.5"
+                        >
+                          <span>Continue Learning</span>
+                          <VscPlay className="text-[10px]" />
+                        </button>
+                        <button
+                          onClick={() => handlePlanBuy('gold')}
+                          className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-black font-extrabold text-xs shadow-md transition"
+                        >
+                          Upgrade to Gold
+                        </button>
+                      </div>
+                    ) : currentPlan === 'expired' ? (
+                      <div className="flex items-center gap-2 flex-1 sm:flex-none">
+                        <button
+                          onClick={() => handlePlanBuy('silver')}
+                          className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white font-bold text-xs shadow-md transition"
+                        >
+                          Renew Silver
+                        </button>
+                        <button
+                          onClick={() => handlePlanBuy('gold')}
+                          className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-black font-extrabold text-xs shadow-md transition"
+                        >
+                          Upgrade to Gold
+                        </button>
+                      </div>
                     ) : (
-                      <button
-                        onClick={() => {
-                          if (token) {
-                            dispatch(addToCart(course));
-                          } else {
-                            navigate('/login');
-                          }
-                        }}
-                        className="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-purple-600 text-white text-xs font-bold hover:bg-purple-700 transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(168,85,247,0.4)]"
-                      >
-                        <span>Add to Cart</span>
-                      </button>
+                      /* FREE PLAN */
+                      <div className="flex items-center gap-2 flex-1 sm:flex-none flex-wrap">
+                        <button
+                          onClick={() => navigate(`/s/courses/${courseId}/take`)}
+                          className="px-3 py-2 rounded-xl bg-richblack-800 text-white border border-richblack-700 text-xs font-semibold hover:bg-richblack-700 transition-all"
+                        >
+                          Continue Free
+                        </button>
+                        <button
+                          onClick={() => handlePlanBuy('silver')}
+                          className="px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all"
+                        >
+                          Upgrade to Silver
+                        </button>
+                        <button
+                          onClick={() => handlePlanBuy('gold')}
+                          className="px-3 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 text-black font-extrabold text-xs hover:from-amber-300 hover:to-yellow-400 transition-all"
+                        >
+                          Upgrade to Gold
+                        </button>
+                      </div>
                     )}
 
                     {/* Three Dots Options Menu */}
@@ -371,27 +447,92 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
                       </button>
 
                       {openMenuId === courseId && (
-                        <div className="absolute right-0 bottom-full mb-2 w-44 bg-[#0e111f] border border-purple-500/30 rounded-xl p-1.5 shadow-2xl z-20 space-y-1">
-                          <button
-                            onClick={() => {
-                              setOpenMenuId(null);
-                              navigate(`/courses/${courseId}`);
-                            }}
-                            className="w-full text-left px-3 py-1.5 text-xs text-richblack-200 hover:text-white hover:bg-purple-600/20 rounded-lg font-medium"
-                          >
-                            View Details
-                          </button>
-                          {isEnrolled && (
+                        <div className="absolute right-0 bottom-full mb-2 w-52 bg-[#0e111f] border border-purple-500/30 rounded-xl p-2 shadow-2xl z-20 space-y-1 text-xs">
+                          {/* CURRENT PLAN DISPLAY HEADER IN MENU */}
+                          <div className="px-2 py-1 border-b border-white/10 text-[11px] font-bold text-richblack-300">
+                            Current Plan: <span className="text-purple-400 uppercase">{currentPlan === 'expired' ? 'SILVER EXPIRED' : currentPlan.toUpperCase()}</span>
+                            {currentPlan === 'silver' && formattedExpiryDate && (
+                              <div className="text-[10px] text-richblack-400 font-normal">Valid Until: {formattedExpiryDate}</div>
+                            )}
+                            {currentPlan === 'gold' && (
+                              <div className="text-[10px] text-amber-400 font-normal">Lifetime Access</div>
+                            )}
+                          </div>
+
+                          {/* PLAN SPECIFIC MENU OPTIONS */}
+                          {currentPlan === 'free' && (
+                            <>
+                              <button
+                                onClick={() => { setOpenMenuId(null); handlePlanBuy('silver'); }}
+                                className="w-full text-left px-2.5 py-1.5 text-blue-300 hover:bg-blue-900/30 rounded-lg font-medium"
+                              >
+                                Upgrade to Silver
+                              </button>
+                              <button
+                                onClick={() => { setOpenMenuId(null); handlePlanBuy('gold'); }}
+                                className="w-full text-left px-2.5 py-1.5 text-amber-300 hover:bg-amber-900/30 rounded-lg font-medium"
+                              >
+                                Upgrade to Gold
+                              </button>
+                            </>
+                          )}
+
+                          {currentPlan === 'silver' && (
+                            <>
+                              <button
+                                disabled
+                                className="w-full text-left px-2.5 py-1.5 text-blue-400/60 bg-blue-950/20 rounded-lg font-semibold cursor-default"
+                              >
+                                Silver ✓ Current Plan
+                              </button>
+                              <button
+                                onClick={() => { setOpenMenuId(null); handlePlanBuy('gold'); }}
+                                className="w-full text-left px-2.5 py-1.5 text-amber-300 hover:bg-amber-900/30 rounded-lg font-medium"
+                              >
+                                Upgrade to Gold
+                              </button>
+                            </>
+                          )}
+
+                          {currentPlan === 'gold' && (
+                            <>
+                              <button
+                                disabled
+                                className="w-full text-left px-2.5 py-1.5 text-amber-400/60 bg-amber-950/20 rounded-lg font-semibold cursor-default"
+                              >
+                                Gold ✓ Current Plan
+                              </button>
+                              <button
+                                disabled
+                                className="w-full text-left px-2.5 py-1.5 text-richblack-600 rounded-lg text-[11px] cursor-not-allowed"
+                              >
+                                Silver (Already Included)
+                              </button>
+                            </>
+                          )}
+
+                          <div className="border-t border-white/10 pt-1">
                             <button
                               onClick={() => {
                                 setOpenMenuId(null);
-                                navigate(`/s/courses/${courseId}/certificate`);
+                                navigate(`/courses/${courseId}`);
                               }}
-                              className="w-full text-left px-3 py-1.5 text-xs text-purple-300 hover:bg-purple-600/20 rounded-lg font-medium"
+                              className="w-full text-left px-2.5 py-1.5 text-richblack-200 hover:text-white hover:bg-purple-600/20 rounded-lg font-medium"
                             >
-                              View Certificate
+                              View Details
                             </button>
-                          )}
+                            {isEnrolled && (
+                              <button
+                                onClick={() => {
+                                  setOpenMenuId(null);
+                                  navigate(`/s/courses/${courseId}/certificate`);
+                                }}
+                                className="w-full text-left px-2.5 py-1.5 text-purple-300 hover:bg-purple-600/20 rounded-lg font-medium"
+                              >
+                                View Certificate
+                              </button>
+                            )}
+                          </div>
                         </div>
                       )}
                     </div>

@@ -20,6 +20,11 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
     _id: courseId,
   } = course
 
+  const enrollment = course?.userEnrollment || (user?.enrollments?.find(e => String(e.courseId || e.course?.id) === String(courseId || course?.id)));
+  const isSilverExpired = enrollment?.plan === 'silver' && enrollment?.expiresAt && new Date(enrollment.expiresAt) <= new Date();
+  const userPlan = isSilverExpired ? 'expired' : (enrollment?.plan || (course?.studentsEnrolled?.includes(user?._id || user?.id) ? 'gold' : null));
+  const formattedExpiry = enrollment?.expiresAt ? new Date(enrollment.expiresAt).toLocaleDateString('en-GB') : null;
+
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href)
       .then(() => toast.success("Link copied to clipboard"))
@@ -111,31 +116,62 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
               </button>
             ) : (
               <div className="space-y-3">
-                <p className="text-xs font-semibold text-richblack-300 uppercase tracking-wider">Select Access Plan</p>
+                {/* CURRENT PLAN BADGE HEADER */}
+                <div className="flex items-center justify-between border-b border-richblack-700 pb-2">
+                  <span className="text-xs font-bold text-richblack-300 uppercase tracking-wider">Select Access Plan</span>
+                  <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded ${
+                    userPlan === 'gold' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' :
+                    userPlan === 'silver' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' :
+                    userPlan === 'expired' ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
+                    'bg-richblack-700 text-richblack-300'
+                  }`}>
+                    Current Plan: {userPlan ? userPlan.toUpperCase() : 'FREE'}
+                  </span>
+                </div>
                 
-                {/* FREE PLAN */}
-                <div className="p-3 rounded-xl border border-richblack-700 bg-richblack-900/60 flex items-center justify-between">
+                {/* FREE PLAN CARD */}
+                <div className={`p-3 rounded-xl border flex items-center justify-between transition-all ${
+                  userPlan === 'free' ? 'border-emerald-500/50 bg-emerald-950/20' : 'border-richblack-700 bg-richblack-900/60'
+                }`}>
                   <div>
-                    <span className="font-bold text-white text-sm block">FREE</span>
+                    <span className="font-bold text-white text-sm block flex items-center gap-1.5">
+                      FREE
+                      {userPlan === 'free' && <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-1.5 py-0.2 rounded">✓ CURRENT</span>}
+                    </span>
                     <span className="text-xs text-richblack-300">First 2 videos only</span>
                   </div>
                   <button
                     onClick={() => handleBuyCourse('free')}
-                    className="px-3 py-1.5 rounded-lg bg-richblack-700 hover:bg-richblack-600 text-white font-medium text-xs transition"
+                    disabled={userPlan === 'gold' || userPlan === 'silver'}
+                    className={`px-3 py-1.5 rounded-lg font-medium text-xs transition ${
+                      userPlan === 'free' ? 'bg-emerald-600 text-white cursor-default' :
+                      (userPlan === 'gold' || userPlan === 'silver') ? 'bg-richblack-800 text-richblack-500 cursor-not-allowed border border-richblack-700' :
+                      'bg-richblack-700 hover:bg-richblack-600 text-white'
+                    }`}
                   >
-                    Continue Free
+                    {userPlan === 'free' ? 'Continue Free' : (userPlan === 'gold' || userPlan === 'silver') ? 'Included' : 'Continue Free'}
                   </button>
                 </div>
 
-                {/* SILVER PLAN */}
-                <div className="p-3 rounded-xl border border-blue-500/40 bg-blue-950/20 flex items-center justify-between">
+                {/* SILVER PLAN CARD */}
+                <div className={`p-3 rounded-xl border flex items-center justify-between transition-all ${
+                  userPlan === 'silver' ? 'border-blue-500 bg-blue-950/40 shadow-[0_0_15px_rgba(59,130,246,0.15)]' : 'border-blue-500/30 bg-blue-950/20'
+                }`}>
                   <div>
                     <div className="flex items-center gap-1.5">
                       <span className="font-bold text-blue-300 text-sm">SILVER</span>
                       <span className="text-[10px] bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded">1 Year</span>
-                      <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">30% OFF</span>
+                      {userPlan !== 'silver' && userPlan !== 'gold' && (
+                        <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">30% OFF</span>
+                      )}
                     </div>
-                    <span className="text-xs text-richblack-300 block">Full course access</span>
+                    <span className="text-xs text-richblack-300 block">
+                      {userPlan === 'silver' ? (
+                        <span className="text-blue-300 font-medium">Valid Until: {formattedExpiry || '1 Year Access'}</span>
+                      ) : (
+                        'Full course access'
+                      )}
+                    </span>
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-bold text-blue-400">
                         ₹{Math.round((course?.pricing?.finalPrice || CurrentPrice) * 0.7)}
@@ -145,39 +181,90 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
                       </span>
                     </div>
                   </div>
-                  <button
-                    onClick={() => handleBuyCourse('silver')}
-                    className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white font-semibold text-xs shadow-md transition"
-                  >
-                    Buy Silver
-                  </button>
+
+                  {userPlan === 'silver' ? (
+                    <button
+                      disabled
+                      className="px-3 py-1.5 rounded-lg bg-blue-900/40 border border-blue-500/40 text-blue-300 font-bold text-xs cursor-default flex items-center gap-1"
+                    >
+                      ✓ Current Plan
+                    </button>
+                  ) : userPlan === 'gold' ? (
+                    <button
+                      disabled
+                      className="px-3 py-1.5 rounded-lg bg-richblack-800 border border-richblack-700 text-richblack-500 font-semibold text-xs cursor-not-allowed"
+                    >
+                      Included
+                    </button>
+                  ) : userPlan === 'expired' ? (
+                    <button
+                      onClick={() => handleBuyCourse('silver')}
+                      className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white font-semibold text-xs shadow-md transition"
+                    >
+                      Renew Silver
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleBuyCourse('silver')}
+                      className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white font-semibold text-xs shadow-md transition"
+                    >
+                      Buy Silver
+                    </button>
+                  )}
                 </div>
 
-                {/* GOLD PLAN */}
-                <div className="p-3 rounded-xl border border-yellow-500/40 bg-yellow-950/20 flex items-center justify-between">
+                {/* GOLD PLAN CARD */}
+                <div className={`p-3 rounded-xl border flex items-center justify-between transition-all ${
+                  userPlan === 'gold' ? 'border-amber-500 bg-amber-950/40 shadow-[0_0_15px_rgba(245,158,11,0.2)]' : 'border-yellow-500/40 bg-yellow-950/20'
+                }`}>
                   <div>
                     <div className="flex items-center gap-1.5">
                       <span className="font-bold text-yellow-400 text-sm">GOLD</span>
                       <span className="text-[10px] bg-yellow-500/20 text-yellow-400 px-1.5 py-0.5 rounded">Lifetime</span>
                     </div>
-                    <span className="text-xs text-richblack-300 block">Unlimited access</span>
-                    <span className="text-xs font-bold text-yellow-400">₹{course?.pricing?.finalPrice || CurrentPrice} (100%)</span>
+                    <span className="text-xs text-richblack-300 block">
+                      {userPlan === 'gold' ? (
+                        <span className="text-amber-300 font-medium">Lifetime Access</span>
+                      ) : (
+                        'Unlimited access'
+                      )}
+                    </span>
+                    <span className="text-xs font-bold text-yellow-400">₹{course?.pricing?.finalPrice || CurrentPrice}</span>
                   </div>
-                  <button
-                    onClick={() => handleBuyCourse('gold')}
-                    className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-black font-semibold text-xs shadow-md transition"
-                  >
-                    Buy Gold
-                  </button>
+
+                  {userPlan === 'gold' ? (
+                    <button
+                      disabled
+                      className="px-3 py-1.5 rounded-lg bg-amber-950/50 border border-amber-500/50 text-amber-300 font-bold text-xs cursor-default flex items-center gap-1"
+                    >
+                      ✓ Current Plan
+                    </button>
+                  ) : userPlan === 'silver' ? (
+                    <button
+                      onClick={() => handleBuyCourse('gold')}
+                      className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-black font-extrabold text-xs shadow-md transition animate-pulse"
+                    >
+                      Upgrade to Gold
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleBuyCourse('gold')}
+                      className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-black font-semibold text-xs shadow-md transition"
+                    >
+                      Buy Gold
+                    </button>
+                  )}
                 </div>
 
-                {/* ADD TO CART */}
-                <button
-                  onClick={handleAddToCart}
-                  className="w-full mt-2 rounded-xl border border-yellow-400/30 bg-transparent py-2.5 font-medium text-yellow-300 text-xs transition-all hover:bg-yellow-400/10"
-                >
-                  Add to Cart
-                </button>
+                {/* ADD TO CART (Only if not Gold) */}
+                {userPlan !== 'gold' && (
+                  <button
+                    onClick={handleAddToCart}
+                    className="w-full mt-2 rounded-xl border border-yellow-400/30 bg-transparent py-2.5 font-medium text-yellow-300 text-xs transition-all hover:bg-yellow-400/10"
+                  >
+                    Add to Cart
+                  </button>
+                )}
               </div>
             )}
           </div>
