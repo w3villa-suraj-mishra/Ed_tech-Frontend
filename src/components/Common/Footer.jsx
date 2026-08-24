@@ -85,7 +85,7 @@ const Footer = () => {
 
         {/* Footer Bottom */}
         <div className="flex flex-col md:flex-row justify-between items-center mt-8 gap-4 text-[14px]">
-          <p>© 2026 study_tech. All rights reserved.</p>
+          <p>© 2026 CodeLearn. All rights reserved.</p>
           <div className="flex gap-6">
             <span className="cursor-pointer hover:text-richblack-50 transition-all">English</span>
             <span className="cursor-pointer hover:text-richblack-50 transition-all">Privacy</span>

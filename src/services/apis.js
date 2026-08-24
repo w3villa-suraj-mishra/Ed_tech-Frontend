@@ -55,6 +55,17 @@ export const courseEndpoints = {
   VERIFY_CERTIFICATE_API: BASE_URL + "/certificate/verify",
 }
 
+// NOTIFICATIONS ENDPOINTS
+export const notificationEndpoints = {
+  GET_NOTIFICATIONS_API: BASE_URL + "/notifications",
+  GET_UNREAD_COUNT_API: BASE_URL + "/notifications/unread-count",
+  MARK_READ_API: BASE_URL + "/notifications",
+  MARK_ALL_READ_API: BASE_URL + "/notifications/read-all",
+  DELETE_NOTIFICATION_API: BASE_URL + "/notifications",
+  PREFERENCES_API: BASE_URL + "/notifications/preferences",
+  ADMIN_CREATE_NOTIFICATION_API: BASE_URL + "/admin/create-notification"
+}
+
 // RATINGS AND REVIEWS
 export const ratingsEndpoints = {
   REVIEWS_DETAILS_API: BASE_URL + "/course/getReviews",

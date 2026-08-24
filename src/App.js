@@ -23,6 +23,7 @@ import GlobalDashboard from "./components/core/Dashboard/GlobalDashboard";
 import Articles from "./components/core/Dashboard/Articles";
 import GuidedPath from "./components/core/Dashboard/GuidedPath";
 import HelpSupport from "./components/core/Dashboard/HelpSupport";
+import NotificationSettings from "./components/core/Dashboard/NotificationSettings";
 import CoursesPage from "./components/core/Dashboard/CoursesPage";
 import ActiveCoursesPage from "./pages/ActiveCoursesPage.jsx";
 import CourseTakePlayer from "./pages/CourseTakePlayer.jsx";
@@ -132,6 +133,8 @@ function App() {
             <Route path="instructor"          element={<InstructorDashboard />} />
             <Route path="articles"            element={<Articles />} />
             <Route path="guided-path"         element={<GuidedPath />} />
+            <Route path="notifications font-['Inter']" element={<NotificationSettings />} />
+            <Route path="notifications"       element={<NotificationSettings />} />
             <Route path="help"                element={<HelpSupport />} />
           </Route>
           <Route path="/verify-otp"           element={<VerifyOtp />} />

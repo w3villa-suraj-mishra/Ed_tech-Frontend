@@ -16,7 +16,7 @@ export default function EnrolledCourses() {
     try {
       const res = await getUserEnrolledCourses(token);
       if (res && Array.isArray(res)) {
-        const normalized = res.map(item => item.course ? item.course : item);
+        const normalized = res.map(item => (item && item.course) ? { ...item.course, ...item } : item);
         setEnrolledCourses(normalized);
       } else {
         setEnrolledCourses([]);
@@ -134,11 +134,12 @@ export default function EnrolledCourses() {
                   <div className="flex flex-col gap-2">
                     <button
                       onClick={() => {
-                        navigate('/t/u/activeCourses');
+                        const courseId = course._id || course.id;
+                        navigate(`/s/courses/${courseId}/take`);
                       }}
                       className="w-full py-3 rounded-xl bg-richblack-700 text-white font-bold text-sm group-hover:bg-yellow-400 group-hover:text-black transition-all"
                     >
-                      Continue Learning
+                      {course.progressPercentage > 0 ? "Continue Course" : "Start Course"}
                     </button>
                   </div>
                 </div>

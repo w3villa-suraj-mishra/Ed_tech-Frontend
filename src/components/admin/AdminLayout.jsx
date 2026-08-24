@@ -3,14 +3,14 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getNotifications } from '../../services/admin/adminAPI';
 
 const NAV = [
-  { label: 'Dashboard',     path: '/admin/dashboard',     icon: '▦', superOnly: false },
-  { label: 'Users',         path: '/admin/users',          icon: '👥', superOnly: false },
-  { label: 'Courses',       path: '/admin/courses',        icon: '📚', superOnly: false },
-  { label: 'Categories',    path: '/admin/categories',     icon: '🏷️',  superOnly: false },
-  { label: 'Enrollments',   path: '/admin/enrollments',    icon: '📋', superOnly: false },
-  { label: 'Reviews',       path: '/admin/reviews',        icon: '⭐', superOnly: false },
-  { label: 'Live Sessions', path: '/admin/live-sessions',  icon: '🎥', superOnly: false },
-  { label: 'Contact Us',    path: '/admin/contacts',       icon: '📩', superOnly: false },
+  { label: 'Dashboard',     path: '/admin/dashboard',     icon: '-', superOnly: false },
+  { label: 'Users',         path: '/admin/users',          icon: '-', superOnly: false },
+  { label: 'Courses',       path: '/admin/courses',        icon: '-', superOnly: false },
+  { label: 'Categories',    path: '/admin/categories',     icon: '-',  superOnly: false },
+  { label: 'Enrollments',   path: '/admin/enrollments',    icon: '-', superOnly: false },
+  { label: 'Reviews',       path: '/admin/reviews',        icon: '-', superOnly: false },
+  // { label: 'Live Sessions', path: '/admin/live-sessions',  icon: '🎥', superOnly: false },
+  { label: 'Contact Us',    path: '/admin/contacts',       icon: '-', superOnly: false },
 ];
 
 export default function AdminLayout({ children }) {

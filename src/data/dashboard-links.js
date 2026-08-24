@@ -33,6 +33,12 @@ export const sidebarLinks = [
     icon: "VscCompass",
   },
   {
+    id: 14,
+    name: "Notifications",
+    path: "/dashboard/notifications",
+    icon: "VscBell",
+  },
+  {
     id: 12,
     name: "Help & Support",
     path: "/dashboard/help",

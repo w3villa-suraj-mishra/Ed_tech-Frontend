@@ -6,6 +6,8 @@ import { VscSignOut, VscDashboard, VscBook, VscAccount, VscBell, VscGear } from 
 import { logout } from "../../services/operations/authAPI";
 import { fetchCourseCategories, getAllCourses } from "../../services/operations/courseDetailsAPI";
 
+import NotificationBell from './NotificationBell';
+
 const Navbar = () => {
   const { token } = useSelector((state) => state.auth);
   const { user } = useSelector((state) => state.profile);
@@ -78,7 +80,7 @@ const Navbar = () => {
             S
           </div>
           <span className="text-xl font-bold text-richblack-25 tracking-wide">
-            Study<span className="text-indigo-500">_Tech</span>
+            Code<span className="">Learn</span>
           </span>
         </Link>
 
@@ -219,6 +221,9 @@ const Navbar = () => {
             )}
           </button>
 
+          {/* REAL-TIME NOTIFICATION BELL */}
+          <NotificationBell />
+
           {/* Unauthenticated Login/Signup */}
           {token === null && (
             <div className="flex items-center gap-3">
@@ -314,7 +319,7 @@ const Navbar = () => {
                     </Link>
 
                     <Link
-                      to="/dashboard/my-profile"
+                      to="/dashboard/notifications"
                       onClick={() => setProfileOpen(false)}
                       className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#C9D1D9] hover:bg-[#21262D] hover:text-white transition-colors"
                     >

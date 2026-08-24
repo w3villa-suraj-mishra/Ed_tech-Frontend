@@ -20,6 +20,10 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
   const [verifying, setVerifying] = useState(false);
 
   useEffect(() => {
+    setActiveTab(defaultTab);
+  }, [defaultTab]);
+
+  useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
@@ -32,12 +36,18 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
           const { verifyPayment } = await import("../../../services/operations/studentFeaturesAPI");
           await verifyPayment(sessionId, [], token, navigate, dispatch);
           setActiveTab("your-courses");
+          const freshEnrolled = await getUserEnrolledCourses(token);
+          if (freshEnrolled && Array.isArray(freshEnrolled)) {
+            const normalized = freshEnrolled.map(item => (item && item.course) ? { ...item.course, ...item } : item);
+            setEnrolledCourses(normalized);
+          }
         }
 
         if (token) {
           const enrolled = await getUserEnrolledCourses(token);
           if (enrolled && Array.isArray(enrolled)) {
-            setEnrolledCourses(enrolled);
+            const normalized = enrolled.map(item => (item && item.course) ? { ...item.course, ...item } : item);
+            setEnrolledCourses(normalized);
           }
         }
         const courses = await getAllCourses();
@@ -117,84 +127,79 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
         <div>
           {filteredEnrolled.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {filteredEnrolled.map((course) => (
-                <div
-                  key={course._id}
-                  onClick={() => navigate(`/courses/${course?._id}`)}
-                  className="bg-[#12161F] border border-[#252C3A] hover:border-indigo-500/50 rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="relative aspect-video w-full overflow-hidden bg-slate-900">
-                      <img
-                        src={course.thumbnail}
-                        alt={course.courseName}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="p-4 space-y-2">
-                      <h3 className="font-bold text-sm text-white line-clamp-1">{course.courseName}</h3>
-                      <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
-                        {course.courseDescription}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="p-4 pt-0 space-y-3">
-                    <div className="flex items-center gap-4 text-[11px] text-slate-400">
-                      <div className="flex items-center gap-1.5">
-                        <FiClock size={13} />
-                        <span>{course?.totalDuration || "0.0 Hours"}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="w-3 h-3 rounded border border-slate-500 flex items-center justify-center text-[8px] font-bold">≡</span>
-                        <span>{course?.sections?.length || course?.courseContent?.length || 0} Sections</span>
-                      </div>
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <div className="w-full bg-[#1C2230] h-1.5 rounded-full overflow-hidden">
-                        <div
-                          className="bg-indigo-500 h-full rounded-full"
-                          style={{ width: `${course.progressPercentage || 0}%` }}
+              {filteredEnrolled.map((course) => {
+                const courseId = course._id || course.id;
+                return (
+                  <div
+                    key={courseId}
+                    onClick={() => navigate(`/s/courses/${courseId}/take`)}
+                    className="bg-[#12161F] border border-[#252C3A] hover:border-indigo-500/50 rounded-2xl overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="relative aspect-video w-full overflow-hidden bg-slate-900">
+                        <img
+                          src={course.thumbnail}
+                          alt={course.courseName}
+                          className="w-full h-full object-cover"
                         />
                       </div>
-                      <div className="text-[11px] text-slate-400 font-medium">
-                        {course.progressPercentage || 0}% Complete
+                      <div className="p-4 space-y-2">
+                        <h3 className="font-bold text-sm text-white line-clamp-1">{course.courseName}</h3>
+                        <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
+                          {course.courseDescription}
+                        </p>
                       </div>
                     </div>
 
-                    <div className="text-xs text-slate-400 font-medium">
-                      Lifetime access
-                    </div>
+                    <div className="p-4 pt-0 space-y-3">
+                      <div className="flex items-center gap-4 text-[11px] text-slate-400">
+                        <div className="flex items-center gap-1.5">
+                          <FiClock size={13} />
+                          <span>{course?.totalDuration || "0.0 Hours"}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="w-3 h-3 rounded border border-slate-500 flex items-center justify-center text-[8px] font-bold">≡</span>
+                          <span>{course?.sections?.length || course?.courseContent?.length || 0} Sections</span>
+                        </div>
+                      </div>
 
-                    <div className="flex items-center gap-1.5 text-xs">
-                      <span className="text-slate-600">★ ★ ★ ★ ★</span>
-                      <span className="text-slate-400 text-[11px] font-medium">0 (0)</span>
-                    </div>
+                      <div className="space-y-1.5">
+                        <div className="w-full bg-[#1C2230] h-1.5 rounded-full overflow-hidden">
+                          <div
+                            className="bg-indigo-500 h-full rounded-full"
+                            style={{ width: `${course.progressPercentage || 0}%` }}
+                          />
+                        </div>
+                        <div className="text-[11px] text-slate-400 font-medium">
+                          {course.progressPercentage || 0}% Complete
+                        </div>
+                      </div>
 
-                    <div className="space-y-2 pt-1">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(`/dashboard/instructor-analytics`);
-                        }}
-                        className="w-full py-2 rounded-xl bg-richblack-800 border border-richblack-700 text-xs font-semibold text-slate-400 hover:bg-richblack-700 hover:text-white transition-all flex items-center justify-center gap-1.5"
-                      >
-                        <span className="text-[10px]">📊</span> Analytics
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate('/t/u/activeCourses');
-                        }}
-                        className="w-full py-2.5 rounded-xl bg-richblack-800 border border-richblack-700 text-xs font-semibold text-white hover:bg-richblack-700 transition-all text-center"
-                      >
-                        Continue
-                      </button>
+                      <div className="text-xs text-slate-400 font-medium">
+                        {course.plan ? `${course.plan.toUpperCase()} Access` : 'Lifetime access'}
+                      </div>
+
+                      <div className="flex items-center gap-1.5 text-xs">
+                        <span className="text-amber-400">★</span>
+                        <span className="text-slate-200 font-semibold">{course.averageRating || 0}</span>
+                        <span className="text-slate-400 text-[11px] font-medium">({course.ratingCount || 0})</span>
+                      </div>
+
+                      <div className="space-y-2 pt-1">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/s/courses/${courseId}/take`);
+                          }}
+                          className="w-full py-2.5 rounded-xl bg-indigo-600 border border-indigo-500 text-xs font-semibold text-white hover:bg-indigo-700 transition-all text-center"
+                        >
+                          Continue Learning
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="bg-[#12161F] border border-[#252C3A] rounded-2xl p-12 text-center text-slate-400 space-y-3">
