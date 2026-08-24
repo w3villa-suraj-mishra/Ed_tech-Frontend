@@ -27,59 +27,51 @@ const RenderSteps = () => {
   
     return (
       <>
-        <div className="relative mb-2 flex w-full justify-center">
+        <div className="relative mb-4 flex w-full justify-center items-center">
           {steps.map((item) => (
-            <>
-              <div
-                className="flex flex-col items-center "
-                key={item.id}
-              >
+            <React.Fragment key={item.id}>
+              <div className="flex flex-col items-center">
                 <button
-                  className={`grid cursor-default aspect-square w-[34px] place-items-center rounded-full border-[1px] ${
+                  className={`grid cursor-default aspect-square w-9 place-items-center rounded-full text-xs font-extrabold transition-all border ${
                     step === item.id
-                      ? "border-yellow-50 bg-yellow-900 text-yellow-50"
-                      : "border-richblack-700 bg-richblack-800 text-richblack-300"
-                  } ${step > item.id && "bg-yellow-50 text-yellow-50"}} `}
+                      ? "border-purple-400 bg-purple-600 text-white shadow-lg shadow-purple-900/50"
+                      : step > item.id
+                      ? "border-emerald-500/40 bg-emerald-600 text-white"
+                      : "border-purple-900/40 bg-[#0c0e1a] text-purple-400/60"
+                  }`}
                 >
                   {step > item.id ? (
-                    <FaCheck className="font-bold text-richblack-900" />
+                    <FaCheck className="text-white text-xs" />
                   ) : (
                     item.id
                   )}
                 </button>
-                
               </div>
               {item.id !== steps.length && (
-                <>
-                  <div
-                    className={`h-[calc(34px/2)] w-[33%]  border-dashed border-b-2 ${
-                    step > item.id  ? "border-yellow-50" : "border-richblack-500"
-                  } `}
-                  ></div>
-                </>
+                <div
+                  className={`h-0.5 w-[25%] mx-2 transition-all ${
+                    step > item.id ? "bg-emerald-500" : "bg-purple-900/40"
+                  }`}
+                />
               )}
-            </>
+            </React.Fragment>
           ))}
         </div>
-  
-        <div className="relative mb-16 flex w-full select-none justify-between">
+
+        <div className="relative mb-10 flex w-full select-none justify-between max-w-xl mx-auto px-4">
           {steps.map((item) => (
-            <>
-              <div
-                className="flex min-w-[130px] flex-col items-center gap-y-2"
-                key={item.id}
+            <div
+              className="flex flex-col items-center text-center"
+              key={item.id}
+            >
+              <p
+                className={`text-xs font-bold transition-colors ${
+                  step >= item.id ? "text-purple-300" : "text-purple-400/40"
+                }`}
               >
-                
-                <p
-                  className={`text-sm ${
-                    step >= item.id ? "text-richblack-5" : "text-richblack-500"
-                  }`}
-                >
-                  {item.title}
-                </p>
-              </div>
-              
-            </>
+                {item.title}
+              </p>
+            </div>
           ))}
         </div>
         {/* Render specific component based on current step */}

@@ -165,77 +165,85 @@ export default function CourseInformationForm() {
     return (
      <form
   onSubmit={handleSubmit(onSubmit)}
-  className="max-w-4xl mx-auto space-y-8 rounded-3xl bg-gradient-to-br from-[#0f172a] to-[#020617] p-[1px] shadow-2xl"
+  className="max-w-4xl mx-auto space-y-8 rounded-2xl bg-[#0c0e1a] border border-purple-900/30 p-6 sm:p-8 shadow-2xl"
 >
-  <div className="rounded-3xl bg-richblack-800 p-8 space-y-8">
+  <div className="space-y-6">
 
     {/* HEADER */}
-    <div>
-      <h2 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
+    <div className="border-b border-purple-900/30 pb-4">
+      <h2 className="text-xl font-bold text-white tracking-tight">
         Course Information
       </h2>
-      <p className="text-sm text-richblack-300">
-        Fill in the details to create your course
+      <p className="text-xs text-purple-300/70 mt-1">
+        Fill in the details to create or update your course.
       </p>
     </div>
 
     {/* TITLE */}
     <div className="flex flex-col gap-2">
-      <label className="text-sm text-richblack-200">
-        Course Title <sup className="text-pink-400">*</sup>
+      <label className="text-xs font-semibold text-purple-200">
+        Course Title <sup className="text-red-400">*</sup>
       </label>
       <input
         {...register("courseTitle", { required: true })}
         placeholder="e.g. Complete MERN Stack Bootcamp"
-        className="w-full rounded-xl bg-richblack-900 px-4 py-3 text-white border border-richblack-700 focus:border-yellow-400 outline-none transition"
+        className="w-full rounded-xl bg-[#070913] px-4 py-3 text-xs text-white border border-purple-900/40 focus:border-purple-500 outline-none transition"
       />
       {errors.courseTitle && (
-        <span className="text-xs text-pink-400">Required</span>
+        <span className="text-[11px] font-semibold text-red-400">Title is required</span>
       )}
     </div>
 
     {/* DESCRIPTION */}
     <div className="flex flex-col gap-2">
-      <label className="text-sm text-richblack-200">
-        Short Description <sup className="text-pink-400">*</sup>
+      <label className="text-xs font-semibold text-purple-200">
+        Short Description <sup className="text-red-400">*</sup>
       </label>
       <textarea
         {...register("courseShortDesc", { required: true })}
-        className="w-full min-h-[130px] rounded-xl bg-richblack-900 px-4 py-3 text-white border border-richblack-700 focus:border-yellow-400 outline-none transition"
+        placeholder="Enter short overview of the course"
+        className="w-full min-h-[110px] rounded-xl bg-[#070913] px-4 py-3 text-xs text-white border border-purple-900/40 focus:border-purple-500 outline-none transition"
       />
       {errors.courseShortDesc && (
-        <span className="text-xs text-pink-400">Required</span>
+        <span className="text-[11px] font-semibold text-red-400">Description is required</span>
       )}
     </div>
 
     {/* PRICE */}
     <div className="flex flex-col gap-2">
-      <label className="text-sm text-richblack-200">
-        Course Price <sup className="text-pink-400">*</sup>
+      <label className="text-xs font-semibold text-purple-200">
+        Course Price <sup className="text-red-400">*</sup>
       </label>
       <div className="relative">
         <input
           {...register("coursePrice", { required: true })}
-          className="w-full rounded-xl bg-richblack-900 px-10 py-3 text-white border border-richblack-700 focus:border-yellow-400 outline-none"
+          placeholder="0.00"
+          className="w-full rounded-xl bg-[#070913] px-10 py-3 text-xs text-white border border-purple-900/40 focus:border-purple-500 outline-none"
         />
-        <HiOutlineCurrencyRupee className="absolute left-3 top-1/2 -translate-y-1/2 text-richblack-400 text-xl" />
+        <HiOutlineCurrencyRupee className="absolute left-3 top-1/2 -translate-y-1/2 text-purple-400 text-lg" />
       </div>
+      {errors.coursePrice && (
+        <span className="text-[11px] font-semibold text-red-400">Price is required</span>
+      )}
     </div>
 
     {/* CATEGORY */}
     <div className="flex flex-col gap-2">
-      <label className="text-sm text-richblack-200">
-        Course Category <sup className="text-pink-400">*</sup>
+      <label className="text-xs font-semibold text-purple-200">
+        Course Category <sup className="text-red-400">*</sup>
       </label>
       <select
         {...register("courseCategory", { required: true })}
-        className="w-full rounded-xl bg-richblack-900 px-4 py-3 text-white border border-richblack-700 focus:border-yellow-400 outline-none"
+        className="w-full rounded-xl bg-[#070913] px-4 py-3 text-xs text-white border border-purple-900/40 focus:border-purple-500 outline-none"
       >
         <option value="">Choose Category</option>
         {courseCategories?.map((cat, i) => (
           <option key={i} value={cat._id}>{cat.name}</option>
         ))}
       </select>
+      {errors.courseCategory && (
+        <span className="text-[11px] font-semibold text-red-400">Category is required</span>
+      )}
     </div>
 
     {/* TAGS */}
@@ -261,13 +269,17 @@ export default function CourseInformationForm() {
 
     {/* BENEFITS */}
     <div className="flex flex-col gap-2">
-      <label className="text-sm text-richblack-200">
-        Course Benefits <sup className="text-pink-400">*</sup>
+      <label className="text-xs font-semibold text-purple-200">
+        Course Benefits <sup className="text-red-400">*</sup>
       </label>
       <textarea
         {...register("courseBenefits", { required: true })}
-        className="w-full min-h-[120px] rounded-xl bg-richblack-900 px-4 py-3 text-white border border-richblack-700 focus:border-yellow-400 outline-none"
+        placeholder="Enter key benefits students will gain"
+        className="w-full min-h-[100px] rounded-xl bg-[#070913] px-4 py-3 text-xs text-white border border-purple-900/40 focus:border-purple-500 outline-none"
       />
+      {errors.courseBenefits && (
+        <span className="text-[11px] font-semibold text-red-400">Benefits are required</span>
+      )}
     </div>
 
     {/* REQUIREMENTS */}
@@ -281,25 +293,25 @@ export default function CourseInformationForm() {
     />
 
     {/* BUTTONS */}
-    <div className="flex justify-end gap-4 pt-4">
-
+    <div className="flex justify-end gap-4 pt-4 border-t border-purple-900/30">
       {editCourse && (
         <button
+          type="button"
           onClick={() => dispatch(setStep(2))}
-          className="px-5 py-2 rounded-xl border border-richblack-600 text-richblack-200 hover:bg-richblack-700 transition"
+          className="px-5 py-2.5 rounded-xl border border-purple-900/40 text-purple-300 hover:bg-purple-950/30 text-xs font-bold transition"
         >
-          Skip
+          Continue to Builder
         </button>
       )}
 
-      <Iconbtn
+      <button
         disabled={loading}
-        text={!editCourse ? "Next Step" : "Save Changes"}
-        customClasses="bg-gradient-to-r from-yellow-400 to-orange-500 text-black hover:scale-105 transition"
+        type="submit"
+        className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-purple-950/50 transition-all hover:scale-[1.02]"
       >
-        <MdNavigateNext />
-      </Iconbtn>
-
+        <span>{!editCourse ? "Next Step" : "Save Changes"}</span>
+        <MdNavigateNext size={18} />
+      </button>
     </div>
 
   </div>
