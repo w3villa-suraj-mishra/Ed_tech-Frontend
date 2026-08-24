@@ -52,16 +52,16 @@ export default function CoursesTable({ courses, setCourses }) {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-8 px-4 py-3 bg-richblack-800 rounded-xl border border-richblack-700">
+      <div className="flex justify-between items-center mb-8 px-5 py-3.5 bg-[#0c0e1a] rounded-2xl border border-purple-900/30 shadow-xl">
         {/* "Select All" Checkbox */}
         <div className="flex items-center gap-3">
           <input
             type="checkbox"
             checked={selectAll}
             onChange={toggleSelectAll}
-            className="w-5 h-5 cursor-pointer accent-yellow-400 border-none rounded focus:ring-0"
+            className="w-4 h-4 cursor-pointer accent-purple-500 rounded border-purple-900 focus:ring-0"
           />
-          <div className="text-sm font-semibold text-richblack-100 uppercase tracking-wider">
+          <div className="text-xs font-bold text-purple-200 uppercase tracking-wider">
             Select All
           </div>
         </div>
@@ -79,21 +79,33 @@ export default function CoursesTable({ courses, setCourses }) {
               btn2Handler: () => setConfirmationModal(null),
             });
           }}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all duration-300 ${
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 ${
             loading || selectedCourses.length === 0
-              ? 'bg-richblack-700 text-richblack-400 cursor-not-allowed border border-richblack-600'
-              : 'bg-red-600 text-white hover:bg-red-700 hover:shadow-[0_0_15px_rgba(220,38,38,0.3)] active:scale-95'
+              ? 'bg-purple-950/30 text-purple-400/40 cursor-not-allowed border border-purple-900/20'
+              : 'bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-950/50 active:scale-95'
           }`}
         >
-          <RiDeleteBin6Line size={18} />
+          <RiDeleteBin6Line size={16} />
           Delete Selected ({selectedCourses.length})
         </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-10">
         {courses?.length === 0 ? (
-          <div className="col-span-full py-10 text-center text-2xl font-medium text-richblack-100">
-            No courses found
+          <div className="col-span-full py-16 flex flex-col items-center justify-center text-center space-y-3 bg-[#0c0e1a] border border-purple-900/30 rounded-2xl">
+            <div className="w-14 h-14 rounded-2xl bg-purple-900/20 flex items-center justify-center text-purple-400">
+              <VscPlayCircle size={32} />
+            </div>
+            <h3 className="text-lg font-bold text-white">No Courses Created Yet</h3>
+            <p className="text-xs text-purple-300/60 max-w-sm">
+              You haven't created any courses. Click below to add your first course and start teaching!
+            </p>
+            <button
+              onClick={() => navigate("/dashboard/add-course")}
+              className="mt-2 px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl transition"
+            >
+              Add New Course
+            </button>
           </div>
         ) : (
           courses.map((course) => {
@@ -101,7 +113,7 @@ export default function CoursesTable({ courses, setCourses }) {
             return (
             <div
               key={courseId}
-              className="group flex flex-col bg-richblack-800 border border-richblack-700 rounded-2xl overflow-hidden hover:border-yellow-400/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,214,10,0.1)]"
+              className="group flex flex-col bg-[#0c0e1a] border border-purple-900/30 rounded-2xl overflow-hidden hover:border-purple-500/40 transition-all duration-300 shadow-xl"
             >
               {/* CARD IMAGE */}
               <div className="relative aspect-video overflow-hidden">
@@ -109,7 +121,7 @@ export default function CoursesTable({ courses, setCourses }) {
                   src={course.thumbnail || "https://res.cloudinary.com/dxgdsmdrl/image/upload/v1714470535/placeholder_course_image.jpg"}
                   alt={course.courseName}
                   onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/600x400/1e293b/a8b2d1?text=No+Image" }}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
                   <button
