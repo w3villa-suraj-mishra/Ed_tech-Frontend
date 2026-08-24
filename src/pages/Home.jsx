@@ -312,12 +312,12 @@ const Home = () => {
                 </div>
 
                 {/* Video Banner */}
-                <div className='mx-3 my-5 h-[420px] shadow-[10px_-5px_50px_-5px] shadow-blue-200 rounded-lg overflow-hidden w-[100%] max-w-[1260px]'>
+                <div className='mx-3 my-5 h-auto shadow-[10px_-5px_50px_-5px] shadow-blue-200 rounded-lg overflow-hidden w-[100%] max-w-[1260px]'>
                     <video
                         muted
                         loop
                         autoPlay
-                        className="shadow-[20px_20px_rgba(255,255,255)] aspect-video object-cover"
+                        className="shadow-[20px_20px_rgba(255,255,255)] aspect-video object-cover w-full h-auto"
                     >
                         <source src={Banner} type="video/mp4" />
                     </video>
@@ -477,12 +477,12 @@ const Home = () => {
                         }
                         ctabtn1={{
                             btnText: "Try it Yourself",
-                            linkto: "/signup",
+                            linkto: token ? "/courses" : "/signup",
                             active: true,
                         }}
                         ctabtn2={{
                             btnText: "Learn More",
-                            linkto: "/login",
+                            linkto: token ? "/courses" : "/login",
                             active: false,
                         }}
                         codeblock={`<!DOCTYPE html>\n<html>\n<head>\n<title>Example</title>\n<link rel="stylesheet" href="styles.css">\n</head>\n<body>\n<h1><a href="/">Header</a></h1>\n<nav>\n<a href="one/">One</a>\n<a href="two/">Two</a>\n<a href="three/">Three</a>\n</nav>\n</body>\n</html>`}
@@ -505,17 +505,17 @@ const Home = () => {
                             "Go ahead, give it a try. Our hands-on learning environment means you'll be writing real code from your very first lesson"
                         }
                         ctabtn1={{
-                            btnText: "Continue Lesson",
-                            linkto: "/signup",
+                            btnText: token && hasActiveCourses ? "Continue Learning" : "Continue Lesson",
+                            linkto: token ? (hasActiveCourses ? "/dashboard/courses" : "/courses") : "/signup",
                             active: true,
                         }}
                         ctabtn2={{
                             btnText: "Learn More",
-                            linkto: "/login",
+                            linkto: token ? "/courses" : "/login",
                             active: false,
                         }}
                         codeblock={`import React from 'react';\nconst App = () => {\n  return (\n    <div>\n      <h1>Hello World</h1>\n    </div>\n  );\n};\nexport default App;`}
-                        codeColor={"text-blue-5"}
+                        codeColor={"text-[#00bfff]"}
                         backgroundGradient={<div className='codeblock2 absolute'></div>}
                     />
                 </div>
@@ -524,17 +524,17 @@ const Home = () => {
             </div>
 
             {/* Section 2 */}
-            <div className='bg-richblack-900 text-richblack-5 py-6'>
-                <div className='homepage_bg py-8 flex items-center justify-center'>
+            <div className='bg-richblack-900 text-richblack-5 mt-16 pb-6'>
+                <div className='homepage_bg h-[280px] flex items-center justify-center pt-24 pb-8'>
                     <div className='w-11/12 max-w-maxContent flex flex-col items-center justify-between gap-5 mx-auto'>
                         <div className='flex flex-row gap-7 text-white'>
-                            <CTAButton active={true} linkto={"/signup"}>
+                            <CTAButton active={true} linkto={token ? "/courses" : "/signup"}>
                                 <div className='flex items-center gap-3'>
                                     Explore Full Catalog
                                     <FaArrowRight />
                                 </div>
                             </CTAButton>
-                            <CTAButton active={false} linkto={"/signup"}>
+                            <CTAButton active={false} linkto={token ? "/courses" : "/login"}>
                                 <div>Learn More</div>
                             </CTAButton>
                         </div>
@@ -552,7 +552,7 @@ const Home = () => {
                             <div className='text-[16px] text-richblack-300'>
                                 The modern StudyNotion is the dictates its own terms. Today, to be a competitive specialist requires more than professional skills.
                             </div>
-                            <CTAButton active={true} linkto={"/signup"}>
+                            <CTAButton active={true} linkto={token ? "/courses" : "/signup"}>
                                 <div>Learn More</div>
                             </CTAButton>
                         </div>
