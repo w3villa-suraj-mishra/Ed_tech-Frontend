@@ -757,7 +757,11 @@ const CourseTakePlayer = () => {
                             </div>
                           </div>
                           <span className="text-[10px] text-slate-400">
-                            {r.createdAt ? new Date(r.createdAt).toLocaleDateString() : 'Recently'}
+                            {r.updatedAt
+                              ? new Date(r.updatedAt).toLocaleDateString()
+                              : r.createdAt
+                              ? new Date(r.createdAt).toLocaleDateString()
+                              : new Date().toLocaleDateString()}
                           </span>
                         </div>
                         {r.review && (

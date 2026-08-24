@@ -26,11 +26,17 @@ const Reviewslider = () => {
     useEffect(() => {
         const getReviewsData = async () => {
             setLoading(true);
-            const data = await fetchAllReviews();
-            if (data && Array.isArray(data)) {
-                setReviews(data);
+            try {
+                const data = await fetchAllReviews();
+                const list = Array.isArray(data) ? data : (data?.data || []);
+                if (list && Array.isArray(list)) {
+                    setReviews(list);
+                }
+            } catch (err) {
+                console.error("Error fetching reviews:", err);
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
         };
         getReviewsData();
     }, []);
