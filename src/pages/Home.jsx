@@ -524,10 +524,9 @@ const Home = () => {
             </div>
 
             {/* Section 2 */}
-            <div className='bg-richblack-900 text-richblack-5 my-6'>
-                <div className='homepage_bg h-[310px] flex items-center justify-center'>
+            <div className='bg-richblack-900 text-richblack-5 py-6'>
+                <div className='homepage_bg py-8 flex items-center justify-center'>
                     <div className='w-11/12 max-w-maxContent flex flex-col items-center justify-between gap-5 mx-auto'>
-                        <div className='h-[150px]'></div>
                         <div className='flex flex-row gap-7 text-white'>
                             <CTAButton active={true} linkto={"/signup"}>
                                 <div className='flex items-center gap-3'>
