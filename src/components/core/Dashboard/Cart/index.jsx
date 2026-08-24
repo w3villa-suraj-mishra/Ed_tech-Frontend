@@ -64,8 +64,13 @@ export default function Cart() {
 
   const handleCheckout = () => {
     if (cart.length === 0) return;
-    const courseIds = cart.map((c) => c._id || c.id);
-    buyCourse(token, courseIds, user, navigate, dispatch);
+    const firstCourse = cart[0];
+    const courseId = firstCourse?._id || firstCourse?.id;
+    if (courseId) {
+      navigate(`/courses/${courseId}`);
+    } else {
+      navigate("/dashboard/buy-courses");
+    }
   };
 
   return (

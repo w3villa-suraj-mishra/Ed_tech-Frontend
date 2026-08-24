@@ -42,6 +42,13 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
     const fetchData = async () => {
       setLoading(true);
       try {
+        const queryParams = new URLSearchParams(window.location.search);
+        const sessionId = queryParams.get("session_id");
+        if (sessionId && token) {
+          const { verifyPayment } = require("../../../services/operations/studentFeaturesAPI");
+          await verifyPayment(sessionId, [], token, navigate, dispatch);
+        }
+
         if (token) {
           const enrolled = await getUserEnrolledCourses(token);
           if (enrolled && Array.isArray(enrolled)) {
