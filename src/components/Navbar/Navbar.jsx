@@ -244,15 +244,6 @@ const Navbar = () => {
 
         {/* ACTION CONTROLS */}
         <div className="flex items-center gap-3">
-          
-          {/* Quick Search Button Icon */}
-          <button
-            onClick={() => navigate('/courses')}
-            aria-label="Search courses"
-            className="w-9 h-9 rounded-full bg-[#141728] border border-white/10 hover:border-purple-500/40 text-richblack-300 hover:text-white flex items-center justify-center transition-colors text-sm"
-          >
-            <AiOutlineSearch />
-          </button>
 
           {/* Real-time Notification Bell */}
           <NotificationBell />
