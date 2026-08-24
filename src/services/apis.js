@@ -53,6 +53,7 @@ export const courseEndpoints = {
   DELETE_COMMENT_API: BASE_URL + "/course/deleteComment",
   GET_CERTIFICATE_API: BASE_URL + "/course/getCertificate",
   VERIFY_CERTIFICATE_API: BASE_URL + "/certificate/verify",
+  GET_HOMEPAGE_STATS_API: BASE_URL + "/course/getHomePageStats",
 }
 
 // NOTIFICATIONS ENDPOINTS

@@ -534,3 +534,16 @@ export const verifyCertificateAPI = async (certificateId) => {
     return { success: false, isValid: false, message: error.response?.data?.message || "Invalid certificate" }
   }
 }
+
+export const getHomePageStats = async () => {
+  try {
+    const response = await apiConnector("GET", courseEndpoints.GET_HOMEPAGE_STATS_API)
+    if (response?.data?.success) {
+      return response.data.data
+    }
+  } catch (error) {
+    console.log("GET HOMEPAGE STATS API ERROR............", error)
+  }
+  return null
+}
+

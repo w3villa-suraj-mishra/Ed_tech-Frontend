@@ -110,6 +110,7 @@ function App() {
       <div className="main-content bg-richblack-900" style={{ flex: 1, minHeight: 0 }}>
         <Routes>
           <Route path="/"                     element={<Home />} />
+          <Route path="/courses"              element={<Catalog />} />
           <Route path="/catalog"              element={<Catalog />} />
           <Route path="/catalog/:categoryId"  element={<Catalog />} />
           <Route path="/about"                element={<About />} />
