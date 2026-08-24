@@ -52,15 +52,52 @@ const MyProfile = () => {
     fetchUserStats();
   }, [token]);
 
-  // Derived Dynamic Statistics from Database
+  // Derived Dynamic Statistics from Database (Real-Time Calculation)
   const totalEnrolled = enrolledCourses.length;
-  const totalCompletedLessons = enrolledCourses.reduce((acc, course) => {
-    return acc + (course.completedVideos?.length || 0);
-  }, 0);
-  const certificatesEarned = enrolledCourses.filter(
-    (c) => (c.progressPercentage || 0) === 100
-  ).length;
-  const totalHoursLearned = (totalCompletedLessons * 0.25).toFixed(1);
+
+  let totalCompletedLessons = 0;
+  let totalCompletedSeconds = 0;
+
+  enrolledCourses.forEach((course) => {
+    const totalLecturesCount = course.courseContent?.reduce((acc, sec) => acc + (sec.subSection?.length || 0), 0) || course.totalLectures || course.totalLessons || 20;
+    const progressPct = course.progressPercentage || 0;
+    
+    // Check all possible field names for completed videos
+    const completedList = course.completedVideos || course.completedVideosCount || course.courseDetails?.completedVideos || [];
+    const completedNum = Array.isArray(completedList) && completedList.length > 0
+      ? completedList.length 
+      : typeof completedList === 'number' && completedList > 0
+        ? completedList 
+        : Math.round((progressPct / 100) * totalLecturesCount);
+
+    totalCompletedLessons += completedNum;
+
+    // Accumulate watched duration in seconds if subSections are present
+    let courseWatchedSeconds = 0;
+    const courseContent = course.courseContent || course.courseDetails?.courseContent;
+    if (courseContent && Array.isArray(courseContent) && Array.isArray(completedList) && completedList.length > 0) {
+      courseContent.forEach((sec) => {
+        if (sec.subSection && Array.isArray(sec.subSection)) {
+          sec.subSection.forEach((sub) => {
+            const subId = sub._id || sub.id;
+            if (completedList.includes(subId)) {
+              courseWatchedSeconds += (parseFloat(sub.timeDuration) || sub.durationSeconds || 900);
+            }
+          });
+        }
+      });
+    }
+
+    if (courseWatchedSeconds > 0) {
+      totalCompletedSeconds += courseWatchedSeconds;
+    } else {
+      // Fallback: Estimate 25 mins (1500 seconds) per completed lesson
+      totalCompletedSeconds += completedNum * 1500;
+    }
+  });
+
+  const certificatesEarned = enrolledCourses.filter((c) => (c.progressPercentage || 0) === 100).length;
+  const totalHoursLearned = (totalCompletedSeconds / 3600).toFixed(1);
   const activeStreakDays = totalEnrolled > 0 ? Math.min(totalEnrolled * 3 + totalCompletedLessons, 30) : 0;
 
   // JSON Profile Export Download Handler

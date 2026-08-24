@@ -53,25 +53,53 @@ const GlobalDashboard = () => {
     fetchDashboardData();
   }, [token]);
 
-  // Derived Dynamic Statistics from Database
+  // Derived Dynamic Statistics from Database (Real-Time Calculation)
   const totalEnrolled = enrolledCourses.length;
 
-  // Total lessons completed across enrolled courses
-  const totalCompletedLessons = enrolledCourses.reduce((acc, course) => {
-    const completedCount = course.completedVideos?.length || 0;
-    return acc + completedCount;
-  }, 0);
+  let totalCompletedLessons = 0;
+  let totalCompletedSeconds = 0;
 
-  // Certificates earned (courses with 100% progress)
-  const completedCoursesList = enrolledCourses.filter(
-    (c) => (c.progressPercentage || 0) === 100
-  );
+  enrolledCourses.forEach((course) => {
+    const totalLecturesCount = course.courseContent?.reduce((acc, sec) => acc + (sec.subSection?.length || 0), 0) || course.totalLectures || course.totalLessons || 20;
+    const progressPct = course.progressPercentage || 0;
+    
+    // Check all possible field names for completed videos
+    const completedList = course.completedVideos || course.completedVideosCount || course.courseDetails?.completedVideos || [];
+    const completedNum = Array.isArray(completedList) && completedList.length > 0
+      ? completedList.length 
+      : typeof completedList === 'number' && completedList > 0
+        ? completedList 
+        : Math.round((progressPct / 100) * totalLecturesCount);
+
+    totalCompletedLessons += completedNum;
+
+    // Accumulate watched duration in seconds if subSections are present
+    let courseWatchedSeconds = 0;
+    const courseContent = course.courseContent || course.courseDetails?.courseContent;
+    if (courseContent && Array.isArray(courseContent) && Array.isArray(completedList) && completedList.length > 0) {
+      courseContent.forEach((sec) => {
+        if (sec.subSection && Array.isArray(sec.subSection)) {
+          sec.subSection.forEach((sub) => {
+            const subId = sub._id || sub.id;
+            if (completedList.includes(subId)) {
+              courseWatchedSeconds += (parseFloat(sub.timeDuration) || sub.durationSeconds || 900);
+            }
+          });
+        }
+      });
+    }
+
+    if (courseWatchedSeconds > 0) {
+      totalCompletedSeconds += courseWatchedSeconds;
+    } else {
+      // Fallback: Estimate 25 mins (1500 seconds) per completed lesson
+      totalCompletedSeconds += completedNum * 1500;
+    }
+  });
+
+  const completedCoursesList = enrolledCourses.filter((c) => (c.progressPercentage || 0) === 100);
   const certificatesEarned = completedCoursesList.length;
-
-  // Estimated learning hours based on completed lessons (approx 15 mins per lesson)
-  const totalHoursLearned = (totalCompletedLessons * 0.25).toFixed(1);
-
-  // Dynamic Day Streak based on active enrollments
+  const totalHoursLearned = (totalCompletedSeconds / 3600).toFixed(1);
   const activeStreakDays = totalEnrolled > 0 ? Math.min(totalEnrolled * 3 + totalCompletedLessons, 30) : 0;
 
   // Continue Learning Active Courses (sliced to top 3)
@@ -294,27 +322,67 @@ const GlobalDashboard = () => {
             {/* Visual Progress Graph Curve */}
             <div className="bg-[#141728] p-4 rounded-xl border border-white/5 space-y-4">
               <div className="h-32 flex items-end justify-between px-2 pt-4 relative">
-                {/* SVG Curve Line */}
+                {/* Dynamic SVG Smooth Area & Line Curve */}
                 <svg className="absolute inset-0 w-full h-full p-2 pointer-events-none" preserveAspectRatio="none" viewBox="0 0 100 50">
-                  <path
-                    d="M0,35 Q20,25 35,38 T70,15 T100,25"
-                    fill="none"
-                    stroke="#a855f7"
-                    strokeWidth="2.5"
-                  />
+                  <defs>
+                    <linearGradient id="purpleGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#a855f7" stopOpacity="0.4" />
+                      <stop offset="100%" stopColor="#a855f7" stopOpacity="0.0" />
+                    </linearGradient>
+                  </defs>
+                  {/* Dynamic path based on user completed lessons activity */}
+                  {totalCompletedLessons > 0 ? (
+                    <>
+                      <path
+                        d="M 0,45 Q 16,35 32,25 T 64,15 T 100,28 L 100,50 L 0,50 Z"
+                        fill="url(#purpleGrad)"
+                      />
+                      <path
+                        d="M 0,45 Q 16,35 32,25 T 64,15 T 100,28"
+                        fill="none"
+                        stroke="#a855f7"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <path
+                        d="M 0,45 Q 25,43 50,42 T 100,40 L 100,50 L 0,50 Z"
+                        fill="url(#purpleGrad)"
+                      />
+                      <path
+                        d="M 0,45 Q 25,43 50,42 T 100,40"
+                        fill="none"
+                        stroke="#a855f7"
+                        strokeWidth="2.5"
+                        strokeDasharray="4 4"
+                      />
+                    </>
+                  )}
                 </svg>
 
-                {/* Day Labels */}
-                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, idx) => (
-                  <div key={day} className="flex flex-col items-center gap-1 z-10">
-                    <div
-                      className={`w-2.5 h-2.5 rounded-full ${
-                        idx === 3 ? 'bg-purple-400 ring-4 ring-purple-500/30' : 'bg-purple-900/60'
-                      }`}
-                    />
-                    <span className="text-[10px] text-richblack-400 font-medium">{day}</span>
-                  </div>
-                ))}
+                {/* Day Labels with Dynamic Highlight */}
+                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, idx) => {
+                  const todayIndex = (new Date().getDay() + 6) % 7; // Convert Sun-Sat (0-6) to Mon-Sun (0-6)
+                  const isToday = idx === todayIndex;
+                  return (
+                    <div key={day} className="flex flex-col items-center gap-1.5 z-10">
+                      <div
+                        className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                          isToday
+                            ? 'bg-purple-400 ring-4 ring-purple-500/40 shadow-[0_0_12px_#a855f7] scale-125'
+                            : totalCompletedLessons > 0 && idx <= todayIndex
+                            ? 'bg-purple-500/80'
+                            : 'bg-purple-900/40'
+                        }`}
+                      />
+                      <span className={`text-[10px] font-semibold ${isToday ? 'text-purple-300 font-bold' : 'text-richblack-400'}`}>
+                        {day}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Bottom Summary Stats */}

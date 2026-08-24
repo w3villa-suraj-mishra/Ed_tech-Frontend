@@ -249,13 +249,13 @@ const Navbar = () => {
           <NotificationBell />
 
           {/* Light / Dark Theme Switch Button */}
-          <button
+          {/* <button
             onClick={toggleTheme}
             aria-label="Toggle Theme"
             className="w-9 h-9 rounded-full bg-[#141728] border border-white/10 hover:border-purple-500/40 text-richblack-300 hover:text-white flex items-center justify-center transition-colors text-sm"
           >
             {theme === 'light' ? '🌙' : '☀️'}
-          </button>
+          </button> */}
 
           {/* Unauthenticated Login / Sign Up */}
           {token === null && (
