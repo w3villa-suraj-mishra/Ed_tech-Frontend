@@ -165,3 +165,33 @@ html.light-mode-active .border-richblack-700,
 html.light-mode-active .border-[#2C333F] {
   border-color: #E2E8F0 !important;
 }
+
+/* Custom Scrollbar Styling for Dropdowns and Modals */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(15, 17, 26, 0.6);
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(168, 85, 247, 0.4);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 85, 247, 0.8);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* Firefox custom scrollbar support */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(168, 85, 247, 0.5) rgba(15, 17, 26, 0.6);
+}

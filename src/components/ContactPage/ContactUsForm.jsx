@@ -1,193 +1,178 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { apiConnector } from '../../services/apiConnector';
 import { contactusEndpoint } from '../../services/apis';
-import CountryCode from "../../data/countrycode.json"
 import toast from 'react-hot-toast';
+import { FaUser, FaEnvelope, FaPaperPlane } from 'react-icons/fa';
 
 const ContactUsForm = () => {
-
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
     reset,
-    formState:{errors,isSubmitSuccessful}
+    formState: { errors, isSubmitSuccessful }
   } = useForm();
 
-  const submitContactForm = async(data)=>{
-  try {
-    setLoading(true)
-    const res = await apiConnector(
-      "POST",
-      contactusEndpoint.CONTACT_US_API,
-      data
-    )
-    console.log("Email Res - ", res)
+  const submitContactForm = async (data) => {
+    try {
+      setLoading(true);
+      const res = await apiConnector(
+        "POST",
+        contactusEndpoint.CONTACT_US_API,
+        data
+      );
 
-    if(res?.data?.success){
-      toast.success("Message sent successfully 🎉")
-    } else {
-      toast.error(res?.data?.message || "Failed to send message ❌")
+      if (res?.data?.success) {
+        toast.success("Message sent successfully 🎉");
+      } else {
+        toast.error(res?.data?.message || "Failed to send message ❌");
+      }
+      setLoading(false);
+    } catch (error) {
+      console.log("ERROR MESSAGE - ", error);
+      const errMsg = error.response?.data?.message || error.message || "Something went wrong ❌";
+      toast.error(errMsg);
+      setLoading(false);
     }
+  };
 
-    setLoading(false)
-  } catch (error) {
-    console.log("ERROR MESSAGE - ", error)
-    const errMsg = error.response?.data?.message || error.message || "Something went wrong ❌"
-    toast.error(errMsg)
-    setLoading(false)
-  }
-}
-
-  useEffect(()=>{
-    if(isSubmitSuccessful){
+  useEffect(() => {
+    if (isSubmitSuccessful) {
       reset({
-        email:"",
-        firstname:"",
-        lastname:"",
-        message:"",
-        phoneNo:"",
-      }) 
-    } 
-  },[ reset,isSubmitSuccessful]);
+        email: "",
+        firstname: "",
+        lastname: "",
+        subject: "",
+        message: "",
+      });
+    }
+  }, [reset, isSubmitSuccessful]);
 
   return (
     <form
-      className="flex flex-col gap-6"
+      className="flex flex-col gap-5 text-left font-sans"
       onSubmit={handleSubmit(submitContactForm)}
     >
-
       {/* First + Last Name */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="flex flex-col">
-          <label htmlFor="firstname" className="text-sm text-richblack-300 mb-1">
+          <label htmlFor="firstname" className="text-xs text-richblack-300 mb-1.5 font-medium">
             First Name
           </label>
-          <input
-            type="text"
-            id="firstname"
-            placeholder="Enter first name"
-            className="w-full rounded-lg bg-richblack-800 border border-richblack-600 px-4 py-3 text-richblack-5 placeholder-richblack-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
-            {...register("firstname", { required: true })}
-          />
+          <div className="relative">
+            <span className="absolute left-3.5 top-3.5 text-richblack-400 text-sm">
+              <FaUser />
+            </span>
+            <input
+              type="text"
+              id="firstname"
+              placeholder="Enter first name"
+              className="w-full rounded-xl bg-[#0b0e1b] border border-white/10 pl-10 pr-4 py-3 text-xs sm:text-sm text-white placeholder-richblack-400 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
+              {...register("firstname", { required: true })}
+            />
+          </div>
           {errors.firstname && (
-            <span className="text-xs text-blue-300 mt-1">
-              Please enter your name
+            <span className="text-[11px] text-purple-400 mt-1">
+              Please enter your first name
             </span>
           )}
         </div>
 
         <div className="flex flex-col">
-          <label htmlFor="lastname" className="text-sm text-richblack-300 mb-1">
+          <label htmlFor="lastname" className="text-xs text-richblack-300 mb-1.5 font-medium">
             Last Name
           </label>
-          <input
-            type="text"
-            id="lastname"
-            placeholder="Enter last name"
-            className="w-full rounded-lg bg-richblack-800 border border-richblack-600 px-4 py-3 text-richblack-5 placeholder-richblack-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
-            {...register("lastname")}
-          />
+          <div className="relative">
+            <span className="absolute left-3.5 top-3.5 text-richblack-400 text-sm">
+              <FaUser />
+            </span>
+            <input
+              type="text"
+              id="lastname"
+              placeholder="Enter last name"
+              className="w-full rounded-xl bg-[#0b0e1b] border border-white/10 pl-10 pr-4 py-3 text-xs sm:text-sm text-white placeholder-richblack-400 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
+              {...register("lastname")}
+            />
+          </div>
         </div>
-
       </div>
 
       {/* Email */}
       <div className="flex flex-col">
-        <label htmlFor="email" className="text-sm text-richblack-300 mb-1">
+        <label htmlFor="email" className="text-xs text-richblack-300 mb-1.5 font-medium">
           Email Address
         </label>
-        <input
-          type="email"
-          id="email"
-          placeholder="Enter email address"
-          className="w-full rounded-lg bg-richblack-800 border border-richblack-600 px-4 py-3 text-richblack-5 placeholder-richblack-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
-          {...register("email", { required: true })}
-        />
+        <div className="relative">
+          <span className="absolute left-3.5 top-3.5 text-richblack-400 text-sm">
+            <FaEnvelope />
+          </span>
+          <input
+            type="email"
+            id="email"
+            placeholder="Enter your email address"
+            className="w-full rounded-xl bg-[#0b0e1b] border border-white/10 pl-10 pr-4 py-3 text-xs sm:text-sm text-white placeholder-richblack-400 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
+            {...register("email", { required: true })}
+          />
+        </div>
         {errors.email && (
-          <span className="text-xs text-blue-300 mt-1">
-            Please enter your email
+          <span className="text-[11px] text-purple-400 mt-1">
+            Please enter your email address
           </span>
         )}
       </div>
 
-      {/* Phone */}
+      {/* Subject */}
       <div className="flex flex-col">
-        <label className="text-sm text-richblack-300 mb-1">
-          Phone Number
+        <label htmlFor="subject" className="text-xs text-richblack-300 mb-1.5 font-medium">
+          Subject
         </label>
-
-        <div className="flex gap-3">
-
-          {/* Country Code */}
-          <select
-            className="w-[90px] rounded-lg bg-richblack-800 border border-richblack-600 px-2 py-3 text-richblack-5 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            {...register("countrycode")}
-          >
-            {CountryCode.map((ele, i) => (
-              <option key={i} value={ele.code}>
-                {ele.code}
-              </option>
-            ))}
-          </select>
-
-          {/* Phone Input */}
-          <input
-            type="number"
-            placeholder="12345 67890"
-            className="flex-1 rounded-lg bg-richblack-800 border border-richblack-600 px-4 py-3 text-richblack-5 placeholder-richblack-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
-           {...register("phoneNo", {
-  required: "Phone number is required",
-  pattern: {
-    value: /^[0-9]{10}$/,
-    message: "Enter a valid 10-digit phone number",
-  },
-})}
-          />
-        </div>
-
-        {errors.phoneNo && (
-          <span className="text-xs text-blue-300 mt-1">
-            {errors.phoneNo.message}
-          </span>
-        )}
+        <select
+          id="subject"
+          className="w-full rounded-xl bg-[#0b0e1b] border border-white/10 px-4 py-3 text-xs sm:text-sm text-white placeholder-richblack-400 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
+          {...register("subject")}
+        >
+          <option value="General Query" className="bg-[#0b0e1b] text-white">Select a subject</option>
+          <option value="General Query" className="bg-[#0b0e1b] text-white">General Query</option>
+          <option value="Courses & Enrollments" className="bg-[#0b0e1b] text-white">Courses & Enrollments</option>
+          <option value="Technical Support" className="bg-[#0b0e1b] text-white">Technical Support</option>
+          <option value="Feedback" className="bg-[#0b0e1b] text-white">Feedback</option>
+        </select>
       </div>
 
       {/* Message */}
       <div className="flex flex-col">
-        <label htmlFor="message" className="text-sm text-richblack-300 mb-1">
+        <label htmlFor="message" className="text-xs text-richblack-300 mb-1.5 font-medium">
           Message
         </label>
         <textarea
           id="message"
-          rows="6"
-          placeholder="Enter your message here..."
-          className="w-full rounded-lg bg-richblack-800 border border-richblack-600 px-4 py-3 text-richblack-5 placeholder-richblack-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 resize-none"
+          rows="4"
+          placeholder="Type your message here..."
+          className="w-full rounded-xl bg-[#0b0e1b] border border-white/10 px-4 py-3 text-xs sm:text-sm text-white placeholder-richblack-400 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all resize-none"
           {...register("message", { required: true })}
         />
         {errors.message && (
-          <span className="text-xs text-blue-300 mt-1">
+          <span className="text-[11px] text-purple-400 mt-1">
             Please enter your message
           </span>
         )}
       </div>
 
-      {/* Button */}
+      {/* Submit Button with Purple-Blue Gradient */}
       <button
         disabled={loading}
         type="submit"
-        className={`mt-4 w-full rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 py-3 text-white font-semibold transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-blue-500/30 ${
+        className={`mt-2 w-full rounded-xl bg-gradient-to-r from-[#8b5cf6] via-[#6366f1] to-[#3b82f6] py-3.5 text-xs sm:text-sm font-bold text-white shadow-[0_4px_20px_rgba(139,92,246,0.4)] transition-all duration-300 hover:opacity-95 hover:shadow-[0_6px_25px_rgba(139,92,246,0.6)] flex items-center justify-center gap-2 ${
           loading ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >
-        {loading ? "Sending..." : "Send Message 🚀"}
+        <FaPaperPlane className="text-xs" />
+        <span>{loading ? "Sending Message..." : "Send Message"}</span>
       </button>
-
     </form>
-  )
-}
+  );
+};
 
 export default ContactUsForm;

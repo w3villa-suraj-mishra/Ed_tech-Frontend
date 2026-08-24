@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
-import { AiOutlineShoppingCart } from "react-icons/ai";
-import { VscSignOut, VscDashboard, VscBook, VscAccount, VscBell, VscGear } from "react-icons/vsc";
+import { AiOutlineShoppingCart, AiOutlineSearch } from "react-icons/ai";
+import { VscSignOut, VscDashboard, VscBook, VscAccount, VscBell, VscGear, VscCode } from "react-icons/vsc";
 import { logout } from "../../services/operations/authAPI";
 import { fetchCourseCategories, getAllCourses } from "../../services/operations/courseDetailsAPI";
-
 import NotificationBell from './NotificationBell';
 
 const Navbar = () => {
@@ -15,14 +14,18 @@ const Navbar = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [categories, setCategories] = useState([]);
   const [courses, setCourses] = useState([]);
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [isCoursesOpen, setIsCoursesOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const [theme, setTheme] = useState(localStorage.getItem('userTheme') || 'dark');
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
+  const searchInputRef = useRef(null);
 
   useEffect(() => {
     const getCategories = async () => {
@@ -70,72 +73,94 @@ const Navbar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const matchRoute = (route) => {
+    return location.pathname === route;
+  };
+
   return (
-    <nav className="flex h-14 items-center justify-center border-b border-b-richblack-700 bg-richblack-900 transition-all duration-200 sticky top-0 z-50">
-      <div className="flex w-11/12 max-w-maxContent items-center justify-between">
+    <nav className="w-full bg-[#070913] border-b border-purple-900/30 sticky top-0 z-50 py-3 px-4 sm:px-6">
+      <div className="max-w-[1280px] mx-auto bg-[#0b0e1b]/90 border border-purple-500/30 rounded-2xl sm:rounded-3xl px-4 sm:px-6 py-2.5 flex items-center justify-between shadow-[0_0_25px_rgba(168,85,247,0.15)] backdrop-blur-xl">
         
-        {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white shadow-md">
-            S
+        {/* BRAND LOGO */}
+        <Link to="/" className="flex items-center gap-3 group">
+          <div className="w-9 h-9 rounded-xl bg-[#141728] border border-purple-500/40 flex items-center justify-center text-purple-400 text-lg group-hover:scale-105 transition-transform shadow-[0_0_15px_rgba(168,85,247,0.3)]">
+            <VscCode />
           </div>
-          <span className="text-xl font-bold text-richblack-25 tracking-wide">
-            Code<span className="">Learn</span>
-          </span>
+          <div className="flex flex-col">
+            <span className="text-white font-black text-lg tracking-tight leading-none">
+              CodeLearn
+            </span>
+            <span className="text-[9px] text-richblack-400 font-medium tracking-widest uppercase mt-0.5">
+              Learn. Build. Grow.
+            </span>
+          </div>
         </Link>
 
-        {/* Navigation Links */}
-        <ul className="flex gap-x-6 text-richblack-25 text-sm font-medium">
-          {/* Dynamic Courses Dropdown (Replaced Home) */}
+        {/* NAVIGATION LINKS */}
+        <ul className="hidden md:flex items-center gap-x-6 lg:gap-x-8 text-richblack-200 text-xs sm:text-sm font-medium">
+          
+          {/* Courses Dropdown */}
           <li
-            className="relative flex items-center gap-1 cursor-pointer group"
+            className="relative flex items-center cursor-pointer group py-1"
             onMouseEnter={() => setIsCoursesOpen(true)}
             onMouseLeave={() => setIsCoursesOpen(false)}
           >
-            <span className="hover:text-indigo-400 transition-all duration-200 flex items-center gap-1">
-              Courses <span className="text-xs">▾</span>
+            <span className={`flex items-center gap-1 transition-colors duration-200 ${matchRoute('/courses') ? 'text-purple-400 font-bold' : 'hover:text-white'}`}>
+              <span>Courses</span>
+              <span className="text-[10px] transform group-hover:rotate-180 transition-transform duration-200">▾</span>
             </span>
+
+            {matchRoute('/courses') && (
+              <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-purple-500 rounded-full shadow-[0_0_8px_#a855f7]" />
+            )}
 
             {isCoursesOpen && (
               <div className="absolute top-full left-0 pt-3 w-[280px] z-50">
-                <div className="bg-white rounded-2xl p-4 shadow-2xl border border-slate-100 text-slate-800 animate-in fade-in slide-in-from-top-2 duration-200">
-                  <div className="absolute -top-1.5 left-6 w-3 h-3 bg-white rotate-45 border-t border-l border-slate-100" />
+                <div className="bg-[#0e111f] rounded-2xl p-4 shadow-[0_10px_30px_rgba(0,0,0,0.9),0_0_20px_rgba(168,85,247,0.25)] border border-purple-500/30 text-white animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="absolute -top-1.5 left-6 w-3 h-3 bg-[#0e111f] rotate-45 border-t border-l border-purple-500/30" />
                   
-                  <div className="px-2 pb-2 mb-2 border-b border-slate-100 flex items-center justify-between">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  <div className="px-2 pb-2 mb-2 border-b border-white/10 flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-purple-400">
                       Popular Courses
                     </span>
-                    <span className="text-[10px] bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full font-bold">
-                      {courses.length} Live
+                    <span className="text-[10px] bg-purple-900/40 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-full font-bold">
+                      {courses.length} Available
                     </span>
                   </div>
 
-                  <div className="max-h-[280px] overflow-y-auto space-y-1 pr-1 custom-scrollbar">
+                  <div className="max-h-[260px] overflow-y-auto space-y-1 pr-2 custom-scrollbar">
                     {courses.length > 0 ? (
-                      courses.map((course, i) => (
+                      courses.slice(0, 10).map((course, i) => (
                         <Link
                           key={course._id || i}
                           to={`/courses/${course._id}`}
-                          className="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-all group/item"
+                          className="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-richblack-100 hover:bg-purple-900/30 hover:text-purple-300 transition-all group/item"
                         >
-                          <div className="flex flex-col max-w-[190px]">
+                          <div className="flex flex-col max-w-[180px]">
                             <span className="truncate capitalize">{course.courseName}</span>
                             {course.instructor && (
-                              <span className="text-[10px] text-slate-400 font-normal">
+                              <span className="text-[10px] text-richblack-400 font-normal">
                                 By {course.instructor.firstName || 'Instructor'}
                               </span>
                             )}
                           </div>
-                          <span className="text-indigo-500 font-bold text-xs">
+                          <span className="text-purple-400 font-bold text-xs">
                             ₹{course.price || 0}
                           </span>
                         </Link>
                       ))
                     ) : (
-                      <p className="text-center text-xs text-slate-400 py-3">
+                      <p className="text-center text-xs text-richblack-400 py-3">
                         No Courses Available
                       </p>
                     )}
+                  </div>
+
+                  <div className="mt-2 pt-2 border-t border-white/10 text-center">
+                    <Link to="/courses" className="text-xs font-bold text-purple-400 hover:text-purple-300 transition-colors inline-flex items-center gap-1">
+                      <span>View All Courses</span>
+                      <span>→</span>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -144,41 +169,49 @@ const Navbar = () => {
 
           {/* Category Dropdown */}
           <li
-            className="relative flex items-center gap-1 cursor-pointer group"
+            className="relative flex items-center cursor-pointer group py-1"
             onMouseEnter={() => setIsCatalogOpen(true)}
             onMouseLeave={() => setIsCatalogOpen(false)}
           >
-            <span className="hover:text-indigo-400 transition-all duration-200 flex items-center gap-1">
-              Category <span className="text-xs">▾</span>
+            <span className={`flex items-center gap-1 transition-colors duration-200 ${matchRoute('/catalog') ? 'text-purple-400 font-bold' : 'hover:text-white'}`}>
+              <span>Category</span>
+              <span className="text-[10px] transform group-hover:rotate-180 transition-transform duration-200">▾</span>
             </span>
+
+            {matchRoute('/catalog') && (
+              <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-purple-500 rounded-full shadow-[0_0_8px_#a855f7]" />
+            )}
 
             {isCatalogOpen && (
               <div className="absolute top-full left-1/2 -translate-x-1/2 pt-3 w-[260px] z-50">
-                <div className="bg-white rounded-2xl p-4 shadow-2xl border border-slate-100 text-slate-800 animate-in fade-in slide-in-from-top-2 duration-200">
-                  <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white rotate-45 border-t border-l border-slate-100" />
+                <div className="bg-[#0e111f] rounded-2xl p-4 shadow-[0_10px_30px_rgba(0,0,0,0.9),0_0_20px_rgba(168,85,247,0.25)] border border-purple-500/30 text-white animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#0e111f] rotate-45 border-t border-l border-purple-500/30" />
                   
-                  <div className="px-2 pb-2 mb-2 border-b border-slate-100">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  <div className="px-2 pb-2 mb-2 border-b border-white/10 flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-purple-400">
                       Explore Categories
+                    </span>
+                    <span className="text-[10px] bg-purple-900/40 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-full font-bold">
+                      {categories.length} Total
                     </span>
                   </div>
 
-                  <div className="max-h-[280px] overflow-y-auto space-y-1 pr-1 custom-scrollbar">
+                  <div className="max-h-[260px] overflow-y-auto space-y-1 pr-2 custom-scrollbar">
                     {categories.length > 0 ? (
                       categories.map((subLink, i) => (
                         <Link
-                          key={i}
-                          to={`/category/${subLink.name.split(" ").join("-").toLowerCase()}`}
-                          className="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-all group/item"
+                          key={subLink._id || i}
+                          to={`/courses?category=${subLink._id || subLink.name.split(" ").join("-").toLowerCase()}`}
+                          className="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-richblack-100 hover:bg-purple-900/30 hover:text-purple-300 transition-all group/item"
                         >
                           <span className="capitalize">{subLink.name}</span>
-                          <span className="text-slate-400 group-hover/item:translate-x-0.5 transition-transform text-[10px]">
+                          <span className="text-richblack-400 group-hover/item:translate-x-0.5 transition-transform text-[10px]">
                             →
                           </span>
                         </Link>
                       ))
                     ) : (
-                      <p className="text-center text-xs text-slate-400 py-3">
+                      <p className="text-center text-xs text-richblack-400 py-3">
                         No Categories Found
                       </p>
                     )}
@@ -188,59 +221,68 @@ const Navbar = () => {
             )}
           </li>
 
-          <li>
-            <Link to="/about" className="hover:text-indigo-400 transition-all duration-200">
+          {/* About */}
+          <li className="relative py-1">
+            <Link to="/about" className={`transition-colors duration-200 ${matchRoute('/about') ? 'text-purple-400 font-bold' : 'hover:text-white'}`}>
               About
             </Link>
+            {matchRoute('/about') && (
+              <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-purple-500 rounded-full shadow-[0_0_8px_#a855f7]" />
+            )}
           </li>
 
-          <li>
-            <Link to="/contact" className="hover:text-indigo-400 transition-all duration-200">
+          {/* Contact */}
+          <li className="relative py-1">
+            <Link to="/contact" className={`transition-colors duration-200 ${matchRoute('/contact') ? 'text-purple-400 font-bold' : 'hover:text-white'}`}>
               Contact
             </Link>
+            {matchRoute('/contact') && (
+              <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-purple-500 rounded-full shadow-[0_0_8px_#a855f7]" />
+            )}
           </li>
         </ul>
 
-        {/* Action Controls */}
-        <div className="flex items-center gap-4">
+        {/* ACTION CONTROLS */}
+        <div className="flex items-center gap-3">
           
-          {/* Light / Dark Mode Toggle Button */}
+          {/* Quick Search Button Icon */}
           <button
-            onClick={toggleTheme}
-            title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
-            className="p-2 rounded-full bg-richblack-800 text-yellow-100 hover:bg-richblack-700 transition-colors border border-richblack-700 cursor-pointer"
+            onClick={() => navigate('/courses')}
+            aria-label="Search courses"
+            className="w-9 h-9 rounded-full bg-[#141728] border border-white/10 hover:border-purple-500/40 text-richblack-300 hover:text-white flex items-center justify-center transition-colors text-sm"
           >
-            {theme === 'light' ? (
-              <svg className="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
-            ) : (
-              <svg className="w-4 h-4 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-              </svg>
-            )}
+            <AiOutlineSearch />
           </button>
 
-          {/* REAL-TIME NOTIFICATION BELL */}
+          {/* Real-time Notification Bell */}
           <NotificationBell />
 
-          {/* Unauthenticated Login/Signup */}
+          {/* Light / Dark Theme Switch Button */}
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle Theme"
+            className="w-9 h-9 rounded-full bg-[#141728] border border-white/10 hover:border-purple-500/40 text-richblack-300 hover:text-white flex items-center justify-center transition-colors text-sm"
+          >
+            {theme === 'light' ? '🌙' : '☀️'}
+          </button>
+
+          {/* Unauthenticated Login / Sign Up */}
           {token === null && (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5">
               <Link to="/login">
-                <button className="rounded-full bg-indigo-600 px-6 py-2 text-white font-medium hover:bg-indigo-700 transition-all duration-200 shadow-[0_2px_10px_rgba(79,70,229,0.3)]">
-                  Login
+                <button className="px-4 py-2 rounded-xl border border-purple-500/40 bg-[#121124] text-xs font-semibold text-white hover:bg-purple-900/30 transition-all">
+                  Log In
                 </button>
               </Link>
               <Link to="/signup">
-                <button className="rounded-full bg-indigo-600 px-6 py-2 text-white font-medium hover:bg-indigo-700 transition-all duration-200 shadow-[0_2px_10px_rgba(79,70,229,0.3)]">
-                  Signup
+                <button className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#a855f7] to-[#8b5cf6] text-xs font-bold text-white shadow-[0_0_15px_rgba(168,85,247,0.5)] hover:opacity-95 transition-all">
+                  Sign Up
                 </button>
               </Link>
             </div>
           )}
 
-          {/* Authenticated User Profile Dropdown */}
+          {/* Authenticated User Profile Avatar */}
           {token !== null && (
             <div className="relative" ref={profileRef}>
               <button
@@ -251,34 +293,35 @@ const Navbar = () => {
                   src={user?.image}
                   alt={user?.first_name}
                   referrerPolicy="no-referrer"
-                  className="aspect-square w-[34px] rounded-full object-cover ring-2 ring-indigo-500/80 hover:ring-indigo-400 transition-all"
+                  className="aspect-square w-[36px] rounded-full object-cover ring-2 ring-purple-500/80 hover:ring-purple-400 transition-all shadow-[0_0_12px_rgba(168,85,247,0.4)]"
                 />
               </button>
 
-              {/* Exact Screenshot Styled My Account Dropdown */}
+              {/* Account Dropdown */}
               {profileOpen && (
-                <div className="absolute right-0 mt-3 w-56 rounded-2xl bg-[#161B22] border border-[#262C36] text-[#E6EDF3] shadow-2xl z-50 overflow-hidden py-2 animate-in fade-in slide-in-from-top-2 duration-150">
+                <div className="absolute right-0 mt-3 w-56 rounded-2xl bg-[#0e111f] border border-purple-500/30 text-richblack-100 shadow-[0_10px_30px_rgba(0,0,0,0.9),0_0_20px_rgba(168,85,247,0.25)] z-50 overflow-hidden py-2 animate-in fade-in slide-in-from-top-2 duration-150">
                   
-                  <div className="px-4 py-2 border-b border-[#262C36] mb-1">
-                    <h3 className="font-semibold text-sm text-white">My Account</h3>
+                  <div className="px-4 py-2 border-b border-white/10 mb-1">
+                    <h3 className="font-semibold text-xs text-white">My Account</h3>
+                    <p className="text-[10px] text-richblack-400 truncate">{user?.email}</p>
                   </div>
 
                   <div className="space-y-0.5">
                     <Link
                       to="/dashboard/my-profile"
                       onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#C9D1D9] hover:bg-[#21262D] hover:text-white transition-colors"
+                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-purple-900/30 hover:text-white transition-colors"
                     >
-                      <VscDashboard className="text-base text-[#8B949E]" />
+                      <VscDashboard className="text-sm text-purple-400" />
                       <span>Dashboard</span>
                     </Link>
 
                     <Link
                       to="/dashboard/enrolled-courses"
                       onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#C9D1D9] hover:bg-[#21262D] hover:text-white transition-colors"
+                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-purple-900/30 hover:text-white transition-colors"
                     >
-                      <VscBook className="text-base text-[#8B949E]" />
+                      <VscBook className="text-sm text-purple-400" />
                       <span>Courses</span>
                     </Link>
 
@@ -286,14 +329,14 @@ const Navbar = () => {
                       <Link
                         to="/dashboard/cart"
                         onClick={() => setProfileOpen(false)}
-                        className="flex items-center justify-between px-4 py-2.5 text-sm text-[#C9D1D9] hover:bg-[#21262D] hover:text-white transition-colors"
+                        className="flex items-center justify-between px-4 py-2 text-xs text-richblack-200 hover:bg-purple-900/30 hover:text-white transition-colors"
                       >
                         <div className="flex items-center gap-3">
-                          <AiOutlineShoppingCart className="text-base text-[#8B949E]" />
+                          <AiOutlineShoppingCart className="text-sm text-purple-400" />
                           <span>Cart</span>
                         </div>
                         {totalItems > 0 && (
-                          <span className="bg-indigo-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                          <span className="bg-purple-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                             {totalItems}
                           </span>
                         )}
@@ -303,40 +346,40 @@ const Navbar = () => {
                     <Link
                       to="/dashboard/my-profile"
                       onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#C9D1D9] hover:bg-[#21262D] hover:text-white transition-colors"
+                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-purple-900/30 hover:text-white transition-colors"
                     >
-                      <VscAccount className="text-base text-[#8B949E]" />
+                      <VscAccount className="text-sm text-purple-400" />
                       <span>Profile</span>
                     </Link>
 
                     <Link
                       to="/dashboard/settings"
                       onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#C9D1D9] hover:bg-[#21262D] hover:text-white transition-colors"
+                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-purple-900/30 hover:text-white transition-colors"
                     >
-                      <VscGear className="text-base text-[#8B949E]" />
+                      <VscGear className="text-sm text-purple-400" />
                       <span>Account</span>
                     </Link>
 
                     <Link
                       to="/dashboard/notifications"
                       onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#C9D1D9] hover:bg-[#21262D] hover:text-white transition-colors"
+                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-purple-900/30 hover:text-white transition-colors"
                     >
-                      <VscBell className="text-base text-[#8B949E]" />
+                      <VscBell className="text-sm text-purple-400" />
                       <span>Notifications</span>
                     </Link>
                   </div>
 
-                  <div className="border-t border-[#262C36] mt-1.5 pt-1">
+                  <div className="border-t border-white/10 mt-1.5 pt-1">
                     <button
                       onClick={() => {
                         setProfileOpen(false);
                         dispatch(logout(navigate));
                       }}
-                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[#C9D1D9] hover:bg-red-500/10 hover:text-red-400 transition-colors text-left"
+                      className="w-full flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-red-500/10 hover:text-red-400 transition-colors text-left"
                     >
-                      <VscSignOut className="text-base text-[#8B949E]" />
+                      <VscSignOut className="text-sm text-red-400" />
                       <span>Logout</span>
                     </button>
                   </div>
@@ -345,7 +388,9 @@ const Navbar = () => {
               )}
             </div>
           )}
+
         </div>
+
       </div>
     </nav>
   );

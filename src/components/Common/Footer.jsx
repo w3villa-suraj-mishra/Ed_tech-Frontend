@@ -10,10 +10,10 @@ const Footer = ({ logoAsset, socialAssets }) => {
   return (
     <footer className="w-full bg-[#070913] text-richblack-300 font-sans border-t border-purple-900/30 relative">
       {/* Top Accent Gradient Line from screenshot */}
-      <div className="w-full h-1 bg-gradient-to-r from-purple-800 via-purple-500 to-indigo-600"></div>
+      {/* <div className="w-full h-1 bg-gradient-to-r from-purple-800 via-purple-500 to-indigo-600"></div> */}
 
-      <div className="w-11/12 max-w-[1260px] mx-auto py-16 px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12 pb-14 border-b border-richblack-800">
+      <div className="w-11/12 max-w-[1260px] mx-auto py-4 px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12 pb-4 border-b border-richblack-800">
           
           {/* Col 1: Brand & Logo Slot & Social Icons */}
           <div className="lg:col-span-2 flex flex-col gap-5">

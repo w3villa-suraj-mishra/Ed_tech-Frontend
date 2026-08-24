@@ -3,32 +3,27 @@ import ContactUsForm from "./ContactUsForm";
 
 const ContactForm = () => {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-richblack-700 bg-gradient-to-br from-richblack-800 via-richblack-900 to-richblack-800 p-8 lg:p-14 shadow-2xl backdrop-blur-md transition-all duration-300 hover:shadow-blue-500/10 hover:scale-[1.01]">
+    <div className="relative overflow-hidden rounded-3xl border border-purple-500/30 bg-[#0e111f]/95 p-6 sm:p-10 shadow-[0_0_35px_rgba(168,85,247,0.2)] backdrop-blur-xl transition-all text-left">
+      
+      {/* Soft Corner Glow Effects */}
+      <div className="absolute -top-20 -right-20 h-60 w-60 rounded-full bg-purple-600 opacity-25 blur-3xl pointer-events-none"></div>
+      <div className="absolute -bottom-20 -left-20 h-60 w-60 rounded-full bg-blue-600 opacity-20 blur-3xl pointer-events-none"></div>
 
-      {/* Glow Effect */}
-      <div className="absolute -top-20 -left-20 h-60 w-60 rounded-full bg-blue-500 opacity-20 blur-3xl"></div>
-      <div className="absolute -bottom-20 -right-20 h-60 w-60 rounded-full bg-purple-500 opacity-20 blur-3xl"></div>
-
-      {/* Content */}
-      <div className="relative z-10 flex flex-col gap-5">
-
-        <h1 className="text-3xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-900 to-purple-300 leading-tight">
-          Got an Idea? Let’s Build It Together 
-        </h1>
-
-        <p className="text-richblack-300 text-base lg:text-lg max-w-xl">
-          Tell us more about your vision. We’ll help you turn it into something amazing.
+      {/* Header & Subtitle */}
+      <div className="relative z-10 flex flex-col gap-2 mb-6">
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          Got an idea? <span className="text-[#a855f7]">Let's Build It Together</span>
+        </h2>
+        <p className="text-xs sm:text-sm text-richblack-300 font-normal">
+          Tell us more about your query. We'll get back to you as soon as possible.
         </p>
-
-        {/* Divider */}
-        <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-richblack-600 to-transparent"></div>
-
-        {/* Form */}
-        <div className="mt-5 transition-all duration-300">
-          <ContactUsForm />
-        </div>
-
       </div>
+
+      {/* Form Container */}
+      <div className="relative z-10">
+        <ContactUsForm />
+      </div>
+
     </div>
   );
 };
