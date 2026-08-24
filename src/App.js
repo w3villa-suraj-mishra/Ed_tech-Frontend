@@ -21,6 +21,7 @@ import EditCourse from "./components/core/Dashboard/EditCourse";
 import MyCourses from "./components/core/Dashboard/MyCourses";
 import GlobalDashboard from "./components/core/Dashboard/GlobalDashboard";
 import Articles from "./components/core/Dashboard/Articles";
+import ArticleDetailPage from "./pages/ArticleDetailPage.jsx";
 import GuidedPath from "./components/core/Dashboard/GuidedPath";
 import HelpSupport from "./components/core/Dashboard/HelpSupport";
 import NotificationSettings from "./components/core/Dashboard/NotificationSettings";
@@ -135,6 +136,7 @@ function App() {
             <Route path="my-courses"          element={<MyCourses />} />
             <Route path="instructor"          element={<InstructorDashboard />} />
             <Route path="articles"            element={<Articles />} />
+            <Route path="articles/:articleId" element={<ArticleDetailPage />} />
             <Route path="guided-path"         element={<GuidedPath />} />
             <Route path="notifications font-['Inter']" element={<NotificationSettings />} />
             <Route path="notifications"       element={<NotificationSettings />} />

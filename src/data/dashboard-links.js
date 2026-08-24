@@ -33,6 +33,12 @@ export const sidebarLinks = [
     icon: "VscQuestion",
   },
   {
+    id: 15,
+    name: "Articles",
+    path: "/dashboard/articles",
+    icon: "VscBook",
+  },
+  {
     id: 2,
     name: "Instructor Stats",
     path: "/dashboard/instructor",

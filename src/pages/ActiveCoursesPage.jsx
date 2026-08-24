@@ -10,6 +10,7 @@ import {
   FaBookmark,
   FaCommentDots,
   FaStore,
+  FaBookOpen,
 } from "react-icons/fa6";
 
 const ActiveCoursesPage = () => {
@@ -74,13 +75,20 @@ const ActiveCoursesPage = () => {
         </button>
 
         {/* NAVIGATION ICONS */}
-        <nav className="flex flex-col gap-6 w-full items-center text-slate-400">
+        <nav className="flex flex-col gap-4 w-full items-center text-slate-400">
           <button
             onClick={() => navigate("/t/u/activeCourses")}
             title="Active Courses"
             className="p-2.5 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 shadow-sm transition-all"
           >
             <FaGraduationCap size={18} />
+          </button>
+          <button
+            onClick={() => navigate("/dashboard/articles")}
+            title="Learn Articles"
+            className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-500 hover:text-indigo-600 transition-all"
+          >
+            <FaBookOpen size={18} />
           </button>
         </nav>
 
