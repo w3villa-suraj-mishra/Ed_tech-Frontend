@@ -74,7 +74,7 @@ export async function getUserEnrolledCourses(token) {
 
 
 export async function getInstructorData(token){
-  let result = []
+  let result = null
 
   try{
     const response = await apiConnector("GET",
@@ -84,7 +84,7 @@ export async function getInstructorData(token){
         Authorization: `Bearer ${token}`,
       }
     )
-    result = response?.data?.data || []
+    result = response?.data || null
   }
   catch(error){
     console.log("GET_INSTRUCTOR_API ERROR............", error)
