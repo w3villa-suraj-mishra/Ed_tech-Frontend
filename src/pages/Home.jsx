@@ -618,10 +618,7 @@ const Home = () => {
                     <InstructorSection />
                 </div>
 
-                <div className='w-full flex flex-col items-center gap-10'>
-                    <h1 className='text-center text-4xl font-semibold'>
-                        What our <HighLightText text={"Students Say"} />
-                    </h1>
+                <div className='w-full flex flex-col items-center'>
                     <Reviewslider />
                 </div>
             </div>

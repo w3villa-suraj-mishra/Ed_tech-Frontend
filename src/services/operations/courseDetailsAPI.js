@@ -407,6 +407,18 @@ export const fetchCourseReviews = async (courseId) => {
   }
 }
 
+export const fetchAllReviews = async () => {
+  try {
+    const response = await apiConnector("GET", ratingsEndpoints.REVIEWS_DETAILS_API)
+    if (response?.data?.success) {
+      return response?.data?.data || []
+    }
+  } catch (error) {
+    console.log("FETCH ALL REVIEWS ERROR............", error)
+  }
+  return []
+}
+
 export const postCommentAPI = async (data, token) => {
   let result = null
   try {
