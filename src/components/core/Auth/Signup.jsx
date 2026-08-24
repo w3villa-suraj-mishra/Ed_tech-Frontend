@@ -274,7 +274,8 @@ function Signup() {
             <button
               type="button"
               onClick={() => {
-                window.location.href = `${BASE_URL}/auth/google_oauth2?mode=signup&role=${accountType}`
+                const targetUrl = `${BASE_URL}/auth/google_oauth2?mode=signup&role=${accountType}`.replace('??', '?')
+                window.location.href = targetUrl
               }}
               className="flex w-full justify-center items-center gap-x-2 rounded-[8px] bg-yellow-50 py-[12px] px-[12px] font-medium text-richblack-900 hover:scale-95 transition-all duration-200"
             >
