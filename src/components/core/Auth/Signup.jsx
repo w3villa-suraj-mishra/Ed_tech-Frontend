@@ -54,12 +54,13 @@ function Signup() {
     }
 
     try {
+      const cleanEmail = String(email || '').toLowerCase().trim()
       localStorage.setItem(
         "signupData",
         JSON.stringify({
           firstName,
           lastName,
-          email,
+          email: cleanEmail,
           password,
           confirmPassword,
           accountType,
@@ -67,7 +68,8 @@ function Signup() {
       )
 
       await apiConnector("POST", endpoints.SENDOTP_API, {
-        email: email,
+        email: cleanEmail,
+        accountType: accountType,
         account_type: accountType
       })
 
