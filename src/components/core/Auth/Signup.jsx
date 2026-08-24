@@ -44,6 +44,8 @@ function Signup() {
     }))
   }
 
+  const [loading, setLoading] = useState(false)
+
   // Handle Form Submission
   const handleOnSubmit = async (e) => {
     e.preventDefault()
@@ -52,6 +54,8 @@ function Signup() {
       toast.error("Passwords Do Not Match")
       return
     }
+
+    setLoading(true)
 
     try {
       const cleanEmail = String(email || '').toLowerCase().trim()
@@ -81,6 +85,8 @@ function Signup() {
       toast.error(
         error?.response?.data?.message || "Failed To Send OTP"
       )
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -246,9 +252,17 @@ function Signup() {
             </div>
             <button
               type="submit"
-              className="mt-6 rounded-[8px] bg-yellow-50 py-[12px] px-[12px] font-medium text-richblack-900 hover:scale-95 transition-all duration-200"
+              disabled={loading}
+              className="mt-6 w-full rounded-[8px] bg-yellow-50 py-[12px] px-[12px] font-medium text-richblack-900 hover:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all duration-200"
             >
-              Create Account
+              {loading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-richblack-900 border-t-transparent rounded-full animate-spin"></div>
+                  Sending Verification Code...
+                </>
+              ) : (
+                "Create Account"
+              )}
             </button>
 
             <div className="flex w-full items-center my-2 gap-x-2">
