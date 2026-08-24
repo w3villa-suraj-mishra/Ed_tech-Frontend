@@ -118,8 +118,8 @@ function VerifyOtp() {
         code: fullOtp,
       });
 
-      // 2. Complete User Signup
-      await apiConnector("POST", endpoints.SIGNUP_API, {
+      // 2. Complete User Signup & Auto-login
+      const signupRes = await apiConnector("POST", endpoints.SIGNUP_API, {
         firstName,
         lastName,
         first_name: firstName,
@@ -135,8 +135,32 @@ function VerifyOtp() {
       });
 
       localStorage.removeItem("signupData");
-      toast.success("Account Created Successfully");
-      navigate("/login");
+
+      // Auto login user if token returned
+      if (signupRes?.data?.token) {
+        const rawUser = signupRes.data?.user || {};
+        const account_type = rawUser.accountType || rawUser.account_type || accountType || "Student";
+        const first_name = rawUser.firstName || rawUser.first_name || firstName;
+        const last_name = rawUser.lastName || rawUser.last_name || lastName;
+        const userImage = rawUser.image || `https://api.dicebear.com/5.x/initials/svg?seed=${first_name} ${last_name}`;
+        
+        const fullUser = {
+          ...rawUser,
+          account_type,
+          accountType: account_type,
+          first_name,
+          last_name,
+          image: userImage
+        };
+
+        localStorage.setItem("token", signupRes.data.token);
+        localStorage.setItem("user", JSON.stringify(fullUser));
+        toast.success("Account Created & Logged In!");
+        navigate("/dashboard/global");
+      } else {
+        toast.success("Account Created Successfully. Please log in.");
+        navigate("/login");
+      }
     } catch (error) {
       console.error("VERIFY OTP / SIGNUP ERROR:", error);
       const errMsg =
