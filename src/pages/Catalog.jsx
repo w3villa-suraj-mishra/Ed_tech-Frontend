@@ -1,73 +1,112 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { getAllCourses, fetchCourseCategories } from '../services/operations/courseDetailsAPI';
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams, useSearchParams, Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { getAllCourses, fetchCourseCategories } from "../services/operations/courseDetailsAPI";
+import { getUserEnrolledCourses } from "../services/operations/profileAPI";
+import { addToCart } from "../services/slices/cartSlice";
+import Footer from "../components/Common/Footer";
+import {
+  VscSearch,
+  VscListFilter,
+  VscChevronLeft,
+  VscChevronRight,
+  VscBook,
+  VscClock,
+  VscStarFull,
+  VscArrowRight
+} from "react-icons/vsc";
 
 const Catalog = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { categoryId: pathCategoryId } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-  const queryCategoryParam = searchParams.get('category') || '';
+  const queryCategoryParam = searchParams.get("category") || "";
+
+  const { token } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.profile);
 
   const [courses, setCourses] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(pathCategoryId || queryCategoryParam || 'all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [enrolledCourseIds, setEnrolledCourseIds] = useState(new Set());
+  const [selectedCategory, setSelectedCategory] = useState(pathCategoryId || queryCategoryParam || "all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("recent");
   const [loading, setLoading] = useState(true);
 
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const coursesPerPage = 6;
+
+  // 1. Fetch courses & categories
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const [coursesData, categoriesData] = await Promise.all([
           getAllCourses(),
-          fetchCourseCategories()
+          fetchCourseCategories(),
         ]);
-        
-        if (coursesData && coursesData.length > 0) {
+
+        if (coursesData && Array.isArray(coursesData)) {
           setCourses(coursesData);
         }
-        
-        if (categoriesData && categoriesData.length > 0) {
+
+        if (categoriesData && Array.isArray(categoriesData)) {
           setCategories(categoriesData);
         }
+
+        // If user logged in, fetch enrolled courses
+        if (token) {
+          const enrolled = await getUserEnrolledCourses(token);
+          if (enrolled && Array.isArray(enrolled)) {
+            const eIds = new Set(enrolled.map((c) => String(c._id || c.id)));
+            setEnrolledCourseIds(eIds);
+          }
+        }
       } catch (error) {
-        console.log("Error fetching catalog data", error);
+        console.error("Error fetching catalog data", error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [token]);
 
+  // Sync category param
   useEffect(() => {
-    const activeCategory = pathCategoryId || queryCategoryParam || 'all';
+    const activeCategory = pathCategoryId || queryCategoryParam || "all";
     setSelectedCategory(activeCategory);
+    setCurrentPage(1);
   }, [pathCategoryId, queryCategoryParam]);
 
-  const handleCategoryChange = (e) => {
-    const val = e.target.value;
-    setSelectedCategory(val);
-    if (val === 'all') {
+  // Handle Category selection
+  const handleCategorySelect = (catId) => {
+    setSelectedCategory(catId);
+    setCurrentPage(1);
+    if (catId === "all") {
       setSearchParams({});
     } else {
-      setSearchParams({ category: val });
+      setSearchParams({ category: catId });
     }
   };
 
-  // Filter courses strictly by category and search query
+  // 2. Filter & Sort Logic
   const filteredCourses = courses.filter((course) => {
     // Search query filter
-    const matchesSearch = course.courseName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    const matchesSearch =
+      course.courseName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       course.courseDescription?.toLowerCase().includes(searchQuery.toLowerCase());
 
     if (!matchesSearch) return false;
 
     // Category filter
-    if (!selectedCategory || selectedCategory === 'all') return true;
+    if (!selectedCategory || selectedCategory === "all") return true;
 
     const courseCatId = course.categoryId || course.category?._id || course.category?.id;
-    const courseCatName = course.category?.name || '';
-    const courseCatSlug = courseCatName.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+    const courseCatName = course.category?.name || "";
+    const courseCatSlug = courseCatName.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
 
     return (
       String(courseCatId) === String(selectedCategory) ||
@@ -76,104 +115,324 @@ const Catalog = () => {
     );
   });
 
-  return (
-    <div className="max-w-[1200px] mx-auto py-16 px-8 font-['Inter'] min-h-[80vh] bg-richblack-900 text-richblack-5">
-      <div className="text-center mb-16">
-        <h1 className="text-4xl font-extrabold text-richblack-5 mb-4">Explore Our Course Catalog</h1>
-        <p className="text-richblack-300 text-lg mb-8">Discover thousands of courses designed to help you advance your career in tech.</p>
+  // Sort Courses
+  const sortedCourses = [...filteredCourses].sort((a, b) => {
+    if (sortBy === "price-low") return (a.price || 0) - (b.price || 0);
+    if (sortBy === "price-high") return (b.price || 0) - (a.price || 0);
+    if (sortBy === "rating") return (b.averageRating || 4.5) - (a.averageRating || 4.5);
+    return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+  });
 
-        <div className="flex flex-col sm:flex-row justify-center gap-4 max-w-[600px] mx-auto">
-          <input
-            type="text"
-            placeholder="Search for courses..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-1 px-6 py-4 rounded-full bg-richblack-800 border border-richblack-700 text-richblack-5 text-base shadow-sm outline-none transition-all focus:border-yellow-50 focus:ring-4 focus:ring-yellow-50/10"
-          />
-          <select
-            value={selectedCategory}
-            onChange={handleCategoryChange}
-            className="px-6 py-4 rounded-full border border-richblack-700 text-richblack-5 text-base bg-richblack-800 outline-none cursor-pointer"
+  // Pagination Math
+  const totalPages = Math.ceil(sortedCourses.length / coursesPerPage) || 1;
+  const indexOfLastCourse = currentPage * coursesPerPage;
+  const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
+  const currentCourses = sortedCourses.slice(indexOfFirstCourse, indexOfLastCourse);
+
+  // Dynamic Button Action Handler based on User state
+  const renderAccessButton = (course) => {
+    const courseId = String(course._id || course.id);
+    const isEnrolled = enrolledCourseIds.has(courseId);
+    const isFree = Number(course.price) === 0;
+
+    if (isEnrolled) {
+      return (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate(`/view-course/${courseId}/section/${course.courseContent?.[0]?._id || "1"}/sub-section/${course.courseContent?.[0]?.subSection?.[0]?._id || "1"}`);
+          }}
+          className="w-full py-3 bg-purple-600/20 border border-purple-500/40 text-purple-300 rounded-xl text-xs font-bold transition-all hover:bg-purple-600 hover:text-white flex items-center justify-center gap-1.5"
+        >
+          <span>Continue Learning</span>
+          <VscArrowRight />
+        </button>
+      );
+    }
+
+    if (isFree) {
+      return (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!token) {
+              navigate("/login");
+            } else {
+              navigate(`/courses/${courseId}`);
+            }
+          }}
+          className="w-full py-3 bg-emerald-600/20 border border-emerald-500/40 text-emerald-300 rounded-xl text-xs font-bold transition-all hover:bg-emerald-600 hover:text-white flex items-center justify-center gap-1.5"
+        >
+          <span>Start Learning</span>
+          <VscArrowRight />
+        </button>
+      );
+    }
+
+    return (
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          if (!token) {
+            navigate("/login");
+          } else {
+            dispatch(addToCart(course));
+            navigate("/dashboard/cart");
+          }
+        }}
+        className="w-full py-3 bg-transparent text-white border border-purple-500/40 rounded-xl text-xs font-bold transition-all hover:bg-purple-600 hover:border-purple-600 shadow-[0_0_12px_rgba(168,85,247,0.2)] flex items-center justify-center gap-1.5"
+      >
+        <span>Enroll Now</span>
+        <VscArrowRight />
+      </button>
+    );
+  };
+
+  return (
+    <div className="bg-[#070913] text-white min-h-screen font-sans flex flex-col justify-between">
+      
+      <div className="max-w-[1260px] mx-auto py-12 px-4 sm:px-6 w-full space-y-10">
+        
+        {/* 1. PAGE HEADER */}
+        <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+            Explore Our <span className="bg-gradient-to-r from-purple-400 via-purple-300 to-indigo-400 bg-clip-text text-transparent">Course Catalog</span>
+          </h1>
+          <p className="text-xs sm:text-sm text-richblack-300 font-medium leading-relaxed">
+            Discover thousands of courses designed to help you advance your career in tech.
+          </p>
+        </div>
+
+        {/* 2. SEARCH & CATEGORY SELECTOR DROPDOWN */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-2xl mx-auto">
+          <div className="relative w-full sm:flex-1">
+            <VscSearch className="absolute left-4 top-3.5 text-richblack-400 text-sm" />
+            <input
+              type="text"
+              placeholder="Search for courses..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full bg-[#101424] border border-purple-500/20 rounded-full pl-11 pr-4 py-3 text-xs sm:text-sm text-white placeholder-richblack-400 focus:outline-none focus:border-purple-500 transition-all shadow-[0_0_15px_rgba(168,85,247,0.06)]"
+            />
+          </div>
+
+          <div className="relative w-full sm:w-56">
+            <select
+              value={selectedCategory}
+              onChange={(e) => handleCategorySelect(e.target.value)}
+              className="w-full appearance-none bg-[#101424] border border-purple-500/20 rounded-full px-5 py-3 pr-10 text-xs sm:text-sm text-white outline-none cursor-pointer focus:border-purple-500 transition-all"
+            >
+              <option value="all">All Categories</option>
+              {categories.map((cat) => {
+                const catId = cat._id || cat.id;
+                return (
+                  <option key={catId} value={catId}>
+                    {cat.name}
+                  </option>
+                );
+              })}
+            </select>
+            <VscListFilter className="absolute right-4 top-3.5 text-richblack-400 pointer-events-none text-sm" />
+          </div>
+        </div>
+
+        {/* 3. CATEGORY CHIPS ROW */}
+        <div className="flex items-center justify-center gap-2.5 flex-wrap">
+          <button
+            onClick={() => handleCategorySelect("all")}
+            className={`px-4 py-2 rounded-full text-xs font-bold transition-all border ${
+              selectedCategory === "all"
+                ? "bg-purple-600 border-purple-500 text-white shadow-[0_0_12px_rgba(168,85,247,0.4)]"
+                : "bg-[#101424] border-white/10 text-richblack-300 hover:text-white hover:border-purple-500/40"
+            }`}
           >
-            <option value="all">All Categories</option>
-            {categories.map((cat) => {
-              const catId = cat._id || cat.id;
+            All
+          </button>
+          {categories.map((cat) => {
+            const catId = String(cat._id || cat.id);
+            const isSelected = String(selectedCategory) === catId || String(selectedCategory).toLowerCase() === cat.name?.toLowerCase();
+            return (
+              <button
+                key={catId}
+                onClick={() => handleCategorySelect(catId)}
+                className={`px-4 py-2 rounded-full text-xs font-bold transition-all border ${
+                  isSelected
+                    ? "bg-purple-600 border-purple-500 text-white shadow-[0_0_12px_rgba(168,85,247,0.4)]"
+                    : "bg-[#101424] border-white/10 text-richblack-300 hover:text-white hover:border-purple-500/40"
+                }`}
+              >
+                {cat.name}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* 4. COURSE GRID */}
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 6 }).map((_, idx) => (
+              <div key={idx} className="bg-[#0e111f] rounded-2xl p-4 border border-purple-500/10 space-y-4 animate-pulse">
+                <div className="h-44 w-full bg-purple-900/20 rounded-xl" />
+                <div className="h-5 bg-purple-900/20 rounded-md w-3/4" />
+                <div className="h-4 bg-purple-900/20 rounded-md w-full" />
+                <div className="h-10 bg-purple-900/20 rounded-xl" />
+              </div>
+            ))}
+          </div>
+        ) : currentCourses.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {currentCourses.map((course) => {
+              const courseId = course._id || course.id;
+              const origPrice = Number(course?.pricing?.originalPrice || course?.originalPrice || course?.price || 0);
+              const currentPrice = Number(course?.pricing?.finalPrice || course?.price || 0);
+              const discountPct = origPrice > currentPrice ? Math.round(((origPrice - currentPrice) / origPrice) * 100) : 0;
+              const rating = course.averageRating || 4.5;
+              const categoryName = course.category?.name || "Development";
+              const totalSections = course.courseContent?.length || course.sections?.length || 2;
+
               return (
-                <option key={catId} value={catId}>
-                  {cat.name}
-                </option>
+                <div
+                  key={courseId}
+                  onClick={() => navigate(`/courses/${courseId}`)}
+                  className="bg-[#0e111f] border border-purple-500/20 hover:border-purple-500/50 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1.5 shadow-[0_0_20px_rgba(168,85,247,0.08)] flex flex-col justify-between cursor-pointer group"
+                >
+                  <div>
+                    {/* Course Thumbnail */}
+                    <div className="relative aspect-video w-full overflow-hidden bg-purple-900/20">
+                      <img
+                        src={course.thumbnail}
+                        alt={course.courseName}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <span className="absolute top-3 right-3 text-[10px] font-extrabold uppercase bg-black/60 backdrop-blur-md text-white border border-white/10 px-2.5 py-1 rounded-md">
+                        {categoryName}
+                      </span>
+                    </div>
+
+                    {/* Card Content */}
+                    <div className="p-5 space-y-3">
+                      <h3 className="font-bold text-base text-white line-clamp-1 group-hover:text-purple-300 transition-colors">
+                        {course.courseName}
+                      </h3>
+
+                      <p className="text-xs text-richblack-300 line-clamp-2 leading-relaxed">
+                        {course.courseDescription}
+                      </p>
+
+                      {/* Course Metadata */}
+                      <div className="flex items-center gap-4 text-[11px] text-richblack-400 pt-1">
+                        <span className="flex items-center gap-1">
+                          <VscBook className="text-purple-400" />
+                          <span>{totalSections} Sections</span>
+                        </span>
+                        <span className="flex items-center gap-1">
+                          🔥 <span>{course.studentsEnroled?.length || 8569} Students</span>
+                        </span>
+                        <span className="flex items-center gap-1 text-emerald-400 font-semibold">
+                          ● Active
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card Bottom / Access Button */}
+                  <div className="p-5 pt-0 space-y-3">
+                    {/* Pricing */}
+                    <div className="flex items-center justify-between border-t border-white/5 pt-3">
+                      <div className="flex items-center gap-1 text-xs">
+                        <VscStarFull className="text-amber-400" />
+                        <span className="text-white font-bold">{rating}</span>
+                      </div>
+
+                      <div className="text-right flex items-center gap-2">
+                        {discountPct > 0 && (
+                          <span className="text-xs text-richblack-400 line-through">₹{origPrice.toLocaleString()}</span>
+                        )}
+                        <span className="text-base font-extrabold text-white">
+                          ₹{currentPrice.toLocaleString()}
+                        </span>
+                        {discountPct > 0 && (
+                          <span className="text-[10px] font-bold bg-purple-900/40 text-purple-300 border border-purple-500/30 px-1.5 py-0.5 rounded">
+                            {discountPct}% OFF
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {renderAccessButton(course)}
+                  </div>
+
+                </div>
               );
             })}
-          </select>
-        </div>
+          </div>
+        ) : (
+          /* EMPTY STATE */
+          <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-12 text-center text-richblack-300 space-y-4 max-w-lg mx-auto shadow-[0_0_20px_rgba(168,85,247,0.08)]">
+            <div className="text-4xl">🔍</div>
+            <h3 className="text-lg font-bold text-white">No Courses Found</h3>
+            <p className="text-xs text-richblack-400">
+              We couldn't find any courses matching your current search or category filter.
+            </p>
+            <button
+              onClick={() => {
+                setSelectedCategory("all");
+                setSearchParams({});
+                setSearchQuery("");
+              }}
+              className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition-all shadow-[0_0_15px_rgba(168,85,247,0.3)] inline-block"
+            >
+              Clear Filters
+            </button>
+          </div>
+        )}
+
+        {/* 5. PAGINATION CONTROLS */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 pt-6">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="w-8 h-8 rounded-lg bg-[#101424] border border-white/10 hover:border-purple-500/40 flex items-center justify-center text-richblack-300 hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-all"
+            >
+              <VscChevronLeft />
+            </button>
+
+            {Array.from({ length: totalPages }).map((_, idx) => {
+              const pageNum = idx + 1;
+              const isActive = currentPage === pageNum;
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() => setCurrentPage(pageNum)}
+                  className={`w-8 h-8 rounded-lg font-bold text-xs transition-all ${
+                    isActive
+                      ? "bg-purple-600 text-white shadow-[0_0_10px_rgba(168,85,247,0.5)]"
+                      : "bg-[#101424] border border-white/10 text-richblack-300 hover:text-white hover:border-purple-500/40"
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+
+            <button
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className="w-8 h-8 rounded-lg bg-[#101424] border border-white/10 hover:border-purple-500/40 flex items-center justify-center text-richblack-300 hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-all"
+            >
+              <VscChevronRight />
+            </button>
+          </div>
+        )}
+
       </div>
 
-      {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-          {Array.from({ length: 6 }).map((_, idx) => (
-            <div key={idx} className="bg-richblack-800 rounded-2xl overflow-hidden shadow-sm border border-richblack-700 flex flex-col">
-              <div className="h-52 w-full bg-richblack-700 animate-pulse"></div>
-              <div className="p-6">
-                <div className="w-20 h-6 bg-richblack-700 rounded-full mb-4 animate-pulse"></div>
-                <div className="h-6 bg-richblack-700 rounded-md mb-2 w-full animate-pulse"></div>
-                <div className="h-6 bg-richblack-700 rounded-md w-3/5 mb-8 animate-pulse"></div>
-                <div className="flex justify-between pt-4 border-t border-richblack-700">
-                  <div className="h-4 bg-richblack-700 rounded-md w-1/4 animate-pulse"></div>
-                  <div className="h-4 bg-richblack-700 rounded-md w-1/4 animate-pulse"></div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : filteredCourses.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-          {filteredCourses.map(course => (
-            <div
-              key={course._id || course.id}
-              onClick={() => navigate(`/courses/${course._id || course.id}`)}
-              className="bg-richblack-800 rounded-2xl overflow-hidden shadow-sm border border-richblack-700 transition-all hover:-translate-y-2 hover:shadow-xl flex flex-col cursor-pointer"
-            >
-              <div className="h-52 bg-gradient-to-br from-richblack-700 to-richblack-900 relative flex justify-end items-start p-4">
-                {course.thumbnail && (
-                   <img src={course.thumbnail} alt={course.courseName} className="absolute inset-0 w-full h-full object-cover opacity-80" />
-                )}
-                <span className="bg-white/20 backdrop-blur-md text-white px-3 py-1.5 rounded-full text-xs font-semibold tracking-wider relative z-10">
-                  {course.tag ? (typeof course.tag === 'string' && course.tag.startsWith('[') ? JSON.parse(course.tag)[0] : course.tag) : "New"}
-                </span>
-              </div>
-              <div className="p-6 flex flex-col flex-1">
-                <h3 className="text-xl font-bold text-richblack-5 mb-6 leading-tight">{course.courseName}</h3>
-                <div className="flex justify-between text-richblack-300 text-sm font-medium mb-6 pt-4 border-t border-richblack-700">
-                  <span>⏱ {course.sections?.length || course.courseContent?.length || 0} Sections</span>
-                  <span>💰 ₹{course.price}</span>
-                  <span>👥 Active</span>
-                </div>
-                <button className="mt-auto w-full py-4 bg-transparent text-yellow-50 border-2 border-yellow-50 rounded-lg text-base font-bold transition-all hover:bg-yellow-50 hover:text-richblack-900">
-                  Enroll Now
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="bg-richblack-800 border border-richblack-700 rounded-2xl p-16 text-center max-w-xl mx-auto my-8 space-y-4">
-          <div className="text-4xl">📚</div>
-          <h3 className="text-2xl font-bold text-white">No Courses Available</h3>
-          <p className="text-richblack-300 text-sm">
-            There are currently no published courses under this category.
-          </p>
-          <button
-            onClick={() => {
-              setSelectedCategory('all');
-              setSearchParams({});
-              setSearchQuery('');
-            }}
-            className="mt-4 px-6 py-2.5 bg-yellow-50 text-richblack-900 font-bold rounded-xl hover:bg-yellow-100 transition-all text-xs"
-          >
-            Clear Filters & View All
-          </button>
-        </div>
-      )}
+      {/* 6. EXISTING STUDY_TECH FOOTER */}
+      <Footer />
     </div>
   );
 };

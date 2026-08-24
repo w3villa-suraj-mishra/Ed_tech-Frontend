@@ -98,6 +98,7 @@ const Home = () => {
     });
     const [dbCategories, setDbCategories] = useState([]);
     const [featuredCourses, setFeaturedCourses] = useState([]);
+    const [showAllCatModal, setShowAllCatModal] = useState(false);
 
     useEffect(() => {
         let isMounted = true;
@@ -248,7 +249,7 @@ const Home = () => {
                 </div>
 
                 {/* Dynamic Stats Section */}
-                <div className='w-full max-w-4xl mt-12 py-6 px-4 flex flex-wrap items-center justify-around gap-6 text-white bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl'>
+                <div className='w-full max-w-4xl mt-6 py-4 px-4 flex flex-wrap items-center justify-around gap-4 text-white bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl'>
                     {/* Stat 1: Learners */}
                     <div className='flex items-center gap-3.5'>
                         <div className='text-[#a855f7] text-2xl p-2 bg-[#a855f7]/10 rounded-xl'>
@@ -311,7 +312,7 @@ const Home = () => {
                 </div>
 
                 {/* Video Banner */}
-                <div className='mx-3 my-7 h-[500px] shadow-[10px_-5px_50px_-5px] shadow-blue-200 rounded-lg overflow-hidden w-[100%] max-w-[1260px]'>
+                <div className='mx-3 my-5 h-[420px] shadow-[10px_-5px_50px_-5px] shadow-blue-200 rounded-lg overflow-hidden w-[100%] max-w-[1260px]'>
                     <video
                         muted
                         loop
@@ -323,7 +324,7 @@ const Home = () => {
                 </div>
 
                 {/* 1. POPULAR CATEGORIES SECTION */}
-                <div className='w-full max-w-[1260px] my-16 px-4 text-center'>
+                <div className='w-full max-w-[1260px] my-6 px-4 text-center'>
                     <h2 className='text-3xl sm:text-4xl font-extrabold tracking-tight text-white'>
                         Popular <span className='text-[#a855f7]'>Categories</span>
                     </h2>
@@ -332,7 +333,7 @@ const Home = () => {
                     </p>
 
                     {/* Categories Grid */}
-                    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-10'>
+                    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-6'>
                         {popularCategoriesList.map((cat, idx) => {
                             const IconComponent = cat.icon;
                             return (
@@ -359,18 +360,74 @@ const Home = () => {
                     </div>
 
                     {/* Browse All Categories Button */}
-                    <div className='mt-8 flex justify-center'>
-                        <Link to='/courses'>
-                            <button className='flex items-center gap-2 bg-[#121624] hover:bg-[#1c2238] border border-[#a855f7]/40 hover:border-[#a855f7] text-white text-xs font-bold px-6 py-2.5 rounded-full transition-all duration-300 shadow-md group'>
-                                <span>Browse All Categories</span>
-                                <span className='group-hover:translate-x-1 transition-transform'>→</span>
-                            </button>
-                        </Link>
+                    <div className='mt-6 flex justify-center'>
+                        <button
+                            onClick={() => setShowAllCatModal(true)}
+                            className='flex items-center gap-2 bg-[#121624] hover:bg-[#1c2238] border border-[#a855f7]/40 hover:border-[#a855f7] text-white text-xs font-bold px-6 py-2.5 rounded-full transition-all duration-300 shadow-md group'
+                        >
+                            <span>View All Categories ({dbCategories.length || categoryDesignPresets.length})</span>
+                            <span className='group-hover:translate-x-1 transition-transform'>→</span>
+                        </button>
                     </div>
                 </div>
 
+                {/* ALL CATEGORIES MODAL */}
+                {showAllCatModal && (
+                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+                        <div className="bg-[#0e111f] border border-purple-500/30 max-w-4xl w-full rounded-3xl p-6 sm:p-8 text-white space-y-6 shadow-[0_0_40px_rgba(168,85,247,0.3)] max-h-[85vh] overflow-y-auto">
+                            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                                <div>
+                                    <h2 className="text-xl font-extrabold text-white">All Course Categories</h2>
+                                    <p className="text-xs text-richblack-300 mt-0.5">Explore all tech domains and learning tracks</p>
+                                </div>
+                                <button
+                                    onClick={() => setShowAllCatModal(false)}
+                                    className="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-richblack-300 hover:text-white flex items-center justify-center text-lg font-bold transition-colors"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                                {(dbCategories.length > 0 ? dbCategories : categoryDesignPresets).map((cat, idx) => {
+                                    const preset = categoryDesignPresets.find(p => p.name.toLowerCase() === (cat.name || '').toLowerCase()) || categoryDesignPresets[idx % categoryDesignPresets.length];
+                                    const IconComponent = preset.icon;
+                                    const categoryId = cat._id || cat.id;
+                                    const categorySlug = (cat.name || preset.name).toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+                                    const targetLink = categoryId ? `/courses?category=${categoryId}` : `/courses?category=${categorySlug}`;
+                                    const count = cat.courseCount !== undefined ? cat.courseCount : (cat.courses?.length || 0);
+
+                                    return (
+                                        <Link
+                                            key={categoryId || idx}
+                                            to={targetLink}
+                                            onClick={() => setShowAllCatModal(false)}
+                                            className="bg-[#141728] hover:bg-[#1c213b] border border-purple-500/20 hover:border-purple-500/50 rounded-2xl p-4 flex items-center gap-3 transition-all duration-300 hover:-translate-y-1 shadow-md group"
+                                        >
+                                            <div className="w-11 h-11 rounded-xl bg-purple-900/30 text-purple-400 flex items-center justify-center text-lg shrink-0 group-hover:scale-110 transition-transform">
+                                                <IconComponent />
+                                            </div>
+                                            <div className="min-w-0 flex-1">
+                                                <h3 className="font-bold text-sm text-white group-hover:text-purple-300 truncate transition-colors">
+                                                    {cat.name || preset.name}
+                                                </h3>
+                                                <p className="text-[11px] text-richblack-400 truncate">
+                                                    {cat.description || preset.description}
+                                                </p>
+                                                <span className="text-[10px] text-purple-400 font-semibold block mt-0.5">
+                                                    {formatStatNumber(count)} Courses
+                                                </span>
+                                            </div>
+                                        </Link>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {/* 2. START LEARNING IN 3 SIMPLE STEPS SECTION */}
-                <div className='w-full max-w-[1260px] my-12 px-4 text-center'>
+                <div className='w-full max-w-[1260px] my-6 px-4 text-center'>
                     <h2 className='text-3xl sm:text-4xl font-extrabold tracking-tight text-white'>
                         Start Learning in <span className='text-[#a855f7]'>3 Simple Steps</span>
                     </h2>
@@ -378,7 +435,7 @@ const Home = () => {
                         Your journey to become a developer starts here
                     </p>
 
-                    <div className='relative mt-14 max-w-4xl mx-auto'>
+                    <div className='relative mt-6 max-w-4xl mx-auto'>
                         {/* Connected Dotted Line for desktop */}
                         <div className='hidden md:block absolute top-7 left-[15%] right-[15%] h-[2px] border-b-2 border-dashed border-[#a855f7]/40 z-0'></div>
 
@@ -405,7 +462,7 @@ const Home = () => {
                 </div>
 
                 {/* 3. EXISTING UNLOCK THE POWER OF CODE SECTION */}
-                <div className='w-full'>
+                <div className='w-full my-6'>
                     <CodeBlocks
                         position={"lg:flex-row"}
                         heading={
@@ -435,7 +492,7 @@ const Home = () => {
                 </div>
 
                 {/* Code Section 2 */}
-                <div className='w-full'>
+                <div className='w-full my-6'>
                     <CodeBlocks
                         position={"lg:flex-row-reverse"}
                         heading={
@@ -467,7 +524,7 @@ const Home = () => {
             </div>
 
             {/* Section 2 */}
-            <div className='bg-richblack-900 text-richblack-5'>
+            <div className='bg-richblack-900 text-richblack-5 my-6'>
                 <div className='homepage_bg h-[310px] flex items-center justify-center'>
                     <div className='w-11/12 max-w-maxContent flex flex-col items-center justify-between gap-5 mx-auto'>
                         <div className='h-[150px]'></div>
@@ -485,8 +542,8 @@ const Home = () => {
                     </div>
                 </div>
 
-                <div className='mx-auto w-11/12 max-w-maxContent flex flex-col items-center justify-between gap-7 py-16'>
-                    <div className='flex flex-row gap-5 mb-10'>
+                <div className='mx-auto w-11/12 max-w-maxContent flex flex-col items-center justify-between gap-6 py-6'>
+                    <div className='flex flex-row gap-5 mb-6'>
                         <div className='text-4xl font-semibold w-[45%] text-richblack-5'>
                             Get the Skills you need for a
                             <HighLightText text={" Job that is in demand"} />
@@ -507,11 +564,11 @@ const Home = () => {
                 </div>
 
                 {/* FEATURED COURSES SECTION */}
-                <div className='w-full max-w-[1260px] mx-auto py-16 px-4 text-center'>
+                <div className='w-full max-w-[1260px] mx-auto py-6 px-4 text-center'>
                     <h2 className='text-3xl sm:text-4xl font-extrabold tracking-tight text-white'>
                         Featured <span className='text-[#a855f7]'>Courses</span>
                     </h2>
-                    <p className='text-sm text-richblack-300 mt-2 font-medium mb-12'>
+                    <p className='text-sm text-richblack-300 mt-2 font-medium mb-6'>
                         Hand-picked top courses for you
                     </p>
 
