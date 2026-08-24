@@ -53,14 +53,25 @@ const ActiveCoursesPage = () => {
     );
   });
 
+  const { user } = useSelector((state) => state.profile);
+  const userInitials = user ? `${user.firstName?.[0] || 'W'}${user.lastName?.[0] || '3'}` : 'W3';
+
   return (
     <div className="min-h-screen bg-slate-50 flex font-['Inter',sans-serif] text-slate-800">
-      {/* NARROW ICON SIDEBAR (Matches Reference Screenshot) */}
+      {/* NARROW ICON SIDEBAR */}
       <aside className="w-16 bg-white border-r border-slate-200 flex flex-col items-center py-5 shrink-0 select-none">
-        {/* LOGO ICON */}
-        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white font-bold text-xs shadow-md mb-8">
-          W3
-        </div>
+        {/* DYNAMIC USER / BRAND LOGO ICON */}
+        <button
+          onClick={() => navigate("/")}
+          className="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white font-bold text-xs shadow-md mb-8 overflow-hidden cursor-pointer hover:scale-105 transition-transform"
+          title="Go to Homepage"
+        >
+          {user?.image ? (
+            <img src={user.image} alt={user.firstName} className="w-full h-full object-cover" />
+          ) : (
+            <span>{userInitials}</span>
+          )}
+        </button>
 
         {/* NAVIGATION ICONS */}
         <nav className="flex flex-col gap-6 w-full items-center text-slate-400">
@@ -71,48 +82,22 @@ const ActiveCoursesPage = () => {
           >
             <FaGraduationCap size={18} />
           </button>
-
-          {/* <button
-            onClick={() => navigate("/dashboard/buy-courses")}
-            title="Explore / Buy Courses"
-            className="p-2.5 rounded-xl hover:bg-slate-100 hover:text-slate-600 transition-all"
-          >
-            <FaStore size={17} />
-          </button>
-
-          <button
-            onClick={() => navigate("/dashboard/guided-path")}
-            title="Guided Path"
-            className="p-2.5 rounded-xl hover:bg-slate-100 hover:text-slate-600 transition-all"
-          >
-            <FaBolt size={16} />
-          </button> */}
-
-          {/* <button
-            onClick={() => navigate("/dashboard/articles")}
-            title="Saved / Articles"
-            className="p-2.5 rounded-xl hover:bg-slate-100 hover:text-slate-600 transition-all"
-          >
-            <FaBookmark size={16} />
-          </button>
-
-          <button
-            onClick={() => navigate("/dashboard/help")}
-            title="Support"
-            className="p-2.5 rounded-xl hover:bg-slate-100 hover:text-slate-600 transition-all"
-          >
-            <FaCommentDots size={16} />
-          </button> */}
         </nav>
 
         {/* BOTTOM USER AVATAR */}
         <div className="mt-auto pt-6 border-t border-slate-100 w-full flex justify-center">
           <button
             onClick={() => navigate("/dashboard/my-profile")}
-            className="text-pink-500 hover:scale-105 transition-transform"
+            className="w-8 h-8 rounded-full overflow-hidden hover:scale-105 transition-transform border border-slate-200"
             title="My Profile"
           >
-            <FaUserCircle size={24} />
+            {user?.image ? (
+              <img src={user.image} alt="Profile" className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full bg-indigo-600 text-white font-bold text-xs flex items-center justify-center">
+                {user?.firstName?.[0] || 'U'}
+              </div>
+            )}
           </button>
         </div>
       </aside>

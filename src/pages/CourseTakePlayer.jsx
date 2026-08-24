@@ -198,6 +198,24 @@ const CourseTakePlayer = () => {
     }
   };
 
+  // Calculate dynamic course total duration in hours and minutes
+  let totalDurationSeconds = 0;
+  if (courseSectionData && Array.isArray(courseSectionData)) {
+    courseSectionData.forEach((sec) => {
+      if (sec.subSection && Array.isArray(sec.subSection)) {
+        sec.subSection.forEach((sub) => {
+          const dur = parseFloat(sub.timeDuration || sub.duration || 0);
+          if (!isNaN(dur)) {
+            totalDurationSeconds += dur;
+          }
+        });
+      }
+    });
+  }
+  const totalHours = Math.floor(totalDurationSeconds / 3600);
+  const totalMinutes = Math.floor((totalDurationSeconds % 3600) / 60);
+  const formattedDuration = `${totalHours > 0 ? `${totalHours}h ` : ''}${totalMinutes}m`;
+
   // Calculate dynamic average rating and review counts
   const totalReviewsCount = reviewsList.length;
   const avgRatingNum =
@@ -296,14 +314,6 @@ const CourseTakePlayer = () => {
       <header className="h-16 border-b border-slate-200 bg-white flex items-center justify-between px-6 z-20 shrink-0 select-none">
         <div className="flex items-center gap-4">
           <button
-            onClick={() => navigate("/t/u/activeCourses")}
-            className="p-2 rounded-lg hover:bg-slate-100 text-indigo-700 transition"
-            title="Back to Active Courses"
-          >
-            <FiArrowLeft size={20} />
-          </button>
-
-          <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="p-2 rounded-lg hover:bg-slate-100 text-indigo-700 transition"
             title="Toggle Curriculum Sidebar"
@@ -357,7 +367,7 @@ const CourseTakePlayer = () => {
               </div>
               <p className="text-xs font-bold text-slate-700">
                 {progressPercentage}% completed{" "}
-                <span className="font-normal text-slate-400">in 79h 19m</span>
+                <span className="font-normal text-slate-400">in {formattedDuration}</span>
               </p>
             </div>
 
