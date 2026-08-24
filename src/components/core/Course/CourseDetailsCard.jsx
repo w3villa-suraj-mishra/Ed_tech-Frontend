@@ -36,6 +36,10 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
       toast.error("You are an Instructor. You can't buy a course.")
       return
     }
+    if (userPlan && userPlan !== 'expired') {
+      toast.error("You have already purchased this course.")
+      return
+    }
     if (token) {
       dispatch(addToCart(course))
       return

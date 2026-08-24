@@ -50,11 +50,36 @@ export default function EditProfile() {
   const [locating, setLocating] = useState(false)
 
   const handleUseCurrentLocation = () => {
+    setLocating(true)
+
+    const fetchIpLocation = async () => {
+      try {
+        const res = await fetch("https://ipapi.co/json/")
+        const data = await res.json()
+        if (data && data.latitude && data.longitude) {
+          const lat = data.latitude
+          const lon = data.longitude
+          setCoordinates({ lat, lon })
+          const address = `${data.city || ""}, ${data.region || ""}, ${data.country_name || ""}`.replace(/^, /, "")
+          if (address) {
+            setAddressInput(address)
+          }
+        } else {
+          alert("Could not detect location automatically. Please enter your address.")
+        }
+      } catch (err) {
+        console.log("IP Geolocation fallback error", err)
+        alert("Could not detect your live location. Please type your address.")
+      } finally {
+        setLocating(false)
+      }
+    }
+
     if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser.")
+      fetchIpLocation()
       return
     }
-    setLocating(true)
+
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const lat = position.coords.latitude
@@ -68,16 +93,36 @@ export default function EditProfile() {
           const data = await res.json()
           if (data && data.display_name) {
             setAddressInput(data.display_name)
+          } else {
+            // Fallback to OpenStreetMap Nominatim
+            const nomRes = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
+            const nomData = await nomRes.json()
+            if (nomData && nomData.display_name) {
+              setAddressInput(nomData.display_name)
+            }
           }
         } catch (err) {
-          console.log("Reverse geocoding error", err)
+          console.log("Reverse geocoding error, trying Nominatim fallback...", err)
+          try {
+            const nomRes = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
+            const nomData = await nomRes.json()
+            if (nomData && nomData.display_name) {
+              setAddressInput(nomData.display_name)
+            }
+          } catch (nErr) {
+            console.log("Nominatim error", nErr)
+          }
         }
         setLocating(false)
       },
       (error) => {
-        console.log("Geolocation error", error)
-        alert("Could not detect your current location.")
-        setLocating(false)
+        console.log("Browser Geolocation error/denied, trying IP fallback...", error)
+        fetchIpLocation()
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
       }
     )
   }

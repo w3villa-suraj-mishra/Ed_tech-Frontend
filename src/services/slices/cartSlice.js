@@ -26,6 +26,12 @@ const cartSlice = createSlice({
         toast.error("Course already in cart")
         return
       }
+
+      // Check if course has already been purchased/enrolled
+      if (course.isEnrolled || course.userEnrollment || course.userPlan) {
+        toast.error("You have already purchased this course.")
+        return
+      }
       // If the course is not in the cart, add it to the cart
       state.cart.push(course)
       // Update the total quantity and price
