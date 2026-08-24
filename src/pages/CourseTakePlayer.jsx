@@ -47,6 +47,8 @@ const CourseTakePlayer = () => {
   // Dynamic Discussion & Rating State
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [commentImage, setCommentImage] = useState(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [reviewsList, setReviewsList] = useState([]);
   const [userRatingInput, setUserRatingInput] = useState(5);
   const [reviewTextInput, setReviewTextInput] = useState("");
@@ -159,18 +161,23 @@ const CourseTakePlayer = () => {
 
   // Persistent comment post
   const handlePostComment = async () => {
-    if (!newComment.trim()) return;
-    const res = await postCommentAPI({ courseId, text: newComment }, token);
+    if (!newComment.trim() && !commentImage) return;
+    const res = await postCommentAPI({ courseId, text: newComment, image: commentImage }, token);
     if (res) {
       setNewComment("");
+      setCommentImage(null);
       loadComments();
     }
   };
 
   // Persistent comment deletion
   const handleDeleteComment = async (commentId) => {
+    if (!commentId) return;
+    const targetId = String(commentId);
+    // Optimistically remove from state for instant response
+    setComments((prev) => prev.filter((item) => String(item.id || item._id) !== targetId));
     const success = await deleteCommentAPI(commentId, token);
-    if (success) {
+    if (!success) {
       loadComments();
     }
   };
@@ -562,17 +569,74 @@ const CourseTakePlayer = () => {
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 {/* LEFT: EDITOR & COMMENTS AREA (3 COLS ON DESKTOP) */}
                 <div className="lg:col-span-3 space-y-3">
-                  {/* RICH TEXT TOOLBAR */}
+                  {/* DYNAMIC RICH TEXT TOOLBAR */}
                   <div className="flex items-center gap-4 text-slate-700 text-sm font-semibold border-b border-slate-200 pb-2 select-none">
-                    <button className="hover:text-indigo-600 font-bold px-1" title="Bold">B</button>
-                    <button className="hover:text-indigo-600 italic px-1" title="Italic">I</button>
-                    <button className="hover:text-indigo-600 underline px-1" title="Underline">U</button>
-                    <button className="hover:text-indigo-600 px-1" title="Bullet List">•</button>
-                    <button className="hover:text-indigo-600 px-1" title="Numbered List">☷</button>
-                    <button className="hover:text-indigo-600 px-1" title="Add Link">🔗</button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setNewComment((prev) => prev ? `**${prev}**` : '**Bold Text**');
+                      }}
+                      className="hover:text-indigo-600 font-bold px-1"
+                      title="Bold"
+                    >
+                      B
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setNewComment((prev) => prev ? `*${prev}*` : '*Italic Text*');
+                      }}
+                      className="hover:text-indigo-600 italic px-1"
+                      title="Italic"
+                    >
+                      I
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setNewComment((prev) => prev ? `_${prev}_` : '_Underline Text_');
+                      }}
+                      className="hover:text-indigo-600 underline px-1"
+                      title="Underline"
+                    >
+                      U
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setNewComment((prev) => prev + (prev ? '\n• ' : '• '));
+                      }}
+                      className="hover:text-indigo-600 px-1"
+                      title="Bullet List"
+                    >
+                      •
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setNewComment((prev) => prev + (prev ? '\n1. ' : '1. '));
+                      }}
+                      className="hover:text-indigo-600 px-1"
+                      title="Numbered List"
+                    >
+                      ☷
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const url = prompt('Enter URL link:');
+                        if (url) {
+                          setNewComment((prev) => `${prev} [Link](${url})`);
+                        }
+                      }}
+                      className="hover:text-indigo-600 px-1"
+                      title="Add Link"
+                    >
+                      🔗
+                    </button>
                   </div>
 
-                  {/* OPEN TEXTAREA (NO LARGE OUTER CARD CONTAINER) */}
+                  {/* OPEN TEXTAREA */}
                   <textarea
                     rows={4}
                     placeholder="Write a comment..."
@@ -581,11 +645,41 @@ const CourseTakePlayer = () => {
                     className="w-full bg-white border border-slate-300 rounded-md p-3 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-600 resize-none shadow-sm"
                   />
 
+                  {/* PREVIEW ATTACHED IMAGE IF SELECTED */}
+                  {commentImage && (
+                    <div className="relative w-24 h-24 rounded-lg overflow-hidden border border-slate-300 group shadow-sm">
+                      <img src={commentImage} alt="Attached Preview" className="w-full h-full object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => setCommentImage(null)}
+                        className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 text-xs shadow hover:bg-red-700 transition"
+                        title="Remove image"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  )}
+
                   {/* ADD IMAGE & POST ACTIONS */}
                   <div className="flex items-center justify-between pt-1">
-                    <button className="text-xs font-semibold text-slate-600 hover:text-indigo-600 flex items-center gap-1.5 transition border border-slate-200 px-3 py-1.5 rounded bg-white">
-                      <span>📷</span> Add Image
-                    </button>
+                    <label className="text-xs font-semibold text-slate-600 hover:text-indigo-600 flex items-center gap-1.5 transition border border-slate-200 px-3 py-1.5 rounded bg-white cursor-pointer">
+                      <span>📷</span> {uploadingImage ? 'Uploading...' : 'Add Image'}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              setCommentImage(reader.result);
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                      />
+                    </label>
                     <button
                       onClick={handlePostComment}
                       className="px-6 py-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold text-xs rounded-md transition shadow-sm"
@@ -644,9 +738,18 @@ const CourseTakePlayer = () => {
                                   )}
                                 </div>
                               </div>
-                              <p className="text-xs text-slate-600 leading-relaxed">
+                              <p className="text-xs text-slate-600 leading-relaxed whitespace-pre-wrap">
                                 {c.text}
                               </p>
+                              {c.image && (
+                                <div className="pt-2">
+                                  <img
+                                    src={c.image}
+                                    alt="Comment Attachment"
+                                    className="max-h-60 rounded-md object-contain border border-slate-200"
+                                  />
+                                </div>
+                              )}
                             </div>
                           </div>
                         );

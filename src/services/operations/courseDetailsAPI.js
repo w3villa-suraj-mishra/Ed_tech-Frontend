@@ -453,17 +453,21 @@ export const fetchCourseComments = async (courseId) => {
 export const deleteCommentAPI = async (commentId, token) => {
   let success = false
   try {
-    const response = await apiConnector("DELETE", courseEndpoints.DELETE_COMMENT_API, { commentId }, {
-      Authorization: `Bearer ${token}`,
-    })
-    if (!response?.data?.success) {
-      throw new Error("Could Not Delete Comment")
+    const response = await apiConnector(
+      "DELETE",
+      `${courseEndpoints.DELETE_COMMENT_API}?commentId=${commentId}`,
+      { commentId },
+      { Authorization: `Bearer ${token}` }
+    )
+    if (response?.data?.success) {
+      toast.success("Comment deleted")
+      success = true
+    } else {
+      throw new Error(response?.data?.message || "Could Not Delete Comment")
     }
-    toast.success("Comment deleted")
-    success = true
   } catch (error) {
     console.log("DELETE COMMENT API ERROR............", error)
-    toast.error("Failed to delete comment")
+    toast.error(error.response?.data?.message || error.message || "Failed to delete comment")
   }
   return success
 }
