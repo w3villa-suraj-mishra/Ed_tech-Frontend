@@ -274,8 +274,8 @@ function Signup() {
             <button
               type="button"
               onClick={() => {
-                const targetUrl = `${BASE_URL}/auth/google_oauth2?mode=signup&role=${accountType}`.replace('??', '?')
-                window.location.href = targetUrl
+                const backendHost = process.env.REACT_APP_BASE_URL || 'https://ed-tech-backend-2kha.vercel.app';
+                window.location.href = `${backendHost}/auth/google_oauth2?mode=signup&role=${accountType}`;
               }}
               className="flex w-full justify-center items-center gap-x-2 rounded-[8px] bg-yellow-50 py-[12px] px-[12px] font-medium text-richblack-900 hover:scale-95 transition-all duration-200"
             >
