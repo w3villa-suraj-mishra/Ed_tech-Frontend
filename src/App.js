@@ -57,11 +57,13 @@ import { BASE_URL } from "./services/apis";
 
 const OAuthCallbackForwarder = () => {
   useEffect(() => {
-    window.location.href = `${BASE_URL}/auth/google_oauth2/callback${window.location.search}`;
+    const search = window.location.search;
+    const backendHost = process.env.REACT_APP_BASE_URL || 'https://ed-tech-backend-2kha.vercel.app';
+    window.location.href = `${backendHost}/auth/google_oauth2/callback${search}`;
   }, []);
   return (
-    <div className="min-h-[calc(100vh-3.5rem)] flex items-center justify-center text-white">
-      <p className="text-xl">Completing login, please wait...</p>
+    <div className="min-h-screen flex items-center justify-center text-white bg-richblack-900">
+      <p className="text-xl">Completing Google login, please wait...</p>
     </div>
   );
 };
