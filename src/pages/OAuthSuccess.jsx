@@ -44,16 +44,15 @@ function OAuthSuccess() {
               image: userImage 
             };
             
+            localStorage.setItem("token", token);
             localStorage.setItem("user", JSON.stringify(fullUser));
+            dispatch(setToken(token));
             dispatch(setUser(fullUser));
 
             toast.success("Logged in successfully!");
 
-            if (account_type === "Instructor") {
-              navigate("/dashboard/instructor", { replace: true });
-            } else {
-              navigate("/dashboard/my-profile", { replace: true });
-            }
+            const targetDashboard = account_type === "Instructor" ? "/dashboard/instructor" : "/dashboard/my-profile";
+            window.location.href = targetDashboard;
             return;
           }
         } catch (error) {
