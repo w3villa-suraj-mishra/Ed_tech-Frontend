@@ -73,9 +73,16 @@ function OAuthSuccess() {
 
         toast.success("Logged in successfully!");
 
-        const targetDashboard = userObj.accountType === "Instructor" || userObj.account_type === "Instructor"
-          ? "/dashboard/instructor"
-          : "/dashboard/my-profile";
+        const normalizedRole = String(userObj.accountType || userObj.account_type || "").toLowerCase();
+
+        let targetDashboard = "/dashboard/my-profile";
+        if (normalizedRole === "admin") {
+          targetDashboard = "/admin/dashboard";
+        } else if (normalizedRole === "instructor") {
+          targetDashboard = "/dashboard/instructor";
+        } else {
+          targetDashboard = "/dashboard/my-profile";
+        }
 
         navigate(targetDashboard, { replace: true });
         return;

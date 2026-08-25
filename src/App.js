@@ -58,7 +58,7 @@ import { BASE_URL } from "./services/apis";
 const OAuthCallbackForwarder = () => {
   useEffect(() => {
     const search = window.location.search;
-    const backendHost = process.env.REACT_APP_BASE_URL || 'https://ed-tech-backend-2kha.vercel.app';
+    const backendHost = process.env.REACT_APP_BASE_URL || BASE_URL || 'https://ed-tech-backend-2kha.vercel.app';
     window.location.href = `${backendHost}/auth/google_oauth2/callback${search}`;
   }, []);
   return (
