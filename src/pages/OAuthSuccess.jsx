@@ -21,10 +21,17 @@ function OAuthSuccess() {
         localStorage.setItem("token", token);
         dispatch(setToken(token));
 
+        let userObj = null;
+
         try {
-          const response = await apiConnector("GET", profileEndpoints.GET_USER_DETAILS_API, null, {
-            Authorization: `Bearer ${token}`,
-          });
+          const response = await apiConnector(
+            "GET",
+            profileEndpoints.GET_USER_DETAILS_API,
+            null,
+            { Authorization: `Bearer ${token}` },
+            null,
+            { skipAuthRedirect: true }
+          );
 
           if (response?.data?.data) {
             const rawUser = response.data.data;
@@ -35,34 +42,44 @@ function OAuthSuccess() {
               ? rawUser.image
               : `https://api.dicebear.com/9.x/initials/svg?seed=${first_name}${last_name}`;
 
-            const fullUser = { 
-              ...rawUser, 
-              account_type, 
+            userObj = {
+              ...rawUser,
+              account_type,
               accountType: account_type,
-              first_name, 
+              first_name,
               last_name,
-              image: userImage 
+              image: userImage
             };
-            
-            localStorage.setItem("token", token);
-            localStorage.setItem("user", JSON.stringify(fullUser));
-            dispatch(setToken(token));
-            dispatch(setUser(fullUser));
-
-            toast.success("Logged in successfully!");
-
-            const targetDashboard = account_type === "Instructor" ? "/dashboard/instructor" : "/dashboard/my-profile";
-            window.location.href = targetDashboard;
-            return;
           }
         } catch (error) {
           console.log("Error fetching OAuth user details", error);
         }
 
-        // Fallback if profile fetch is delayed
-        navigate("/dashboard/global", { replace: true });
+        if (!userObj) {
+          userObj = {
+            accountType: role || "Student",
+            account_type: role || "Student",
+            email: "user@oauth.com",
+            first_name: "Google",
+            last_name: "User",
+            image: `https://api.dicebear.com/9.x/initials/svg?seed=GoogleUser`
+          };
+        }
+
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(userObj));
+        dispatch(setToken(token));
+        dispatch(setUser(userObj));
+
+        toast.success("Logged in successfully!");
+
+        const targetDashboard = userObj.accountType === "Instructor" || userObj.account_type === "Instructor"
+          ? "/dashboard/instructor"
+          : "/dashboard/my-profile";
+
+        navigate(targetDashboard, { replace: true });
+        return;
       } else {
-        const params = new URLSearchParams(window.location.search);
         const errMsg = params.get("error") || "Authentication failed. Please try again.";
         toast.error(errMsg);
         navigate("/login", { replace: true });
