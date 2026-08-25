@@ -22,7 +22,6 @@ function OAuthSuccess() {
         dispatch(setToken(token));
 
         try {
-          // Fetch complete profile user details using the newly received OAuth token
           const response = await apiConnector("GET", profileEndpoints.GET_USER_DETAILS_API, null, {
             Authorization: `Bearer ${token}`,
           });
@@ -51,9 +50,9 @@ function OAuthSuccess() {
             toast.success("Logged in successfully!");
 
             if (account_type === "Instructor") {
-              navigate("/dashboard/instructor");
+              navigate("/dashboard/instructor", { replace: true });
             } else {
-              navigate("/dashboard/my-profile");
+              navigate("/dashboard/my-profile", { replace: true });
             }
             return;
           }
@@ -62,10 +61,12 @@ function OAuthSuccess() {
         }
 
         // Fallback if profile fetch is delayed
-        navigate("/dashboard/global");
+        navigate("/dashboard/global", { replace: true });
       } else {
-        toast.error("Authentication failed. Please try again.");
-        navigate("/login");
+        const params = new URLSearchParams(window.location.search);
+        const errMsg = params.get("error") || "Authentication failed. Please try again.";
+        toast.error(errMsg);
+        navigate("/login", { replace: true });
       }
     };
 
