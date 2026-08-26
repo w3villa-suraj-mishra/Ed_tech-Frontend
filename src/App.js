@@ -73,13 +73,14 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const { token } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.profile);
   const isAdminRoute = location.pathname.startsWith("/admin");
 
   useEffect(() => {
-    if (token && !isAdminRoute) {
+    if (token && !user && !isAdminRoute) {
       dispatch(getUserDetails(token, navigate));
     }
-  }, [token, isAdminRoute, dispatch, navigate]);
+  }, [token, user, isAdminRoute, dispatch, navigate]);
 
   // Admin routes render WITHOUT the public Navbar/Footer
   if (isAdminRoute) {
