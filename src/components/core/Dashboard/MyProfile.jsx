@@ -127,7 +127,7 @@ const MyProfile = () => {
   };
 
   return (
-    <div className="space-y-6 text-white max-w-5xl mx-auto pb-10">
+    <div className="w-full space-y-6 text-white pb-10">
       
       {/* PAGE HEADER */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

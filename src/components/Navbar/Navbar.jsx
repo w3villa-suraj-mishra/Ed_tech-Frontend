@@ -78,8 +78,9 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="w-full bg-[#070913] border-b border-purple-900/30 sticky top-0 z-50 py-3 px-4 sm:px-6">
-      <div className="max-w-[1280px] mx-auto bg-[#0b0e1b]/90 border border-purple-500/30 rounded-2xl sm:rounded-3xl px-4 sm:px-6 py-2.5 flex items-center justify-between shadow-[0_0_25px_rgba(168,85,247,0.15)] backdrop-blur-xl">
+    <nav className="w-full bg-[#070913] border-b border-purple-900/30 sticky top-0 z-50 py-3">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-[#0b0e1b]/90 border border-purple-500/30 rounded-2xl sm:rounded-3xl px-4 sm:px-6 py-2.5 flex items-center justify-between shadow-[0_0_25px_rgba(168,85,247,0.15)] backdrop-blur-xl">
         
         {/* BRAND LOGO */}
         <Link to="/" className="flex items-center gap-3 group">
@@ -382,6 +383,7 @@ const Navbar = () => {
 
         </div>
 
+        </div>
       </div>
     </nav>
   );

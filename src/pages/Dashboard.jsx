@@ -15,12 +15,12 @@ import Sidebar from "../components/core/Dashboard/Sidebar"
       )
     }
   return (
-    <div className="relative flex min-h-[calc(100vh-3.5rem)] bg-[#070913]">
-      <Sidebar/>
-      <div className="flex-1 min-w-0">
-          <div className="mx-auto w-11/12 max-w-[1200px] py-8">
-            <Outlet/>
-          </div>
+    <div className="min-h-[calc(100vh-3.5rem)] bg-[#070913]">
+      <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row px-4 sm:px-6 lg:px-8">
+        <Sidebar/>
+        <div className="flex-1 min-w-0 py-6 md:py-8 lg:pl-8">
+          <Outlet/>
+        </div>
       </div>
     </div>
   )
