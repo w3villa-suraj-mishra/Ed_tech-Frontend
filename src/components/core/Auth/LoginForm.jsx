@@ -223,12 +223,13 @@ useEffect(() => {
             <button
               type="button"
               onClick={() => {
-                window.location.href = `${BASE_URL}/github-start?mode=login&role=${accountType}`
+                const backendHost = process.env.REACT_APP_BASE_URL || BASE_URL || 'https://ed-tech-backend-2kha.vercel.app';
+                window.location.href = `${backendHost}/auth/github?mode=login&role=${accountType}`;
               }}
               className="flex w-full justify-center items-center gap-x-2 rounded-[8px] bg-yellow-50 py-[12px] px-[12px] font-medium text-richblack-900 hover:scale-95 transition-all duration-200"
             >
               <FaGithub className="text-2xl" />
-              Sign in with GitHub
+              Continue with GitHub
             </button>
           </form>
         </div>
