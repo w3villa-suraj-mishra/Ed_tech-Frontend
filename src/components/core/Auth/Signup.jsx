@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react"
 import { toast } from "react-hot-toast"
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
+import { AiOutlineEye, AiOutlineEyeInvisible, AiOutlineTrophy } from "react-icons/ai"
 import { useDispatch } from "react-redux"
 import { useNavigate, Link } from "react-router-dom"
 import { FcGoogle } from "react-icons/fc"
 import { FaGithub } from "react-icons/fa"
-import { VscBook, VscCode, VscTrophy } from "react-icons/vsc"
+import { VscBook, VscCode } from "react-icons/vsc"
 import { sendOtp } from "../../../services/operations/authAPI"
 import { setSignupData } from "../../../services/slices/authSlice"
 import { ACCOUNT_TYPE } from "../../../utils/constants"
@@ -354,7 +354,7 @@ function Signup() {
 
               <div className="flex items-start gap-3.5">
                 <div className="w-9 h-9 rounded-xl bg-purple-900/30 border border-purple-500/30 flex items-center justify-center text-purple-400 text-lg shrink-0 mt-0.5">
-                  <VscTrophy />
+                  <AiOutlineTrophy />
                 </div>
                 <div>
                   <h4 className="text-xs sm:text-sm font-bold text-white">Achieve your goals</h4>
