@@ -141,9 +141,15 @@ const Reviewslider = () => {
                     )}
                 </>
             ) : (
-                <div className='bg-richblack-800 border border-richblack-700 rounded-2xl p-12 max-w-md mx-auto text-center'>
-                    <p className='text-richblack-300 text-sm font-medium'>
-                        No learner reviews available yet.
+                <div className='bg-[#111422]/90 border border-purple-500/20 rounded-3xl p-10 w-full max-w-full mx-auto flex flex-col items-center justify-center text-center shadow-[0_0_30px_rgba(168,85,247,0.1)] my-6'>
+                    <div className='w-16 h-16 rounded-2xl bg-purple-900/30 border border-purple-500/30 flex items-center justify-center text-purple-400 text-3xl mb-4 shadow-inner'>
+                        💬
+                    </div>
+                    <h3 className='text-xl sm:text-2xl font-extrabold text-white mb-2'>
+                        No Reviews Yet
+                    </h3>
+                    <p className='text-xs sm:text-sm text-richblack-300 max-w-md leading-relaxed'>
+                        Be the first to enroll in a course and share your learning experience!
                     </p>
                 </div>
             )}

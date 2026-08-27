@@ -655,15 +655,15 @@ const Home = () => {
                             })}
                         </div>
                     ) : (
-                        /* Styled Empty State Card */
-                        <div className='bg-[#111422]/90 border border-purple-500/20 rounded-3xl p-8 max-w-lg mx-auto flex flex-col items-center justify-center text-center shadow-[0_0_30px_rgba(168,85,247,0.1)] my-6'>
+                        /* Styled Empty State Card (Full Width Container) */
+                        <div className='bg-[#111422]/90 border border-purple-500/20 rounded-3xl p-10 w-full max-w-full mx-auto flex flex-col items-center justify-center text-center shadow-[0_0_30px_rgba(168,85,247,0.1)] my-6'>
                             <div className='w-16 h-16 rounded-2xl bg-purple-900/30 border border-purple-500/30 flex items-center justify-center text-purple-400 text-3xl mb-4 shadow-inner'>
                                 <FaBookOpen />
                             </div>
-                            <h3 className='text-xl font-extrabold text-white mb-2'>
+                            <h3 className='text-xl sm:text-2xl font-extrabold text-white mb-2'>
                                 No Courses Available Yet
                             </h3>
-                            <p className='text-xs sm:text-sm text-richblack-300 max-w-xs leading-relaxed mb-6'>
+                            <p className='text-xs sm:text-sm text-richblack-300 max-w-md leading-relaxed mb-2'>
                                 We're preparing new high-quality courses for you. Check back soon or explore our catalog!
                             </p>
                         </div>
