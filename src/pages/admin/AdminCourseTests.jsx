@@ -156,8 +156,9 @@ function AdminCourseTestsInner() {
 
       toast.success(`Course test ${testStatus === 'published' ? 'published' : 'saved as draft'} successfully! 🎓`);
       setIsTestModalOpen(false);
+      const createdCourseId = formData.courseId;
       setFormData({
-        courseId: selectedCourseId,
+        courseId: createdCourseId,
         title: '',
         description: '',
         testType: selectedCategory !== 'All' ? selectedCategory : 'MCQ',
@@ -167,7 +168,12 @@ function AdminCourseTestsInner() {
         status: 'published',
         selectedQuestionIds: [],
       });
-      fetchCourseTests(selectedCourseId);
+      // If "All Courses" filter is active, pass empty or created courseId so the created test immediately shows up
+      if (selectedCourseId && String(selectedCourseId) !== String(createdCourseId)) {
+        setSelectedCourseId(createdCourseId);
+      } else {
+        fetchCourseTests(selectedCourseId);
+      }
     } catch (err) {
       toast.error(err?.response?.data?.message || 'Failed to create course test');
     } finally {
@@ -188,8 +194,9 @@ function AdminCourseTestsInner() {
 
   const filteredTests = tests.filter(t => {
     const matchesSearch = t.title?.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = selectedCategory === 'All' || t.testType === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const matchesCategory = selectedCategory === 'All' || t.testType === selectedCategory || t.category === selectedCategory;
+    const matchesCourse = !selectedCourseId || String(t.courseId) === String(selectedCourseId);
+    return matchesSearch && matchesCategory && matchesCourse;
   });
 
   const availableQuestions = questions.filter(q => {
