@@ -259,7 +259,7 @@ export default function InstructorPracticeBuilder() {
         courseId: targetCourseId,
       };
 
-      const res = await apiConnector('POST', practiceEndpoints.ADMIN_QUESTIONS, payload, {
+      const res = await apiConnector('POST', practiceEndpoints.INSTRUCTOR_GET_QUESTIONS, payload, {
         Authorization: `Bearer ${token}`
       });
 
