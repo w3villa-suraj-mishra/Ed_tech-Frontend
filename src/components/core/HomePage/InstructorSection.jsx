@@ -36,7 +36,7 @@ const InstructorSection = () => {
           </h2>
 
           <p className='text-xs sm:text-sm text-richblack-300 leading-relaxed max-w-xl'>
-            Instructors from around the world teach millions of learners on StudyTech. We provide the tools, course player, and global audience to help you share what you love and build your online teaching brand.
+            Instructors from around the world teach millions of learners on CodeLearn. We provide the tools, course player, and global audience to help you share what you love and build your online teaching brand.
           </p>
 
           {/* Highlights Row */}

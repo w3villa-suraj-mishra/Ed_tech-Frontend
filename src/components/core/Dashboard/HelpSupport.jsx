@@ -50,12 +50,12 @@ const HelpSupport = () => {
     {
       id: 3,
       q: "How does course validity / access work now?",
-      a: "All purchased courses on StudyTech come with lifetime access including all future lecture updates and downloadable study resources."
+      a: "All purchased courses on CodeLearn come with lifetime access including all future lecture updates and downloadable study resources."
     },
     {
       id: 4,
       q: "I'm not able to log in / OTP is not coming.",
-      a: "Check your spam/junk folder. Ensure you entered the correct email address associated with your registered StudyTech account."
+      a: "Check your spam/junk folder. Ensure you entered the correct email address associated with your registered CodeLearn account."
     },
     {
       id: 5,
@@ -87,7 +87,7 @@ const HelpSupport = () => {
       const payload = {
         firstname: user?.firstName || "Student",
         lastname: user?.lastName || "User",
-        email: user?.email || "student@studytech.com",
+        email: user?.email || "student@codelearn.com",
         subject: ticketSubject,
         message: `[SUPPORT TICKET]: ${ticketSubject}\n\n${ticketMsg}`,
         phoneNo: user?.additionalDetails?.contactNumber || "",
@@ -187,7 +187,7 @@ const HelpSupport = () => {
                 <VscArrowRight className="text-xs text-richblack-400 group-hover:text-purple-400 group-hover:translate-x-1 transition-all" />
               </div>
               <span className="text-[10px] text-richblack-400 mt-0.5">Get help via email</span>
-              <span className="text-[10px] text-purple-300 font-medium truncate mt-1">support@studytech.com</span>
+              <span className="text-[10px] text-purple-300 font-medium truncate mt-1">support@codelearn.com</span>
             </div>
           </div>
 
@@ -526,7 +526,7 @@ const HelpSupport = () => {
             <div className="space-y-3 text-xs leading-relaxed text-richblack-300">
               <p className="font-semibold text-purple-300">{selectedArticle.desc}</p>
               <p>
-                Welcome to the official StudyTech guide for <strong>{selectedArticle.title}</strong>. This article covers step-by-step instructions on accessing your account, tracking your course progress, and resolving common payment or enrollment questions.
+                Welcome to the official CodeLearn guide for <strong>{selectedArticle.title}</strong>. This article covers step-by-step instructions on accessing your account, tracking your course progress, and resolving common payment or enrollment questions.
               </p>
               <div className="p-3 bg-[#141728] rounded-xl border border-white/5 space-y-1">
                 <span className="font-bold text-white block">Key Tips:</span>

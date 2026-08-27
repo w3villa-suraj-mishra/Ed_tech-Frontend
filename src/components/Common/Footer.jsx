@@ -20,7 +20,7 @@ const Footer = ({ logoAsset, socialAssets }) => {
             {/* Logo Slot */}
             <Link to="/" className="flex items-center gap-3 group w-fit">
               {logoAsset ? (
-                <img src={logoAsset} alt="Study_Tech Logo" className="h-10 w-auto object-contain" />
+                <img src={logoAsset} alt="CodeLearn Logo" className="h-10 w-auto object-contain" />
               ) : (
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-700 flex items-center justify-center text-white font-bold text-xl shadow-lg border border-purple-400/30 group-hover:scale-105 transition-transform">
                   <FaCode />
@@ -28,7 +28,7 @@ const Footer = ({ logoAsset, socialAssets }) => {
               )}
               <div className="flex flex-col">
                 <span className="text-white font-black text-2xl tracking-tight leading-none">
-                  Study_Tech
+                  CodeLearn
                 </span>
                 <span className="text-[10px] text-richblack-400 font-medium tracking-widest uppercase mt-1">
                   Learn. Build. Grow.
@@ -113,7 +113,7 @@ const Footer = ({ logoAsset, socialAssets }) => {
 
         {/* Dynamic Copyright Footer Line */}
         <div className="pt-8 text-center text-xs text-richblack-400 font-medium">
-          <p>© {currentYear} Study_Tech. All rights reserved.</p>
+          <p>© {currentYear} CodeLearn. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -431,7 +431,7 @@ const Catalog = () => {
 
       </div>
 
-      {/* 6. EXISTING STUDY_TECH FOOTER */}
+      {/* 6. EXISTING CODELEARN FOOTER */}
       <Footer />
     </div>
   );

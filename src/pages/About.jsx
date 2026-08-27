@@ -61,7 +61,7 @@ const About = () => {
           <div className="lg:col-span-7 space-y-6 text-left">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-900/40 border border-purple-500/30 text-purple-300 text-xs font-bold w-fit">
               <span>★</span>
-              <span>About Study_Tech</span>
+              <span>About CodeLearn</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
@@ -70,7 +70,7 @@ const About = () => {
             </h1>
 
             <p className="text-sm sm:text-base text-richblack-300 leading-relaxed max-w-xl font-normal">
-              At Study_Tech, we believe learning should be accessible, engaging, and future-ready. Our mission is to empower learners worldwide with the skills they need to build better careers and create a better world.
+              At CodeLearn, we believe learning should be accessible, engaging, and future-ready. Our mission is to empower learners worldwide with the skills they need to build better careers and create a better world.
             </p>
           </div>
 
@@ -175,7 +175,7 @@ const About = () => {
             </h2>
             <div className="space-y-4 text-xs sm:text-sm text-richblack-300 leading-relaxed font-normal">
               <p>
-                Study_Tech was born out of a shared vision and passion for transforming education. We recognized the gap between traditional learning and the real-world skills needed in today’s tech-driven world.
+                CodeLearn was born out of a shared vision and passion for transforming education. We recognized the gap between traditional learning and the real-world skills needed in today’s tech-driven world.
               </p>
               <p>
                 A group of educators, developers, and industry professionals came together to create a platform that delivers high-quality, practical, and affordable learning to everyone, everywhere.

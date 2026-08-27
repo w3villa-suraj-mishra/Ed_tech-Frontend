@@ -58,7 +58,7 @@ const faqCategories = [
       },
       {
         q: "Which browsers are supported?",
-        a: "Study_Tech works smoothly on modern versions of Chrome, Firefox, Safari, Edge, and mobile browsers."
+        a: "CodeLearn works smoothly on modern versions of Chrome, Firefox, Safari, Edge, and mobile browsers."
       },
       {
         q: "How can I report a technical bug?",
@@ -77,7 +77,7 @@ const faqCategories = [
         a: "Yes! Our web application is fully responsive and optimized for mobile, tablet, and desktop screens."
       },
       {
-        q: "How can I become an instructor on Study_Tech?",
+        q: "How can I become an instructor on CodeLearn?",
         a: "Create an instructor account through the Signup page or reach out to our team to submit your instructor application."
       },
       {
@@ -201,7 +201,7 @@ const Contact = () => {
                 Join a Community of <span className="text-[#a855f7]">{learnersCount} Learners</span>
               </h3>
               <p className="text-xs sm:text-sm text-richblack-300 mt-1 font-normal">
-                Learn, build, and grow together with Study_Tech.
+                Learn, build, and grow together with CodeLearn.
               </p>
 
               <div className="mt-5">

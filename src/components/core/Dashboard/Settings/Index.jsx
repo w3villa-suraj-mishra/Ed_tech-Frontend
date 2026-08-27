@@ -581,7 +581,7 @@ export default function Settings() {
           <div className="p-5 rounded-xl bg-purple-900/20 border border-purple-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <span className="text-xs font-bold text-purple-300 block uppercase tracking-wider">Current Membership</span>
-              <h3 className="text-lg font-extrabold text-white mt-1">StudyTech Lifetime Access</h3>
+              <h3 className="text-lg font-extrabold text-white mt-1">CodeLearn Lifetime Access</h3>
               <p className="text-xs text-richblack-300">Unlimited course streaming and updates included.</p>
             </div>
             <button
@@ -628,7 +628,7 @@ export default function Settings() {
             </div>
 
             <p className="text-xs text-richblack-300 leading-relaxed">
-              Are you sure you want to permanently delete your StudyTech account? All your enrolled courses, certificates, and learning progress will be permanently wiped.
+              Are you sure you want to permanently delete your CodeLearn account? All your enrolled courses, certificates, and learning progress will be permanently wiped.
             </p>
 
             <div className="flex justify-end gap-3 pt-2">
