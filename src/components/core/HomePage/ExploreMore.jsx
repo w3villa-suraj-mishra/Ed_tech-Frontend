@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import HighLightText from "./HighLightText";
 
 export const HomePageExplore = [
@@ -128,6 +129,7 @@ const tabsName = [
 ];
 
 const ExploreMore = () => {
+    const navigate = useNavigate();
     const [currentTab, setCurrentTab] = useState(tabsName[0]);
     const [courses, setCourses] = useState(HomePageExplore[0].courses);
     const [currentCard, setCurrentCard] = useState(HomePageExplore[0].courses[0].heading);
@@ -137,6 +139,11 @@ const ExploreMore = () => {
         const result = HomePageExplore.filter((course) => course.tag === value);
         setCourses(result[0].courses);
         setCurrentCard(result[0].courses[0].heading);
+    }
+
+    const handleCardClick = (heading) => {
+        setCurrentCard(heading);
+        navigate(`/courses?search=${encodeURIComponent(heading)}`);
     }
 
   return (
@@ -182,7 +189,7 @@ const ExploreMore = () => {
                     ${currentCard === element.heading 
                         ? "bg-white shadow-[12px_12px_0_0_#FFD60A] text-richblack-800" 
                         : "bg-richblack-800 text-richblack-200"}`}
-                    onClick={() => setCurrentCard(element.heading)}
+                    onClick={() => handleCardClick(element.heading)}
                 >
                     <div>
                         <h2 className={`font-bold text-[20px] mb-3 ${currentCard === element.heading ? "text-richblack-800" : "text-richblack-5"}`}>

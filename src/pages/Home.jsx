@@ -476,13 +476,13 @@ const Home = () => {
                             "Our courses are designed and taught by industry experts who have years of experience in coding and are passionate about sharing their knowledge with you."
                         }
                         ctabtn1={{
-                            btnText: "Try it Yourself",
-                            linkto: token ? "/courses" : "/signup",
+                            btnText: token ? (hasActiveCourses ? "Continue Learning" : "Start Learning") : "Try it Yourself",
+                            linkto: token ? (hasActiveCourses ? "/t/u/activeCourses" : "/courses") : "/signup",
                             active: true,
                         }}
                         ctabtn2={{
                             btnText: "Learn More",
-                            linkto: token ? "/courses" : "/login",
+                            linkto: "/courses",
                             active: false,
                         }}
                         codeblock={`<!DOCTYPE html>\n<html>\n<head>\n<title>Example</title>\n<link rel="stylesheet" href="styles.css">\n</head>\n<body>\n<h1><a href="/">Header</a></h1>\n<nav>\n<a href="one/">One</a>\n<a href="two/">Two</a>\n<a href="three/">Three</a>\n</nav>\n</body>\n</html>`}
@@ -505,13 +505,13 @@ const Home = () => {
                             "Go ahead, give it a try. Our hands-on learning environment means you'll be writing real code from your very first lesson"
                         }
                         ctabtn1={{
-                            btnText: token && hasActiveCourses ? "Continue Learning" : "Continue Lesson",
-                            linkto: token ? (hasActiveCourses ? "/dashboard/courses" : "/courses") : "/signup",
+                            btnText: token ? (hasActiveCourses ? "Continue Learning" : "Start Learning") : "Continue Lesson",
+                            linkto: token ? (hasActiveCourses ? "/t/u/activeCourses" : "/courses") : "/signup",
                             active: true,
                         }}
                         ctabtn2={{
                             btnText: "Learn More",
-                            linkto: token ? "/courses" : "/login",
+                            linkto: "/courses",
                             active: false,
                         }}
                         codeblock={`import React from 'react';\nconst App = () => {\n  return (\n    <div>\n      <h1>Hello World</h1>\n    </div>\n  );\n};\nexport default App;`}
