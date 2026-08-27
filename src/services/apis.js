@@ -118,4 +118,6 @@ export const practiceEndpoints = {
   ADMIN_TESTS: BASE_URL + "/admin/practice/tests",
   ADMIN_CATEGORIES: BASE_URL + "/admin/practice/categories",
   ADMIN_TOPICS: BASE_URL + "/admin/practice/topics",
+  GET_COURSE_PRACTICE: BASE_URL + "/practice/course",
+  INSTRUCTOR_CREATE_COURSE_TEST: BASE_URL + "/instructor/practice/course-test",
 }

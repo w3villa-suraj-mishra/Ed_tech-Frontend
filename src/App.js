@@ -40,6 +40,7 @@ import PracticeCenter from "./pages/PracticeCenter";
 import DailyQuiz from "./pages/DailyQuiz";
 import TopicPractice from "./pages/TopicPractice";
 import PreviousAttempts from "./pages/PreviousAttempts";
+import InstructorPracticeBuilder from "./pages/InstructorPracticeBuilder";
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -163,6 +164,7 @@ function App() {
             <Route path="edit-course/:courseId" element={<EditCourse />} />
             <Route path="my-courses"          element={<MyCourses />} />
             <Route path="instructor"          element={<InstructorDashboard />} />
+            <Route path="instructor-practice" element={<InstructorPracticeBuilder />} />
             <Route path="articles"            element={<Articles />} />
             <Route path="articles/:articleId" element={<ArticleDetailPage />} />
             <Route path="guided-path"         element={<GuidedPath />} />

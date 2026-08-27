@@ -67,6 +67,13 @@ export const sidebarLinks = [
     icon: "VscAdd",
   },
   {
+    id: 17,
+    name: "Course Practice Builder",
+    path: "/dashboard/instructor-practice",
+    type: ACCOUNT_TYPE.INSTRUCTOR,
+    icon: "VscCode",
+  },
+  {
     id: 6,
     name: "Cart",
     path: "/dashboard/cart",

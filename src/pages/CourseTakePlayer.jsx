@@ -24,6 +24,7 @@ import {
   FiTrash2
 } from "react-icons/fi";
 import { FaComments } from "react-icons/fa6";
+import CoursePracticeTab from "../components/core/ViewCourse/CoursePracticeTab";
 
 const { COURSE_DETAILS_API } = courseEndpoints;
 
@@ -327,6 +328,15 @@ const CourseTakePlayer = () => {
         </div>
 
         <div className="flex items-center gap-3">
+          <button
+            onClick={() => setCurrentLecture(null)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+              currentLecture === null ? 'bg-purple-600 text-white' : 'text-purple-600 hover:bg-purple-50'
+            }`}
+          >
+            <span>🎯 Practice / Tests</span>
+          </button>
+
           <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-indigo-600 hover:bg-indigo-50 transition">
             <FaComments size={14} />
             <span>Discuss ({comments.length})</span>
@@ -544,6 +554,10 @@ const CourseTakePlayer = () => {
                   onEnded={handleCompleteAndContinue}
                 />
               </div>
+            </div>
+          ) : currentLecture === null ? (
+            <div className="flex-1 overflow-y-auto bg-[#090D16]">
+              <CoursePracticeTab />
             </div>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center text-slate-400 p-8 space-y-2">
