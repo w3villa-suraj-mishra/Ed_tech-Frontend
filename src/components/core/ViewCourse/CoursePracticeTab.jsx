@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-[#a855f7]' === undefined ? require('react-redux') : require('react-redux');
+import { useSelector } from 'react-redux';
 import { apiConnector } from '../../../services/apiConnector';
 import { practiceEndpoints } from '../../../services/apis';
 import { FaClock, FaCheckCircle, FaAward, FaPlay } from 'react-icons/fa';
