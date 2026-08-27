@@ -294,20 +294,23 @@ function AdminPracticeBankInner() {
 
         <div className="flex flex-wrap gap-2">
           <button
+            type="button"
             onClick={() => setIsCategoryModalOpen(true)}
-            className="px-3 py-2 bg-[#2C333F] hover:bg-[#3E4553] text-white text-xs font-semibold rounded-xl transition-all"
+            className="px-3.5 py-2 bg-[#2C333F] hover:bg-[#3E4553] text-white text-xs font-semibold rounded-xl transition-all cursor-pointer shadow"
           >
             Manage Categories/Topics
           </button>
           <button
+            type="button"
             onClick={() => setIsBulkModalOpen(true)}
-            className="px-3 py-2 bg-[#2C333F] hover:bg-[#3E4553] text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-all"
+            className="px-3.5 py-2 bg-[#2C333F] hover:bg-[#3E4553] text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-all cursor-pointer shadow"
           >
             <FaFileImport /> Bulk CSV
           </button>
           <button
+            type="button"
             onClick={() => handleOpenCreateModal()}
-            className="px-4 py-2 bg-[#FFD60A] text-black hover:bg-[#e5c009] text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-md transition-all"
+            className="px-4 py-2 bg-[#FFD60A] text-black hover:bg-[#e5c009] text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-md transition-all cursor-pointer"
           >
             <FaPlus /> Add Question
           </button>
