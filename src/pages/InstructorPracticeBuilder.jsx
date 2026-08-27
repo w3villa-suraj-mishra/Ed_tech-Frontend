@@ -114,9 +114,7 @@ export default function InstructorPracticeBuilder() {
 
   const fetchInstructorQuestions = async () => {
     try {
-      const url = selectedCourseId
-        ? `${practiceEndpoints.INSTRUCTOR_GET_QUESTIONS}?courseId=${selectedCourseId}`
-        : practiceEndpoints.INSTRUCTOR_GET_QUESTIONS;
+      const url = practiceEndpoints.INSTRUCTOR_GET_QUESTIONS;
       const res = await apiConnector('GET', url, null, {
         Authorization: `Bearer ${token}`
       });
