@@ -23,6 +23,7 @@ function AdminPracticeBankInner() {
 
   // Filters
   const [search, setSearch] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState('');
 
@@ -35,6 +36,7 @@ function AdminPracticeBankInner() {
   // Question Form State
   const [formData, setFormData] = useState({
     title: '',
+    testCategory: 'MCQ',
     type: 'MCQ',
     scope: 'GLOBAL',
     courseId: '',
@@ -51,14 +53,17 @@ function AdminPracticeBankInner() {
       { text: '', isCorrect: false },
       { text: '', isCorrect: false },
     ],
+    answerDetails: {
+      acceptedAnswer: '',
+    },
     codingDetails: {
+      language: 'javascript',
       problemStatement: '',
       inputFormat: '',
       outputFormat: '',
       constraints: '',
-      exampleInput: '',
-      exampleOutput: '',
       starterCode: 'function solution() {\n  // Write code here\n}',
+      testCases: '',
     },
     interviewDetails: {
       sampleAnswer: '',
@@ -81,6 +86,7 @@ function AdminPracticeBankInner() {
     try {
       let url = `${practiceEndpoints.ADMIN_QUESTIONS}?`;
       if (search) url += `search=${encodeURIComponent(search)}&`;
+      if (categoryFilter) url += `testCategory=${categoryFilter}&`;
       if (typeFilter) url += `type=${typeFilter}&`;
       if (difficultyFilter) url += `difficulty=${difficultyFilter}&`;
 
@@ -121,13 +127,14 @@ function AdminPracticeBankInner() {
     fetchQuestions();
     fetchCategories();
     fetchCourses();
-  }, [search, typeFilter, difficultyFilter]);
+  }, [search, categoryFilter, typeFilter, difficultyFilter]);
 
   const handleOpenCreateModal = (q = null) => {
     if (q) {
       setEditingQuestion(q);
       setFormData({
         title: q.title || '',
+        testCategory: q.testCategory || 'MCQ',
         type: q.type || 'MCQ',
         scope: q.scope || 'GLOBAL',
         courseId: q.courseId || '',
@@ -138,20 +145,21 @@ function AdminPracticeBankInner() {
         marks: q.marks || 1,
         negativeMarks: q.negativeMarks || 0,
         status: q.status || 'published',
-        options: q.options && q.options.length === 4 ? q.options.map(o => ({ text: o.optionText, isCorrect: o.isCorrect })) : [
+        options: q.options && q.options.length > 0 ? q.options.map(o => ({ text: o.optionText, isCorrect: o.isCorrect })) : [
           { text: '', isCorrect: true },
           { text: '', isCorrect: false },
           { text: '', isCorrect: false },
           { text: '', isCorrect: false },
         ],
+        answerDetails: q.answerDetails || { acceptedAnswer: '' },
         codingDetails: q.codingDetails || {
+          language: 'javascript',
           problemStatement: '',
           inputFormat: '',
           outputFormat: '',
           constraints: '',
-          exampleInput: '',
-          exampleOutput: '',
           starterCode: 'function solution() {\n  // Write code here\n}',
+          testCases: '',
         },
         interviewDetails: q.interviewDetails || {
           sampleAnswer: '',
@@ -162,6 +170,7 @@ function AdminPracticeBankInner() {
       setEditingQuestion(null);
       setFormData({
         title: '',
+        testCategory: 'MCQ',
         type: 'MCQ',
         scope: 'GLOBAL',
         courseId: '',
@@ -178,14 +187,15 @@ function AdminPracticeBankInner() {
           { text: '', isCorrect: false },
           { text: '', isCorrect: false },
         ],
+        answerDetails: { acceptedAnswer: '' },
         codingDetails: {
+          language: 'javascript',
           problemStatement: '',
           inputFormat: '',
           outputFormat: '',
           constraints: '',
-          exampleInput: '',
-          exampleOutput: '',
           starterCode: 'function solution() {\n  // Write code here\n}',
+          testCases: '',
         },
         interviewDetails: {
           sampleAnswer: '',
@@ -194,6 +204,24 @@ function AdminPracticeBankInner() {
       });
     }
     setIsQuestionModalOpen(true);
+  };
+
+  const handleTypeChange = (newType) => {
+    let newOptions = formData.options;
+    if (newType === 'True/False') {
+      newOptions = [
+        { text: 'True', isCorrect: true },
+        { text: 'False', isCorrect: false },
+      ];
+    } else if ((newType === 'MCQ' || newType === 'Multiple Select') && formData.options.length < 2) {
+      newOptions = [
+        { text: '', isCorrect: true },
+        { text: '', isCorrect: false },
+        { text: '', isCorrect: false },
+        { text: '', isCorrect: false },
+      ];
+    }
+    setFormData({ ...formData, type: newType, options: newOptions });
   };
 
   const handleSaveQuestion = async (e) => {
@@ -207,7 +235,7 @@ function AdminPracticeBankInner() {
       const payload = {
         ...formData,
         courseId: formData.scope === 'GLOBAL' ? null : formData.courseId,
-        options: formData.type === 'MCQ' ? formData.options : undefined
+        options: ['MCQ', 'Multiple Select', 'True/False'].includes(formData.type) ? formData.options : undefined
       };
 
       if (editingQuestion) {
@@ -258,26 +286,22 @@ function AdminPracticeBankInner() {
 
   const handleCreateTopic = async (e) => {
     e.preventDefault();
-    if (!selectedCatForTopic) {
-      toast.error('Select a category first');
-      return;
-    }
     try {
-      await apiConnector('POST', practiceEndpoints.ADMIN_TOPICS, { categoryId: selectedCatForTopic, name: topicName }, {
-        Authorization: `Bearer ${adminToken}`
-      });
+      await apiConnector('POST', practiceEndpoints.ADMIN_TOPICS, {
+        name: topicName,
+        categoryId: selectedCatForTopic
+      }, { Authorization: `Bearer ${adminToken}` });
       toast.success('Topic created');
       setTopicName('');
       fetchCategories();
     } catch (err) {
-      toast.error(err?.response?.data?.message || 'Failed to create topic');
+      toast.error('Failed to create topic');
     }
   };
 
   const handleBulkUpload = async (e) => {
     e.preventDefault();
     try {
-      // Simple format: Title,Type,Difficulty,Explanation
       const lines = csvText.split('\n').filter(l => l.trim());
       const parsedQuestions = lines.map(line => {
         const parts = line.split(',');
@@ -310,42 +334,34 @@ function AdminPracticeBankInner() {
 
   return (
     <AdminLayout>
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-[#F1F2FF]">Practice Question Bank 🎯</h1>
-          <p className="text-xs text-[#AFB2BF] mt-1">Manage MCQs, Coding Problems, and Interview Questions.</p>
+          <div className="flex items-center gap-2">
+            <span className="p-2 bg-[#FFD60A]/10 text-[#FFD60A] rounded-xl text-xl">⚡</span>
+            <h1 className="text-2xl font-bold text-[#F1F2FF]">Practice Question Bank</h1>
+          </div>
+          <p className="text-xs text-[#AFB2BF] mt-1">Manage global & course-specific questions, test categories, and dynamic question types.</p>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
-            type="button"
             onClick={() => setIsCategoryModalOpen(true)}
-            className="px-3.5 py-2 bg-[#2C333F] hover:bg-[#3E4553] text-white text-xs font-semibold rounded-xl transition-all cursor-pointer shadow"
+            className="px-3.5 py-2 bg-[#161D29] border border-[#2C333F] text-[#AFB2BF] hover:text-white font-semibold text-xs rounded-xl transition-colors"
           >
-            Manage Categories/Topics
+            Manage Categories
           </button>
           <button
-            type="button"
-            onClick={() => setIsBulkModalOpen(true)}
-            className="px-3.5 py-2 bg-[#2C333F] hover:bg-[#3E4553] text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-all cursor-pointer shadow"
-          >
-            <FaFileImport /> Bulk CSV
-          </button>
-          <button
-            type="button"
             onClick={() => handleOpenCreateModal()}
-            className="px-4 py-2 bg-[#FFD60A] text-black hover:bg-[#e5c009] text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-md transition-all cursor-pointer"
+            className="px-4 py-2 bg-[#FFD60A] text-black font-bold text-xs rounded-xl flex items-center gap-2 shadow-lg hover:bg-yellow-400 transition"
           >
             <FaPlus /> Add Question
           </button>
         </div>
       </div>
 
-      {/* Filter Bar */}
-      <div className="bg-[#161D29] border border-[#2C333F] rounded-2xl p-4 mb-6 flex flex-wrap gap-4 items-center justify-between">
-        <div className="relative flex-1 min-w-[240px]">
-          <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#585D69] text-sm" />
+      <div className="bg-[#161D29] border border-[#2C333F] rounded-2xl p-4 mb-6 flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4">
+        <div className="relative flex-1">
+          <FaSearch className="absolute left-3.5 top-3.5 text-[#585D69]" />
           <input
             type="text"
             placeholder="Search questions by title..."
@@ -355,16 +371,33 @@ function AdminPracticeBankInner() {
           />
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
+          <select
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            className="bg-[#090D16] border border-[#2C333F] rounded-xl px-3 py-2 text-xs text-[#AFB2BF] focus:outline-none focus:border-[#FFD60A]"
+          >
+            <option value="">All Test Categories</option>
+            <option value="MCQ">MCQ</option>
+            <option value="Coding">Coding</option>
+            <option value="Topic Practice">Topic Practice</option>
+            <option value="Mock Test">Mock Test</option>
+            <option value="Interview Test">Interview Test</option>
+            <option value="Daily Quiz">Daily Quiz</option>
+          </select>
+
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
             className="bg-[#090D16] border border-[#2C333F] rounded-xl px-3 py-2 text-xs text-[#AFB2BF] focus:outline-none focus:border-[#FFD60A]"
           >
-            <option value="">All Types</option>
+            <option value="">All Question Types</option>
             <option value="MCQ">MCQ</option>
+            <option value="Multiple Select">Multiple Select</option>
+            <option value="True/False">True/False</option>
+            <option value="Short Answer">Short Answer</option>
+            <option value="Fill in the Blank">Fill in the Blank</option>
             <option value="Coding">Coding</option>
-            <option value="Interview">Interview</option>
           </select>
 
           <select
@@ -380,10 +413,9 @@ function AdminPracticeBankInner() {
         </div>
       </div>
 
-      {/* Table */}
       <div className="bg-[#161D29] border border-[#2C333F] rounded-2xl overflow-hidden shadow-xl">
         {loading ? (
-          <TableSkeleton rows={5} cols={5} />
+          <TableSkeleton rows={5} cols={6} />
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
@@ -392,8 +424,8 @@ function AdminPracticeBankInner() {
                   <th className="px-5 py-3.5">Question Title</th>
                   <th className="px-5 py-3.5">Scope</th>
                   <th className="px-5 py-3.5">Course</th>
-                  <th className="px-5 py-3.5">Type</th>
-                  <th className="px-5 py-3.5">Category / Topic</th>
+                  <th className="px-5 py-3.5">Test Category</th>
+                  <th className="px-5 py-3.5">Question Type</th>
                   <th className="px-5 py-3.5">Difficulty</th>
                   <th className="px-5 py-3.5 text-right">Actions</th>
                 </tr>
@@ -420,15 +452,17 @@ function AdminPracticeBankInner() {
                         {q.scope === 'COURSE' ? (q.course?.courseName || courses.find(c => String(c.id || c._id) === String(q.courseId))?.courseName || '—') : '—'}
                       </td>
                       <td className="px-5 py-4">
+                        <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#FFD60A]/10 text-[#FFD60A] border border-[#FFD60A]/20">
+                          {q.testCategory || 'MCQ'}
+                        </span>
+                      </td>
+                      <td className="px-5 py-4">
                         <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
                           q.type === 'MCQ' ? 'bg-blue-500/20 text-blue-400' :
                           q.type === 'Coding' ? 'bg-purple-500/20 text-purple-400' : 'bg-amber-500/20 text-amber-400'
                         }`}>
                           {q.type}
                         </span>
-                      </td>
-                      <td className="px-5 py-4 text-[#AFB2BF]">
-                        {q.category?.name || 'General'} {q.topic ? `> ${q.topic.name}` : ''}
                       </td>
                       <td className="px-5 py-4">
                         <span className={`font-semibold ${
@@ -479,7 +513,6 @@ function AdminPracticeBankInner() {
               />
             </div>
 
-            {/* QUESTION SCOPE selection */}
             <div className="bg-[#090D16] p-3.5 border border-[#2C333F] rounded-xl space-y-3">
               <div>
                 <label className="block text-[#FFD60A] font-bold mb-2 uppercase tracking-wide text-[11px]">Question Scope *</label>
@@ -531,18 +564,41 @@ function AdminPracticeBankInner() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-slate-300 font-semibold mb-1">Question Type</label>
+                <label className="block text-[#FFD60A] font-bold mb-1">1. TEST CATEGORY *</label>
                 <select
-                  value={formData.type}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                  required
+                  value={formData.testCategory}
+                  onChange={(e) => setFormData({ ...formData, testCategory: e.target.value })}
                   className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-white focus:outline-none focus:border-[#FFD60A]"
                 >
                   <option value="MCQ">MCQ</option>
-                  <option value="Coding">Coding Problem</option>
-                  <option value="Interview">Interview Question</option>
+                  <option value="Coding">Coding</option>
+                  <option value="Topic Practice">Topic Practice</option>
+                  <option value="Mock Test">Mock Test</option>
+                  <option value="Interview Test">Interview Test</option>
+                  <option value="Daily Quiz">Daily Quiz</option>
                 </select>
               </div>
 
+              <div>
+                <label className="block text-[#FFD60A] font-bold mb-1">2. QUESTION TYPE *</label>
+                <select
+                  required
+                  value={formData.type}
+                  onChange={(e) => handleTypeChange(e.target.value)}
+                  className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-white focus:outline-none focus:border-[#FFD60A]"
+                >
+                  <option value="MCQ">MCQ (Single Answer)</option>
+                  <option value="Multiple Select">Multiple Select</option>
+                  <option value="True/False">True / False</option>
+                  <option value="Short Answer">Short Answer</option>
+                  <option value="Fill in the Blank">Fill in the Blank</option>
+                  <option value="Coding">Coding Problem</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-slate-300 font-semibold mb-1">Difficulty</label>
                 <select
@@ -555,12 +611,22 @@ function AdminPracticeBankInner() {
                   <option value="Hard">Hard</option>
                 </select>
               </div>
+
+              <div>
+                <label className="block text-slate-300 font-semibold mb-1">Marks</label>
+                <input
+                  type="number"
+                  min={1}
+                  value={formData.marks}
+                  onChange={(e) => setFormData({ ...formData, marks: Number(e.target.value) })}
+                  className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-white focus:outline-none focus:border-[#FFD60A]"
+                />
+              </div>
             </div>
 
-            {/* MCQ Options */}
             {formData.type === 'MCQ' && (
               <div className="space-y-2 pt-2 border-t border-[#2C333F]">
-                <label className="block text-slate-300 font-semibold">Options (Select Correct Answer)</label>
+                <label className="block text-slate-300 font-semibold">Answer Options (Select Exactly 1 Correct Answer)</label>
                 {formData.options.map((opt, idx) => (
                   <div key={idx} className="flex items-center gap-2">
                     <input
@@ -589,25 +655,133 @@ function AdminPracticeBankInner() {
               </div>
             )}
 
-            {/* Coding Problem Fields */}
+            {formData.type === 'Multiple Select' && (
+              <div className="space-y-2 pt-2 border-t border-[#2C333F]">
+                <label className="block text-slate-300 font-semibold">Answer Options (Check all Correct Answers)</label>
+                {formData.options.map((opt, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={opt.isCorrect}
+                      onChange={(e) => {
+                        const newOpts = [...formData.options];
+                        newOpts[idx].isCorrect = e.target.checked;
+                        setFormData({ ...formData, options: newOpts });
+                      }}
+                      className="accent-[#FFD60A]"
+                    />
+                    <input
+                      type="text"
+                      placeholder={`Option ${idx + 1}`}
+                      value={opt.text}
+                      onChange={(e) => {
+                        const newOpts = [...formData.options];
+                        newOpts[idx].text = e.target.value;
+                        setFormData({ ...formData, options: newOpts });
+                      }}
+                      className="flex-1 bg-[#090D16] border border-[#2C333F] rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#FFD60A]"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {formData.type === 'True/False' && (
+              <div className="space-y-2 pt-2 border-t border-[#2C333F]">
+                <label className="block text-slate-300 font-semibold">Select Correct Choice</label>
+                <div className="flex gap-6">
+                  {formData.options.map((opt, idx) => (
+                    <label key={idx} className="flex items-center gap-2 text-white font-bold cursor-pointer">
+                      <input
+                        type="radio"
+                        name="trueFalseChoice"
+                        checked={opt.isCorrect}
+                        onChange={() => {
+                          const newOpts = formData.options.map((o, i) => ({ ...o, isCorrect: i === idx }));
+                          setFormData({ ...formData, options: newOpts });
+                        }}
+                        className="accent-[#FFD60A]"
+                      />
+                      <span>{opt.text}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {(formData.type === 'Short Answer' || formData.type === 'Fill in the Blank') && (
+              <div className="space-y-2 pt-2 border-t border-[#2C333F]">
+                <label className="block text-slate-300 font-semibold">Accepted Correct Answer *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Exact string answer expected from student..."
+                  value={formData.answerDetails?.acceptedAnswer || ''}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    answerDetails: { ...formData.answerDetails, acceptedAnswer: e.target.value }
+                  })}
+                  className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-white focus:outline-none focus:border-[#FFD60A]"
+                />
+              </div>
+            )}
+
             {formData.type === 'Coding' && (
               <div className="space-y-3 pt-2 border-t border-[#2C333F]">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-slate-300 font-semibold mb-1">Programming Language</label>
+                    <select
+                      value={formData.codingDetails.language}
+                      onChange={(e) => setFormData({ ...formData, codingDetails: { ...formData.codingDetails, language: e.target.value } })}
+                      className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-white focus:outline-none focus:border-[#FFD60A]"
+                    >
+                      <option value="javascript">JavaScript</option>
+                      <option value="python">Python</option>
+                      <option value="java">Java</option>
+                      <option value="cpp">C++</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-slate-300 font-semibold mb-1">Constraints</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. 1 <= N <= 10^5"
+                      value={formData.codingDetails.constraints}
+                      onChange={(e) => setFormData({ ...formData, codingDetails: { ...formData.codingDetails, constraints: e.target.value } })}
+                      className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-white focus:outline-none focus:border-[#FFD60A]"
+                    />
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-slate-300 font-semibold mb-1">Problem Statement</label>
                   <textarea
                     rows={3}
                     value={formData.codingDetails.problemStatement}
                     onChange={(e) => setFormData({ ...formData, codingDetails: { ...formData.codingDetails, problemStatement: e.target.value } })}
-                    className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-white"
+                    className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-white focus:outline-none focus:border-[#FFD60A]"
                   />
                 </div>
+
                 <div>
                   <label className="block text-slate-300 font-semibold mb-1">Starter Code</label>
                   <textarea
                     rows={3}
                     value={formData.codingDetails.starterCode}
                     onChange={(e) => setFormData({ ...formData, codingDetails: { ...formData.codingDetails, starterCode: e.target.value } })}
-                    className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-white font-mono text-xs"
+                    className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-white font-mono text-xs focus:outline-none focus:border-[#FFD60A]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-slate-300 font-semibold mb-1">Test Cases (JSON or text)</label>
+                  <textarea
+                    rows={2}
+                    placeholder="e.g. Input: [1,2], Output: 3"
+                    value={formData.codingDetails.testCases}
+                    onChange={(e) => setFormData({ ...formData, codingDetails: { ...formData.codingDetails, testCases: e.target.value } })}
+                    className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-white font-mono text-xs focus:outline-none focus:border-[#FFD60A]"
                   />
                 </div>
               </div>
