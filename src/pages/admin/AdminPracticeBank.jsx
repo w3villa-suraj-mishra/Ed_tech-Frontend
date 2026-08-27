@@ -428,7 +428,7 @@ function AdminPracticeBankInner() {
 
       {/* CREATE / EDIT QUESTION MODAL */}
       {isQuestionModalOpen && (
-        <AdminModal title={editingQuestion ? 'Edit Question' : 'Create Question'} onClose={() => setIsQuestionModalOpen(false)}>
+        <AdminModal isOpen={isQuestionModalOpen} title={editingQuestion ? 'Edit Question' : 'Create Question'} onClose={() => setIsQuestionModalOpen(false)}>
           <form onSubmit={handleSaveQuestion} className="space-y-4 max-h-[75vh] overflow-y-auto pr-2 text-xs">
             <div>
               <label className="block text-slate-300 font-semibold mb-1">Question Title / Statement *</label>
@@ -558,7 +558,7 @@ function AdminPracticeBankInner() {
 
       {/* CATEGORIES / TOPICS MODAL */}
       {isCategoryModalOpen && (
-        <AdminModal title="Manage Categories & Topics" onClose={() => setIsCategoryModalOpen(false)}>
+        <AdminModal isOpen={isCategoryModalOpen} title="Manage Categories & Topics" onClose={() => setIsCategoryModalOpen(false)}>
           <div className="space-y-6 text-xs">
             {/* Create Category */}
             <form onSubmit={handleCreateCategory} className="space-y-2 border-b border-[#2C333F] pb-4">
@@ -603,7 +603,7 @@ function AdminPracticeBankInner() {
 
       {/* BULK CSV MODAL */}
       {isBulkModalOpen && (
-        <AdminModal title="Bulk Upload Questions (CSV Format)" onClose={() => setIsBulkModalOpen(false)}>
+        <AdminModal isOpen={isBulkModalOpen} title="Bulk Upload Questions (CSV Format)" onClose={() => setIsBulkModalOpen(false)}>
           <form onSubmit={handleBulkUpload} className="space-y-4 text-xs">
             <p className="text-slate-400">Paste CSV lines formatted as: <br/><code className="text-[#FFD60A]">Question Title,Type,Difficulty,Explanation,OptA,OptB,OptC,OptD</code></p>
             <textarea
