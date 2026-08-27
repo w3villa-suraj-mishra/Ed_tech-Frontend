@@ -49,6 +49,8 @@ import { useNavigate } from "react-router-dom";
 
 import AdminPracticeBank   from "./pages/admin/AdminPracticeBank";
 import AdminPracticeTests  from "./pages/admin/AdminPracticeTests";
+import AdminGlobalTests    from "./pages/admin/AdminGlobalTests";
+import AdminCourseTests    from "./pages/admin/AdminCourseTests";
 
 // Admin pages
 import AdminIndex        from "./pages/admin/AdminIndex";
@@ -108,6 +110,8 @@ function App() {
           <Route path="/admin/enrollments"  element={<AdminEnrollments />} />
           <Route path="/admin/practice-bank" element={<AdminPracticeBank />} />
           <Route path="/admin/practice-tests" element={<AdminPracticeTests />} />
+          <Route path="/admin/global-tests"  element={<AdminGlobalTests />} />
+          <Route path="/admin/course-tests"  element={<AdminCourseTests />} />
           <Route path="/admin/reviews"      element={<AdminReviews />} />
           <Route path="/admin/articles"     element={<AdminArticles />} />
           <Route path="/admin/live-sessions" element={<AdminLiveSessions />} />
