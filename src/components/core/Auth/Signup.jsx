@@ -11,6 +11,7 @@ import { setSignupData } from "../../../services/slices/authSlice"
 import { ACCOUNT_TYPE } from "../../../utils/constants"
 import { apiConnector } from "../../../services/apiConnector"
 import { endpoints, BASE_URL } from "../../../services/apis"
+import Tab from "../../Common/Tab"
 
 function Signup() {
   const navigate = useNavigate()
@@ -18,6 +19,20 @@ function Signup() {
 
   const [accountType, setAccountType] = useState(ACCOUNT_TYPE.STUDENT)
   const [agreedTerms, setAgreedTerms] = useState(false)
+
+  // Data to pass to Tab component for accountType toggle
+  const tabData = [
+    {
+      id: 1,
+      tabName: "Student",
+      type: ACCOUNT_TYPE.STUDENT,
+    },
+    {
+      id: 2,
+      tabName: "Instructor",
+      type: ACCOUNT_TYPE.INSTRUCTOR,
+    },
+  ]
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -113,7 +128,7 @@ function Signup() {
         <div className="lg:col-span-7 flex flex-col justify-center max-w-xl mx-auto lg:mx-0 w-full">
           
           {/* Header */}
-          <div className="mb-8">
+          <div className="mb-6">
             <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight flex items-center gap-2">
               <span>Create your account</span>
               <span className="text-purple-400 text-2xl">✨</span>
@@ -121,6 +136,11 @@ function Signup() {
             <p className="text-slate-400 text-sm sm:text-base mt-2">
               Join millions of learners and start your <span className="text-purple-400 font-semibold">coding</span> journey today.
             </p>
+          </div>
+
+          {/* Student / Instructor Role Selection Toggle Pill */}
+          <div className="mb-6">
+            <Tab tabData={tabData} field={accountType} setField={setAccountType} />
           </div>
 
           <form onSubmit={handleOnSubmit} className="space-y-5 w-full">
