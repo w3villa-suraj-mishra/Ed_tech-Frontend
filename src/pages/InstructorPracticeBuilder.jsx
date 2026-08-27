@@ -307,8 +307,12 @@ export default function InstructorPracticeBuilder() {
     }
   };
 
+  const [isSubmittingTest, setIsSubmittingTest] = useState(false);
+
   // Step 5 & 6: Create & Publish/Save Draft Test
   const handleCreateTestSubmit = async (statusType) => {
+    if (isSubmittingTest) return;
+
     const targetCourseId = testForm.courseId || selectedCourseId;
     if (!targetCourseId) {
       toast.error('Select a course first');
@@ -323,6 +327,7 @@ export default function InstructorPracticeBuilder() {
       return;
     }
 
+    setIsSubmittingTest(true);
     try {
       const payload = {
         ...testForm,
@@ -337,7 +342,14 @@ export default function InstructorPracticeBuilder() {
 
       if (res.data?.success) {
         toast.success(statusType === 'published' ? 'Test published successfully! 🚀' : 'Test saved as draft! 📝');
+        
+        // Immediate state update and refetch
+        const newTest = res.data.data;
+        if (newTest) {
+          setTests((prev) => [newTest, ...prev]);
+        }
         fetchInstructorTests();
+
         setTestForm({
           title: '',
           description: '',
@@ -349,10 +361,14 @@ export default function InstructorPracticeBuilder() {
           selectedQuestionIds: [],
           status: 'published'
         });
+
+        // Switch to My Practice tab to view the created test
         setActiveTab('my-practice');
       }
     } catch (err) {
-      toast.error(err?.response?.data?.message || 'Failed to save test');
+      toast.error(err?.response?.data?.message || 'Failed to create test');
+    } finally {
+      setIsSubmittingTest(false);
     }
   };
 
@@ -701,17 +717,26 @@ export default function InstructorPracticeBuilder() {
             <div className="flex gap-4 pt-4">
               <button
                 type="button"
+                disabled={isSubmittingTest}
                 onClick={() => handleCreateTestSubmit('draft')}
-                className="flex-1 py-3 bg-[#2C333F] text-white font-bold text-xs rounded-xl hover:bg-gray-700 transition"
+                className="flex-1 py-3 bg-[#2C333F] text-white font-bold text-xs rounded-xl hover:bg-gray-700 transition disabled:opacity-50"
               >
-                Save Draft 📝
+                {isSubmittingTest ? 'Saving Draft...' : 'Save Draft 📝'}
               </button>
               <button
                 type="button"
+                disabled={isSubmittingTest}
                 onClick={() => handleCreateTestSubmit('published')}
-                className="flex-1 py-3 bg-[#FFD60A] text-black font-bold text-xs rounded-xl shadow-xl hover:bg-yellow-400 transition"
+                className="flex-1 py-3 bg-[#FFD60A] text-black font-bold text-xs rounded-xl shadow-xl hover:bg-yellow-400 transition disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                Publish Test 🚀
+                {isSubmittingTest ? (
+                  <>
+                    <span className="w-3.5 h-3.5 border-2 border-black border-t-transparent rounded-full animate-spin"></span>
+                    Publishing...
+                  </>
+                ) : (
+                  'Publish Test 🚀'
+                )}
               </button>
             </div>
           </div>
