@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
 import {
   FaPlus, FaBook, FaClock, FaAward, FaSearch, FaFilter, FaCheckCircle,
   FaTimesCircle, FaEye, FaEdit, FaTrash, FaListUl, FaQuestionCircle,
-  FaUserGraduate, FaCode, FaCommentDots, FaArrowLeft
+  FaUserGraduate, FaCode, FaCommentDots, FaArrowLeft, FaTrashAlt
 } from 'react-icons/fa';
 
 export default function InstructorPracticeBuilder() {
@@ -24,7 +24,6 @@ export default function InstructorPracticeBuilder() {
   const [questions, setQuestions] = useState([]);
   const [attempts, setAttempts] = useState([]);
   const [selectedTestForAttempts, setSelectedTestForAttempts] = useState(null);
-  const [selectedAttemptDetail, setSelectedAttemptDetail] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // Question Filters
@@ -45,8 +44,8 @@ export default function InstructorPracticeBuilder() {
       { optionText: '', isCorrect: true },
       { optionText: '', isCorrect: false },
     ],
-    codingDetails: { language: 'javascript', initialCode: '', expectedOutput: '' },
-    interviewDetails: { sampleAnswer: '', keyPoints: '' }
+    codingDetails: { language: 'javascript', problemStatement: '', starterCode: '', testCases: '' },
+    interviewDetails: { expectedAnswer: '', keyPoints: '' }
   });
 
   // Create Test Form State
@@ -167,19 +166,93 @@ export default function InstructorPracticeBuilder() {
     }
   };
 
-  // Step 4: Submit Create Question
-  const handleCreateQuestionSubmit = async (e) => {
-    e.preventDefault();
+  // Question Form Helpers & Validations
+  const handleAddMcqOption = () => {
+    setQForm((prev) => ({
+      ...prev,
+      options: [...prev.options, { optionText: '', isCorrect: false }]
+    }));
+  };
+
+  const handleRemoveMcqOption = (index) => {
+    if (qForm.options.length <= 2) {
+      toast.error('Minimum 2 options required');
+      return;
+    }
+    const updated = qForm.options.filter((_, i) => i !== index);
+    // Ensure at least one remains correct if removed option was correct
+    const hasCorrect = updated.some((o) => o.isCorrect);
+    if (!hasCorrect && updated.length > 0) {
+      updated[0].isCorrect = true;
+    }
+    setQForm((prev) => ({ ...prev, options: updated }));
+  };
+
+  const handleQuestionTypeChange = (newType) => {
+    if (newType === 'True/False') {
+      setQForm((prev) => ({
+        ...prev,
+        type: newType,
+        options: [
+          { optionText: 'True', isCorrect: true },
+          { optionText: 'False', isCorrect: false }
+        ]
+      }));
+    } else if (newType === 'MCQ') {
+      setQForm((prev) => ({
+        ...prev,
+        type: newType,
+        options: [
+          { optionText: '', isCorrect: true },
+          { optionText: '', isCorrect: false }
+        ]
+      }));
+    } else {
+      setQForm((prev) => ({ ...prev, type: newType, options: [] }));
+    }
+  };
+
+  const validateQuestionForm = () => {
     const targetCourseId = qForm.courseId || selectedCourseId;
     if (!targetCourseId) {
       toast.error('Please select a course for this question');
-      return;
+      return false;
     }
-    if (!qForm.title) {
+    if (!qForm.title || !qForm.title.trim()) {
       toast.error('Question title is required');
-      return;
+      return false;
+    }
+    if (!qForm.marks || qForm.marks <= 0) {
+      toast.error('Valid marks are required');
+      return false;
     }
 
+    if (qForm.type === 'MCQ') {
+      if (qForm.options.length < 2) {
+        toast.error('MCQ requires at least 2 options');
+        return false;
+      }
+      for (let i = 0; i < qForm.options.length; i++) {
+        if (!qForm.options[i].optionText.trim()) {
+          toast.error(`Option ${i + 1} text is required`);
+          return false;
+        }
+      }
+      const correctCount = qForm.options.filter((o) => o.isCorrect).length;
+      if (correctCount !== 1) {
+        toast.error('Exactly one option must be marked as correct');
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  // Submit Question (Single or Save & Add Another)
+  const saveQuestion = async (shouldAddAnother = false) => {
+    if (!validateQuestionForm()) return;
+
+    const targetCourseId = qForm.courseId || selectedCourseId;
     try {
       const payload = {
         ...qForm,
@@ -191,24 +264,39 @@ export default function InstructorPracticeBuilder() {
       });
 
       if (res.data?.success) {
-        toast.success('Question added to Question Bank! 🎯');
-        fetchInstructorQuestions();
+        toast.success('Question saved to Question Bank! 🎯');
+        
+        // Immediate state update (Real-time addition)
+        const savedQ = res.data.data;
+        if (savedQ) {
+          setQuestions((prev) => [savedQ, ...prev]);
+        } else {
+          fetchInstructorQuestions();
+        }
+
+        // Reset form for next question
         setQForm({
           title: '',
-          type: 'MCQ',
+          type: qForm.type, // keep chosen question type
           courseId: targetCourseId,
           difficulty: 'Easy',
           explanation: '',
           marks: 1,
           negativeMarks: 0,
-          options: [
+          options: qForm.type === 'True/False' ? [
+            { optionText: 'True', isCorrect: true },
+            { optionText: 'False', isCorrect: false }
+          ] : [
             { optionText: '', isCorrect: true },
             { optionText: '', isCorrect: false },
           ],
-          codingDetails: { language: 'javascript', initialCode: '', expectedOutput: '' },
-          interviewDetails: { sampleAnswer: '', keyPoints: '' }
+          codingDetails: { language: 'javascript', problemStatement: '', starterCode: '', testCases: '' },
+          interviewDetails: { expectedAnswer: '', keyPoints: '' }
         });
-        setActiveTab('question-bank');
+
+        if (!shouldAddAnother) {
+          setActiveTab('question-bank');
+        }
       }
     } catch (err) {
       toast.error(err?.response?.data?.message || 'Failed to create question');
@@ -451,9 +539,9 @@ export default function InstructorPracticeBuilder() {
               </select>
               <button
                 onClick={() => setActiveTab('create-question')}
-                className="px-4 py-2 bg-[#FFD60A] text-black text-xs font-bold rounded-xl whitespace-nowrap"
+                className="px-4 py-2 bg-[#FFD60A] text-black text-xs font-bold rounded-xl whitespace-nowrap flex items-center gap-1.5"
               >
-                + Add Question
+                <FaPlus /> Add Question
               </button>
             </div>
           </div>
@@ -626,20 +714,21 @@ export default function InstructorPracticeBuilder() {
         </div>
       )}
 
-      {/* TAB 4: ADD QUESTION */}
+      {/* TAB 4: ADD QUESTION (DYNAMIC MULTI-OPTION & DYNAMIC TYPES) */}
       {activeTab === 'create-question' && (
-        <form onSubmit={handleCreateQuestionSubmit} className="max-w-3xl space-y-6 bg-[#161D29] border border-[#2C333F] p-6 sm:p-8 rounded-3xl shadow-xl">
+        <div className="max-w-3xl space-y-6 bg-[#161D29] border border-[#2C333F] p-6 sm:p-8 rounded-3xl shadow-xl">
           <h2 className="text-xl font-bold text-white border-b border-[#2C333F] pb-4">
             Add New Question
           </h2>
 
-          <div className="space-y-4">
+          <div className="space-y-5">
+            {/* Question Type */}
             <div>
               <label className="block text-xs font-bold text-[#AFB2BF] uppercase tracking-wider mb-2">Question Type</label>
               <select
                 value={qForm.type}
-                onChange={(e) => setQForm({ ...qForm, type: e.target.value })}
-                className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-sm text-white focus:outline-none"
+                onChange={(e) => handleQuestionTypeChange(e.target.value)}
+                className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-sm text-white focus:outline-none focus:border-[#FFD60A]"
               >
                 <option value="MCQ">MCQ (Multiple Choice)</option>
                 <option value="True/False">True / False</option>
@@ -648,25 +737,33 @@ export default function InstructorPracticeBuilder() {
               </select>
             </div>
 
+            {/* Question Title / Statement */}
             <div>
-              <label className="block text-xs font-bold text-[#AFB2BF] uppercase tracking-wider mb-2">Question Title / Prompt *</label>
+              <label className="block text-xs font-bold text-[#AFB2BF] uppercase tracking-wider mb-2">
+                {qForm.type === 'Coding' ? 'Problem Title *' : 'Question / Prompt *'}
+              </label>
               <input
                 required
                 type="text"
-                placeholder="e.g. What is the output of useEffect with an empty dependency array?"
+                placeholder={
+                  qForm.type === 'Coding'
+                    ? 'e.g. Write a function to reverse a string'
+                    : 'e.g. What is the output of useEffect with empty dependency array?'
+                }
                 value={qForm.title}
                 onChange={(e) => setQForm({ ...qForm, title: e.target.value })}
-                className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-sm text-white focus:outline-none"
+                className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-sm text-white focus:outline-none focus:border-[#FFD60A]"
               />
             </div>
 
+            {/* Difficulty & Marks */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-bold text-[#AFB2BF] uppercase tracking-wider mb-2">Difficulty</label>
                 <select
                   value={qForm.difficulty}
                   onChange={(e) => setQForm({ ...qForm, difficulty: e.target.value })}
-                  className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-sm text-white"
+                  className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-sm text-white focus:outline-none focus:border-[#FFD60A]"
                 >
                   <option value="Easy">Easy</option>
                   <option value="Medium">Medium</option>
@@ -677,53 +774,197 @@ export default function InstructorPracticeBuilder() {
                 <label className="block text-xs font-bold text-[#AFB2BF] uppercase tracking-wider mb-2">Marks</label>
                 <input
                   type="number"
+                  min={1}
                   value={qForm.marks}
                   onChange={(e) => setQForm({ ...qForm, marks: Number(e.target.value) })}
-                  className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-sm text-white"
+                  className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-sm text-white focus:outline-none focus:border-[#FFD60A]"
                 />
               </div>
             </div>
 
-            {/* MCQ Options */}
-            {(qForm.type === 'MCQ' || qForm.type === 'True/False') && (
-              <div className="space-y-3">
-                <label className="block text-xs font-bold text-[#AFB2BF] uppercase tracking-wider">Answer Options</label>
-                {qForm.options.map((opt, idx) => (
-                  <div key={idx} className="flex items-center gap-3">
-                    <input
-                      type="radio"
-                      name="correctOption"
-                      checked={opt.isCorrect}
-                      onChange={() => {
-                        const updated = qForm.options.map((o, i) => ({ ...o, isCorrect: i === idx }));
-                        setQForm({ ...qForm, options: updated });
-                      }}
-                      className="accent-[#FFD60A]"
-                    />
-                    <input
-                      type="text"
-                      placeholder={`Option ${idx + 1}`}
-                      value={opt.optionText}
-                      onChange={(e) => {
-                        const updated = [...qForm.options];
-                        updated[idx].optionText = e.target.value;
-                        setQForm({ ...qForm, options: updated });
-                      }}
-                      className="flex-1 bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-xs text-white"
-                    />
-                  </div>
-                ))}
+            {/* TYPE 1: MCQ DYNAMIC OPTIONS */}
+            {qForm.type === 'MCQ' && (
+              <div className="space-y-3 pt-2">
+                <div className="flex justify-between items-center">
+                  <label className="block text-xs font-bold text-[#AFB2BF] uppercase tracking-wider">
+                    Answer Options (Select exactly 1 correct answer)
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleAddMcqOption}
+                    className="px-3 py-1.5 bg-purple-600/20 text-purple-300 border border-purple-500/30 hover:bg-purple-600/30 text-xs font-bold rounded-xl flex items-center gap-1.5 transition"
+                  >
+                    <FaPlus /> Add Option
+                  </button>
+                </div>
+
+                <div className="space-y-2">
+                  {qForm.options.map((opt, idx) => (
+                    <div key={idx} className="flex items-center gap-3">
+                      <input
+                        type="radio"
+                        name="correctOptionRadio"
+                        checked={opt.isCorrect}
+                        onChange={() => {
+                          const updated = qForm.options.map((o, i) => ({ ...o, isCorrect: i === idx }));
+                          setQForm({ ...qForm, options: updated });
+                        }}
+                        className="accent-[#FFD60A] w-4 h-4 cursor-pointer"
+                        title="Mark as correct answer"
+                      />
+                      <input
+                        type="text"
+                        placeholder={`Option ${idx + 1}`}
+                        value={opt.optionText}
+                        onChange={(e) => {
+                          const updated = [...qForm.options];
+                          updated[idx].optionText = e.target.value;
+                          setQForm({ ...qForm, options: updated });
+                        }}
+                        className="flex-1 bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-[#FFD60A]"
+                      />
+                      {qForm.options.length > 2 && (
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveMcqOption(idx)}
+                          className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition"
+                          title="Remove option"
+                        >
+                          <FaTrashAlt className="text-xs" />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
-            <button
-              type="submit"
-              className="w-full py-3.5 bg-[#FFD60A] text-black font-bold text-xs rounded-xl shadow-xl hover:bg-yellow-400 transition"
-            >
-              Save Question to Bank 🎯
-            </button>
+            {/* TYPE 2: TRUE / FALSE */}
+            {qForm.type === 'True/False' && (
+              <div className="space-y-3 pt-2">
+                <label className="block text-xs font-bold text-[#AFB2BF] uppercase tracking-wider">Correct Answer</label>
+                <div className="flex gap-4">
+                  {qForm.options.map((opt, idx) => (
+                    <label
+                      key={idx}
+                      className={`flex-1 p-3.5 rounded-xl border text-xs font-bold cursor-pointer flex items-center justify-center gap-2 transition ${
+                        opt.isCorrect
+                          ? 'bg-purple-600/30 border-purple-500 text-white'
+                          : 'bg-[#090D16] border-[#2C333F] text-gray-400 hover:border-gray-500'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="trueFalseRadio"
+                        checked={opt.isCorrect}
+                        onChange={() => {
+                          const updated = qForm.options.map((o, i) => ({ ...o, isCorrect: i === idx }));
+                          setQForm({ ...qForm, options: updated });
+                        }}
+                        className="accent-[#FFD60A]"
+                      />
+                      {opt.optionText}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* TYPE 3: CODING PROBLEM */}
+            {qForm.type === 'Coding' && (
+              <div className="space-y-4 pt-2">
+                <div>
+                  <label className="block text-xs font-bold text-[#AFB2BF] uppercase tracking-wider mb-2">Problem Statement</label>
+                  <textarea
+                    rows={3}
+                    placeholder="Describe input format, output format, constraints..."
+                    value={qForm.codingDetails?.problemStatement || ''}
+                    onChange={(e) =>
+                      setQForm({
+                        ...qForm,
+                        codingDetails: { ...qForm.codingDetails, problemStatement: e.target.value }
+                      })
+                    }
+                    className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-xs text-white focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-[#AFB2BF] uppercase tracking-wider mb-2">Starter Code</label>
+                  <textarea
+                    rows={3}
+                    placeholder="function solution(str) { \n  // write code here\n }"
+                    value={qForm.codingDetails?.starterCode || ''}
+                    onChange={(e) =>
+                      setQForm({
+                        ...qForm,
+                        codingDetails: { ...qForm.codingDetails, starterCode: e.target.value }
+                      })
+                    }
+                    className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-xs font-mono text-emerald-400 focus:outline-none"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* TYPE 4: INTERVIEW QUESTION */}
+            {qForm.type === 'Interview' && (
+              <div className="space-y-4 pt-2">
+                <div>
+                  <label className="block text-xs font-bold text-[#AFB2BF] uppercase tracking-wider mb-2">Expected Answer / Explanation</label>
+                  <textarea
+                    rows={3}
+                    placeholder="Key concepts, model answer, and points for interviewer..."
+                    value={qForm.interviewDetails?.expectedAnswer || ''}
+                    onChange={(e) =>
+                      setQForm({
+                        ...qForm,
+                        interviewDetails: { ...qForm.interviewDetails, expectedAnswer: e.target.value }
+                      })
+                    }
+                    className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-xs text-white focus:outline-none"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Explanation / Notes */}
+            <div>
+              <label className="block text-xs font-bold text-[#AFB2BF] uppercase tracking-wider mb-2">Explanation (Optional)</label>
+              <textarea
+                rows={2}
+                placeholder="Reasoning shown to student after answering..."
+                value={qForm.explanation}
+                onChange={(e) => setQForm({ ...qForm, explanation: e.target.value })}
+                className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#FFD60A]"
+              />
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-[#2C333F]">
+              <button
+                type="button"
+                onClick={() => saveQuestion(true)}
+                className="flex-1 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs rounded-xl shadow-lg flex items-center justify-center gap-2 transition"
+              >
+                <FaPlus /> Save & Add Another Question
+              </button>
+              <button
+                type="button"
+                onClick={() => saveQuestion(false)}
+                className="flex-1 py-3 bg-[#FFD60A] text-black font-bold text-xs rounded-xl shadow-lg hover:bg-yellow-400 transition"
+              >
+                Save Question 🎯
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('question-bank')}
+                className="px-5 py-3 bg-[#2C333F] text-[#AFB2BF] hover:text-white font-bold text-xs rounded-xl transition"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
-        </form>
+        </div>
       )}
 
       {/* TAB 5: STUDENT ATTEMPTS */}
