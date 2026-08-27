@@ -246,10 +246,14 @@ export default function InstructorPracticeBuilder() {
     return true;
   };
 
+  const [isSubmittingQuestion, setIsSubmittingQuestion] = useState(false);
+
   // Submit Question (Single or Save & Add Another)
   const saveQuestion = async (shouldAddAnother = false) => {
+    if (isSubmittingQuestion) return; // Prevent duplicate rapid submission
     if (!validateQuestionForm()) return;
 
+    setIsSubmittingQuestion(true);
     const targetCourseId = qForm.courseId || selectedCourseId;
     try {
       const payload = {
@@ -298,6 +302,8 @@ export default function InstructorPracticeBuilder() {
       }
     } catch (err) {
       toast.error(err?.response?.data?.message || 'Failed to create question');
+    } finally {
+      setIsSubmittingQuestion(false);
     }
   };
 
@@ -941,22 +947,42 @@ export default function InstructorPracticeBuilder() {
             <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-[#2C333F]">
               <button
                 type="button"
+                disabled={isSubmittingQuestion}
                 onClick={() => saveQuestion(true)}
-                className="flex-1 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs rounded-xl shadow-lg flex items-center justify-center gap-2 transition"
+                className={`flex-1 py-3 font-bold text-xs rounded-xl shadow-lg flex items-center justify-center gap-2 transition ${
+                  isSubmittingQuestion
+                    ? 'bg-purple-900/50 text-purple-300 cursor-not-allowed'
+                    : 'bg-purple-600 hover:bg-purple-500 text-white'
+                }`}
               >
-                <FaPlus /> Save & Add Another Question
+                {isSubmittingQuestion ? (
+                  <>
+                    <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                    Saving Question...
+                  </>
+                ) : (
+                  <>
+                    <FaPlus /> Save & Add Another Question
+                  </>
+                )}
               </button>
               <button
                 type="button"
+                disabled={isSubmittingQuestion}
                 onClick={() => saveQuestion(false)}
-                className="flex-1 py-3 bg-[#FFD60A] text-black font-bold text-xs rounded-xl shadow-lg hover:bg-yellow-400 transition"
+                className={`flex-1 py-3 font-bold text-xs rounded-xl shadow-lg transition ${
+                  isSubmittingQuestion
+                    ? 'bg-yellow-600/50 text-gray-400 cursor-not-allowed'
+                    : 'bg-[#FFD60A] text-black hover:bg-yellow-400'
+                }`}
               >
-                Save Question 🎯
+                {isSubmittingQuestion ? 'Saving...' : 'Save Question 🎯'}
               </button>
               <button
                 type="button"
+                disabled={isSubmittingQuestion}
                 onClick={() => setActiveTab('question-bank')}
-                className="px-5 py-3 bg-[#2C333F] text-[#AFB2BF] hover:text-white font-bold text-xs rounded-xl transition"
+                className="px-5 py-3 bg-[#2C333F] text-[#AFB2BF] hover:text-white font-bold text-xs rounded-xl transition disabled:opacity-50"
               >
                 Cancel
               </button>
