@@ -55,7 +55,7 @@ export default function PracticeCenter() {
     {
       id: 'daily-quiz',
       title: 'Daily Quiz',
-      count: `${overview?.dailyQuizCount || 1} Active Quiz`,
+      count: `${overview?.dailyQuizCount ?? 0} Active ${overview?.dailyQuizCount === 1 ? 'Quiz' : 'Quizzes'}`,
       desc: 'Quick 5-minute daily challenges to keep your coding skills sharp.',
       icon: <FaBolt className="text-[#FFD60A] text-2xl" />,
       tag: 'FREE DAILY',
@@ -64,7 +64,7 @@ export default function PracticeCenter() {
     {
       id: 'topic-practice',
       title: 'Topic Practice',
-      count: `${overview?.topicPracticeCount || 5}+ Topics`,
+      count: `${overview?.topicPracticeCount ?? 0} Topics Available`,
       desc: 'Filter questions by category, topic, and difficulty to master specific concepts.',
       icon: <FaBookReader className="text-[#a855f7] text-2xl" />,
       tag: 'CONCEPT-WISE',
@@ -73,7 +73,7 @@ export default function PracticeCenter() {
     {
       id: 'course-tests',
       title: 'Course Tests',
-      count: `${overview?.courseTestCount || 2} Course Tests`,
+      count: `${overview?.courseTestCount ?? 0} Course Tests`,
       desc: 'Full module tests to evaluate your grasp on course material.',
       icon: <FaClipboardList className="text-blue-400 text-2xl" />,
       tag: 'MODULE CHECKS',
@@ -82,7 +82,7 @@ export default function PracticeCenter() {
     {
       id: 'mock-tests',
       title: 'Mock Tests',
-      count: `${overview?.mockTestCount || 3} Full Mocks`,
+      count: `${overview?.mockTestCount ?? 0} Full Mocks`,
       desc: 'Full-length timed exams simulating real interview assessments.',
       icon: <FaAward className="text-emerald-400 text-2xl" />,
       tag: 'TIMED EXAMS',
@@ -91,7 +91,7 @@ export default function PracticeCenter() {
     {
       id: 'coding-problems',
       title: 'Coding Problems',
-      count: `${overview?.codingCount || 10}+ Challenges`,
+      count: `${overview?.codingCount ?? 0} Challenges`,
       desc: 'Solve interactive algorithmic & web development programming problems.',
       icon: <FaLaptopCode className="text-pink-400 text-2xl" />,
       tag: 'HANDS-ON',
@@ -100,7 +100,7 @@ export default function PracticeCenter() {
     {
       id: 'interview-questions',
       title: 'Interview Questions',
-      count: `${overview?.interviewCount || 15}+ Questions`,
+      count: `${overview?.interviewCount ?? 0} Questions`,
       desc: 'Top tech company interview questions with detailed solution breakdowns.',
       icon: <FaUserFriends className="text-indigo-400 text-2xl" />,
       tag: 'CAREER READY',
