@@ -193,9 +193,13 @@ function AdminCourseTestsInner() {
   });
 
   const availableQuestions = questions.filter(q => {
+    // Match by testCategory if specified, or by question type as fallback
+    if (q.testCategory) {
+      return q.testCategory === formData.testType;
+    }
     if (formData.testType === 'MCQ') return q.type === 'MCQ';
     if (formData.testType === 'Coding') return q.type === 'Coding';
-    if (formData.testType === 'Interview Test') return q.type === 'Interview';
+    if (formData.testType === 'Interview Test') return q.type === 'Interview' || q.type === 'Coding';
     return true;
   });
 
