@@ -48,7 +48,8 @@ const NotificationBell = () => {
 
     const socket = io(backendUrl, {
       auth: { token },
-      transports: ["websocket", "polling"]
+      transports: ["polling"],
+      reconnectionAttempts: 3,
     });
 
     socket.on("connect", () => {
