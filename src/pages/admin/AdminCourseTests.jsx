@@ -50,7 +50,6 @@ function AdminCourseTestsInner() {
         setCourses(list);
         if (list.length > 0) {
           const firstId = list[0].id || list[0]._id;
-          setSelectedCourseId(firstId);
           setFormData((prev) => ({ ...prev, courseId: firstId }));
         }
       }
