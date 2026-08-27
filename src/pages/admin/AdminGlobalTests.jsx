@@ -147,12 +147,12 @@ function AdminGlobalTestsInner() {
 
   // Filter available questions based on modal test category / type matching
   const availableQuestions = questions.filter(q => {
-    if (q.testCategory) {
-      return q.testCategory === formData.testType;
+    if (q.testCategory && q.testCategory === formData.testType) {
+      return true;
     }
-    if (formData.testType === 'MCQ') return q.type === 'MCQ';
-    if (formData.testType === 'Coding') return q.type === 'Coding';
-    if (formData.testType === 'Interview Test') return q.type === 'Interview' || q.type === 'Coding';
+    if (formData.testType === 'MCQ') return q.type === 'MCQ' || q.testCategory === 'MCQ';
+    if (formData.testType === 'Coding') return q.type === 'Coding' || q.testCategory === 'Coding';
+    if (formData.testType === 'Interview Test') return q.type === 'Interview' || q.type === 'Coding' || q.testCategory === 'Interview Test';
     return true;
   });
 

@@ -193,13 +193,18 @@ function AdminCourseTestsInner() {
   });
 
   const availableQuestions = questions.filter(q => {
-    // Match by testCategory if specified, or by question type as fallback
-    if (q.testCategory) {
-      return q.testCategory === formData.testType;
+    // If courseId is set on question, ensure it matches selected modal courseId
+    if (q.courseId && formData.courseId && String(q.courseId) !== String(formData.courseId)) {
+      return false;
     }
-    if (formData.testType === 'MCQ') return q.type === 'MCQ';
-    if (formData.testType === 'Coding') return q.type === 'Coding';
-    if (formData.testType === 'Interview Test') return q.type === 'Interview' || q.type === 'Coding';
+    // Match by testCategory if specified
+    if (q.testCategory && q.testCategory === formData.testType) {
+      return true;
+    }
+    // Match by type as fallback
+    if (formData.testType === 'MCQ') return q.type === 'MCQ' || q.testCategory === 'MCQ';
+    if (formData.testType === 'Coding') return q.type === 'Coding' || q.testCategory === 'Coding';
+    if (formData.testType === 'Interview Test') return q.type === 'Interview' || q.type === 'Coding' || q.testCategory === 'Interview Test';
     return true;
   });
 
@@ -215,11 +220,16 @@ function AdminCourseTestsInner() {
         </div>
         <button
           onClick={() => {
+            const activeCourseId = formData.courseId || selectedCourseId || (courses.length > 0 ? (courses[0].id || courses[0]._id) : '');
             setFormData(prev => ({
               ...prev,
+              courseId: activeCourseId,
               testType: selectedCategory !== 'All' ? selectedCategory : 'MCQ',
               selectedQuestionIds: []
             }));
+            if (activeCourseId) {
+              fetchCourseQuestions(activeCourseId);
+            }
             setIsTestModalOpen(true);
           }}
           className="px-4 py-2.5 bg-[#FFD60A] text-black font-bold text-xs rounded-xl flex items-center gap-2 shadow-lg hover:bg-yellow-400 transition"
