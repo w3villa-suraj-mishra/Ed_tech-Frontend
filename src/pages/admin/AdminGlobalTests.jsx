@@ -250,7 +250,7 @@ function AdminGlobalTestsInner() {
       {/* Modal: Create Global Test */}
       {isTestModalOpen && (
         <AdminModal isOpen={isTestModalOpen} title="Build Global Practice Test 🌐" onClose={() => setIsTestModalOpen(false)}>
-          <form className="space-y-4 text-xs max-h-[75vh] overflow-y-auto pr-2">
+          <form className="space-y-4 text-xs">
             <div>
               <label className="block text-[#AFB2BF] font-semibold mb-1">Test Title *</label>
               <input

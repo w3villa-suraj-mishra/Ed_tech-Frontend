@@ -319,7 +319,7 @@ function AdminCourseTestsInner() {
       {/* Modal: Create Course Test */}
       {isTestModalOpen && (
         <AdminModal isOpen={isTestModalOpen} title="Build Course-Specific Practice Test 🎓" onClose={() => setIsTestModalOpen(false)}>
-          <form className="space-y-4 text-xs max-h-[75vh] overflow-y-auto pr-2">
+          <form className="space-y-4 text-xs">
             <div>
               <label className="block text-[#AFB2BF] font-semibold mb-1">Target Course *</label>
               <select

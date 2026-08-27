@@ -429,7 +429,7 @@ function AdminPracticeBankInner() {
       {/* CREATE / EDIT QUESTION MODAL */}
       {isQuestionModalOpen && (
         <AdminModal isOpen={isQuestionModalOpen} title={editingQuestion ? 'Edit Question' : 'Create Question'} onClose={() => setIsQuestionModalOpen(false)}>
-          <form onSubmit={handleSaveQuestion} className="space-y-4 max-h-[75vh] overflow-y-auto pr-2 text-xs">
+          <form onSubmit={handleSaveQuestion} className="space-y-4 text-xs">
             <div>
               <label className="block text-slate-300 font-semibold mb-1">Question Title / Statement *</label>
               <textarea
