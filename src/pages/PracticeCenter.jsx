@@ -3,18 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { practiceEndpoints } from '../services/apis';
 import { apiConnector } from '../services/apiConnector';
-import { 
-  FaLightningBolt, 
-  FaBookOpen, 
-  FaGraduationCap, 
-  FaTrophy, 
-  FaCode, 
-  FaComments, 
-  FaHistory, 
-  FaArrowRight,
-  FaCheckCircle,
-  FaClock
-} from 'react-[#a855f7]'; // Wait, let's use standard react-icons/fa
+
 import { 
   FaBolt, 
   FaBookReader, 
