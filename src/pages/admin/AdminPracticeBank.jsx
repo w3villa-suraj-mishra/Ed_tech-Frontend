@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { AdminProtectedRoute, TableSkeleton } from '../../components/admin/AdminUI';
 import AdminModal from '../../components/admin/AdminModal';
-import { practiceEndpoints } from '../../services/apis';
+import { practiceEndpoints, courseEndpoints } from '../../services/apis';
 import { apiConnector } from '../../services/apiConnector';
 import { toast } from 'react-hot-toast';
 import { FaPlus, FaTrash, FaEdit, FaSearch, FaFilter, FaFileImport } from 'react-icons/fa';
@@ -18,6 +18,7 @@ export default function AdminPracticeBank() {
 function AdminPracticeBankInner() {
   const [questions, setQuestions] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Filters
@@ -35,6 +36,8 @@ function AdminPracticeBankInner() {
   const [formData, setFormData] = useState({
     title: '',
     type: 'MCQ',
+    scope: 'GLOBAL',
+    courseId: '',
     categoryId: '',
     topicId: '',
     difficulty: 'Easy',
@@ -103,9 +106,21 @@ function AdminPracticeBankInner() {
     }
   };
 
+  const fetchCourses = async () => {
+    try {
+      const res = await apiConnector('GET', courseEndpoints.GET_ALL_COURSE_API);
+      if (res.data?.success) {
+        setCourses(res.data.data || []);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     fetchQuestions();
     fetchCategories();
+    fetchCourses();
   }, [search, typeFilter, difficultyFilter]);
 
   const handleOpenCreateModal = (q = null) => {
@@ -114,6 +129,8 @@ function AdminPracticeBankInner() {
       setFormData({
         title: q.title || '',
         type: q.type || 'MCQ',
+        scope: q.scope || 'GLOBAL',
+        courseId: q.courseId || '',
         categoryId: q.categoryId || '',
         topicId: q.topicId || '',
         difficulty: q.difficulty || 'Easy',
@@ -146,6 +163,8 @@ function AdminPracticeBankInner() {
       setFormData({
         title: '',
         type: 'MCQ',
+        scope: 'GLOBAL',
+        courseId: '',
         categoryId: '',
         topicId: '',
         difficulty: 'Easy',
@@ -365,6 +384,7 @@ function AdminPracticeBankInner() {
               <thead className="bg-[#090D16] border-b border-[#2C333F] text-[#AFB2BF] font-semibold uppercase tracking-wider">
                 <tr>
                   <th className="px-5 py-3.5">Question Title</th>
+                  <th className="px-5 py-3.5">Scope</th>
                   <th className="px-5 py-3.5">Type</th>
                   <th className="px-5 py-3.5">Category / Topic</th>
                   <th className="px-5 py-3.5">Difficulty</th>
@@ -374,7 +394,7 @@ function AdminPracticeBankInner() {
               <tbody className="divide-y divide-[#2C333F] text-[#F1F2FF]">
                 {questions.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-10 text-[#585D69]">
+                    <td colSpan={6} className="text-center py-10 text-[#585D69]">
                       No questions found. Click "Add Question" to create one.
                     </td>
                   </tr>
@@ -382,6 +402,13 @@ function AdminPracticeBankInner() {
                   questions.map((q) => (
                     <tr key={q.id} className="hover:bg-[#1f2736] transition-colors">
                       <td className="px-5 py-4 font-medium max-w-sm truncate">{q.title}</td>
+                      <td className="px-5 py-4">
+                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                          q.scope === 'COURSE' ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                        }`}>
+                          {q.scope === 'COURSE' ? 'Course Test' : 'Global Practice'}
+                        </span>
+                      </td>
                       <td className="px-5 py-4">
                         <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
                           q.type === 'MCQ' ? 'bg-blue-500/20 text-blue-400' :
@@ -440,6 +467,40 @@ function AdminPracticeBankInner() {
                 className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-white focus:outline-none focus:border-[#FFD60A]"
                 placeholder="Enter title or question statement..."
               />
+            </div>
+
+            {/* Target Scope Selection: Global vs Course Specific */}
+            <div className="grid grid-cols-2 gap-4 bg-[#090D16] p-3 border border-[#2C333F] rounded-xl">
+              <div>
+                <label className="block text-[#FFD60A] font-semibold mb-1">Target Scope *</label>
+                <select
+                  value={formData.scope}
+                  onChange={(e) => setFormData({ ...formData, scope: e.target.value, courseId: e.target.value === 'GLOBAL' ? '' : formData.courseId })}
+                  className="w-full bg-[#161D29] border border-[#2C333F] rounded-xl p-2.5 text-white focus:outline-none focus:border-[#FFD60A]"
+                >
+                  <option value="GLOBAL">Global Practice Bank (All Students)</option>
+                  <option value="COURSE">Course-Specific Test</option>
+                </select>
+              </div>
+
+              {formData.scope === 'COURSE' && (
+                <div>
+                  <label className="block text-[#FFD60A] font-semibold mb-1">Target Course *</label>
+                  <select
+                    required={formData.scope === 'COURSE'}
+                    value={formData.courseId}
+                    onChange={(e) => setFormData({ ...formData, courseId: e.target.value })}
+                    className="w-full bg-[#161D29] border border-[#2C333F] rounded-xl p-2.5 text-white focus:outline-none focus:border-[#FFD60A]"
+                  >
+                    <option value="">Select Target Course</option>
+                    {courses.map((c) => (
+                      <option key={c.id || c._id} value={c.id || c._id}>
+                        {c.courseName}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
