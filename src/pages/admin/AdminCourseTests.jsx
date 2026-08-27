@@ -168,12 +168,9 @@ function AdminCourseTestsInner() {
         status: 'published',
         selectedQuestionIds: [],
       });
-      // If "All Courses" filter is active, pass empty or created courseId so the created test immediately shows up
-      if (selectedCourseId && String(selectedCourseId) !== String(createdCourseId)) {
-        setSelectedCourseId(createdCourseId);
-      } else {
-        fetchCourseTests(selectedCourseId);
-      }
+      // Always update selectedCourseId to match created course and fetch its tests
+      setSelectedCourseId(createdCourseId);
+      fetchCourseTests(createdCourseId);
     } catch (err) {
       toast.error(err?.response?.data?.message || 'Failed to create course test');
     } finally {
