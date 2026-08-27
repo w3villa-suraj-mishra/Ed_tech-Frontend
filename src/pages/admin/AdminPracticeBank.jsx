@@ -33,6 +33,9 @@ function AdminPracticeBankInner() {
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState(null);
 
+  // Selection & Bulk Actions
+  const [selectedQuestionIds, setSelectedQuestionIds] = useState([]);
+
   // Question Form State
   const [formData, setFormData] = useState({
     title: '',
@@ -264,9 +267,40 @@ function AdminPracticeBankInner() {
         Authorization: `Bearer ${adminToken}`
       });
       toast.success('Question deleted');
+      setSelectedQuestionIds((prev) => prev.filter((item) => item !== id));
       fetchQuestions();
     } catch (err) {
       toast.error('Failed to delete question');
+    }
+  };
+
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedQuestionIds(questions.map((q) => q.id));
+    } else {
+      setSelectedQuestionIds([]);
+    }
+  };
+
+  const handleSelectOne = (id) => {
+    setSelectedQuestionIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedQuestionIds.length === 0) return;
+    if (!window.confirm(`Are you sure you want to delete ${selectedQuestionIds.length} selected question(s)?`)) return;
+
+    try {
+      await apiConnector('POST', practiceEndpoints.ADMIN_BULK_DELETE_QUESTIONS, { ids: selectedQuestionIds }, {
+        Authorization: `Bearer ${adminToken}`
+      });
+      toast.success(`${selectedQuestionIds.length} question(s) deleted`);
+      setSelectedQuestionIds([]);
+      fetchQuestions();
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Failed to delete selected questions');
     }
   };
 
@@ -344,6 +378,14 @@ function AdminPracticeBankInner() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          {selectedQuestionIds.length > 0 && (
+            <button
+              onClick={handleBulkDelete}
+              className="px-4 py-2 bg-red-600/90 text-white font-bold text-xs rounded-xl flex items-center gap-2 shadow-lg hover:bg-red-700 transition"
+            >
+              <FaTrash /> Delete Selected ({selectedQuestionIds.length})
+            </button>
+          )}
           <button
             onClick={() => setIsCategoryModalOpen(true)}
             className="px-3.5 py-2 bg-[#161D29] border border-[#2C333F] text-[#AFB2BF] hover:text-white font-semibold text-xs rounded-xl transition-colors"
@@ -415,12 +457,20 @@ function AdminPracticeBankInner() {
 
       <div className="bg-[#161D29] border border-[#2C333F] rounded-2xl overflow-hidden shadow-xl">
         {loading ? (
-          <TableSkeleton rows={5} cols={6} />
+          <TableSkeleton rows={5} cols={7} />
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead className="bg-[#090D16] border-b border-[#2C333F] text-[#AFB2BF] font-semibold uppercase tracking-wider">
                 <tr>
+                  <th className="px-4 py-3.5 w-10 text-center">
+                    <input
+                      type="checkbox"
+                      checked={questions.length > 0 && selectedQuestionIds.length === questions.length}
+                      onChange={handleSelectAll}
+                      className="rounded border-[#2C333F] text-[#FFD60A] focus:ring-0 focus:ring-offset-0 bg-[#090D16] cursor-pointer"
+                    />
+                  </th>
                   <th className="px-5 py-3.5">Question Title</th>
                   <th className="px-5 py-3.5">Scope</th>
                   <th className="px-5 py-3.5">Course</th>
@@ -433,13 +483,21 @@ function AdminPracticeBankInner() {
               <tbody className="divide-y divide-[#2C333F] text-[#F1F2FF]">
                 {questions.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="text-center py-10 text-[#585D69]">
+                    <td colSpan={8} className="text-center py-10 text-[#585D69]">
                       No questions found. Click "Add Question" to create one.
                     </td>
                   </tr>
                 ) : (
                   questions.map((q) => (
-                    <tr key={q.id} className="hover:bg-[#1f2736] transition-colors">
+                    <tr key={q.id} className={`hover:bg-[#1f2736] transition-colors ${selectedQuestionIds.includes(q.id) ? 'bg-[#1f2736]/60' : ''}`}>
+                      <td className="px-4 py-4 text-center">
+                        <input
+                          type="checkbox"
+                          checked={selectedQuestionIds.includes(q.id)}
+                          onChange={() => handleSelectOne(q.id)}
+                          className="rounded border-[#2C333F] text-[#FFD60A] focus:ring-0 focus:ring-offset-0 bg-[#090D16] cursor-pointer"
+                        />
+                      </td>
                       <td className="px-5 py-4 font-medium max-w-sm truncate">{q.title}</td>
                       <td className="px-5 py-4">
                         <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
