@@ -69,11 +69,11 @@ function AdminCourseTestsInner() {
         Authorization: `Bearer ${adminToken}`
       });
       if (res.data?.success) {
-        setTests(res.data.data || []);
+        const testData = res.data.data || [];
+        setTests(testData);
       }
     } catch (err) {
       console.error('Fetch course tests error:', err);
-      // Fallback empty array without interrupting UI with toast error on empty/network state
       setTests([]);
     } finally {
       setLoading(false);
@@ -102,8 +102,8 @@ function AdminCourseTestsInner() {
   }, []);
 
   useEffect(() => {
+    fetchCourseTests(selectedCourseId);
     if (selectedCourseId) {
-      fetchCourseTests(selectedCourseId);
       fetchCourseQuestions(selectedCourseId);
     }
   }, [selectedCourseId]);
@@ -210,6 +210,7 @@ function AdminCourseTestsInner() {
             onChange={(e) => setSelectedCourseId(e.target.value)}
             className="w-full bg-[#161D29] border border-[#2C333F] rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#FFD60A]"
           >
+            <option value="">All Courses</option>
             {courses.map((c) => (
               <option key={c.id || c._id} value={c.id || c._id}>
                 {c.courseName}
