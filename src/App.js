@@ -154,6 +154,10 @@ function App() {
             <Route path="courses"             element={<CoursesPage defaultTab="your-courses" />} />
             <Route path="enrolled-courses"    element={<CoursesPage defaultTab="your-courses" />} />
             <Route path="buy-courses"         element={<CoursesPage defaultTab="buy-courses" />} />
+            <Route path="practice"            element={<PracticeCenter />} />
+            <Route path="practice/daily-quiz" element={<DailyQuiz />} />
+            <Route path="practice/topic"      element={<TopicPractice />} />
+            <Route path="practice/attempts"   element={<PreviousAttempts />} />
             <Route path="settings"            element={<Settings />} />
             <Route path="add-course"          element={<AddCourse />} />
             <Route path="edit-course/:courseId" element={<EditCourse />} />
