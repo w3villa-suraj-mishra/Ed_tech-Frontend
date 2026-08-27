@@ -49,8 +49,8 @@ function AdminGlobalTestsInner() {
         setTests(res.data.data || []);
       }
     } catch (err) {
-      console.error(err);
-      toast.error('Failed to load global tests');
+      console.error('Fetch global tests error:', err);
+      setTests([]);
     } finally {
       setLoading(false);
     }

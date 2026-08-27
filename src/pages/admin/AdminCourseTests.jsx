@@ -72,8 +72,9 @@ function AdminCourseTestsInner() {
         setTests(res.data.data || []);
       }
     } catch (err) {
-      console.error(err);
-      toast.error('Failed to load course tests');
+      console.error('Fetch course tests error:', err);
+      // Fallback empty array without interrupting UI with toast error on empty/network state
+      setTests([]);
     } finally {
       setLoading(false);
     }
