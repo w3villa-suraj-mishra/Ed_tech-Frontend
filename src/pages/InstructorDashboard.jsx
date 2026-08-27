@@ -92,6 +92,7 @@ const InstructorDashboard = () => {
     { label: 'Instructor Guide', path: '/dashboard/instructor', icon: <VscGraph size={18} />, highlighted: true },
     { label: 'My Courses', path: '/dashboard/my-courses', icon: <VscVm size={18} /> },
     { label: 'Add Content', path: '/dashboard/add-course', icon: <VscAdd size={18} /> },
+    { label: 'Practice', path: '/dashboard/instructor-practice', icon: <VscBook size={18} /> },
   ];
 
   const sidebarBottomItems = [
