@@ -85,7 +85,7 @@ function AdminCourseTestsInner() {
       return;
     }
     try {
-      const res = await apiConnector('GET', `${practiceEndpoints.ADMIN_QUESTIONS}?courseId=${cId}`, null, {
+      const res = await apiConnector('GET', `${practiceEndpoints.ADMIN_QUESTIONS}?scope=COURSE&courseId=${cId}`, null, {
         Authorization: `Bearer ${adminToken}`
       });
       if (res.data?.success) {

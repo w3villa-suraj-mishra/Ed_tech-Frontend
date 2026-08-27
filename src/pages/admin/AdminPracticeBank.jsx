@@ -198,9 +198,15 @@ function AdminPracticeBankInner() {
 
   const handleSaveQuestion = async (e) => {
     e.preventDefault();
+    if (formData.scope === 'COURSE' && !formData.courseId) {
+      toast.error('Please select a course for Course Question');
+      return;
+    }
+
     try {
       const payload = {
         ...formData,
+        courseId: formData.scope === 'GLOBAL' ? null : formData.courseId,
         options: formData.type === 'MCQ' ? formData.options : undefined
       };
 
@@ -385,6 +391,7 @@ function AdminPracticeBankInner() {
                 <tr>
                   <th className="px-5 py-3.5">Question Title</th>
                   <th className="px-5 py-3.5">Scope</th>
+                  <th className="px-5 py-3.5">Course</th>
                   <th className="px-5 py-3.5">Type</th>
                   <th className="px-5 py-3.5">Category / Topic</th>
                   <th className="px-5 py-3.5">Difficulty</th>
@@ -394,7 +401,7 @@ function AdminPracticeBankInner() {
               <tbody className="divide-y divide-[#2C333F] text-[#F1F2FF]">
                 {questions.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="text-center py-10 text-[#585D69]">
+                    <td colSpan={7} className="text-center py-10 text-[#585D69]">
                       No questions found. Click "Add Question" to create one.
                     </td>
                   </tr>
@@ -406,8 +413,11 @@ function AdminPracticeBankInner() {
                         <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
                           q.scope === 'COURSE' ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                         }`}>
-                          {q.scope === 'COURSE' ? 'Course Test' : 'Global Practice'}
+                          {q.scope === 'COURSE' ? 'Course' : 'Global'}
                         </span>
+                      </td>
+                      <td className="px-5 py-4 text-[#AFB2BF]">
+                        {q.scope === 'COURSE' ? (q.course?.courseName || courses.find(c => String(c.id || c._id) === String(q.courseId))?.courseName || '—') : '—'}
                       </td>
                       <td className="px-5 py-4">
                         <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
@@ -469,30 +479,46 @@ function AdminPracticeBankInner() {
               />
             </div>
 
-            {/* Target Scope Selection: Global vs Course Specific */}
-            <div className="grid grid-cols-2 gap-4 bg-[#090D16] p-3 border border-[#2C333F] rounded-xl">
+            {/* QUESTION SCOPE selection */}
+            <div className="bg-[#090D16] p-3.5 border border-[#2C333F] rounded-xl space-y-3">
               <div>
-                <label className="block text-[#FFD60A] font-semibold mb-1">Target Scope *</label>
-                <select
-                  value={formData.scope}
-                  onChange={(e) => setFormData({ ...formData, scope: e.target.value, courseId: e.target.value === 'GLOBAL' ? '' : formData.courseId })}
-                  className="w-full bg-[#161D29] border border-[#2C333F] rounded-xl p-2.5 text-white focus:outline-none focus:border-[#FFD60A]"
-                >
-                  <option value="GLOBAL">Global Practice Bank (All Students)</option>
-                  <option value="COURSE">Course-Specific Test</option>
-                </select>
+                <label className="block text-[#FFD60A] font-bold mb-2 uppercase tracking-wide text-[11px]">Question Scope *</label>
+                <div className="flex items-center gap-6 text-white font-medium">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="questionScope"
+                      value="GLOBAL"
+                      checked={formData.scope === 'GLOBAL'}
+                      onChange={() => setFormData({ ...formData, scope: 'GLOBAL', courseId: '' })}
+                      className="accent-[#FFD60A] w-4 h-4"
+                    />
+                    <span>Global Question</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="questionScope"
+                      value="COURSE"
+                      checked={formData.scope === 'COURSE'}
+                      onChange={() => setFormData({ ...formData, scope: 'COURSE' })}
+                      className="accent-[#FFD60A] w-4 h-4"
+                    />
+                    <span>Course Question</span>
+                  </label>
+                </div>
               </div>
 
               {formData.scope === 'COURSE' && (
-                <div>
-                  <label className="block text-[#FFD60A] font-semibold mb-1">Target Course *</label>
+                <div className="pt-2 border-t border-[#2C333F]">
+                  <label className="block text-slate-300 font-semibold mb-1">Select Course *</label>
                   <select
-                    required={formData.scope === 'COURSE'}
+                    required
                     value={formData.courseId}
                     onChange={(e) => setFormData({ ...formData, courseId: e.target.value })}
                     className="w-full bg-[#161D29] border border-[#2C333F] rounded-xl p-2.5 text-white focus:outline-none focus:border-[#FFD60A]"
                   >
-                    <option value="">Select Target Course</option>
+                    <option value="">-- Choose Course --</option>
                     {courses.map((c) => (
                       <option key={c.id || c._id} value={c.id || c._id}>
                         {c.courseName}
