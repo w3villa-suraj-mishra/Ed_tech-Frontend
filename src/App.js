@@ -34,11 +34,20 @@ import OAuthSuccess from "./pages/OAuthSuccess.jsx";
 import CourseDetails from "./pages/CourseDetails.jsx";
 import ViewCourse from "./pages/ViewCourse.jsx";
 import VideoDetails from "./components/core/ViewCourse/videoDetails.jsx";
+
+// Student Practice Pages
+import PracticeCenter from "./pages/PracticeCenter";
+import DailyQuiz from "./pages/DailyQuiz";
+import TopicPractice from "./pages/TopicPractice";
+import PreviousAttempts from "./pages/PreviousAttempts";
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserDetails } from "./services/operations/profileAPI";
 import { useNavigate } from "react-router-dom";
+
+import AdminPracticeBank   from "./pages/admin/AdminPracticeBank";
+import AdminPracticeTests  from "./pages/admin/AdminPracticeTests";
 
 // Admin pages
 import AdminIndex        from "./pages/admin/AdminIndex";
@@ -96,6 +105,8 @@ function App() {
           <Route path="/admin/courses"      element={<AdminCourses />} />
           <Route path="/admin/categories"   element={<AdminCategories />} />
           <Route path="/admin/enrollments"  element={<AdminEnrollments />} />
+          <Route path="/admin/practice-bank" element={<AdminPracticeBank />} />
+          <Route path="/admin/practice-tests" element={<AdminPracticeTests />} />
           <Route path="/admin/reviews"      element={<AdminReviews />} />
           <Route path="/admin/articles"     element={<AdminArticles />} />
           <Route path="/admin/live-sessions" element={<AdminLiveSessions />} />
@@ -123,6 +134,16 @@ function App() {
           <Route path="/contact"              element={<Contact />} />
           <Route path="/login"                element={<LoginForm />} />
           <Route path="/signup"               element={<Signup />} />
+          
+          {/* Practice Center Routes */}
+          <Route path="/practice"             element={<PracticeCenter />} />
+          <Route path="/practice/daily-quiz text-white" element={<DailyQuiz />} />
+          <Route path="/practice/daily-quiz text-white" element={<DailyQuiz />} />
+          <Route path="/practice/daily-quiz"   element={<DailyQuiz />} />
+          <Route path="/practice/topic font-sans" element={<TopicPractice />} />
+          <Route path="/practice/topic"        element={<TopicPractice />} />
+          <Route path="/practice/attempts"    element={<PreviousAttempts />} />
+
           <Route path="/student-dashboard"    element={<StudentDashboard />} />
           <Route path="/instructor-dashboard" element={<InstructorDashboard />} />
           <Route path="/dashboard"            element={<Dashboard />}>

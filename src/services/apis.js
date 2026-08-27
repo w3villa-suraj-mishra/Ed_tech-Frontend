@@ -102,3 +102,20 @@ export const settingsEndpoints = {
   CHANGE_PASSWORD_API: BASE_URL + "/auth/changepassword",
   DELETE_PROFILE_API: BASE_URL + "/profile/deleteAccount",
 }
+
+// PRACTICE ENDPOINTS
+export const practiceEndpoints = {
+  GET_PRACTICE_OVERVIEW: BASE_URL + "/practice/overview",
+  GET_DAILY_QUIZ: BASE_URL + "/practice/daily-quiz",
+  GET_TOPIC_QUESTIONS: BASE_URL + "/practice/topic-questions",
+  GET_PRACTICE_TESTS: BASE_URL + "/practice/tests",
+  SUBMIT_ATTEMPT: BASE_URL + "/practice/submit",
+  GET_USER_ATTEMPTS: BASE_URL + "/practice/attempts",
+  GET_ATTEMPT_DETAILS: BASE_URL + "/practice/attempts/",
+  GET_PRACTICE_CATEGORIES: BASE_URL + "/practice/categories",
+  ADMIN_QUESTIONS: BASE_URL + "/admin/practice/questions",
+  ADMIN_BULK_QUESTIONS: BASE_URL + "/admin/practice/questions/bulk",
+  ADMIN_TESTS: BASE_URL + "/admin/practice/tests",
+  ADMIN_CATEGORIES: BASE_URL + "/admin/practice/categories",
+  ADMIN_TOPICS: BASE_URL + "/admin/practice/topics",
+}
