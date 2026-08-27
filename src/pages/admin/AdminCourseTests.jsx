@@ -7,6 +7,16 @@ import { apiConnector } from '../../services/apiConnector';
 import { toast } from 'react-hot-toast';
 import { FaPlus, FaTrash, FaEye, FaGraduationCap, FaSearch, FaFilter } from 'react-icons/fa';
 
+const TEST_CATEGORIES = [
+  'All',
+  'MCQ',
+  'Coding',
+  'Topic Practice',
+  'Mock Test',
+  'Interview Test',
+  'Daily Quiz'
+];
+
 export default function AdminCourseTests() {
   return (
     <AdminProtectedRoute>
@@ -26,13 +36,13 @@ function AdminCourseTestsInner() {
   const [selectedTestForStats, setSelectedTestForStats] = useState(null);
 
   const [search, setSearch] = useState('');
-  const [typeFilter, setTypeFilter] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
   const [formData, setFormData] = useState({
     courseId: '',
     title: '',
     description: '',
-    testType: 'Course Test',
+    testType: 'MCQ',
     duration: 20,
     totalMarks: 20,
     passingPercentage: 50,
@@ -150,7 +160,7 @@ function AdminCourseTestsInner() {
         courseId: selectedCourseId,
         title: '',
         description: '',
-        testType: 'Course Test',
+        testType: selectedCategory !== 'All' ? selectedCategory : 'MCQ',
         duration: 20,
         totalMarks: 20,
         passingPercentage: 50,
@@ -178,8 +188,15 @@ function AdminCourseTestsInner() {
 
   const filteredTests = tests.filter(t => {
     const matchesSearch = t.title?.toLowerCase().includes(search.toLowerCase());
-    const matchesType = !typeFilter || t.testType === typeFilter;
-    return matchesSearch && matchesType;
+    const matchesCategory = selectedCategory === 'All' || t.testType === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  const availableQuestions = questions.filter(q => {
+    if (formData.testType === 'MCQ') return q.type === 'MCQ';
+    if (formData.testType === 'Coding') return q.type === 'Coding';
+    if (formData.testType === 'Interview Test') return q.type === 'Interview';
+    return true;
   });
 
   return (
@@ -193,15 +210,39 @@ function AdminCourseTestsInner() {
           <p className="text-xs text-[#AFB2BF] mt-1">Exclusive tests restricted to enrolled students of the specific course.</p>
         </div>
         <button
-          onClick={() => setIsTestModalOpen(true)}
+          onClick={() => {
+            setFormData(prev => ({
+              ...prev,
+              testType: selectedCategory !== 'All' ? selectedCategory : 'MCQ',
+              selectedQuestionIds: []
+            }));
+            setIsTestModalOpen(true);
+          }}
           className="px-4 py-2.5 bg-[#FFD60A] text-black font-bold text-xs rounded-xl flex items-center gap-2 shadow-lg hover:bg-yellow-400 transition"
         >
           <FaPlus /> Build Course Test
         </button>
       </div>
 
+      {/* Category Navigation Tabs */}
+      <div className="flex flex-wrap gap-2 mb-6 border-b border-[#2C333F] pb-3">
+        {TEST_CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setSelectedCategory(cat)}
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              selectedCategory === cat
+                ? 'bg-[#FFD60A] text-black shadow-md font-extrabold'
+                : 'bg-[#161D29] text-[#AFB2BF] border border-[#2C333F] hover:text-white hover:border-[#585D69]'
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
       {/* Course Selector & Filters */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
         <div>
           <label className="block text-[11px] font-bold text-[#AFB2BF] uppercase mb-1">Select Active Course</label>
           <select
@@ -231,20 +272,6 @@ function AdminCourseTestsInner() {
             />
           </div>
         </div>
-
-        <div>
-          <label className="block text-[11px] font-bold text-[#AFB2BF] uppercase mb-1">Filter Test Type</label>
-          <select
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value)}
-            className="w-full bg-[#161D29] border border-[#2C333F] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#FFD60A]"
-          >
-            <option value="">All Test Types</option>
-            <option value="Course Test">Course Test</option>
-            <option value="Topic Practice">Topic Practice</option>
-            <option value="Mock Test">Mock Test</option>
-          </select>
-        </div>
       </div>
 
       {/* Tests Table */}
@@ -256,7 +283,7 @@ function AdminCourseTestsInner() {
             <thead className="bg-[#090D16] border-b border-[#2C333F] text-[#AFB2BF] font-semibold uppercase">
               <tr>
                 <th className="px-5 py-3.5">Test Title</th>
-                <th className="px-5 py-3.5">Type</th>
+                <th className="px-5 py-3.5">Category / Type</th>
                 <th className="px-5 py-3.5">Questions</th>
                 <th className="px-5 py-3.5">Duration</th>
                 <th className="px-5 py-3.5">Status</th>
@@ -268,7 +295,7 @@ function AdminCourseTestsInner() {
                 <tr>
                   <td colSpan={6} className="text-center py-12 text-[#585D69]">
                     <FaGraduationCap className="mx-auto text-3xl mb-2 opacity-30" />
-                    No tests found for the selected course.
+                    No tests found for the selected course and category.
                   </td>
                 </tr>
               ) : (
@@ -361,15 +388,18 @@ function AdminCourseTestsInner() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-[#AFB2BF] font-semibold mb-1">Test Type</label>
+                <label className="block text-[#AFB2BF] font-semibold mb-1">Category / Test Type</label>
                 <select
                   value={formData.testType}
-                  onChange={(e) => setFormData({ ...formData, testType: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, testType: e.target.value, selectedQuestionIds: [] })}
                   className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-white focus:outline-none focus:border-[#FFD60A]"
                 >
-                  <option value="Course Test">Course Test</option>
+                  <option value="MCQ">MCQ</option>
+                  <option value="Coding">Coding</option>
                   <option value="Topic Practice">Topic Practice</option>
                   <option value="Mock Test">Mock Test</option>
+                  <option value="Interview Test">Interview Test</option>
+                  <option value="Daily Quiz">Daily Quiz</option>
                 </select>
               </div>
 
@@ -416,12 +446,10 @@ function AdminCourseTestsInner() {
                 Select Questions from Selected Course Question Bank ({formData.selectedQuestionIds.length} Selected)
               </label>
               <div className="max-h-48 overflow-y-auto bg-[#090D16] border border-[#2C333F] rounded-xl p-3 space-y-2">
-                {!formData.courseId ? (
-                  <p className="text-center text-slate-500 py-4">Please select a course first to view available questions.</p>
-                ) : questions.length === 0 ? (
-                  <p className="text-center text-slate-500 py-4">No questions found for this specific course in Practice Bank.</p>
+                {availableQuestions.length === 0 ? (
+                  <p className="text-center text-slate-500 py-4">No course questions available for this category.</p>
                 ) : (
-                  questions.map((q) => (
+                  availableQuestions.map((q) => (
                     <label key={q.id} className="flex items-center gap-2 text-slate-300 hover:text-white cursor-pointer select-none">
                       <input
                         type="checkbox"

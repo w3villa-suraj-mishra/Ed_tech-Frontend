@@ -443,6 +443,22 @@ export default function InstructorPracticeBuilder() {
       {/* TAB 1: MY PRACTICE MANAGEMENT LIST */}
       {activeTab === 'my-practice' && (
         <div className="space-y-6">
+          <div className="flex flex-wrap gap-2 border-b border-[#2C333F] pb-3">
+            {['All', 'MCQ', 'Coding', 'Topic Practice', 'Mock Test', 'Interview Test', 'Daily Quiz'].map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setQTypeFilter(cat === 'All' ? '' : cat)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  (qTypeFilter === cat || (cat === 'All' && !qTypeFilter))
+                    ? 'bg-purple-600 text-white shadow-md'
+                    : 'bg-[#161D29] text-[#AFB2BF] border border-[#2C333F] hover:text-white'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-bold text-white">Course Practice Tests & Quizzes</h2>
             <button
@@ -463,7 +479,7 @@ export default function InstructorPracticeBuilder() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {tests.map((test) => (
+              {tests.filter(t => !qTypeFilter || t.testType === qTypeFilter).map((test) => (
                 <div key={test.id} className="bg-[#161D29] border border-[#2C333F] rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:border-purple-500/50 transition-all">
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
@@ -625,10 +641,12 @@ export default function InstructorPracticeBuilder() {
                 onChange={(e) => setTestForm({ ...testForm, testType: e.target.value })}
                 className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-sm text-white focus:outline-none"
               >
-                <option value="Course Test">Course Test</option>
-                <option value="Quiz">Quiz</option>
-                <option value="Coding Test">Coding Test</option>
+                <option value="MCQ">MCQ</option>
+                <option value="Coding">Coding</option>
+                <option value="Topic Practice">Topic Practice</option>
+                <option value="Mock Test">Mock Test</option>
                 <option value="Interview Test">Interview Test</option>
+                <option value="Daily Quiz">Daily Quiz</option>
               </select>
             </div>
 

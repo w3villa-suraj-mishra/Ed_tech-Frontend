@@ -53,6 +53,24 @@ export default function PracticeCenter() {
 
   const cards = [
     {
+      id: 'mcq-tests',
+      title: 'MCQ Practice',
+      count: 'Multiple Choice Quizzes',
+      desc: 'Test your knowledge across foundational and advanced concepts.',
+      icon: <FaClipboardList className="text-cyan-400 text-2xl" />,
+      tag: 'QUIZ',
+      link: '/practice/tests?type=MCQ'
+    },
+    {
+      id: 'coding-problems',
+      title: 'Coding Practice',
+      count: `${overview?.codingCount ?? 0} Challenges`,
+      desc: 'Solve interactive algorithmic & web development programming problems.',
+      icon: <FaLaptopCode className="text-pink-400 text-2xl" />,
+      tag: 'HANDS-ON',
+      link: '/practice/coding'
+    },
+    {
       id: 'daily-quiz',
       title: 'Daily Quiz',
       count: `${overview?.dailyQuizCount ?? 0} Active ${overview?.dailyQuizCount === 1 ? 'Quiz' : 'Quizzes'}`,
@@ -71,15 +89,6 @@ export default function PracticeCenter() {
       link: '/practice/topic'
     },
     {
-      id: 'course-tests',
-      title: 'Course Tests',
-      count: `${overview?.courseTestCount ?? 0} Course Tests`,
-      desc: 'Full module tests to evaluate your grasp on course material.',
-      icon: <FaClipboardList className="text-blue-400 text-2xl" />,
-      tag: 'MODULE CHECKS',
-      link: '/practice/tests?type=Course Test'
-    },
-    {
       id: 'mock-tests',
       title: 'Mock Tests',
       count: `${overview?.mockTestCount ?? 0} Full Mocks`,
@@ -87,15 +96,6 @@ export default function PracticeCenter() {
       icon: <FaAward className="text-emerald-400 text-2xl" />,
       tag: 'TIMED EXAMS',
       link: '/practice/tests?type=Mock Test'
-    },
-    {
-      id: 'coding-problems',
-      title: 'Coding Problems',
-      count: `${overview?.codingCount ?? 0} Challenges`,
-      desc: 'Solve interactive algorithmic & web development programming problems.',
-      icon: <FaLaptopCode className="text-pink-400 text-2xl" />,
-      tag: 'HANDS-ON',
-      link: '/practice/coding'
     },
     {
       id: 'interview-questions',
