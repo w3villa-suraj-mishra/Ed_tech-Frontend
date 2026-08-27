@@ -192,8 +192,7 @@ function AdminCourseTestsInner() {
   const filteredTests = tests.filter(t => {
     const matchesSearch = t.title?.toLowerCase().includes(search.toLowerCase());
     const matchesCategory = selectedCategory === 'All' || t.testType === selectedCategory || t.category === selectedCategory;
-    const matchesCourse = !selectedCourseId || String(t.courseId) === String(selectedCourseId);
-    return matchesSearch && matchesCategory && matchesCourse;
+    return matchesSearch && matchesCategory;
   });
 
   const availableQuestions = questions.filter(q => {
