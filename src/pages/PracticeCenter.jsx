@@ -148,8 +148,12 @@ export default function PracticeCenter() {
                 <h2 className="text-xl font-bold text-white group-hover:text-[#a855f7] transition-colors">
                   {card.title}
                 </h2>
-                <p className="text-xs text-[#a855f7] font-semibold mt-0.5 mb-3">
-                  {card.count}
+                <p className="text-xs text-[#a855f7] font-semibold mt-0.5 mb-3 h-4 flex items-center">
+                  {loading ? (
+                    <span className="w-16 h-3 bg-purple-500/20 rounded animate-pulse inline-block"></span>
+                  ) : (
+                    card.count
+                  )}
                 </p>
                 <p className="text-xs text-richblack-300 leading-relaxed font-medium mb-6">
                   {card.desc}
