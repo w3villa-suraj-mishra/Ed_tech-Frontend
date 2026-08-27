@@ -571,91 +571,106 @@ const Home = () => {
                         Hand-picked top courses for you
                     </p>
 
-                    {/* Course Cards Grid: Desktop (4 cols), Tablet (2 cols), Mobile (1 col) */}
-                    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left'>
-                        {featuredCourses.map((course, index) => {
-                            const badge = featuredBadges[index % featuredBadges.length];
-                            const price = course.price || 0;
-                            const originalPrice = course.originalPrice || Math.round(price * 1.5) || 999;
-                            const rating = course.rating || (4.7 + (index % 3) * 0.1).toFixed(1);
-                            const reviewsCount = course.reviewsCount || `${(1.5 + index * 0.5).toFixed(1)}K`;
-                            const instructorName = course.instructor
-                                ? `${course.instructor.firstName || ''} ${course.instructor.lastName || ''}`.trim()
-                                : "Suraj Mishra";
-                            const instructorImg = course.instructor?.image || "https://api.dicebear.com/5.x/initials/svg?seed=Suraj%20Mishra";
+                    {/* Course Cards Grid or Empty State */}
+                    {featuredCourses && featuredCourses.length > 0 ? (
+                        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left'>
+                            {featuredCourses.map((course, index) => {
+                                const badge = featuredBadges[index % featuredBadges.length];
+                                const price = course.price || 0;
+                                const originalPrice = course.originalPrice || Math.round(price * 1.5) || 999;
+                                const rating = course.rating || (4.7 + (index % 3) * 0.1).toFixed(1);
+                                const reviewsCount = course.reviewsCount || `${(1.5 + index * 0.5).toFixed(1)}K`;
+                                const instructorName = course.instructor
+                                    ? `${course.instructor.firstName || ''} ${course.instructor.lastName || ''}`.trim()
+                                    : "Suraj Mishra";
+                                const instructorImg = course.instructor?.image || "https://api.dicebear.com/5.x/initials/svg?seed=Suraj%20Mishra";
 
-                            return (
-                                <div
-                                    key={course._id || course.id || index}
-                                    onClick={() => window.location.href = `/courses/${course._id || course.id}`}
-                                    className='bg-[#111422]/90 hover:bg-[#161a2e] border border-white/10 hover:border-[#a855f7]/50 rounded-2xl overflow-hidden flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 shadow-xl cursor-pointer group'
-                                >
-                                    <div>
-                                        {/* Card Header Thumbnail / Gradient */}
-                                        <div className='relative h-44 bg-gradient-to-br from-[#1a103c] to-[#0a0d18] flex items-center justify-center p-4 overflow-hidden'>
-                                            {/* Badge */}
-                                            <span className={`absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-extrabold tracking-wider z-10 text-white ${
-                                                index % 4 === 0 ? 'bg-amber-500' :
-                                                index % 4 === 1 ? 'bg-purple-600' :
-                                                index % 4 === 2 ? 'bg-emerald-500' : 'bg-blue-600'
-                                            }`}>
-                                                {badge}
-                                            </span>
+                                return (
+                                    <div
+                                        key={course._id || course.id || index}
+                                        onClick={() => window.location.href = `/courses/${course._id || course.id}`}
+                                        className='bg-[#111422]/90 hover:bg-[#161a2e] border border-white/10 hover:border-[#a855f7]/50 rounded-2xl overflow-hidden flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 shadow-xl cursor-pointer group'
+                                    >
+                                        <div>
+                                            {/* Card Header Thumbnail / Gradient */}
+                                            <div className='relative h-44 bg-gradient-to-br from-[#1a103c] to-[#0a0d18] flex items-center justify-center p-4 overflow-hidden'>
+                                                {/* Badge */}
+                                                <span className={`absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-extrabold tracking-wider z-10 text-white ${
+                                                    index % 4 === 0 ? 'bg-amber-500' :
+                                                    index % 4 === 1 ? 'bg-purple-600' :
+                                                    index % 4 === 2 ? 'bg-emerald-500' : 'bg-blue-600'
+                                                }`}>
+                                                    {badge}
+                                                </span>
 
-                                            {course.thumbnail ? (
-                                                <img
-                                                    src={course.thumbnail}
-                                                    alt={course.courseName}
-                                                    className='w-full h-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-105'
-                                                />
-                                            ) : (
-                                                <div className='w-16 h-16 rounded-2xl bg-[#a855f7]/20 flex items-center justify-center text-[#a855f7] text-3xl shadow-inner'>
-                                                    <FaCode />
+                                                {course.thumbnail ? (
+                                                    <img
+                                                        src={course.thumbnail}
+                                                        alt={course.courseName}
+                                                        className='w-full h-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-105'
+                                                    />
+                                                ) : (
+                                                    <div className='w-16 h-16 rounded-2xl bg-[#a855f7]/20 flex items-center justify-center text-[#a855f7] text-3xl shadow-inner'>
+                                                        <FaCode />
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {/* Card Content */}
+                                            <div className='p-5'>
+                                                <h3 className='text-base font-bold text-white line-clamp-2 leading-snug group-hover:text-[#a855f7] transition-colors min-h-[44px]'>
+                                                    {course.courseName}
+                                                </h3>
+
+                                                {/* Instructor */}
+                                                <div className='flex items-center gap-2.5 mt-4'>
+                                                    <img
+                                                        src={instructorImg}
+                                                        alt={instructorName}
+                                                        className='w-6 h-6 rounded-full object-cover border border-white/20'
+                                                    />
+                                                    <span className='text-xs text-richblack-300 font-medium truncate'>
+                                                        {instructorName}
+                                                    </span>
                                                 </div>
-                                            )}
+                                            </div>
                                         </div>
 
-                                        {/* Card Content */}
-                                        <div className='p-5'>
-                                            <h3 className='text-base font-bold text-white line-clamp-2 leading-snug group-hover:text-[#a855f7] transition-colors min-h-[44px]'>
-                                                {course.courseName}
-                                            </h3>
-
-                                            {/* Instructor */}
-                                            <div className='flex items-center gap-2.5 mt-4'>
-                                                <img
-                                                    src={instructorImg}
-                                                    alt={instructorName}
-                                                    className='w-6 h-6 rounded-full object-cover border border-white/20'
-                                                />
-                                                <span className='text-xs text-richblack-300 font-medium truncate'>
-                                                    {instructorName}
-                                                </span>
+                                        {/* Card Footer: Rating & Pricing */}
+                                        <div className='px-5 pb-5 pt-3 border-t border-white/5 flex items-center justify-between mt-auto'>
+                                            <div className='flex items-center gap-1.5 text-amber-400 text-xs font-bold'>
+                                                <FaStar />
+                                                <span>{rating}</span>
+                                                <span className='text-richblack-400 font-normal text-[11px]'>({reviewsCount})</span>
+                                            </div>
+                                            <div className='flex items-baseline gap-1.5'>
+                                                <span className='text-sm font-extrabold text-white'>₹{price}</span>
+                                                {originalPrice > price && (
+                                                    <span className='text-[11px] text-richblack-400 line-through'>₹{originalPrice}</span>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
-
-                                    {/* Card Footer: Rating & Pricing */}
-                                    <div className='px-5 pb-5 pt-3 border-t border-white/5 flex items-center justify-between mt-auto'>
-                                        <div className='flex items-center gap-1.5 text-amber-400 text-xs font-bold'>
-                                            <FaStar />
-                                            <span>{rating}</span>
-                                            <span className='text-richblack-400 font-normal text-[11px]'>({reviewsCount})</span>
-                                        </div>
-                                        <div className='flex items-baseline gap-1.5'>
-                                            <span className='text-sm font-extrabold text-white'>₹{price}</span>
-                                            {originalPrice > price && (
-                                                <span className='text-[11px] text-richblack-400 line-through'>₹{originalPrice}</span>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        /* Styled Empty State Card */
+                        <div className='bg-[#111422]/90 border border-purple-500/20 rounded-3xl p-8 max-w-lg mx-auto flex flex-col items-center justify-center text-center shadow-[0_0_30px_rgba(168,85,247,0.1)] my-6'>
+                            <div className='w-16 h-16 rounded-2xl bg-purple-900/30 border border-purple-500/30 flex items-center justify-center text-purple-400 text-3xl mb-4 shadow-inner'>
+                                <FaBookOpen />
+                            </div>
+                            <h3 className='text-xl font-extrabold text-white mb-2'>
+                                No Courses Available Yet
+                            </h3>
+                            <p className='text-xs sm:text-sm text-richblack-300 max-w-xs leading-relaxed mb-6'>
+                                We're preparing new high-quality courses for you. Check back soon or explore our catalog!
+                            </p>
+                        </div>
+                    )}
 
                     {/* View All Courses Button */}
-                    <div className='mt-10 flex justify-center'>
+                    <div className='mt-8 flex justify-center'>
                         <Link to='/courses'>
                             <button className='flex items-center gap-2 bg-[#121624] hover:bg-[#1c2238] border border-[#a855f7]/40 hover:border-[#a855f7] text-white text-xs font-bold px-6 py-2.5 rounded-full transition-all duration-300 shadow-md group'>
                                 <span>View All Courses</span>
