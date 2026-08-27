@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { AdminProtectedRoute, TableSkeleton, Modal } from '../../components/admin/AdminUI';
+import { AdminProtectedRoute, TableSkeleton } from '../../components/admin/AdminUI';
+import AdminModal from '../../components/admin/AdminModal';
 import { practiceEndpoints } from '../../services/apis';
 import { apiConnector } from '../../services/apiConnector';
 import { toast } from 'react-hot-toast';
@@ -158,7 +159,7 @@ function AdminPracticeTestsInner() {
       </div>
 
       {isTestModalOpen && (
-        <Modal title="Build Practice Test" onClose={() => setIsTestModalOpen(false)}>
+        <AdminModal isOpen={isTestModalOpen} title="Build Practice Test" onClose={() => setIsTestModalOpen(false)}>
           <form onSubmit={handleCreateTest} className="space-y-4 text-xs max-h-[75vh] overflow-y-auto pr-2">
             <div>
               <label className="block text-slate-300 font-semibold mb-1">Test Title *</label>
@@ -200,7 +201,7 @@ function AdminPracticeTestsInner() {
             </div>
 
             <div>
-              <label className="block text-slate-300 font-semibold mb-2">Select Questions from Bank ({formData.selectedQuestionIds.length} Selected)</label>
+              <label className="block text-slate-[#300] font-semibold mb-2">Select Questions from Bank ({formData.selectedQuestionIds.length} Selected)</label>
               <div className="max-h-48 overflow-y-auto bg-[#090D16] border border-[#2C333F] rounded-xl p-3 space-y-2">
                 {questions.map((q) => (
                   <label key={q.id} className="flex items-center gap-2 text-slate-300 hover:text-white cursor-pointer select-none">
@@ -239,7 +240,7 @@ function AdminPracticeTestsInner() {
               </button>
             </div>
           </form>
-        </Modal>
+        </AdminModal>
       )}
     </AdminLayout>
   );

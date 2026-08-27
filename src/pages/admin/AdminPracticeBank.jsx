@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { AdminProtectedRoute, TableSkeleton, Modal } from '../../components/admin/AdminUI';
+import { AdminProtectedRoute, TableSkeleton } from '../../components/admin/AdminUI';
+import AdminModal from '../../components/admin/AdminModal';
 import { practiceEndpoints } from '../../services/apis';
 import { apiConnector } from '../../services/apiConnector';
 import { toast } from 'react-hot-toast';
@@ -424,7 +425,7 @@ function AdminPracticeBankInner() {
 
       {/* CREATE / EDIT QUESTION MODAL */}
       {isQuestionModalOpen && (
-        <Modal title={editingQuestion ? 'Edit Question' : 'Create Question'} onClose={() => setIsQuestionModalOpen(false)}>
+        <AdminModal title={editingQuestion ? 'Edit Question' : 'Create Question'} onClose={() => setIsQuestionModalOpen(false)}>
           <form onSubmit={handleSaveQuestion} className="space-y-4 max-h-[75vh] overflow-y-auto pr-2 text-xs">
             <div>
               <label className="block text-slate-300 font-semibold mb-1">Question Title / Statement *</label>
@@ -549,12 +550,12 @@ function AdminPracticeBankInner() {
               </button>
             </div>
           </form>
-        </Modal>
+        </AdminModal>
       )}
 
       {/* CATEGORIES / TOPICS MODAL */}
       {isCategoryModalOpen && (
-        <Modal title="Manage Categories & Topics" onClose={() => setIsCategoryModalOpen(false)}>
+        <AdminModal title="Manage Categories & Topics" onClose={() => setIsCategoryModalOpen(false)}>
           <div className="space-y-6 text-xs">
             {/* Create Category */}
             <form onSubmit={handleCreateCategory} className="space-y-2 border-b border-[#2C333F] pb-4">
@@ -594,12 +595,12 @@ function AdminPracticeBankInner() {
               </div>
             </form>
           </div>
-        </Modal>
+        </AdminModal>
       )}
 
       {/* BULK CSV MODAL */}
       {isBulkModalOpen && (
-        <Modal title="Bulk Upload Questions (CSV Format)" onClose={() => setIsBulkModalOpen(false)}>
+        <AdminModal title="Bulk Upload Questions (CSV Format)" onClose={() => setIsBulkModalOpen(false)}>
           <form onSubmit={handleBulkUpload} className="space-y-4 text-xs">
             <p className="text-slate-400">Paste CSV lines formatted as: <br/><code className="text-[#FFD60A]">Question Title,Type,Difficulty,Explanation,OptA,OptB,OptC,OptD</code></p>
             <textarea
@@ -611,7 +612,7 @@ function AdminPracticeBankInner() {
             />
             <button type="submit" className="w-full py-2.5 bg-[#FFD60A] text-black font-bold rounded-xl">Upload Questions</button>
           </form>
-        </Modal>
+        </AdminModal>
       )}
     </AdminLayout>
   );
