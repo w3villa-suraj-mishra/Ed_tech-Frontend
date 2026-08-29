@@ -37,6 +37,7 @@ function AdminCourseTestsInner() {
 
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedTestIds, setSelectedTestIds] = useState([]);
 
   const [formData, setFormData] = useState({
     courseId: '',
@@ -183,9 +184,30 @@ function AdminCourseTestsInner() {
     try {
       await apiConnector('DELETE', `${practiceEndpoints.ADMIN_TESTS}/${id}`, null, { Authorization: `Bearer ${adminToken}` });
       toast.success('Course test deleted');
+      setSelectedTestIds((prev) => prev.filter((tId) => tId !== id));
       fetchCourseTests(selectedCourseId);
     } catch (err) {
       toast.error('Failed to delete test');
+    }
+  };
+
+  const handleBulkDeleteTests = async () => {
+    if (selectedTestIds.length === 0) return;
+    if (!window.confirm(`Are you sure you want to delete ${selectedTestIds.length} selected test(s)?`)) return;
+    try {
+      const res = await apiConnector(
+        'POST',
+        practiceEndpoints.ADMIN_BULK_DELETE_TESTS,
+        { testIds: selectedTestIds },
+        { Authorization: `Bearer ${adminToken}` }
+      );
+      if (res.data?.success) {
+        toast.success(res.data.message || 'Selected tests deleted successfully!');
+        setSelectedTestIds([]);
+        fetchCourseTests(selectedCourseId);
+      }
+    } catch (err) {
+      toast.error('Failed to delete selected tests');
     }
   };
 
@@ -221,24 +243,34 @@ function AdminCourseTestsInner() {
           </div>
           <p className="text-xs text-[#AFB2BF] mt-1">Exclusive tests restricted to enrolled students of the specific course.</p>
         </div>
-        <button
-          onClick={() => {
-            const activeCourseId = formData.courseId || selectedCourseId || (courses.length > 0 ? (courses[0].id || courses[0]._id) : '');
-            setFormData(prev => ({
-              ...prev,
-              courseId: activeCourseId,
-              testType: selectedCategory !== 'All' ? selectedCategory : 'MCQ',
-              selectedQuestionIds: []
-            }));
-            if (activeCourseId) {
-              fetchCourseQuestions(activeCourseId);
-            }
-            setIsTestModalOpen(true);
-          }}
-          className="px-4 py-2.5 bg-[#FFD60A] text-black font-bold text-xs rounded-xl flex items-center gap-2 shadow-lg hover:bg-yellow-400 transition"
-        >
-          <FaPlus /> Build Course Test
-        </button>
+        <div className="flex items-center gap-2">
+          {selectedTestIds.length > 0 && (
+            <button
+              onClick={handleBulkDeleteTests}
+              className="px-4 py-2.5 bg-red-600/20 border border-red-500/40 text-red-400 font-bold text-xs rounded-xl flex items-center gap-2 hover:bg-red-600/30 transition"
+            >
+              <FaTrash /> Delete Selected ({selectedTestIds.length})
+            </button>
+          )}
+          <button
+            onClick={() => {
+              const activeCourseId = formData.courseId || selectedCourseId || (courses.length > 0 ? (courses[0].id || courses[0]._id) : '');
+              setFormData(prev => ({
+                ...prev,
+                courseId: activeCourseId,
+                testType: selectedCategory !== 'All' ? selectedCategory : 'MCQ',
+                selectedQuestionIds: []
+              }));
+              if (activeCourseId) {
+                fetchCourseQuestions(activeCourseId);
+              }
+              setIsTestModalOpen(true);
+            }}
+            className="px-4 py-2.5 bg-[#FFD60A] text-black font-bold text-xs rounded-xl flex items-center gap-2 shadow-lg hover:bg-yellow-400 transition"
+          >
+            <FaPlus /> Build Course Test
+          </button>
+        </div>
       </div>
 
       {/* Category Navigation Tabs */}
@@ -299,6 +331,22 @@ function AdminCourseTestsInner() {
           <table className="w-full text-left text-xs">
             <thead className="bg-[#090D16] border-b border-[#2C333F] text-[#AFB2BF] font-semibold uppercase">
               <tr>
+                <th className="px-4 py-3.5 w-10 text-center">
+                  <input
+                    type="checkbox"
+                    checked={filteredTests.length > 0 && filteredTests.every(t => selectedTestIds.includes(t.id))}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        const fIds = filteredTests.map(t => t.id);
+                        setSelectedTestIds(prev => Array.from(new Set([...prev, ...fIds])));
+                      } else {
+                        const fIds = filteredTests.map(t => t.id);
+                        setSelectedTestIds(prev => prev.filter(id => !fIds.includes(id)));
+                      }
+                    }}
+                    className="w-4 h-4 rounded border-gray-600 bg-[#161D29] text-purple-600 focus:ring-purple-500 cursor-pointer"
+                  />
+                </th>
                 <th className="px-5 py-3.5">Test Title</th>
                 <th className="px-5 py-3.5">Category / Type</th>
                 <th className="px-5 py-3.5">Questions</th>
@@ -310,14 +358,28 @@ function AdminCourseTestsInner() {
             <tbody className="divide-y divide-[#2C333F] text-[#F1F2FF]">
               {filteredTests.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="text-center py-12 text-[#585D69]">
+                  <td colSpan={7} className="text-center py-12 text-[#585D69]">
                     <FaGraduationCap className="mx-auto text-3xl mb-2 opacity-30" />
                     No tests found for the selected course and category.
                   </td>
                 </tr>
               ) : (
                 filteredTests.map((t) => (
-                  <tr key={t.id} className="hover:bg-[#1f2736] transition">
+                  <tr key={t.id} className={`transition ${selectedTestIds.includes(t.id) ? 'bg-purple-500/10 hover:bg-purple-500/15' : 'hover:bg-[#1f2736]'}`}>
+                    <td className="px-4 py-4 text-center">
+                      <input
+                        type="checkbox"
+                        checked={selectedTestIds.includes(t.id)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedTestIds(prev => [...prev, t.id]);
+                          } else {
+                            setSelectedTestIds(prev => prev.filter(id => id !== t.id));
+                          }
+                        }}
+                        className="w-4 h-4 rounded border-gray-600 bg-[#090D16] text-purple-600 focus:ring-purple-500 cursor-pointer"
+                      />
+                    </td>
                     <td className="px-5 py-4 font-bold">
                       {t.title}
                       {t.description && <p className="text-[11px] font-normal text-[#838894] truncate max-w-xs">{t.description}</p>}
