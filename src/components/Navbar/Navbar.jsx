@@ -70,9 +70,30 @@ const Navbar = () => {
         setProfileOpen(false);
       }
     };
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsMobileMenuOpen(false);
+        setProfileOpen(false);
+      }
+    };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
+
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
 
   const matchRoute = (route) => {
     return location.pathname === route;
@@ -408,43 +429,56 @@ const Navbar = () => {
 
       {/* MOBILE SLIDE-OVER NAVIGATION DRAWER */}
       {isMobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 top-[65px] z-[100] bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="bg-[#0b0e1b] border-b border-blue-500/30 p-5 space-y-4 max-h-[85vh] overflow-y-auto custom-scrollbar">
+        <div className="md:hidden fixed inset-0 z-[100] flex">
+          {/* Semi-transparent Backdrop Overlay */}
+          <div
+            className="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity"
+            onClick={() => setIsMobileMenuOpen(false)}
+            aria-hidden="true"
+          />
+
+          {/* Top/Slide Drawer */}
+          <div className="fixed top-[60px] left-0 right-0 max-h-[85vh] bg-[#0b0e1b] border-b border-blue-500/30 p-5 space-y-4 overflow-y-auto custom-scrollbar shadow-2xl z-[101] animate-in fade-in slide-in-from-top duration-200">
             <div className="flex flex-col space-y-3 font-medium text-sm text-richblack-100">
               <Link
                 to="/courses"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-xl hover:bg-blue-950/40 hover:text-white transition-colors"
+                className="py-2 px-3 rounded-xl hover:bg-blue-950/40 hover:text-white transition-colors flex items-center gap-2"
               >
-                📚 Courses
+                <span>📚</span>
+                <span>Courses</span>
               </Link>
               <Link
                 to="/catalog"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-xl hover:bg-blue-950/40 hover:text-white transition-colors"
+                className="py-2 px-3 rounded-xl hover:bg-blue-950/40 hover:text-white transition-colors flex items-center gap-2"
               >
-                🏷️ Categories
+                <span>🏷️</span>
+                <span>Categories</span>
               </Link>
               <Link
                 to="/practice"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-xl hover:bg-blue-950/40 hover:text-white transition-colors"
+                className="py-2 px-3 rounded-xl hover:bg-blue-950/40 hover:text-white transition-colors flex items-center gap-2"
               >
-                ⚡ Practice Center
+                <span>⚡</span>
+                <span>Practice Center</span>
               </Link>
               <Link
                 to="/about"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-xl hover:bg-blue-950/40 hover:text-white transition-colors"
+                className="py-2 px-3 rounded-xl hover:bg-blue-950/40 hover:text-white transition-colors flex items-center gap-2"
               >
-                ℹ️ About Us
+                <span>ℹ️</span>
+                <span>About Us</span>
               </Link>
               <Link
                 to="/contact"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-xl hover:bg-blue-950/40 hover:text-white transition-colors"
+                className="py-2 px-3 rounded-xl hover:bg-blue-950/40 hover:text-white transition-colors flex items-center gap-2"
               >
-                📞 Contact
+                <span>📞</span>
+                <span>Contact</span>
               </Link>
 
               {token === null && (
@@ -486,7 +520,7 @@ const Navbar = () => {
                       setIsMobileMenuOpen(false);
                       dispatch(logout(navigate));
                     }}
-                    className="w-full flex items-center gap-3 py-2 px-3 rounded-xl hover:bg-red-500/20 text-red-400 text-xs text-left"
+                    className="w-full flex items-center gap-3 py-2 px-3 rounded-xl hover:bg-red-500/20 text-red-400 text-xs text-left cursor-pointer"
                   >
                     <VscSignOut className="text-sm" />
                     <span>Logout</span>

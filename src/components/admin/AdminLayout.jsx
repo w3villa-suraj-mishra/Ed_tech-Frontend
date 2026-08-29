@@ -20,12 +20,15 @@ const NAV = [
 export default function AdminLayout({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+
   const [theme, setTheme]             = useState(localStorage.getItem('adminTheme') || 'dark');
   const [notifications, setNotifs]    = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifOpen, setNotifOpen]     = useState(false);
-  const [tabFilter, setTabFilter]     = useState('all'); // 'all' or 'unread'
+  const [tabFilter, setTabFilter]     = useState('all');
   const notifRef                      = useRef(null);
 
   const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{}');
@@ -33,6 +36,29 @@ export default function AdminLayout({ children }) {
   useEffect(() => {
     localStorage.setItem('adminTheme', theme);
   }, [theme]);
+
+  // Handle ESC key for mobile drawer
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && mobileDrawerOpen) {
+        setMobileDrawerOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [mobileDrawerOpen]);
+
+  // Lock scroll when mobile drawer open
+  useEffect(() => {
+    if (mobileDrawerOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [mobileDrawerOpen]);
 
   const loadNotifications = () => {
     getNotifications()
@@ -51,7 +77,6 @@ export default function AdminLayout({ children }) {
     return () => clearInterval(interval);
   }, []);
 
-  // Close notification popover when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (notifRef.current && !notifRef.current.contains(e.target)) {
@@ -74,13 +99,42 @@ export default function AdminLayout({ children }) {
     ? notifications.filter(n => n.type === 'contact')
     : notifications;
 
+  const renderNavLinks = (isMobile = false) => (
+    <nav className="flex-1 overflow-y-auto py-4">
+      {NAV.map((item) => {
+        const active = location.pathname.startsWith(item.path);
+        return (
+          <Link
+            key={item.path}
+            to={item.path}
+            onClick={() => isMobile && setMobileDrawerOpen(false)}
+            title={!sidebarOpen && !isMobile ? item.label : ''}
+            className={`flex items-center gap-3 px-4 py-3 mx-2 rounded-xl mb-1 transition-all duration-200 text-sm font-medium
+              ${active
+                ? 'bg-[#FFD60A]/10 text-[#FFD60A] border border-[#FFD60A]/20 font-bold'
+                : isLight
+                  ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                  : 'text-[#AFB2BF] hover:bg-[#2C333F] hover:text-white'
+              }`}
+          >
+            <span className="text-base flex-shrink-0">{item.icon}</span>
+            {(sidebarOpen || isMobile) && <span className="truncate">{item.label}</span>}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+
   return (
     <div className={`min-h-screen flex font-inter transition-colors duration-300 ${
       isLight ? 'bg-slate-100 text-slate-900' : 'bg-[#090D16] text-[#F1F2FF]'
     }`}>
-      {/* Sidebar */}
+      
+      {/* ──────────────────────────────────────────────────────────── */}
+      {/* 1. DESKTOP SIDEBAR (Visible on md and larger)              */}
+      {/* ──────────────────────────────────────────────────────────── */}
       <aside
-        className={`${sidebarOpen ? 'w-60' : 'w-16'} flex-shrink-0 border-r flex flex-col transition-all duration-300 z-30 ${
+        className={`hidden md:flex ${sidebarOpen ? 'w-60' : 'w-16'} flex-shrink-0 border-r flex-col transition-all duration-300 z-30 sticky top-0 h-screen ${
           isLight ? 'bg-white border-slate-200' : 'bg-[#161D29] border-[#2C333F]'
         }`}
       >
@@ -96,36 +150,16 @@ export default function AdminLayout({ children }) {
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className={`hover:text-white transition-colors ml-auto ${isLight ? 'text-slate-500' : 'text-[#999DAA]'}`}
+            title="Toggle Sidebar"
           >
             {sidebarOpen ? '◀' : '▶'}
           </button>
         </div>
 
-        {/* Nav */}
-        <nav className="flex-1 overflow-y-auto py-4">
-          {NAV.map((item) => {
-            const active = location.pathname.startsWith(item.path);
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                title={!sidebarOpen ? item.label : ''}
-                className={`flex items-center gap-3 px-4 py-3 mx-2 rounded-xl mb-1 transition-all duration-200 text-sm font-medium
-                  ${active
-                    ? 'bg-[#FFD60A]/10 text-[#FFD60A] border border-[#FFD60A]/20 font-bold'
-                    : isLight
-                      ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                      : 'text-[#AFB2BF] hover:bg-[#2C333F] hover:text-white'
-                  }`}
-              >
-                <span className="text-base flex-shrink-0">{item.icon}</span>
-                {sidebarOpen && <span className="truncate">{item.label}</span>}
-              </Link>
-            );
-          })}
-        </nav>
+        {/* Desktop Nav */}
+        {renderNavLinks(false)}
 
-        {/* User info */}
+        {/* Desktop User info */}
         <div className={`border-t p-4 ${isLight ? 'border-slate-200' : 'border-[#2C333F]'}`}>
           {sidebarOpen ? (
             <div className="mb-3">
@@ -149,17 +183,71 @@ export default function AdminLayout({ children }) {
         </div>
       </aside>
 
-      {/* Main */}
+      {/* ──────────────────────────────────────────────────────────── */}
+      {/* 2. MOBILE DRAWER OVERLAY (Visible when mobileDrawerOpen)    */}
+      {/* ──────────────────────────────────────────────────────────── */}
+      {mobileDrawerOpen && (
+        <div className="md:hidden fixed inset-0 z-50 flex">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
+            onClick={() => setMobileDrawerOpen(false)}
+          />
+
+          {/* Fixed Drawer Panel */}
+          <div className={`fixed top-0 left-0 bottom-0 w-64 border-r z-50 flex flex-col justify-between py-4 px-2 shadow-2xl transition-transform duration-300 overflow-y-auto custom-scrollbar ${
+            isLight ? 'bg-white border-slate-200' : 'bg-[#161D29] border-[#2C333F]'
+          }`}>
+            <div>
+              <div className="flex items-center justify-between px-4 pb-3 border-b border-[#2C333F]">
+                <span className="text-base font-bold text-[#FFD60A]">⚡ Admin Portal</span>
+                <button
+                  onClick={() => setMobileDrawerOpen(false)}
+                  className="p-1 rounded-lg text-[#AFB2BF] hover:text-white"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {renderNavLinks(true)}
+            </div>
+
+            <div className="border-t p-4 border-[#2C333F] mt-4">
+              <div className="mb-3">
+                <p className="text-xs truncate text-[#999DAA]">{adminUser.email}</p>
+                <span className="inline-block mt-1 text-[10px] px-2 py-0.5 rounded-full font-bold bg-[#FFD60A]/20 text-[#FFD60A]">
+                  {adminUser.accountType}
+                </span>
+              </div>
+              <button
+                onClick={() => {
+                  setMobileDrawerOpen(false);
+                  handleLogout();
+                }}
+                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors text-sm"
+              >
+                <span>🚪</span>
+                <span>Logout</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ──────────────────────────────────────────────────────────── */}
+      {/* MAIN CONTENT CONTAINER                                       */}
+      {/* ──────────────────────────────────────────────────────────── */}
       <div className="flex-1 flex flex-col min-w-0">
+        
         {/* Topbar */}
         <header className={`h-16 border-b flex items-center justify-between px-4 sm:px-6 flex-shrink-0 ${
           isLight ? 'bg-white border-slate-200' : 'bg-[#161D29] border-[#2C333F]'
         }`}>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="md:hidden p-2 rounded-lg text-[#AFB2BF] hover:text-white bg-[#2C333F]"
-              aria-label="Toggle Admin Sidebar"
+              onClick={() => setMobileDrawerOpen(true)}
+              className="md:hidden p-2 rounded-lg text-[#AFB2BF] hover:text-white bg-[#2C333F] cursor-pointer"
+              aria-label="Open Admin Menu"
             >
               ☰
             </button>
@@ -169,7 +257,7 @@ export default function AdminLayout({ children }) {
           </div>
 
           <div className="flex items-center gap-5">
-            {/* Dark / Light Toggle */}
+            {/* Theme Toggle */}
             <button
               onClick={() => setTheme(isLight ? 'dark' : 'light')}
               title={`Switch to ${isLight ? 'Dark' : 'Light'} Mode`}
@@ -180,19 +268,17 @@ export default function AdminLayout({ children }) {
               }`}
             >
               {isLight ? (
-                /* Sun Icon */
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
               ) : (
-                /* Moon Icon */
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                 </svg>
               )}
             </button>
 
-            {/* Dynamic Notification Bell */}
+            {/* Notification Bell */}
             <div className="relative" ref={notifRef}>
               <button
                 onClick={() => setNotifOpen(!notifOpen)}
@@ -212,12 +298,10 @@ export default function AdminLayout({ children }) {
                 )}
               </button>
 
-              {/* Exact Screenshot Styled Notification Popover */}
               {notifOpen && (
                 <div className={`absolute right-0 mt-3 w-80 rounded-2xl shadow-2xl border z-50 overflow-hidden ${
                   isLight ? 'bg-white border-slate-200 text-slate-900' : 'bg-[#12161F] border-[#252C3A] text-white'
                 }`}>
-                  {/* Top Header */}
                   <div className="px-5 py-4 flex items-center justify-between border-b border-[#252C3A]">
                     <div className="flex items-center gap-2">
                       <h3 className="font-bold text-base">Notifications</h3>
@@ -225,7 +309,6 @@ export default function AdminLayout({ children }) {
                     </div>
                   </div>
 
-                  {/* Tabs: All / Unread */}
                   <div className="flex border-b border-[#252C3A] px-4 pt-2 text-xs font-semibold text-[#8E95A5]">
                     <button
                       onClick={() => setTabFilter('all')}
@@ -249,7 +332,6 @@ export default function AdminLayout({ children }) {
                     </button>
                   </div>
 
-                  {/* Body Content */}
                   <div className="max-h-72 overflow-y-auto divide-y divide-[#252C3A]">
                     {displayedNotifs.length === 0 ? (
                       <div className="py-12 px-6 flex flex-col items-center justify-center text-center">
@@ -281,7 +363,6 @@ export default function AdminLayout({ children }) {
                     )}
                   </div>
 
-                  {/* Footer */}
                   <div className="px-5 py-3 border-t border-[#252C3A] flex items-center justify-between text-xs text-[#8E95A5] bg-[#0E121A]">
                     <Link
                       to="/admin/contacts"
@@ -320,6 +401,7 @@ export default function AdminLayout({ children }) {
           {children}
         </main>
       </div>
+
     </div>
   );
 }
