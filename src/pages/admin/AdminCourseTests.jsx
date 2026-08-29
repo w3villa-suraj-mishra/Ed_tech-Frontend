@@ -5,7 +5,7 @@ import AdminModal from '../../components/admin/AdminModal';
 import { practiceEndpoints, courseEndpoints } from '../../services/apis';
 import { apiConnector } from '../../services/apiConnector';
 import { toast } from 'react-hot-toast';
-import { FaPlus, FaTrash, FaEye, FaGraduationCap, FaSearch, FaFilter } from 'react-icons/fa';
+import { FaPlus, FaTrash, FaEye, FaEdit, FaGraduationCap, FaSearch, FaFilter } from 'react-icons/fa';
 import TestBuilderWizard from '../../components/common/TestBuilderWizard';
 
 const TEST_CATEGORIES = [
