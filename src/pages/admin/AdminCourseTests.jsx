@@ -6,6 +6,7 @@ import { practiceEndpoints, courseEndpoints } from '../../services/apis';
 import { apiConnector } from '../../services/apiConnector';
 import { toast } from 'react-hot-toast';
 import { FaPlus, FaTrash, FaEye, FaGraduationCap, FaSearch, FaFilter } from 'react-icons/fa';
+import TestBuilderWizard from '../../components/common/TestBuilderWizard';
 
 const TEST_CATEGORIES = [
   'All',
@@ -29,10 +30,8 @@ function AdminCourseTestsInner() {
   const [courses, setCourses] = useState([]);
   const [selectedCourseId, setSelectedCourseId] = useState('');
   const [tests, setTests] = useState([]);
-  const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-  const [isTestModalOpen, setIsTestModalOpen] = useState(false);
+  const [isWizardOpen, setIsWizardOpen] = useState(false);
   const [selectedTestForStats, setSelectedTestForStats] = useState(null);
 
   const [search, setSearch] = useState('');
@@ -90,94 +89,13 @@ function AdminCourseTestsInner() {
     }
   };
 
-  const fetchCourseQuestions = async (cId) => {
-    if (!cId) {
-      setQuestions([]);
-      return;
-    }
-    try {
-      const res = await apiConnector('GET', `${practiceEndpoints.ADMIN_QUESTIONS}?scope=COURSE&courseId=${cId}`, null, {
-        Authorization: `Bearer ${adminToken}`
-      });
-      if (res.data?.success) {
-        setQuestions(res.data.data || []);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   useEffect(() => {
     fetchCourses();
   }, []);
 
   useEffect(() => {
     fetchCourseTests(selectedCourseId);
-    if (selectedCourseId) {
-      fetchCourseQuestions(selectedCourseId);
-    }
   }, [selectedCourseId]);
-
-  const handleModalCourseChange = (cId) => {
-    setFormData((prev) => ({
-      ...prev,
-      courseId: cId,
-      selectedQuestionIds: []
-    }));
-    fetchCourseQuestions(cId);
-  };
-
-  const handleCreateCourseTest = async (e, testStatus = 'published') => {
-    if (e) e.preventDefault();
-    if (submitting) return;
-
-    if (!formData.courseId) {
-      toast.error('Please select a course first');
-      return;
-    }
-    if (!formData.title.trim()) {
-      toast.error('Test title is required');
-      return;
-    }
-    if (formData.selectedQuestionIds.length === 0) {
-      toast.error('Select at least 1 question belonging to this course');
-      return;
-    }
-
-    setSubmitting(true);
-    try {
-      await apiConnector('POST', practiceEndpoints.ADMIN_TESTS, {
-        ...formData,
-        scope: 'COURSE',
-        courseId: formData.courseId,
-        status: testStatus,
-        questionIds: formData.selectedQuestionIds,
-        numberOfQuestions: formData.selectedQuestionIds.length
-      }, { Authorization: `Bearer ${adminToken}` });
-
-      toast.success(`Course test ${testStatus === 'published' ? 'published' : 'saved as draft'} successfully! 🎓`);
-      setIsTestModalOpen(false);
-      const createdCourseId = formData.courseId;
-      setFormData({
-        courseId: createdCourseId,
-        title: '',
-        description: '',
-        testType: selectedCategory !== 'All' ? selectedCategory : 'MCQ',
-        duration: 20,
-        totalMarks: 20,
-        passingPercentage: 50,
-        status: 'published',
-        selectedQuestionIds: [],
-      });
-      // Always update selectedCourseId to match created course and fetch its tests
-      setSelectedCourseId(createdCourseId);
-      fetchCourseTests(createdCourseId);
-    } catch (err) {
-      toast.error(err?.response?.data?.message || 'Failed to create course test');
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   const handleDeleteTest = async (id) => {
     if (!window.confirm('Are you sure you want to delete this course test?')) return;
@@ -217,22 +135,6 @@ function AdminCourseTestsInner() {
     return matchesSearch && matchesCategory;
   });
 
-  const availableQuestions = questions.filter(q => {
-    // If courseId is set on question, ensure it matches selected modal courseId
-    if (q.courseId && formData.courseId && String(q.courseId) !== String(formData.courseId)) {
-      return false;
-    }
-    // Match by testCategory if specified
-    if (q.testCategory && q.testCategory === formData.testType) {
-      return true;
-    }
-    // Match by type as fallback
-    if (formData.testType === 'MCQ') return q.type === 'MCQ' || q.testCategory === 'MCQ';
-    if (formData.testType === 'Coding') return q.type === 'Coding' || q.testCategory === 'Coding';
-    if (formData.testType === 'Interview Test') return q.type === 'Interview' || q.type === 'Coding' || q.testCategory === 'Interview Test';
-    return true;
-  });
-
   return (
     <AdminLayout>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
@@ -253,19 +155,7 @@ function AdminCourseTestsInner() {
             </button>
           )}
           <button
-            onClick={() => {
-              const activeCourseId = formData.courseId || selectedCourseId || (courses.length > 0 ? (courses[0].id || courses[0]._id) : '');
-              setFormData(prev => ({
-                ...prev,
-                courseId: activeCourseId,
-                testType: selectedCategory !== 'All' ? selectedCategory : 'MCQ',
-                selectedQuestionIds: []
-              }));
-              if (activeCourseId) {
-                fetchCourseQuestions(activeCourseId);
-              }
-              setIsTestModalOpen(true);
-            }}
+            onClick={() => setIsWizardOpen(true)}
             className="px-4 py-2.5 bg-[#FFD60A] text-black font-bold text-xs rounded-xl flex items-center gap-2 shadow-lg hover:bg-yellow-400 transition"
           >
             <FaPlus /> Build Course Test
@@ -422,156 +312,7 @@ function AdminCourseTestsInner() {
         )}
       </div>
 
-      {/* Modal: Create Course Test */}
-      {isTestModalOpen && (
-        <AdminModal isOpen={isTestModalOpen} title="Build Course-Specific Practice Test 🎓" onClose={() => setIsTestModalOpen(false)}>
-          <form className="space-y-4 text-xs">
-            <div>
-              <label className="block text-[#AFB2BF] font-semibold mb-1">Target Course *</label>
-              <select
-                value={formData.courseId}
-                onChange={(e) => handleModalCourseChange(e.target.value)}
-                className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-white focus:outline-none focus:border-[#FFD60A]"
-              >
-                <option value="">Select a Course</option>
-                {courses.map((c) => (
-                  <option key={c.id || c._id} value={c.id || c._id}>
-                    {c.courseName}
-                  </option>
-                ))}
-              </select>
-            </div>
 
-            <div>
-              <label className="block text-[#AFB2BF] font-semibold mb-1">Test Title *</label>
-              <input
-                required
-                type="text"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-white focus:outline-none focus:border-[#FFD60A]"
-                placeholder="e.g. React Hooks End of Module Quiz"
-              />
-            </div>
-
-            <div>
-              <label className="block text-[#AFB2BF] font-semibold mb-1">Description</label>
-              <textarea
-                rows={2}
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-white focus:outline-none focus:border-[#FFD60A]"
-                placeholder="Brief summary of test objectives..."
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-[#AFB2BF] font-semibold mb-1">Category / Test Type</label>
-                <select
-                  value={formData.testType}
-                  onChange={(e) => setFormData({ ...formData, testType: e.target.value, selectedQuestionIds: [] })}
-                  className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-white focus:outline-none focus:border-[#FFD60A]"
-                >
-                  <option value="MCQ">MCQ</option>
-                  <option value="Coding">Coding</option>
-                  <option value="Topic Practice">Topic Practice</option>
-                  <option value="Mock Test">Mock Test</option>
-                  <option value="Interview Test">Interview Test</option>
-                  <option value="Daily Quiz">Daily Quiz</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-[#AFB2BF] font-semibold mb-1">Duration (Minutes)</label>
-                <input
-                  type="number"
-                  min={1}
-                  value={formData.duration}
-                  onChange={(e) => setFormData({ ...formData, duration: Number(e.target.value) })}
-                  className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-white focus:outline-none focus:border-[#FFD60A]"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-[#AFB2BF] font-semibold mb-1">Total Marks</label>
-                <input
-                  type="number"
-                  min={1}
-                  value={formData.totalMarks}
-                  onChange={(e) => setFormData({ ...formData, totalMarks: Number(e.target.value) })}
-                  className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-white focus:outline-none focus:border-[#FFD60A]"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[#AFB2BF] font-semibold mb-1">Passing Percentage (%)</label>
-                <input
-                  type="number"
-                  min={1}
-                  max={100}
-                  value={formData.passingPercentage}
-                  onChange={(e) => setFormData({ ...formData, passingPercentage: Number(e.target.value) })}
-                  className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-white focus:outline-none focus:border-[#FFD60A]"
-                />
-              </div>
-            </div>
-
-            {/* Course-Specific Questions List */}
-            <div>
-              <label className="block text-[#AFB2BF] font-semibold mb-2">
-                Select Questions from Selected Course Question Bank ({formData.selectedQuestionIds.length} Selected)
-              </label>
-              <div className="max-h-48 overflow-y-auto bg-[#090D16] border border-[#2C333F] rounded-xl p-3 space-y-2">
-                {availableQuestions.length === 0 ? (
-                  <p className="text-center text-slate-500 py-4">No course questions available for this category.</p>
-                ) : (
-                  availableQuestions.map((q) => (
-                    <label key={q.id} className="flex items-center gap-2 text-slate-300 hover:text-white cursor-pointer select-none">
-                      <input
-                        type="checkbox"
-                        checked={formData.selectedQuestionIds.includes(q.id)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setFormData({ ...formData, selectedQuestionIds: [...formData.selectedQuestionIds, q.id] });
-                          } else {
-                            setFormData({ ...formData, selectedQuestionIds: formData.selectedQuestionIds.filter(id => id !== q.id) });
-                          }
-                        }}
-                        className="accent-[#FFD60A]"
-                      />
-                      <span className="truncate">{q.title}</span>
-                      <span className="text-[10px] text-purple-400 font-bold ml-auto">[{q.type}]</span>
-                    </label>
-                  ))
-                )}
-              </div>
-            </div>
-
-            {/* Submit Actions */}
-            <div className="pt-4 flex justify-end gap-3 border-t border-[#2C333F]">
-              <button
-                type="button"
-                disabled={submitting}
-                onClick={(e) => handleCreateCourseTest(e, 'draft')}
-                className="px-4 py-2.5 bg-[#2C333F] text-yellow-400 font-bold rounded-xl hover:bg-[#3d4554] transition disabled:opacity-50"
-              >
-                Save as Draft
-              </button>
-              <button
-                type="button"
-                disabled={submitting}
-                onClick={(e) => handleCreateCourseTest(e, 'published')}
-                className="px-5 py-2.5 bg-[#FFD60A] text-black font-bold rounded-xl hover:bg-yellow-400 transition disabled:opacity-50"
-              >
-                {submitting ? 'Publishing...' : 'Publish Course Test 🎓'}
-              </button>
-            </div>
-          </form>
-        </AdminModal>
-      )}
 
       {/* Stats Modal */}
       {selectedTestForStats && (
@@ -606,6 +347,22 @@ function AdminCourseTestsInner() {
           </div>
         </AdminModal>
       )}
+      {/* TEST BUILDER WIZARD MODAL */}
+      <TestBuilderWizard
+        isOpen={isWizardOpen}
+        onClose={() => setIsWizardOpen(false)}
+        token={adminToken}
+        role="ADMIN"
+        courses={courses}
+        initialScope="COURSE"
+        initialCourseId={selectedCourseId}
+        onSuccess={(createdTest) => {
+          if (createdTest?.courseId) {
+            setSelectedCourseId(createdTest.courseId);
+          }
+          fetchCourseTests(createdTest?.courseId || selectedCourseId);
+        }}
+      />
     </AdminLayout>
   );
 }

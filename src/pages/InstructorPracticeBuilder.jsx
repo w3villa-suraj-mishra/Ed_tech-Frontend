@@ -6,8 +6,9 @@ import { toast } from 'react-hot-toast';
 import {
   FaPlus, FaBook, FaClock, FaAward, FaSearch, FaFilter, FaCheckCircle,
   FaTimesCircle, FaEye, FaEdit, FaTrash, FaListUl, FaQuestionCircle,
-  FaUserGraduate, FaCode, FaCommentDots, FaArrowLeft, FaTrashAlt
+  FaUserGraduate, FaCode, FaCommentDots, FaArrowLeft,
 } from 'react-icons/fa';
+import TestBuilderWizard from '../components/common/TestBuilderWizard';
 
 export default function InstructorPracticeBuilder() {
   const { token } = useSelector((state) => state.auth);
@@ -52,18 +53,8 @@ export default function InstructorPracticeBuilder() {
     interviewDetails: { expectedAnswer: '', keyPoints: '' }
   });
 
-  // Create Test Form State
-  const [testForm, setTestForm] = useState({
-    title: '',
-    description: '',
-    testType: 'Course Test',
-    courseId: '',
-    duration: 20,
-    totalMarks: 20,
-    passingPercentage: 50,
-    selectedQuestionIds: [],
-    status: 'published'
-  });
+  // Test Builder Wizard Modal
+  const [isWizardOpen, setIsWizardOpen] = useState(false);
 
   useEffect(() => {
     fetchInstructorCourses();
@@ -89,7 +80,6 @@ export default function InstructorPracticeBuilder() {
         if (fetchedCourses.length > 0) {
           const firstId = fetchedCourses[0]._id || fetchedCourses[0].id;
           setSelectedCourseId(firstId);
-          setTestForm((prev) => ({ ...prev, courseId: firstId }));
           setQForm((prev) => ({ ...prev, courseId: firstId }));
         }
       }
@@ -380,81 +370,6 @@ export default function InstructorPracticeBuilder() {
 
   const [isSubmittingTest, setIsSubmittingTest] = useState(false);
 
-  // Step 5 & 6: Create & Publish/Save Draft Test
-  const handleCreateTestSubmit = async (statusType) => {
-    if (isSubmittingTest) return;
-
-    const targetCourseId = testForm.courseId || selectedCourseId;
-    if (!targetCourseId) {
-      toast.error('Select a course first');
-      return;
-    }
-    if (!testForm.title.trim()) {
-      toast.error('Test title is required');
-      return;
-    }
-    if (statusType === 'published' && testForm.selectedQuestionIds.length === 0) {
-      toast.error('Select at least 1 question to Publish the test');
-      return;
-    }
-
-    setIsSubmittingTest(true);
-    try {
-      const payload = {
-        ...testForm,
-        courseId: targetCourseId,
-        questionIds: testForm.selectedQuestionIds,
-        status: statusType
-      };
-
-      console.log('[COURSE TEST CREATE REQUEST]', payload);
-
-      const res = await apiConnector('POST', practiceEndpoints.INSTRUCTOR_CREATE_COURSE_TEST, payload, {
-        Authorization: `Bearer ${token}`
-      });
-
-      console.log('[COURSE TEST CREATE RESPONSE]', res.data);
-
-      if (res.data?.success) {
-        toast.success(statusType === 'published' ? 'Test published successfully! 🚀' : 'Test saved as draft! 📝');
-        
-        // Ensure active selected course matches targetCourseId
-        setSelectedCourseId(targetCourseId);
-        setQTypeFilter(''); // Reset category filter so "All" tab shows the test
-
-        // Immediate state update and refetch
-        const newTest = res.data.data;
-        if (newTest) {
-          setTests((prev) => {
-            const exists = prev.some(t => Number(t.id) === Number(newTest.id));
-            return exists ? prev : [newTest, ...prev];
-          });
-        }
-        await fetchInstructorTests(targetCourseId);
-
-        setTestForm({
-          title: '',
-          description: '',
-          testType: 'Course Test',
-          courseId: targetCourseId,
-          duration: 20,
-          totalMarks: 20,
-          passingPercentage: 50,
-          selectedQuestionIds: [],
-          status: 'published'
-        });
-
-        // Switch to My Practice tab to view the created test
-        setActiveTab('my-practice');
-      }
-    } catch (err) {
-      console.error('[COURSE TEST CREATE ERROR]', err);
-      toast.error(err?.response?.data?.message || 'Failed to create test');
-    } finally {
-      setIsSubmittingTest(false);
-    }
-  };
-
   // Filtered Questions
   const filteredQuestions = questions.filter((q) => {
     const matchesSearch = q.title?.toLowerCase().includes(qSearch.toLowerCase());
@@ -483,7 +398,6 @@ export default function InstructorPracticeBuilder() {
             value={selectedCourseId}
             onChange={(e) => {
               setSelectedCourseId(e.target.value);
-              setTestForm((prev) => ({ ...prev, courseId: e.target.value }));
               setQForm((prev) => ({ ...prev, courseId: e.target.value }));
             }}
             className="bg-[#090D16] border border-[#2C333F] rounded-xl px-3 py-1.5 text-xs font-bold text-[#FFD60A] focus:outline-none"
@@ -570,12 +484,12 @@ export default function InstructorPracticeBuilder() {
                   onClick={handleBulkDeleteTests}
                   className="px-4 py-2 bg-red-600/20 border border-red-500/40 text-red-400 text-xs font-bold rounded-xl hover:bg-red-600/30 flex items-center gap-2 transition"
                 >
-                  <FaTrashAlt /> Delete Selected ({selectedTestIds.length})
+                  <FaTrash /> Delete Selected ({selectedTestIds.length})
                 </button>
               )}
               <button
-                onClick={() => setActiveTab('create-test')}
-                className="px-4 py-2 bg-[#FFD60A] text-black text-xs font-bold rounded-xl hover:bg-yellow-400 flex items-center gap-2"
+                onClick={() => setIsWizardOpen(true)}
+                className="px-4 py-2 bg-[#FFD60A] text-black text-xs font-bold rounded-xl hover:bg-yellow-400 flex items-center gap-2 shadow-md"
               >
                 <FaPlus /> Create New Test
               </button>
@@ -725,7 +639,7 @@ export default function InstructorPracticeBuilder() {
                   onClick={handleBulkDeleteQuestions}
                   className="px-4 py-2 bg-red-600/20 border border-red-500/40 text-red-400 text-xs font-bold rounded-xl hover:bg-red-600/30 flex items-center gap-1.5 whitespace-nowrap transition"
                 >
-                  <FaTrashAlt /> Delete Selected ({selectedQuestionIdsForDelete.length})
+                  <FaTrash /> Delete Selected ({selectedQuestionIdsForDelete.length})
                 </button>
               )}
               <button
@@ -789,26 +703,6 @@ export default function InstructorPracticeBuilder() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => {
-                          setTestForm((prev) => ({
-                            ...prev,
-                            selectedQuestionIds: prev.selectedQuestionIds.includes(q.id)
-                              ? prev.selectedQuestionIds.filter((id) => id !== q.id)
-                              : [...prev.selectedQuestionIds, q.id]
-                          }));
-                          toast.success('Question updated in Test selection!');
-                        }}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
-                          testForm.selectedQuestionIds.includes(q.id)
-                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                            : 'bg-[#090D16] text-[#AFB2BF] border border-[#2C333F] hover:text-white'
-                        }`}
-                      >
-                        {testForm.selectedQuestionIds.includes(q.id) ? '✓ Selected for Test' : '+ Select for Test'}
-                      </button>
-                    </div>
                   </div>
                 ))}
               </div>
@@ -817,138 +711,20 @@ export default function InstructorPracticeBuilder() {
         </div>
       )}
 
-      {/* TAB 3: CREATE TEST / QUIZ */}
+      {/* TAB 3: CREATE TEST / QUIZ (Renders Wizard Trigger) */}
       {activeTab === 'create-test' && (
-        <div className="max-w-3xl space-y-6 bg-[#161D29] border border-[#2C333F] p-6 sm:p-8 rounded-3xl shadow-xl">
-          <h2 className="text-xl font-bold text-white border-b border-[#2C333F] pb-4">
-            Build New Test / Quiz
-          </h2>
-
-          <div className="space-y-4">
-            <div>
-              <label className="block text-xs font-bold text-[#AFB2BF] uppercase tracking-wider mb-2">Test Type</label>
-              <select
-                value={testForm.testType}
-                onChange={(e) => setTestForm({ ...testForm, testType: e.target.value })}
-                className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-sm text-white focus:outline-none"
-              >
-                <option value="MCQ">MCQ</option>
-                <option value="Coding">Coding</option>
-                <option value="Topic Practice">Topic Practice</option>
-                <option value="Mock Test">Mock Test</option>
-                <option value="Interview Test">Interview Test</option>
-                <option value="Daily Quiz">Daily Quiz</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-[#AFB2BF] uppercase tracking-wider mb-2">Title *</label>
-              <input
-                type="text"
-                placeholder="e.g. React State & Lifecycle Assessment"
-                value={testForm.title}
-                onChange={(e) => setTestForm({ ...testForm, title: e.target.value })}
-                className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-sm text-white focus:outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-[#AFB2BF] uppercase tracking-wider mb-2">Description</label>
-              <textarea
-                rows={2}
-                placeholder="Instructions or details..."
-                value={testForm.description}
-                onChange={(e) => setTestForm({ ...testForm, description: e.target.value })}
-                className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-sm text-white focus:outline-none"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-xs font-bold text-[#AFB2BF] uppercase tracking-wider mb-2">Duration (Mins)</label>
-                <input
-                  type="number"
-                  value={testForm.duration}
-                  onChange={(e) => setTestForm({ ...testForm, duration: Number(e.target.value) })}
-                  className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-sm text-white"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-[#AFB2BF] uppercase tracking-wider mb-2">Total Marks</label>
-                <input
-                  type="number"
-                  value={testForm.totalMarks}
-                  onChange={(e) => setTestForm({ ...testForm, totalMarks: Number(e.target.value) })}
-                  className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-sm text-white"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-[#AFB2BF] uppercase tracking-wider mb-2">Passing %</label>
-                <input
-                  type="number"
-                  value={testForm.passingPercentage}
-                  onChange={(e) => setTestForm({ ...testForm, passingPercentage: Number(e.target.value) })}
-                  className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-sm text-white"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-[#AFB2BF] uppercase tracking-wider mb-2">
-                Select Questions ({testForm.selectedQuestionIds.length} Selected)
-              </label>
-              <div className="max-h-60 overflow-y-auto bg-[#090D16] border border-[#2C333F] rounded-xl p-4 space-y-2">
-                {questions.length === 0 ? (
-                  <p className="text-xs text-gray-500">No questions available. Add questions in Question Bank first.</p>
-                ) : (
-                  questions.map((q) => (
-                    <label key={q.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#161D29] cursor-pointer select-none text-xs text-[#F1F2FF]">
-                      <input
-                        type="checkbox"
-                        checked={testForm.selectedQuestionIds.includes(q.id)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setTestForm({ ...testForm, selectedQuestionIds: [...testForm.selectedQuestionIds, q.id] });
-                          } else {
-                            setTestForm({ ...testForm, selectedQuestionIds: testForm.selectedQuestionIds.filter(id => id !== q.id) });
-                          }
-                        }}
-                        className="accent-[#FFD60A]"
-                      />
-                      <span className="truncate flex-1 font-medium">{q.title}</span>
-                      <span className="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 font-bold">{q.type}</span>
-                    </label>
-                  ))
-                )}
-              </div>
-            </div>
-
-            <div className="flex gap-4 pt-4">
-              <button
-                type="button"
-                disabled={isSubmittingTest}
-                onClick={() => handleCreateTestSubmit('draft')}
-                className="flex-1 py-3 bg-[#2C333F] text-white font-bold text-xs rounded-xl hover:bg-gray-700 transition disabled:opacity-50"
-              >
-                {isSubmittingTest ? 'Saving Draft...' : 'Save Draft 📝'}
-              </button>
-              <button
-                type="button"
-                disabled={isSubmittingTest}
-                onClick={() => handleCreateTestSubmit('published')}
-                className="flex-1 py-3 bg-[#FFD60A] text-black font-bold text-xs rounded-xl shadow-xl hover:bg-yellow-400 transition disabled:opacity-50 flex items-center justify-center gap-2"
-              >
-                {isSubmittingTest ? (
-                  <>
-                    <span className="w-3.5 h-3.5 border-2 border-black border-t-transparent rounded-full animate-spin"></span>
-                    Publishing...
-                  </>
-                ) : (
-                  'Publish Test 🚀'
-                )}
-              </button>
-            </div>
-          </div>
+        <div className="max-w-xl mx-auto text-center p-10 bg-[#161D29] border border-[#2C333F] rounded-3xl space-y-4 shadow-xl">
+          <div className="text-4xl">🚀</div>
+          <h2 className="text-xl font-bold text-white">Unified Test Builder Wizard</h2>
+          <p className="text-xs text-[#AFB2BF]">
+            Build practice tests, quizzes, and assessments with step-by-step guidance and inline question creation.
+          </p>
+          <button
+            onClick={() => setIsWizardOpen(true)}
+            className="px-6 py-3 bg-[#FFD60A] text-black text-xs font-bold rounded-xl hover:bg-yellow-400 shadow-lg transition"
+          >
+            Open Test Builder Wizard
+          </button>
         </div>
       )}
 
@@ -1068,7 +844,7 @@ export default function InstructorPracticeBuilder() {
                           className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition"
                           title="Remove option"
                         >
-                          <FaTrashAlt className="text-xs" />
+                          <FaTrash className="text-xs" />
                         </button>
                       )}
                     </div>
@@ -1287,6 +1063,23 @@ export default function InstructorPracticeBuilder() {
           </div>
         </div>
       )}
+
+      {/* TEST BUILDER WIZARD MODAL */}
+      <TestBuilderWizard
+        isOpen={isWizardOpen}
+        onClose={() => setIsWizardOpen(false)}
+        token={token}
+        role="INSTRUCTOR"
+        courses={courses}
+        initialCourseId={selectedCourseId}
+        onSuccess={(createdTest) => {
+          if (createdTest?.courseId) {
+            setSelectedCourseId(createdTest.courseId);
+          }
+          fetchInstructorTests(createdTest?.courseId || selectedCourseId);
+          setActiveTab('my-practice');
+        }}
+      />
     </div>
   );
 }
