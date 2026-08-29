@@ -37,7 +37,8 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
   }, [location.search]);
 
   const handleApplyCoupon = async (overrideCode = null, overridePlan = 'gold') => {
-    const targetCode = (overrideCode || couponInput).trim();
+    const rawCode = (typeof overrideCode === 'string' && overrideCode) ? overrideCode : couponInput;
+    const targetCode = (rawCode || '').trim();
     if (!targetCode) return;
 
     setIsValidatingCoupon(true);
@@ -50,7 +51,7 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
         {
           code: targetCode,
           courseId: courseId || course?.id,
-          plan: overridePlan
+          plan: typeof overridePlan === 'string' ? overridePlan : 'gold'
         },
         headers
       );
@@ -332,7 +333,7 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
                       />
                       <button
                         type="button"
-                        onClick={handleApplyCoupon}
+                        onClick={() => handleApplyCoupon()}
                         disabled={isValidatingCoupon || !couponInput.trim()}
                         className="px-3.5 py-1.5 bg-yellow-400 hover:bg-yellow-300 disabled:opacity-50 text-black font-bold text-xs rounded-lg transition"
                       >
