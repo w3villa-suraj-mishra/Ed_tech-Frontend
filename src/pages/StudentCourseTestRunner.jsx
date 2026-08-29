@@ -667,12 +667,12 @@ export default function StudentCourseTestRunner() {
       {/* TEST RUNNER MAIN AREA */}
       <div className="flex-1 flex overflow-hidden">
         {/* QUESTION CONTENT AREA */}
-        <main className="flex-1 p-4 md:p-6 overflow-y-auto w-full max-w-none space-y-4 flex flex-col">
+        <main className={`flex-1 p-3 md:p-4 w-full max-w-none flex flex-col min-h-0 ${currentQuestion?.type === 'Coding' ? 'overflow-hidden' : 'overflow-y-auto'}`}>
           {currentQuestion ? (
             currentQuestion.type === 'Coding' ? (
-              <div className="flex-1 flex flex-col lg:flex-row gap-6 min-h-[500px] w-full">
+              <div className="flex-1 flex flex-col lg:flex-row gap-4 h-full min-h-0 w-full overflow-hidden mb-2">
                     {/* LEFT: PROBLEM DETAILS */}
-                    <div className="flex-1 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm overflow-y-auto space-y-4 text-xs max-h-[700px]">
+                    <div className="w-full lg:w-5/12 bg-white border border-slate-200 rounded-2xl p-5 shadow-sm overflow-y-auto space-y-4 text-xs h-full">
                       <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                         <span className="font-bold text-slate-400">Question {currentQuestionIndex + 1} of {questions.length}</span>
                         <span className="px-2.5 py-0.5 rounded-full font-extrabold bg-indigo-100 text-indigo-700 text-[10px]">Coding ({currentQuestion.marks || 1} Marks)</span>
@@ -725,8 +725,8 @@ export default function StudentCourseTestRunner() {
                     </div>
 
                 {/* RIGHT: REAL MONACO CODE EDITOR & EXECUTION CONSOLE */}
-                <div className="flex-1 flex flex-col space-y-4">
-                  <div className="bg-[#0D1117] border border-slate-800 rounded-2xl p-4 flex flex-col flex-1 shadow-lg overflow-hidden min-h-[550px]">
+                <div className="w-full lg:w-7/12 flex flex-col h-full min-h-0 overflow-hidden">
+                  <div className="bg-[#0D1117] border border-slate-800 rounded-2xl p-4 flex flex-col flex-1 shadow-lg overflow-hidden min-h-0">
                     {/* EDITOR HEADER */}
                     <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-3 shrink-0">
                       <div className="flex items-center gap-2">
@@ -770,9 +770,9 @@ export default function StudentCourseTestRunner() {
                     </div>
 
                     {/* MONACO CODE EDITOR WORKSPACE */}
-                    <div className="flex-1 relative rounded-xl overflow-hidden border border-slate-800 min-h-[300px]">
+                    <div className="flex-1 relative rounded-xl overflow-hidden border border-slate-800 min-h-[280px]">
                       <Editor
-                        height="300px"
+                        height="100%"
                         language={getMonacoLang(currentLang)}
                         value={currentCode}
                         onChange={(val) => setAnswers(prev => ({ ...prev, [currentQuestion.id]: val || '' }))}
