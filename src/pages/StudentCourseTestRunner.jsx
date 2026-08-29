@@ -591,10 +591,10 @@ export default function StudentCourseTestRunner() {
       {/* TEST RUNNER MAIN AREA */}
       <div className="flex-1 flex overflow-hidden">
         {/* QUESTION CONTENT AREA */}
-        <main className="flex-1 p-6 md:p-8 overflow-y-auto max-w-4xl mx-auto space-y-6">
+        <main className="flex-1 p-4 md:p-6 overflow-y-auto w-full max-w-none space-y-4 flex flex-col">
           {currentQuestion ? (
             currentQuestion.type === 'Coding' ? (
-              <div className="flex flex-col lg:flex-row gap-6 h-full min-h-[500px]">
+              <div className="flex-1 flex flex-col lg:flex-row gap-6 min-h-[500px] w-full">
                 {/* LEFT: PROBLEM DETAILS */}
                 <div className="flex-1 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm overflow-y-auto space-y-4 text-xs">
                   <div className="flex items-center justify-between border-b border-slate-100 pb-3">
