@@ -195,69 +195,81 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
         </div>
       </div>
 
-      {/* 2. DYNAMIC STATISTICS CARDS ROW */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* 2. DYNAMIC STATISTICS CARDS ROW (2 per row on mobile, compact size) */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         
         {/* Enrolled Courses */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
+        <div className="bg-[#0e111f] border border-blue-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
           <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-8 h-8 rounded-xl bg-blue-950/30 text-blue-400 flex items-center justify-center text-base">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-blue-950/30 text-blue-400 flex items-center justify-center text-xs sm:text-base">
               <VscBook />
             </div>
+            <span className="text-[9px] sm:text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-1.5 sm:px-2 py-0.5 rounded-full">
+              Live
+            </span>
           </div>
-          <div className="mt-3">
-            <span className="text-2xl font-extrabold text-white block">{totalEnrolled}</span>
-            <span className="text-xs text-richblack-300 font-medium">Enrolled Courses</span>
+          <div className="mt-2 sm:mt-3">
+            <span className="text-lg sm:text-2xl font-extrabold text-white block">{totalEnrolled}</span>
+            <span className="text-[10px] sm:text-xs text-richblack-300 font-medium leading-tight block">Enrolled Courses</span>
           </div>
-          <div className="mt-2 text-[10px] text-emerald-400 font-medium">
+          <div className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-emerald-400 font-medium">
             ↑ {totalEnrolled > 0 ? "100%" : "0%"} vs last month
           </div>
         </div>
 
         {/* Hours Learned */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
+        <div className="bg-[#0e111f] border border-blue-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
           <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-8 h-8 rounded-xl bg-indigo-900/30 text-indigo-400 flex items-center justify-center text-base">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-indigo-900/30 text-indigo-400 flex items-center justify-center text-xs sm:text-base">
               <VscCoverage />
             </div>
+            <span className="text-[9px] sm:text-[10px] text-indigo-400 font-bold bg-indigo-500/10 px-1.5 sm:px-2 py-0.5 rounded-full">
+              Est.
+            </span>
           </div>
-          <div className="mt-3">
-            <span className="text-2xl font-extrabold text-white block">{totalHoursLearned}</span>
-            <span className="text-xs text-richblack-300 font-medium">Hours Learned</span>
+          <div className="mt-2 sm:mt-3">
+            <span className="text-lg sm:text-2xl font-extrabold text-white block">{totalHoursLearned}</span>
+            <span className="text-[10px] sm:text-xs text-richblack-300 font-medium leading-tight block">Hours Learned</span>
           </div>
-          <div className="mt-2 text-[10px] text-indigo-400 font-medium">
+          <div className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-indigo-400 font-medium">
             ↑ {totalCompletedLessons > 0 ? "35%" : "0%"} vs last month
           </div>
         </div>
 
         {/* Lessons Completed */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
+        <div className="bg-[#0e111f] border border-blue-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
           <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-8 h-8 rounded-xl bg-emerald-900/30 text-emerald-400 flex items-center justify-center text-base">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-900/30 text-emerald-400 flex items-center justify-center text-xs sm:text-base">
               <VscPass />
             </div>
+            <span className="text-[9px] sm:text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-1.5 sm:px-2 py-0.5 rounded-full">
+              Total
+            </span>
           </div>
-          <div className="mt-3">
-            <span className="text-2xl font-extrabold text-white block">{totalCompletedLessons}</span>
-            <span className="text-xs text-richblack-300 font-medium">Lessons Completed</span>
+          <div className="mt-2 sm:mt-3">
+            <span className="text-lg sm:text-2xl font-extrabold text-white block">{totalCompletedLessons}</span>
+            <span className="text-[10px] sm:text-xs text-richblack-300 font-medium leading-tight block">Lessons Completed</span>
           </div>
-          <div className="mt-2 text-[10px] text-emerald-400 font-medium">
+          <div className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-emerald-400 font-medium">
             ↑ {totalCompletedLessons > 0 ? "40%" : "0%"} vs last month
           </div>
         </div>
 
         {/* Day Streak */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
+        <div className="bg-[#0e111f] border border-blue-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
           <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-8 h-8 rounded-xl bg-amber-900/30 text-amber-400 flex items-center justify-center text-base">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-amber-900/30 text-amber-400 flex items-center justify-center text-xs sm:text-base">
               <VscFlame />
             </div>
+            <span className="text-[9px] sm:text-[10px] text-amber-400 font-bold bg-amber-500/10 px-1.5 sm:px-2 py-0.5 rounded-full">
+              Active
+            </span>
           </div>
-          <div className="mt-3">
-            <span className="text-2xl font-extrabold text-white block">{activeStreakDays}</span>
-            <span className="text-xs text-richblack-300 font-medium">Day Streak</span>
+          <div className="mt-2 sm:mt-3">
+            <span className="text-lg sm:text-2xl font-extrabold text-white block">{activeStreakDays}</span>
+            <span className="text-[10px] sm:text-xs text-richblack-300 font-medium leading-tight block">Day Streak</span>
           </div>
-          <div className="mt-2 text-[10px] text-amber-400 font-medium">
+          <div className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-amber-400 font-medium">
             ↑ Keep it up! 🔥
           </div>
         </div>
