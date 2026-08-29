@@ -16,8 +16,6 @@ import {
   FiRefreshCw
 } from 'react-icons/fi';
 
-import Footer from '../components/Common/Footer.jsx';
-
 const CATEGORIES = [
   'All',
   'MCQ',
@@ -305,7 +303,6 @@ export default function StudentCoursePracticePage() {
         )}
 
       </div>
-      <Footer />
     </div>
   );
 }
