@@ -272,29 +272,41 @@ export default function StudentCoursePracticePage() {
                   </div>
 
                   {/* BOTTOM ACTION BAR */}
-                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+                  <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <div className="text-xs text-slate-500 font-medium">
                       <span>Attempts: <strong className="text-slate-800 font-bold">{test.attemptsCount || 0}</strong></span>
                     </div>
 
-                    <button
-                      onClick={() => navigate(`/s/courses/${courseId}/take/pratice-test/${test.id}`)}
-                      className={`px-6 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 ${
-                        hasAttempted
-                          ? 'bg-slate-900 hover:bg-slate-800 text-white shadow-slate-900/20'
-                          : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-600/30'
-                      }`}
-                    >
-                      {hasAttempted ? (
-                        <>
-                          <FiRefreshCw size={14} /> Retake Test
-                        </>
-                      ) : (
-                        <>
-                          <FiPlay size={14} /> Start Test →
-                        </>
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                      <button
+                        onClick={() => navigate(`/s/courses/${courseId}/take/pratice-test/${test.id}`)}
+                        className={`flex-1 sm:flex-initial px-5 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 ${
+                          hasAttempted
+                            ? 'bg-slate-900 hover:bg-slate-800 text-white shadow-slate-900/20'
+                            : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-600/30'
+                        }`}
+                      >
+                        {hasAttempted ? (
+                          <>
+                            <FiRefreshCw size={14} /> Retake Test
+                          </>
+                        ) : (
+                          <>
+                            <FiPlay size={14} /> Start Test →
+                          </>
+                        )}
+                      </button>
+
+                      {hasAttempted && test.latestAttemptId && (
+                        <button
+                          onClick={() => navigate(`/s/courses/${courseId}/take/pratice-test/${test.id}/review/${test.latestAttemptId}`)}
+                          className="flex-1 sm:flex-initial px-5 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-sm active:scale-95"
+                          title="Review your latest completed attempt"
+                        >
+                          <FiBarChart2 size={14} /> Review Test
+                        </button>
                       )}
-                    </button>
+                    </div>
                   </div>
                 </div>
               );
