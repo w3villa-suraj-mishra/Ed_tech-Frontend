@@ -96,14 +96,16 @@ const Navbar = () => {
         
         {/* BRAND LOGO & MOBILE HAMBURGER BUTTON */}
         <div className="flex items-center gap-2.5">
-          {/* Mobile Hamburger Drawer Trigger Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 rounded-xl bg-blue-950/40 border border-blue-500/30 text-blue-300 hover:text-white transition-all text-base focus:outline-none shrink-0"
-            aria-label="Toggle Mobile Menu"
-          >
-            {isMobileMenuOpen ? '✕' : '☰'}
-          </button>
+          {/* Mobile Hamburger Drawer Trigger Button (Only visible outside home page) */}
+          {location.pathname !== '/' && (
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 rounded-xl bg-blue-950/40 border border-blue-500/30 text-blue-300 hover:text-white transition-all text-base focus:outline-none shrink-0"
+              aria-label="Toggle Mobile Menu"
+            >
+              {isMobileMenuOpen ? '✕' : '☰'}
+            </button>
+          )}
 
           {/* CodeLearn Logo */}
           <Link to="/" className="flex items-center gap-2.5 group">
