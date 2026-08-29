@@ -189,10 +189,17 @@ export default function AdminAnnouncements() {
     }
 
     try {
+      // Helper to convert HTML datetime-local (YYYY-MM-DDTHH:mm) into a proper Date object
+      const parseLocalDatetime = (dtStr) => {
+        if (!dtStr) return null;
+        const d = new Date(dtStr);
+        return isNaN(d.getTime()) ? null : d.toISOString();
+      };
+
       const payload = {
         ...formData,
-        startAt: formData.startAt ? new Date(formData.startAt).toISOString() : null,
-        endAt: formData.endAt ? new Date(formData.endAt).toISOString() : null
+        startAt: parseLocalDatetime(formData.startAt),
+        endAt: parseLocalDatetime(formData.endAt)
       };
 
       if (editingId) {
