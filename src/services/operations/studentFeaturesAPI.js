@@ -41,7 +41,8 @@ export async function buyCourse(token, courses, userDetails, navigate, dispatch,
         }
     } catch (error) {
         console.log("PAYMENT ERROR.....", error);
-        toast.error(error.message || "Could not process plan checkout");
+        const errorMsg = error.response?.data?.message || error.message || "Could not process plan checkout";
+        toast.error(errorMsg);
     }
     toast.dismiss(toastId);
 }
