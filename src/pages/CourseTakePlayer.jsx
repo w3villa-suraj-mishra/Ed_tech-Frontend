@@ -41,6 +41,7 @@ const CourseTakePlayer = () => {
   const [currentLecture, setCurrentLecture] = useState(null);
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [currentLectureIndex, setCurrentLectureIndex] = useState(0);
+  const [showPractice, setShowPractice] = useState(false);
 
   // Certificate Modal State
   const [showCertModal, setShowCertModal] = useState(false);
@@ -138,6 +139,7 @@ const CourseTakePlayer = () => {
     setCurrentLectureIndex(lecIndex);
     setActiveSectionId(sectionId);
     setCurrentLecture(lecture);
+    setShowPractice(false);
   };
 
   const isCompleted = (lecId) => completedLectures.includes(String(lecId));
@@ -329,9 +331,9 @@ const CourseTakePlayer = () => {
 
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setCurrentLecture(null)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
-              currentLecture === null ? 'bg-purple-600 text-white' : 'text-purple-600 hover:bg-purple-50'
+            onClick={() => setShowPractice(!showPractice)}
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition shadow-sm ${
+              showPractice ? 'bg-purple-600 text-white hover:bg-purple-700' : 'bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100'
             }`}
           >
             <span>🎯 Practice / Tests</span>
@@ -528,7 +530,11 @@ const CourseTakePlayer = () => {
 
         {/* MAIN PLAYER AREA */}
         <main className="flex-1 bg-white flex flex-col justify-between overflow-y-auto">
-          {currentLocked ? (
+          {showPractice ? (
+            <div className="flex-1 overflow-y-auto bg-[#090D16]">
+              <CoursePracticeTab />
+            </div>
+          ) : currentLocked ? (
             <div className="flex-1 flex flex-col items-center justify-center text-slate-800 p-8 space-y-4">
               <FiLock size={48} className="text-amber-500" />
               <h2 className="text-lg font-bold">This lesson is locked</h2>
@@ -554,10 +560,6 @@ const CourseTakePlayer = () => {
                   onEnded={handleCompleteAndContinue}
                 />
               </div>
-            </div>
-          ) : currentLecture === null ? (
-            <div className="flex-1 overflow-y-auto bg-[#090D16]">
-              <CoursePracticeTab />
             </div>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center text-slate-400 p-8 space-y-2">
