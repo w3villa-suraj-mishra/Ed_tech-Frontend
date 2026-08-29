@@ -142,73 +142,73 @@ const InstructorDashboard = () => {
           </div>
         </div>
 
-        {/* 3. STATISTICS CARDS (4 COLUMNS) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {/* 3. STATISTICS CARDS (2 per row on mobile) */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
           {/* CARD 1: TOTAL COURSES */}
-          <div className="bg-[#0c0e1a] border border-blue-950/30 rounded-2xl p-5 shadow-xl hover:border-blue-500/40 transition-all group">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
-                <FiBookOpen size={22} />
+          <div className="bg-[#0c0e1a] border border-blue-950/30 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 shadow-xl hover:border-blue-500/40 transition-all group">
+            <div className="flex items-center gap-2.5 sm:gap-4">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform shrink-0">
+                <FiBookOpen className="text-base sm:text-2xl" />
               </div>
-              <div>
-                <h3 className="text-2xl font-extrabold text-white">{totalCourses}</h3>
-                <p className="text-xs text-blue-300/70 font-medium">Total Courses</p>
+              <div className="min-w-0">
+                <h3 className="text-lg sm:text-2xl font-extrabold text-white truncate">{totalCourses}</h3>
+                <p className="text-[10px] sm:text-xs text-blue-300/70 font-medium truncate">Total Courses</p>
               </div>
             </div>
             {courseDelta && (
-              <p className="text-[11px] font-semibold text-emerald-400 flex items-center gap-1 mt-3 pl-1">
+              <p className="text-[9px] sm:text-[11px] font-semibold text-emerald-400 flex items-center gap-1 mt-2 sm:mt-3 pl-1">
                 <span>↑</span> {courseDelta}
               </p>
             )}
           </div>
 
           {/* CARD 2: TOTAL STUDENTS */}
-          <div className="bg-[#0c0e1a] border border-blue-950/30 rounded-2xl p-5 shadow-xl hover:border-emerald-500/40 transition-all group">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
-                <FiUsers size={22} />
+          <div className="bg-[#0c0e1a] border border-blue-950/30 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 shadow-xl hover:border-emerald-500/40 transition-all group">
+            <div className="flex items-center gap-2.5 sm:gap-4">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform shrink-0">
+                <FiUsers className="text-base sm:text-2xl" />
               </div>
-              <div>
-                <h3 className="text-2xl font-extrabold text-white">{totalStudents.toLocaleString()}</h3>
-                <p className="text-xs text-blue-300/70 font-medium">Total Students</p>
+              <div className="min-w-0">
+                <h3 className="text-lg sm:text-2xl font-extrabold text-white truncate">{totalStudents.toLocaleString()}</h3>
+                <p className="text-[10px] sm:text-xs text-blue-300/70 font-medium truncate">Total Students</p>
               </div>
             </div>
             {studentDelta && (
-              <p className="text-[11px] font-semibold text-emerald-400 flex items-center gap-1 mt-3 pl-1">
+              <p className="text-[9px] sm:text-[11px] font-semibold text-emerald-400 flex items-center gap-1 mt-2 sm:mt-3 pl-1">
                 <span>↑</span> {studentDelta}
               </p>
             )}
           </div>
 
           {/* CARD 3: TOTAL EARNINGS */}
-          <div className="bg-[#0c0e1a] border border-blue-950/30 rounded-2xl p-5 shadow-xl hover:border-amber-500/40 transition-all group">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-amber-600/20 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
-                <FiCreditCard size={22} />
+          <div className="bg-[#0c0e1a] border border-blue-950/30 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 shadow-xl hover:border-amber-500/40 transition-all group">
+            <div className="flex items-center gap-2.5 sm:gap-4">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-amber-600/20 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform shrink-0">
+                <FiCreditCard className="text-base sm:text-2xl" />
               </div>
-              <div>
-                <h3 className="text-2xl font-extrabold text-white">₹{totalEarnings.toLocaleString()}</h3>
-                <p className="text-xs text-blue-300/70 font-medium">Total Earnings</p>
+              <div className="min-w-0">
+                <h3 className="text-lg sm:text-2xl font-extrabold text-white truncate">₹{totalEarnings.toLocaleString()}</h3>
+                <p className="text-[10px] sm:text-xs text-blue-300/70 font-medium truncate">Total Earnings</p>
               </div>
             </div>
             {earningsDelta && (
-              <p className="text-[11px] font-semibold text-emerald-400 flex items-center gap-1 mt-3 pl-1">
+              <p className="text-[9px] sm:text-[11px] font-semibold text-emerald-400 flex items-center gap-1 mt-2 sm:mt-3 pl-1">
                 <span>↑</span> {earningsDelta}
               </p>
             )}
           </div>
 
           {/* CARD 4: AVERAGE RATING */}
-          <div className="bg-[#0c0e1a] border border-blue-950/30 rounded-2xl p-5 shadow-xl hover:border-blue-500/40 transition-all group">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
-                <FiStar size={22} />
+          <div className="bg-[#0c0e1a] border border-blue-950/30 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 shadow-xl hover:border-blue-500/40 transition-all group">
+            <div className="flex items-center gap-2.5 sm:gap-4">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform shrink-0">
+                <FiStar className="text-base sm:text-2xl" />
               </div>
-              <div>
-                <h3 className="text-2xl font-extrabold text-white">
+              <div className="min-w-0">
+                <h3 className="text-lg sm:text-2xl font-extrabold text-white truncate">
                   {averageRating > 0 ? averageRating : 'No ratings'}
                 </h3>
-                <p className="text-xs text-blue-300/70 font-medium">Avg. Rating</p>
+                <p className="text-[10px] sm:text-xs text-blue-300/70 font-medium truncate">Avg. Rating</p>
               </div>
             </div>
           </div>
