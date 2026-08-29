@@ -932,28 +932,28 @@ export default function StudentCourseTestRunner() {
                                     <span className={tc.passed ? 'text-emerald-400' : 'text-red-400'}>
                                       {tc.passed ? '✓' : '✗'} Test Case #{tc.testCaseIndex}
                                     </span>
-                                    <span className="text-[10px] text-slate-400">{tc.status} • {tc.executionTime ? `${tc.executionTime}s` : '0.01s'}</span>
+                                    <span className="text-[10px] text-slate-400">{tc.status === 'NO_OUTPUT' ? 'NO OUTPUT' : tc.status} • {tc.executionTime ? `${tc.executionTime}s` : '0.01s'}</span>
                                   </div>
-                                  <div className="text-slate-300 flex items-baseline gap-1 text-[11px]">
-                                    <span className="text-slate-400 font-semibold shrink-0">Input:</span>
-                                    <code className="text-emerald-300 font-mono bg-slate-900/80 px-2 py-0.5 rounded border border-slate-800 break-all">
+                                  <div className="text-slate-300 flex items-start gap-2 text-[11px]">
+                                    <span className="text-slate-400 font-semibold shrink-0 pt-0.5">Input:</span>
+                                    <code className="text-emerald-300 font-mono bg-slate-900/80 px-2 py-1 rounded border border-slate-800 break-all whitespace-pre-wrap flex-1">
                                       {tc.input !== undefined && tc.input !== null && String(tc.input).trim() !== '' ? String(tc.input) : '(none)'}
                                     </code>
                                   </div>
-                                  <div className="text-slate-300 flex items-baseline gap-1 text-[11px]">
-                                    <span className="text-slate-400 font-semibold shrink-0">Expected Output:</span>
-                                    <code className="text-emerald-300 font-mono bg-slate-900/80 px-2 py-0.5 rounded border border-slate-800 break-all">
+                                  <div className="text-slate-300 flex items-start gap-2 text-[11px]">
+                                    <span className="text-slate-400 font-semibold shrink-0 pt-0.5">Expected Output:</span>
+                                    <code className="text-emerald-300 font-mono bg-slate-900/80 px-2 py-1 rounded border border-slate-800 break-all whitespace-pre-wrap flex-1">
                                       {tc.expectedOutput !== undefined && tc.expectedOutput !== null && String(tc.expectedOutput).trim() !== ''
                                         ? String(tc.expectedOutput)
                                         : (tc.output !== undefined && tc.output !== null && String(tc.output).trim() !== '' ? String(tc.output) : '(none)')}
                                     </code>
                                   </div>
-                                  <div className="text-slate-300 flex items-baseline gap-1 text-[11px]">
-                                    <span className="text-slate-400 font-semibold shrink-0">Actual Output:</span>
-                                    <code className={`font-mono bg-slate-900/80 px-2 py-0.5 rounded border border-slate-800 break-all ${
+                                  <div className="text-slate-300 flex items-start gap-2 text-[11px]">
+                                    <span className="text-slate-400 font-semibold shrink-0 pt-0.5">Actual Output:</span>
+                                    <code className={`font-mono bg-slate-900/80 px-2 py-1 rounded border border-slate-800 break-all whitespace-pre-wrap flex-1 ${
                                       (tc.actualOutput !== undefined && tc.actualOutput !== null && String(tc.actualOutput).trim() !== '') || (tc.stdout !== undefined && tc.stdout !== null && String(tc.stdout).trim() !== '')
                                         ? (tc.passed ? 'text-emerald-300' : 'text-red-300')
-                                        : 'text-slate-500 italic'
+                                        : 'text-amber-400/90 italic'
                                     }`}>
                                       {tc.actualOutput !== undefined && tc.actualOutput !== null && String(tc.actualOutput).trim() !== ''
                                         ? String(tc.actualOutput)
