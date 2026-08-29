@@ -46,10 +46,10 @@ export default function AnnouncementBanner() {
     };
   }, [token]);
 
-  // Countdown timer handler
+  // Countdown timer handler with separate hours, minutes, seconds
   useEffect(() => {
     if (!announcement || !announcement.countdownEnabled || !announcement.endAt) {
-      setTimeLeft('');
+      setTimeLeft(null);
       return;
     }
 
@@ -59,23 +59,20 @@ export default function AnnouncementBanner() {
       const diff = end - now;
 
       if (diff <= 0) {
-        setTimeLeft('');
+        setTimeLeft(null);
         setAnnouncement(null); // Auto expire and hide
         return false;
       }
 
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const totalHours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-      let formatted = '';
-      if (days > 0) formatted += `${days}d `;
-      formatted += `${String(hours).padStart(2, '0')}h `;
-      formatted += `${String(minutes).padStart(2, '0')}m `;
-      formatted += `${String(seconds).padStart(2, '0')}s`;
-
-      setTimeLeft(formatted);
+      setTimeLeft({
+        hours: totalHours,
+        minutes: minutes,
+        seconds: seconds
+      });
       return true;
     };
 
@@ -118,31 +115,31 @@ export default function AnnouncementBanner() {
   }
 
   return (
-    <div className="w-full bg-gradient-to-r from-[#090d19] via-[#0f172a] to-[#090d19] border-b border-blue-500/30 text-white shadow-md relative z-40 transition-all duration-300">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-2.5 flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4 text-xs sm:text-sm">
+    <div className="w-full bg-[#1e1938]/95 backdrop-blur-md border-b border-[#3b3266] text-white shadow-lg relative z-40 font-sans transition-all duration-300">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-center sm:justify-between gap-3 text-xs sm:text-sm">
         
-        {/* Left Section: Highlight Text & Message */}
-        <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 text-center md:text-left">
+        {/* Left / Center Message Section */}
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-center sm:text-left">
           {announcement.highlightText && (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold text-[11px] uppercase tracking-wider shadow-sm shrink-0">
-              <FiTag className="text-xs" />
-              <span>{announcement.highlightText}</span>
-            </span>
+            <div className="text-purple-200 font-medium text-xs tracking-normal">
+              Use discount code <span className="font-extrabold text-[#ffd700] tracking-wide">' {announcement.highlightText} '</span>
+            </div>
           )}
 
-          <div className="font-medium text-richblack-100 flex flex-wrap items-center gap-1.5 justify-center md:justify-start">
-            <span className="font-bold text-white">{announcement.title}:</span>
-            <span>{announcement.message}</span>
+          <div className="text-purple-100 font-medium flex flex-wrap items-center gap-1.5 justify-center">
+            <span>{announcement.message || announcement.title}</span>
           </div>
         </div>
 
-        {/* Right Section: Countdown, CTA & Dismiss */}
-        <div className="flex items-center justify-center gap-3.5 shrink-0">
-          {/* Countdown timer */}
+        {/* Right Section: Countdown Timer, CTA Button & Close Icon */}
+        <div className="flex items-center justify-center gap-4 shrink-0">
+          
+          {/* Detailed Countdown display: X hours Y minutes Z seconds */}
           {announcement.countdownEnabled && timeLeft && (
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-950/60 border border-blue-500/40 text-blue-300 font-mono text-xs font-bold shadow-inner">
-              <FiClock className="text-blue-400 text-xs animate-pulse" />
-              <span>{timeLeft}</span>
+            <div className="flex items-center gap-2 text-xs font-normal text-purple-200">
+              <span><strong className="font-bold text-white text-sm">{timeLeft.hours}</strong> hours</span>
+              <span><strong className="font-bold text-white text-sm">{String(timeLeft.minutes).padStart(2, '0')}</strong> minutes</span>
+              <span><strong className="font-bold text-white text-sm">{String(timeLeft.seconds).padStart(2, '0')}</strong> seconds</span>
             </div>
           )}
 
@@ -150,10 +147,9 @@ export default function AnnouncementBanner() {
           {announcement.ctaEnabled && announcement.ctaText && (
             <button
               onClick={handleCtaClick}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-xl bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs transition-all shadow-[0_0_12px_rgba(37,99,235,0.4)] active:scale-95 cursor-pointer"
+              className="px-4 py-1.5 rounded-lg bg-[#2e2654] hover:bg-[#3d336e] border border-[#52448a] text-white font-medium text-xs transition-all active:scale-95 cursor-pointer shadow-sm"
             >
-              <span>{announcement.ctaText}</span>
-              <FiArrowRight className="text-xs" />
+              {announcement.ctaText}
             </button>
           )}
 
@@ -161,7 +157,7 @@ export default function AnnouncementBanner() {
           {announcement.dismissible && (
             <button
               onClick={handleDismiss}
-              className="p-1 rounded-lg text-richblack-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+              className="text-purple-300 hover:text-white transition-colors cursor-pointer p-0.5"
               title="Dismiss announcement"
               aria-label="Close Announcement"
             >
