@@ -163,10 +163,13 @@ export default function StudentCourseTestRunner() {
       }
     } catch (err) {
       console.error('Fetch review answers error:', err);
-      if (err.response?.status === 403) {
-        setErrorMessage(err.response?.data?.message || 'Access Denied: You do not have permission to view this review.');
+      const serverMsg = err.response?.data?.message;
+      if (serverMsg) {
+        setErrorMessage(serverMsg);
+      } else if (err.response?.status === 403) {
+        setErrorMessage('Access Denied: You do not have permission to view this review.');
       } else {
-        setErrorMessage(err.response?.data?.message || 'Unable to load test review.');
+        setErrorMessage('Unable to load test review.');
       }
     } finally {
       setLoading(false);
