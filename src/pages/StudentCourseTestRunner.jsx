@@ -111,14 +111,64 @@ export default function StudentCourseTestRunner() {
     });
   };
 
+  const [codeRunning, setCodeRunning] = useState(false);
+  const [runResult, setRunResult] = useState(null);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
+
+  const handleRunCode = async (question) => {
+    if (codeRunning) return;
+    setCodeRunning(true);
+    setRunResult(null);
+    try {
+      const userCode = answers[question.id] !== undefined ? answers[question.id] : (question.codingDetails?.starterCode || '');
+      const language = question.codingDetails?.language || 'python';
+      const visibleInput = question.codingDetails?.testCases?.[0]?.input || '';
+
+      const res = await apiConnector('POST', practiceEndpoints.RUN_CODE_API, {
+        questionId: question.id,
+        language,
+        sourceCode: userCode,
+        input: visibleInput
+      }, { Authorization: `Bearer ${token}` });
+
+      if (res.data) {
+        setRunResult(res.data);
+      }
+    } catch (err) {
+      setRunResult({
+        success: false,
+        code: 'CODE_EXECUTOR_UNAVAILABLE',
+        message: 'Code execution is currently unavailable. Please try again later.'
+      });
+    } finally {
+      setCodeRunning(false);
+    }
+  };
+
+  const handleResetCode = (question) => {
+    const defaultCode = question.codingDetails?.starterCode || '';
+    setAnswers(prev => ({ ...prev, [question.id]: defaultCode }));
+    setShowResetConfirm(false);
+    setRunResult(null);
+  };
+
   const handleSubmitTest = async (isAutoSubmit = false) => {
     if (!test || submitting) return;
     setSubmitting(true);
     try {
-      const formattedAnswers = Object.entries(answers).map(([qId, optId]) => ({
-        questionId: Number(qId),
-        selectedOptionId: Number(optId)
-      }));
+      const formattedAnswers = Object.entries(answers).map(([qId, userVal]) => {
+        const qObj = questions.find(q => String(q.id) === String(qId));
+        if (qObj && qObj.type === 'Coding') {
+          return {
+            questionId: Number(qId),
+            userCode: String(userVal)
+          };
+        }
+        return {
+          questionId: Number(qId),
+          selectedOptionId: Number(userVal)
+        };
+      });
 
       const totalDuration = (test.duration || 15) * 60;
       const timeTakenSeconds = Math.max(1, totalDuration - timeLeftSeconds);
@@ -307,21 +357,49 @@ export default function StudentCourseTestRunner() {
                 >
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-xs text-slate-500">Question {idx + 1}</span>
-                    <span
-                      className={`px-3 py-1 rounded-full text-[10px] font-extrabold flex items-center gap-1 ${
-                        isCorrect
-                          ? 'bg-emerald-100 text-emerald-700'
-                          : isUnanswered
-                          ? 'bg-amber-100 text-amber-800'
-                          : 'bg-red-100 text-red-700'
-                      }`}
-                    >
-                      {isCorrect ? <FiCheckCircle size={12} /> : isUnanswered ? <FiHelpCircle size={12} /> : <FiXCircle size={12} />}
-                      {isCorrect ? 'CORRECT (+1)' : isUnanswered ? 'NOT ANSWERED' : 'INCORRECT (0)'}
-                    </span>
+                    {q.type === 'Coding' ? (
+                      <span className="px-3 py-1 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-800 flex items-center gap-1">
+                        <FiClock size={12} /> Evaluation Pending (Executor Unavailable)
+                      </span>
+                    ) : (
+                      <span
+                        className={`px-3 py-1 rounded-full text-[10px] font-extrabold flex items-center gap-1 ${
+                          isCorrect
+                            ? 'bg-emerald-100 text-emerald-700'
+                            : isUnanswered
+                            ? 'bg-amber-100 text-amber-800'
+                            : 'bg-red-100 text-red-700'
+                        }`}
+                      >
+                        {isCorrect ? <FiCheckCircle size={12} /> : isUnanswered ? <FiHelpCircle size={12} /> : <FiXCircle size={12} />}
+                        {isCorrect ? 'CORRECT (+1)' : isUnanswered ? 'NOT ANSWERED' : 'INCORRECT (0)'}
+                      </span>
+                    )}
                   </div>
 
                   <h3 className="font-bold text-sm text-slate-900">{q.title}</h3>
+
+                  {q.type === 'Coding' && (
+                    <div className="space-y-3 pt-2">
+                      <div className="flex items-center gap-2 text-xs">
+                        <span className="font-bold text-slate-500">Submitted Language:</span>
+                        <span className="px-2 py-0.5 bg-slate-100 font-mono font-bold text-slate-800 rounded uppercase">
+                          {q.codingDetails?.language || 'Python'}
+                        </span>
+                      </div>
+
+                      {ans.userCode ? (
+                        <div>
+                          <span className="block text-[11px] font-bold text-slate-600 mb-1">Submitted Source Code:</span>
+                          <pre className="bg-[#0D1117] text-emerald-400 font-mono text-xs p-4 rounded-xl border border-slate-800 overflow-x-auto">
+                            {ans.userCode}
+                          </pre>
+                        </div>
+                      ) : (
+                        <p className="text-xs text-slate-400 italic">No code submitted.</p>
+                      )}
+                    </div>
+                  )}
 
                   {/* OPTIONS REVIEW */}
                   <div className="space-y-2 pt-2">
@@ -515,48 +593,184 @@ export default function StudentCourseTestRunner() {
         {/* QUESTION CONTENT AREA */}
         <main className="flex-1 p-6 md:p-8 overflow-y-auto max-w-4xl mx-auto space-y-6">
           {currentQuestion ? (
-            <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm space-y-6">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                <span className="text-xs font-bold text-slate-400">
-                  Question {currentQuestionIndex + 1} of {questions.length}
-                </span>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-600">
-                  {currentQuestion.type || 'MCQ'}
-                </span>
+            currentQuestion.type === 'Coding' ? (
+              <div className="flex flex-col lg:flex-row gap-6 h-full min-h-[500px]">
+                {/* LEFT: PROBLEM DETAILS */}
+                <div className="flex-1 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm overflow-y-auto space-y-4 text-xs">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <span className="font-bold text-slate-400">Question {currentQuestionIndex + 1} of {questions.length}</span>
+                    <span className="px-2.5 py-0.5 rounded-full font-extrabold bg-indigo-100 text-indigo-700 text-[10px]">Coding</span>
+                  </div>
+
+                  <h2 className="text-base font-bold text-slate-900">{currentQuestion.title}</h2>
+
+                  {currentQuestion.codingDetails?.problemStatement && (
+                    <div>
+                      <h4 className="font-bold text-slate-700 mb-1">Problem Statement</h4>
+                      <p className="text-slate-600 leading-relaxed whitespace-pre-line">{currentQuestion.codingDetails.problemStatement}</p>
+                    </div>
+                  )}
+
+                  {currentQuestion.codingDetails?.inputFormat && (
+                    <div>
+                      <h4 className="font-bold text-slate-700 mb-1">Input Format</h4>
+                      <p className="text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100">{currentQuestion.codingDetails.inputFormat}</p>
+                    </div>
+                  )}
+
+                  {currentQuestion.codingDetails?.outputFormat && (
+                    <div>
+                      <h4 className="font-bold text-slate-700 mb-1">Output Format</h4>
+                      <p className="text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100">{currentQuestion.codingDetails.outputFormat}</p>
+                    </div>
+                  )}
+
+                  {currentQuestion.codingDetails?.constraints && (
+                    <div>
+                      <h4 className="font-bold text-slate-700 mb-1">Constraints</h4>
+                      <code className="text-slate-700 bg-slate-100 px-2 py-1 rounded">{currentQuestion.codingDetails.constraints}</code>
+                    </div>
+                  )}
+
+                  {currentQuestion.codingDetails?.testCases?.length > 0 && (
+                    <div>
+                      <h4 className="font-bold text-slate-700 mb-2">Visible Example Test Cases</h4>
+                      <div className="space-y-2">
+                        {currentQuestion.codingDetails.testCases.map((tc, idx) => (
+                          <div key={idx} className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-1 font-mono text-[11px]">
+                            <span className="font-bold text-slate-500 block text-[10px]">Sample #{idx + 1}</span>
+                            <div><span className="text-slate-400">Input:</span> {tc.input}</div>
+                            <div><span className="text-slate-400">Expected Output:</span> {tc.output || tc.expectedOutput}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* RIGHT: REAL CODE EDITOR & CONTROLS */}
+                <div className="flex-1 flex flex-col space-y-4">
+                  <div className="bg-[#0D1117] border border-slate-800 rounded-2xl p-4 flex flex-col flex-1 shadow-lg overflow-hidden">
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-slate-400 font-bold text-xs">Language:</span>
+                        <span className="px-2.5 py-1 bg-slate-800 text-yellow-400 rounded-lg text-xs font-mono font-bold uppercase">
+                          {currentQuestion.codingDetails?.language || 'Python'}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => setShowResetConfirm(true)}
+                          className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold transition"
+                        >
+                          <FiRefreshCw className="inline mr-1" /> Reset Code
+                        </button>
+                        <button
+                          onClick={() => handleRunCode(currentQuestion)}
+                          disabled={codeRunning}
+                          className="px-4 py-1.5 bg-yellow-400 hover:bg-yellow-500 text-black font-extrabold rounded-xl text-xs shadow transition disabled:opacity-50"
+                        >
+                          {codeRunning ? 'Running...' : 'Run Code'}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* CODE EDITOR WORKSPACE */}
+                    <div className="flex-1 relative font-mono text-xs text-slate-100 min-h-[220px]">
+                      <textarea
+                        value={
+                          answers[currentQuestion.id] !== undefined
+                            ? answers[currentQuestion.id]
+                            : (currentQuestion.codingDetails?.starterCode || '')
+                        }
+                        onChange={(e) => setAnswers({ ...answers, [currentQuestion.id]: e.target.value })}
+                        placeholder="// Write your solution here..."
+                        className="w-full h-full bg-[#0D1117] text-emerald-400 font-mono p-3 rounded-xl border border-slate-800 outline-none resize-none leading-relaxed"
+                      />
+                    </div>
+
+                    {/* RUN OUTPUT PANEL */}
+                    {runResult && (
+                      <div className="mt-3 p-3 bg-slate-900 border border-slate-800 rounded-xl space-y-1 font-mono text-[11px]">
+                        <div className="flex items-center justify-between">
+                          <span className={`font-bold ${runResult.success ? 'text-emerald-400' : 'text-amber-400'}`}>
+                            {runResult.status || 'Status: Execution Unavailable'}
+                          </span>
+                        </div>
+                        <p className="text-slate-300 text-[11px] leading-snug">{runResult.message}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* RESET CONFIRMATION MODAL */}
+                {showResetConfirm && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl p-6 max-w-sm w-full space-y-4 text-center shadow-2xl">
+                      <h3 className="font-bold text-base text-slate-900">Reset Code to Starter Template?</h3>
+                      <p className="text-xs text-slate-500">Your currently typed code for this question will be lost.</p>
+                      <div className="flex gap-3 pt-2">
+                        <button
+                          onClick={() => setShowResetConfirm(false)}
+                          className="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-xl"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          onClick={() => handleResetCode(currentQuestion)}
+                          className="flex-1 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl"
+                        >
+                          Reset Code
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
+            ) : (
+              <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm space-y-6">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                  <span className="text-xs font-bold text-slate-400">
+                    Question {currentQuestionIndex + 1} of {questions.length}
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-600">
+                    {currentQuestion.type || 'MCQ'}
+                  </span>
+                </div>
 
-              <h2 className="text-base md:text-lg font-bold text-slate-900 leading-snug">
-                {currentQuestion.title}
-              </h2>
+                <h2 className="text-base md:text-lg font-bold text-slate-900 leading-snug">
+                  {currentQuestion.title}
+                </h2>
 
-              {/* OPTIONS GRID */}
-              <div className="grid grid-cols-1 gap-3 pt-2">
-                {currentQuestion.options?.map((opt) => {
-                  const isSelected = answers[currentQuestion.id] === opt.id;
+                {/* OPTIONS GRID */}
+                <div className="grid grid-cols-1 gap-3 pt-2">
+                  {currentQuestion.options?.map((opt) => {
+                    const isSelected = answers[currentQuestion.id] === opt.id;
 
-                  return (
-                    <button
-                      key={opt.id}
-                      onClick={() => handleSelectOption(currentQuestion.id, opt.id)}
-                      className={`p-4 rounded-xl text-left text-xs font-medium border transition-all flex items-center justify-between ${
-                        isSelected
-                          ? 'bg-indigo-50/80 border-indigo-600 text-indigo-900 font-bold shadow-sm'
-                          : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                      }`}
-                    >
-                      <span>{opt.optionText}</span>
-                      <div
-                        className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                          isSelected ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-slate-300'
+                    return (
+                      <button
+                        key={opt.id}
+                        onClick={() => handleSelectOption(currentQuestion.id, opt.id)}
+                        className={`p-4 rounded-xl text-left text-xs font-medium border transition-all flex items-center justify-between ${
+                          isSelected
+                            ? 'bg-indigo-50/80 border-indigo-600 text-indigo-900 font-bold shadow-sm'
+                            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                         }`}
                       >
-                        {isSelected && <span className="w-2 h-2 bg-white rounded-full" />}
-                      </div>
-                    </button>
-                  );
-                })}
+                        <span>{opt.optionText}</span>
+                        <div
+                          className={`w-5 h-5 rounded-full border flex items-center justify-center ${
+                            isSelected ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-slate-300'
+                          }`}
+                        >
+                          {isSelected && <span className="w-2 h-2 bg-white rounded-full" />}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )
           ) : (
             <p className="text-xs text-slate-400">No questions available in this test.</p>
           )}

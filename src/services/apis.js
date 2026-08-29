@@ -110,6 +110,7 @@ export const practiceEndpoints = {
   GET_TOPIC_QUESTIONS: BASE_URL + "/practice/topic-questions",
   GET_PRACTICE_TESTS: BASE_URL + "/practice/tests",
   SUBMIT_ATTEMPT: BASE_URL + "/practice/submit",
+  RUN_CODE_API: BASE_URL + "/practice/code/run",
   GET_USER_ATTEMPTS: BASE_URL + "/practice/attempts",
   GET_ATTEMPT_DETAILS: BASE_URL + "/practice/attempts/",
   GET_PRACTICE_CATEGORIES: BASE_URL + "/practice/categories",

@@ -58,7 +58,17 @@ export default function TestBuilderWizard({
       { optionText: '', isCorrect: true },
       { optionText: '', isCorrect: false }
     ],
-    codingDetails: { language: 'javascript', problemStatement: '', starterCode: '', testCases: '' },
+    codingDetails: {
+      problemStatement: '',
+      inputFormat: '',
+      outputFormat: '',
+      constraints: '',
+      language: 'python',
+      starterCode: 'def solve():\n    # Write your solution here\n    pass',
+      testCases: [
+        { input: '', expectedOutput: '', isHidden: false }
+      ]
+    },
     interviewDetails: { expectedAnswer: '', keyPoints: '' }
   });
 
@@ -868,6 +878,203 @@ export default function TestBuilderWizard({
                       )}
                     </div>
                   ))}
+                </div>
+              )}
+
+              {/* CODING PROBLEM BUILDER */}
+              {qForm.type === 'Coding' && (
+                <div className="space-y-4 pt-2 border-t border-[#2C333F]">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-bold text-yellow-400 text-xs">💻 Coding Problem Details</h4>
+                    <div>
+                      <label className="text-slate-300 text-[11px] font-semibold mr-2">Language:</label>
+                      <select
+                        value={qForm.codingDetails?.language || 'python'}
+                        onChange={(e) => setQForm({
+                          ...qForm,
+                          codingDetails: { ...qForm.codingDetails, language: e.target.value }
+                        })}
+                        className="bg-[#090D16] border border-[#2C333F] rounded-lg p-1.5 text-white text-xs"
+                      >
+                        <option value="python">Python</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="cpp">C++</option>
+                        <option value="java">Java</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-300 font-semibold mb-1">Problem Statement *</label>
+                    <textarea
+                      rows={3}
+                      value={qForm.codingDetails?.problemStatement || ''}
+                      onChange={(e) => setQForm({
+                        ...qForm,
+                        codingDetails: { ...qForm.codingDetails, problemStatement: e.target.value }
+                      })}
+                      placeholder="Describe the coding challenge..."
+                      className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-white outline-none focus:border-[#FFD60A]"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-slate-300 font-semibold mb-1">Input Format</label>
+                      <textarea
+                        rows={2}
+                        value={qForm.codingDetails?.inputFormat || ''}
+                        onChange={(e) => setQForm({
+                          ...qForm,
+                          codingDetails: { ...qForm.codingDetails, inputFormat: e.target.value }
+                        })}
+                        placeholder="e.g. Two space-separated integers A and B"
+                        className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2 text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-slate-300 font-semibold mb-1">Output Format</label>
+                      <textarea
+                        rows={2}
+                        value={qForm.codingDetails?.outputFormat || ''}
+                        onChange={(e) => setQForm({
+                          ...qForm,
+                          codingDetails: { ...qForm.codingDetails, outputFormat: e.target.value }
+                        })}
+                        placeholder="e.g. Single integer representing sum"
+                        className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2 text-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-300 font-semibold mb-1">Constraints</label>
+                    <input
+                      type="text"
+                      value={qForm.codingDetails?.constraints || ''}
+                      onChange={(e) => setQForm({
+                        ...qForm,
+                        codingDetails: { ...qForm.codingDetails, constraints: e.target.value }
+                      })}
+                      placeholder="e.g. 1 <= N <= 10^5"
+                      className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2 text-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-300 font-semibold mb-1">Starter Code / Boilerplate</label>
+                    <textarea
+                      rows={4}
+                      value={qForm.codingDetails?.starterCode || ''}
+                      onChange={(e) => setQForm({
+                        ...qForm,
+                        codingDetails: { ...qForm.codingDetails, starterCode: e.target.value }
+                      })}
+                      placeholder="Provide starter code function..."
+                      className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 font-mono text-xs text-emerald-400 outline-none"
+                    />
+                  </div>
+
+                  {/* TEST CASES SECTION */}
+                  <div className="space-y-3 pt-2 border-t border-[#2C333F]">
+                    <div className="flex items-center justify-between">
+                      <label className="block text-slate-300 font-semibold">Test Cases ({qForm.codingDetails?.testCases?.length || 0})</label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const currentCases = qForm.codingDetails?.testCases || [];
+                          setQForm({
+                            ...qForm,
+                            codingDetails: {
+                              ...qForm.codingDetails,
+                              testCases: [...currentCases, { input: '', expectedOutput: '', isHidden: false }]
+                            }
+                          });
+                        }}
+                        className="text-yellow-400 font-bold text-xs hover:underline"
+                      >
+                        + Add Test Case
+                      </button>
+                    </div>
+
+                    {(qForm.codingDetails?.testCases || []).map((tc, idx) => (
+                      <div key={idx} className="bg-[#090D16] border border-[#2C333F] rounded-xl p-3 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-slate-400 text-[11px]">Test Case #{idx + 1}</span>
+                          <div className="flex items-center gap-3">
+                            <label className="flex items-center gap-1 text-[11px] text-slate-300 cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={!!tc.isHidden}
+                                onChange={(e) => {
+                                  const updatedCases = [...qForm.codingDetails.testCases];
+                                  updatedCases[idx].isHidden = e.target.checked;
+                                  setQForm({
+                                    ...qForm,
+                                    codingDetails: { ...qForm.codingDetails, testCases: updatedCases }
+                                  });
+                                }}
+                                className="accent-yellow-400"
+                              />
+                              Hidden Test Case
+                            </label>
+                            {qForm.codingDetails.testCases.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const updatedCases = qForm.codingDetails.testCases.filter((_, i) => i !== idx);
+                                  setQForm({
+                                    ...qForm,
+                                    codingDetails: { ...qForm.codingDetails, testCases: updatedCases }
+                                  });
+                                }}
+                                className="text-red-400 hover:text-red-300 text-[11px]"
+                              >
+                                Delete
+                              </button>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <span className="block text-[10px] text-slate-400 mb-1">Input</span>
+                            <textarea
+                              rows={2}
+                              value={tc.input}
+                              onChange={(e) => {
+                                const updatedCases = [...qForm.codingDetails.testCases];
+                                updatedCases[idx].input = e.target.value;
+                                setQForm({
+                                  ...qForm,
+                                  codingDetails: { ...qForm.codingDetails, testCases: updatedCases }
+                                });
+                              }}
+                              placeholder="Input data"
+                              className="w-full bg-[#161D29] border border-[#2C333F] rounded-lg p-2 font-mono text-[11px] text-white"
+                            />
+                          </div>
+                          <div>
+                            <span className="block text-[10px] text-slate-400 mb-1">Expected Output</span>
+                            <textarea
+                              rows={2}
+                              value={tc.expectedOutput}
+                              onChange={(e) => {
+                                const updatedCases = [...qForm.codingDetails.testCases];
+                                updatedCases[idx].expectedOutput = e.target.value;
+                                setQForm({
+                                  ...qForm,
+                                  codingDetails: { ...qForm.codingDetails, testCases: updatedCases }
+                                });
+                              }}
+                              placeholder="Expected output"
+                              className="w-full bg-[#161D29] border border-[#2C333F] rounded-lg p-2 font-mono text-[11px] text-white"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
 
