@@ -65,7 +65,7 @@ export default function UpdatePassword() {
             </span>
 
             {errors.oldPassword && (
-              <span className="text-xs text-pink-400">
+              <span className="text-xs text-blue-400">
                 Please enter your current password.
               </span>
             )}
@@ -80,7 +80,7 @@ export default function UpdatePassword() {
             <input
               type={showNewPassword ? "text" : "password"}
               placeholder="Enter New Password"
-              className="rounded-lg border border-richblack-600 bg-richblack-800 px-4 py-3 text-white focus:ring-2 focus:ring-purple-500 outline-none transition-all"
+              className="rounded-lg border border-richblack-600 bg-richblack-800 px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
               {...register("newPassword", { required: true })}
             />
 
@@ -96,7 +96,7 @@ export default function UpdatePassword() {
             </span>
 
             {errors.newPassword && (
-              <span className="text-xs text-pink-400">
+              <span className="text-xs text-blue-400">
                 Please enter your new password.
               </span>
             )}

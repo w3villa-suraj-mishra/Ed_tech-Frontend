@@ -66,7 +66,7 @@ export default function Upload({
   return (
     <div className="flex flex-col space-y-2">
       <label className="text-sm text-richblack-5" htmlFor={name}>
-        {label} {!viewData && <sup className="text-pink-200">*</sup>}
+        {label} {!viewData && <sup className="text-blue-200">*</sup>}
       </label>
       <div
         {...getRootProps()}
@@ -119,7 +119,7 @@ export default function Upload({
         )}
       </div>
       {errors[name] && (
-        <span className="ml-2 text-xs tracking-wide text-pink-200">
+        <span className="ml-2 text-xs tracking-wide text-blue-200">
           {label} is required
         </span>
       )}

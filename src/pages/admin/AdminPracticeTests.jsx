@@ -94,7 +94,7 @@ function AdminPracticeTestsInner() {
                   <tr key={t.id} className="hover:bg-[#1f2736]">
                     <td className="px-5 py-4 font-bold">{t.title}</td>
                     <td className="px-5 py-4">
-                      <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-purple-500/20 text-purple-400">
+                      <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-blue-500/20 text-blue-400">
                         {t.testType}
                       </span>
                     </td>

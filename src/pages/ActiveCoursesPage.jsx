@@ -64,7 +64,7 @@ const ActiveCoursesPage = () => {
         {/* DYNAMIC USER / BRAND LOGO ICON */}
         <button
           onClick={() => navigate("/")}
-          className="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white font-bold text-xs shadow-md mb-8 overflow-hidden cursor-pointer hover:scale-105 transition-transform"
+          className="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-600 to-blue-500 flex items-center justify-center text-white font-bold text-xs shadow-md mb-8 overflow-hidden cursor-pointer hover:scale-105 transition-transform"
           title="Go to Homepage"
         >
           {user?.image ? (

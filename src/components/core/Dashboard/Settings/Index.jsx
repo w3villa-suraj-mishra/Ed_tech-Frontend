@@ -191,13 +191,13 @@ export default function Settings() {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 text-xs font-bold transition-all relative pb-2 whitespace-nowrap ${
-                activeTab === tab.id ? "text-purple-400" : "text-richblack-400 hover:text-white"
+                activeTab === tab.id ? "text-blue-400" : "text-richblack-400 hover:text-white"
               }`}
             >
               <Icon className="text-sm" />
               <span>{tab.label}</span>
               {activeTab === tab.id && (
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-500 rounded-full shadow-[0_0_8px_#a855f7]" />
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]" />
               )}
             </button>
           );
@@ -205,9 +205,9 @@ export default function Settings() {
       </div>
 
       {/* 3. PROFILE PICTURE CARD */}
-      <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-6 shadow-[0_0_20px_rgba(168,85,247,0.08)] flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-6 shadow-[0_0_20px_rgba(37, 99, 235,0.08)] flex flex-col sm:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-4">
-          <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-purple-500/40 bg-purple-900/30 shrink-0">
+          <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-blue-500/40 bg-blue-950/30 shrink-0">
             <img
               src={previewSource || user?.image}
               alt={user?.firstName}
@@ -217,7 +217,7 @@ export default function Settings() {
           <div>
             <h2 className="text-base font-bold text-white">{user?.firstName} {user?.lastName}</h2>
             <p className="text-xs text-richblack-300">{user?.email}</p>
-            <span className="inline-block mt-1 text-[10px] font-bold bg-purple-900/40 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-md">
+            <span className="inline-block mt-1 text-[10px] font-bold bg-blue-950/40 text-blue-300 border border-blue-500/30 px-2 py-0.5 rounded-md">
               {user?.accountType} Student
             </span>
           </div>
@@ -237,7 +237,7 @@ export default function Settings() {
                 setImageFile(null);
                 setPreviewSource(null);
               }}
-              className="px-4 py-2 rounded-xl bg-purple-900/30 border border-purple-500/20 text-purple-300 text-xs font-semibold hover:bg-purple-600 hover:text-white transition-all"
+              className="px-4 py-2 rounded-xl bg-blue-950/30 border border-blue-500/20 text-blue-300 text-xs font-semibold hover:bg-blue-600 hover:text-white transition-all"
             >
               Remove
             </button>
@@ -251,7 +251,7 @@ export default function Settings() {
               }
             }}
             disabled={loadingPic}
-            className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition-all shadow-[0_0_15px_rgba(168,85,247,0.3)] flex items-center gap-2"
+            className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-800 text-white text-xs font-bold transition-all shadow-[0_0_15px_rgba(37, 99, 235,0.3)] flex items-center gap-2"
           >
             <FiUpload className="text-sm" />
             <span>{loadingPic ? "Uploading..." : imageFile ? "Upload New" : "Select Image"}</span>
@@ -261,9 +261,9 @@ export default function Settings() {
 
       {/* 4. PROFILE INFORMATION FORM */}
       {(activeTab === "profile" || activeTab === "account") && (
-        <form onSubmit={handleSubmitProfile(submitProfileForm)} className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-6 space-y-6 shadow-[0_0_20px_rgba(168,85,247,0.08)]">
+        <form onSubmit={handleSubmitProfile(submitProfileForm)} className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-6 space-y-6 shadow-[0_0_20px_rgba(37, 99, 235,0.08)]">
           <div className="flex items-center gap-2 border-b border-white/10 pb-3">
-            <VscPerson className="text-purple-400 text-lg" />
+            <VscPerson className="text-blue-400 text-lg" />
             <h2 className="text-base font-bold text-white">Profile Information</h2>
           </div>
 
@@ -274,7 +274,7 @@ export default function Settings() {
                 type="text"
                 defaultValue={user?.firstName}
                 {...registerProfile("firstName", { required: true })}
-                className="w-full bg-[#141728] border border-purple-500/20 rounded-xl px-4 py-2.5 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-purple-500 transition-colors"
+                className="w-full bg-[#141728] border border-blue-500/20 rounded-xl px-4 py-2.5 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-blue-500 transition-colors"
               />
             </div>
 
@@ -284,7 +284,7 @@ export default function Settings() {
                 type="text"
                 defaultValue={user?.lastName}
                 {...registerProfile("lastName", { required: true })}
-                className="w-full bg-[#141728] border border-purple-500/20 rounded-xl px-4 py-2.5 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-purple-500 transition-colors"
+                className="w-full bg-[#141728] border border-blue-500/20 rounded-xl px-4 py-2.5 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-blue-500 transition-colors"
               />
             </div>
 
@@ -294,7 +294,7 @@ export default function Settings() {
                 type="date"
                 defaultValue={user?.additionalDetails?.dateOfBirth}
                 {...registerProfile("dateOfBirth")}
-                className="w-full bg-[#141728] border border-purple-500/20 rounded-xl px-4 py-2.5 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-purple-500 transition-colors"
+                className="w-full bg-[#141728] border border-blue-500/20 rounded-xl px-4 py-2.5 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-blue-500 transition-colors"
               />
             </div>
 
@@ -303,7 +303,7 @@ export default function Settings() {
               <select
                 defaultValue={user?.additionalDetails?.gender || "Male"}
                 {...registerProfile("gender")}
-                className="w-full bg-[#141728] border border-purple-500/20 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500 transition-colors"
+                className="w-full bg-[#141728] border border-blue-500/20 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 transition-colors"
               >
                 {genders.map((g) => (
                   <option key={g} value={g}>{g}</option>
@@ -318,7 +318,7 @@ export default function Settings() {
                 placeholder="+91 12345 67890"
                 defaultValue={user?.additionalDetails?.contactNumber}
                 {...registerProfile("contactNumber")}
-                className="w-full bg-[#141728] border border-purple-500/20 rounded-xl px-4 py-2.5 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-purple-500 transition-colors"
+                className="w-full bg-[#141728] border border-blue-500/20 rounded-xl px-4 py-2.5 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-blue-500 transition-colors"
               />
             </div>
 
@@ -329,7 +329,7 @@ export default function Settings() {
                 placeholder="Passionate learner exploring new technologies."
                 defaultValue={user?.additionalDetails?.about}
                 {...registerProfile("about")}
-                className="w-full bg-[#141728] border border-purple-500/20 rounded-xl px-4 py-2.5 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-purple-500 transition-colors"
+                className="w-full bg-[#141728] border border-blue-500/20 rounded-xl px-4 py-2.5 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-blue-500 transition-colors"
               />
             </div>
           </div>
@@ -337,7 +337,7 @@ export default function Settings() {
           {/* Address & Geolocation field matching screenshot */}
           <div className="space-y-2 pt-2">
             <label className="text-xs text-richblack-300 font-semibold flex items-center gap-1">
-              <VscLocation className="text-purple-400" />
+              <VscLocation className="text-blue-400" />
               <span>Address (Auto-suggest powered by LocationIQ)</span>
             </label>
 
@@ -347,13 +347,13 @@ export default function Settings() {
                 value={addressInput}
                 onChange={(e) => handleAddressChange(e.target.value)}
                 placeholder="Sector 63, Block A, Noida, Uttar Pradesh 201301, India"
-                className="w-full bg-[#141728] border border-purple-500/20 rounded-xl px-4 py-2.5 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-purple-500 transition-colors"
+                className="w-full bg-[#141728] border border-blue-500/20 rounded-xl px-4 py-2.5 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-blue-500 transition-colors"
               />
               <button
                 type="button"
                 onClick={handleUseCurrentLocation}
                 disabled={locating}
-                className="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl transition-all shrink-0 flex items-center justify-center gap-1.5 shadow-[0_0_12px_rgba(168,85,247,0.3)] disabled:opacity-50"
+                className="px-4 py-2.5 bg-blue-600 hover:bg-blue-800 text-white text-xs font-bold rounded-xl transition-all shrink-0 flex items-center justify-center gap-1.5 shadow-[0_0_12px_rgba(37, 99, 235,0.3)] disabled:opacity-50"
               >
                 <VscLocation />
                 <span>{locating ? "Locating..." : "Update Location"}</span>
@@ -361,7 +361,7 @@ export default function Settings() {
 
               {/* Suggestions Popup */}
               {suggestions.length > 0 && (
-                <div className="absolute top-full left-0 z-50 w-full mt-1 bg-[#141728] border border-purple-500/30 rounded-xl shadow-2xl overflow-hidden max-h-52 overflow-y-auto">
+                <div className="absolute top-full left-0 z-50 w-full mt-1 bg-[#141728] border border-blue-500/30 rounded-xl shadow-2xl overflow-hidden max-h-52 overflow-y-auto">
                   {suggestions.map((item, idx) => (
                     <div
                       key={idx}
@@ -370,7 +370,7 @@ export default function Settings() {
                         setCoordinates({ lat: item.lat, lon: item.lon });
                         setSuggestions([]);
                       }}
-                      className="p-3 text-xs text-richblack-200 hover:bg-purple-600 hover:text-white cursor-pointer border-b border-white/5 last:border-0 transition-colors"
+                      className="p-3 text-xs text-richblack-200 hover:bg-blue-600 hover:text-white cursor-pointer border-b border-white/5 last:border-0 transition-colors"
                     >
                       📍 {item.display_name}
                     </div>
@@ -390,7 +390,7 @@ export default function Settings() {
             </button>
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition-all shadow-[0_0_15px_rgba(168,85,247,0.3)]"
+              className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-800 text-white text-xs font-bold transition-all shadow-[0_0_15px_rgba(37, 99, 235,0.3)]"
             >
               Save Changes
             </button>
@@ -400,9 +400,9 @@ export default function Settings() {
 
       {/* 5. CHANGE PASSWORD SECTION */}
       {(activeTab === "security" || activeTab === "profile") && (
-        <form onSubmit={handleSubmitPassword(submitPasswordForm)} className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-6 space-y-6 shadow-[0_0_20px_rgba(168,85,247,0.08)]">
+        <form onSubmit={handleSubmitPassword(submitPasswordForm)} className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-6 space-y-6 shadow-[0_0_20px_rgba(37, 99, 235,0.08)]">
           <div className="flex items-center gap-2 border-b border-white/10 pb-3">
-            <VscLock className="text-purple-400 text-lg" />
+            <VscLock className="text-blue-400 text-lg" />
             <div>
               <h2 className="text-base font-bold text-white">Change Password</h2>
               <p className="text-[11px] text-richblack-400">Update your password to keep your account secure.</p>
@@ -416,7 +416,7 @@ export default function Settings() {
                 type={showOldPass ? "text" : "password"}
                 placeholder="Enter current password"
                 {...registerPassword("oldPassword", { required: true })}
-                className="w-full bg-[#141728] border border-purple-500/20 rounded-xl pl-4 pr-10 py-2.5 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-purple-500 transition-colors"
+                className="w-full bg-[#141728] border border-blue-500/20 rounded-xl pl-4 pr-10 py-2.5 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-blue-500 transition-colors"
               />
               <button
                 type="button"
@@ -433,7 +433,7 @@ export default function Settings() {
                 type={showNewPass ? "text" : "password"}
                 placeholder="Enter new password"
                 {...registerPassword("newPassword", { required: true })}
-                className="w-full bg-[#141728] border border-purple-500/20 rounded-xl pl-4 pr-10 py-2.5 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-purple-500 transition-colors"
+                className="w-full bg-[#141728] border border-blue-500/20 rounded-xl pl-4 pr-10 py-2.5 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-blue-500 transition-colors"
               />
               <button
                 type="button"
@@ -450,7 +450,7 @@ export default function Settings() {
                 type={showConfirmPass ? "text" : "password"}
                 placeholder="Confirm new password"
                 {...registerPassword("confirmNewPassword", { required: true })}
-                className="w-full bg-[#141728] border border-purple-500/20 rounded-xl pl-4 pr-10 py-2.5 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-purple-500 transition-colors"
+                className="w-full bg-[#141728] border border-blue-500/20 rounded-xl pl-4 pr-10 py-2.5 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-blue-500 transition-colors"
               />
               <button
                 type="button"
@@ -472,7 +472,7 @@ export default function Settings() {
             </button>
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition-all shadow-[0_0_15px_rgba(168,85,247,0.3)]"
+              className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-800 text-white text-xs font-bold transition-all shadow-[0_0_15px_rgba(37, 99, 235,0.3)]"
             >
               Update Password
             </button>
@@ -482,9 +482,9 @@ export default function Settings() {
 
       {/* 6. PREFERENCES SECTION */}
       {(activeTab === "preferences" || activeTab === "profile") && (
-        <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-6 space-y-6 shadow-[0_0_20px_rgba(168,85,247,0.08)]">
+        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-6 space-y-6 shadow-[0_0_20px_rgba(37, 99, 235,0.08)]">
           <div className="flex items-center gap-2 border-b border-white/10 pb-3">
-            <VscSettingsGear className="text-purple-400 text-lg" />
+            <VscSettingsGear className="text-blue-400 text-lg" />
             <h2 className="text-base font-bold text-white">Preferences</h2>
           </div>
 
@@ -500,7 +500,7 @@ export default function Settings() {
                 type="button"
                 onClick={() => setEmailNotifs(!emailNotifs)}
                 className={`w-11 h-6 rounded-full transition-colors relative p-0.5 ${
-                  emailNotifs ? "bg-purple-600" : "bg-richblack-700"
+                  emailNotifs ? "bg-blue-600" : "bg-richblack-700"
                 }`}
               >
                 <span className={`block w-5 h-5 rounded-full bg-white transition-transform ${
@@ -519,7 +519,7 @@ export default function Settings() {
                 type="button"
                 onClick={() => setMarketingEmails(!marketingEmails)}
                 className={`w-11 h-6 rounded-full transition-colors relative p-0.5 ${
-                  marketingEmails ? "bg-purple-600" : "bg-richblack-700"
+                  marketingEmails ? "bg-blue-600" : "bg-richblack-700"
                 }`}
               >
                 <span className={`block w-5 h-5 rounded-full bg-white transition-transform ${
@@ -538,7 +538,7 @@ export default function Settings() {
                 type="button"
                 onClick={() => setDarkMode(!darkMode)}
                 className={`w-11 h-6 rounded-full transition-colors relative p-0.5 ${
-                  darkMode ? "bg-purple-600" : "bg-richblack-700"
+                  darkMode ? "bg-blue-600" : "bg-richblack-700"
                 }`}
               >
                 <span className={`block w-5 h-5 rounded-full bg-white transition-transform ${
@@ -557,7 +557,7 @@ export default function Settings() {
                 type="button"
                 onClick={() => setCourseReminders(!courseReminders)}
                 className={`w-11 h-6 rounded-full transition-colors relative p-0.5 ${
-                  courseReminders ? "bg-purple-600" : "bg-richblack-700"
+                  courseReminders ? "bg-blue-600" : "bg-richblack-700"
                 }`}
               >
                 <span className={`block w-5 h-5 rounded-full bg-white transition-transform ${
@@ -572,21 +572,21 @@ export default function Settings() {
 
       {/* 7. BILLING & PLANS SECTION */}
       {activeTab === "billing" && (
-        <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-6 space-y-6 shadow-[0_0_20px_rgba(168,85,247,0.08)]">
+        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-6 space-y-6 shadow-[0_0_20px_rgba(37, 99, 235,0.08)]">
           <div className="flex items-center gap-2 border-b border-white/10 pb-3">
-            <VscCreditCard className="text-purple-400 text-lg" />
+            <VscCreditCard className="text-blue-400 text-lg" />
             <h2 className="text-base font-bold text-white">Billing & Plan</h2>
           </div>
 
-          <div className="p-5 rounded-xl bg-purple-900/20 border border-purple-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="p-5 rounded-xl bg-blue-950/20 border border-blue-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <span className="text-xs font-bold text-purple-300 block uppercase tracking-wider">Current Membership</span>
+              <span className="text-xs font-bold text-blue-300 block uppercase tracking-wider">Current Membership</span>
               <h3 className="text-lg font-extrabold text-white mt-1">CodeLearn Lifetime Access</h3>
               <p className="text-xs text-richblack-300">Unlimited course streaming and updates included.</p>
             </div>
             <button
               onClick={() => navigate("/dashboard/buy-courses")}
-              className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition-all shadow-[0_0_12px_rgba(168,85,247,0.3)] shrink-0"
+              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-800 text-white text-xs font-bold transition-all shadow-[0_0_12px_rgba(37, 99, 235,0.3)] shrink-0"
             >
               Browse More Courses
             </button>
@@ -618,7 +618,7 @@ export default function Settings() {
 
       {/* DELETE ACCOUNT CONFIRMATION MODAL */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-[#0B1120]lack/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-[#0e111f] border border-red-500/40 max-w-md w-full rounded-2xl p-6 text-white space-y-4 shadow-[0_0_30px_rgba(239,68,68,0.3)]">
             <div className="flex items-center gap-3 border-b border-white/10 pb-3">
               <div className="w-10 h-10 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center text-xl shrink-0">

@@ -59,7 +59,7 @@ const Reviewslider = () => {
             {/* Header */}
             <div className='mb-12'>
                 <h2 className='text-3xl sm:text-4xl font-extrabold tracking-tight text-white'>
-                    What Our <span className='text-[#a855f7]'>Learners</span> Say
+                    What Our <span className='text-[#3b82f6]'>Learners</span> Say
                 </h2>
                 <p className='text-xs sm:text-sm text-richblack-300 mt-2 font-medium'>
                     Real experiences from our amazing community
@@ -132,7 +132,7 @@ const Reviewslider = () => {
                                     aria-label={`Go to slide ${idx + 1}`}
                                     className={`h-2 rounded-full transition-all duration-300 ${
                                         currentSlide === idx
-                                            ? "w-7 bg-[#a855f7] shadow-[0_0_10px_rgba(168,85,247,0.8)]"
+                                            ? "w-7 bg-[#3b82f6] shadow-[0_0_10px_rgba(37, 99, 235,0.8)]"
                                             : "w-2.5 bg-richblack-600 hover:bg-richblack-400"
                                     }`}
                                 />
@@ -141,8 +141,8 @@ const Reviewslider = () => {
                     )}
                 </>
             ) : (
-                <div className='bg-[#111422]/90 border border-purple-500/20 rounded-3xl p-10 w-full max-w-full mx-auto flex flex-col items-center justify-center text-center shadow-[0_0_30px_rgba(168,85,247,0.1)] my-6'>
-                    <div className='w-16 h-16 rounded-2xl bg-purple-900/30 border border-purple-500/30 flex items-center justify-center text-purple-400 text-3xl mb-4 shadow-inner'>
+                <div className='bg-[#111422]/90 border border-blue-500/20 rounded-3xl p-10 w-full max-w-full mx-auto flex flex-col items-center justify-center text-center shadow-[0_0_30px_rgba(37, 99, 235,0.1)] my-6'>
+                    <div className='w-16 h-16 rounded-2xl bg-blue-950/30 border border-blue-500/30 flex items-center justify-center text-blue-400 text-3xl mb-4 shadow-inner'>
                         💬
                     </div>
                     <h3 className='text-xl sm:text-2xl font-extrabold text-white mb-2'>

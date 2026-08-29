@@ -332,7 +332,7 @@ const CourseTakePlayer = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(`/s/courses/${courseId}/take/pratice-test`)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white transition shadow-sm"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-blue-600 hover:bg-blue-800 text-white transition shadow-sm"
           >
             <span>🎯 Practice / Tests</span>
           </button>
@@ -548,7 +548,7 @@ const CourseTakePlayer = () => {
             </div>
           ) : currentLecture?.videoUrl ? (
             <div className="w-full max-w-5xl mx-auto px-4 md:px-8 py-4 flex items-center justify-center">
-              <div className="w-full bg-black rounded-xl overflow-hidden shadow-lg border border-slate-200 flex items-center justify-center">
+              <div className="w-full bg-[#0B1120]lack rounded-xl overflow-hidden shadow-lg border border-slate-200 flex items-center justify-center">
                 <video
                   key={currentLecture._id}
                   src={currentLecture.videoUrl}

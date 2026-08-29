@@ -69,12 +69,12 @@ const ContactUsForm = () => {
               type="text"
               id="firstname"
               placeholder="Enter first name"
-              className="w-full rounded-xl bg-[#0b0e1b] border border-white/10 pl-10 pr-4 py-3 text-xs sm:text-sm text-white placeholder-richblack-400 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
+              className="w-full rounded-xl bg-[#0b0e1b] border border-white/10 pl-10 pr-4 py-3 text-xs sm:text-sm text-white placeholder-richblack-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
               {...register("firstname", { required: true })}
             />
           </div>
           {errors.firstname && (
-            <span className="text-[11px] text-purple-400 mt-1">
+            <span className="text-[11px] text-blue-400 mt-1">
               Please enter your first name
             </span>
           )}
@@ -92,7 +92,7 @@ const ContactUsForm = () => {
               type="text"
               id="lastname"
               placeholder="Enter last name"
-              className="w-full rounded-xl bg-[#0b0e1b] border border-white/10 pl-10 pr-4 py-3 text-xs sm:text-sm text-white placeholder-richblack-400 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
+              className="w-full rounded-xl bg-[#0b0e1b] border border-white/10 pl-10 pr-4 py-3 text-xs sm:text-sm text-white placeholder-richblack-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
               {...register("lastname")}
             />
           </div>
@@ -112,12 +112,12 @@ const ContactUsForm = () => {
             type="email"
             id="email"
             placeholder="Enter your email address"
-            className="w-full rounded-xl bg-[#0b0e1b] border border-white/10 pl-10 pr-4 py-3 text-xs sm:text-sm text-white placeholder-richblack-400 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
+            className="w-full rounded-xl bg-[#0b0e1b] border border-white/10 pl-10 pr-4 py-3 text-xs sm:text-sm text-white placeholder-richblack-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
             {...register("email", { required: true })}
           />
         </div>
         {errors.email && (
-          <span className="text-[11px] text-purple-400 mt-1">
+          <span className="text-[11px] text-blue-400 mt-1">
             Please enter your email address
           </span>
         )}
@@ -130,7 +130,7 @@ const ContactUsForm = () => {
         </label>
         <select
           id="subject"
-          className="w-full rounded-xl bg-[#0b0e1b] border border-white/10 px-4 py-3 text-xs sm:text-sm text-white placeholder-richblack-400 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
+          className="w-full rounded-xl bg-[#0b0e1b] border border-white/10 px-4 py-3 text-xs sm:text-sm text-white placeholder-richblack-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
           {...register("subject")}
         >
           <option value="General Query" className="bg-[#0b0e1b] text-white">Select a subject</option>
@@ -150,11 +150,11 @@ const ContactUsForm = () => {
           id="message"
           rows="4"
           placeholder="Type your message here..."
-          className="w-full rounded-xl bg-[#0b0e1b] border border-white/10 px-4 py-3 text-xs sm:text-sm text-white placeholder-richblack-400 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all resize-none"
+          className="w-full rounded-xl bg-[#0b0e1b] border border-white/10 px-4 py-3 text-xs sm:text-sm text-white placeholder-richblack-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none"
           {...register("message", { required: true })}
         />
         {errors.message && (
-          <span className="text-[11px] text-purple-400 mt-1">
+          <span className="text-[11px] text-blue-400 mt-1">
             Please enter your message
           </span>
         )}
@@ -164,7 +164,7 @@ const ContactUsForm = () => {
       <button
         disabled={loading}
         type="submit"
-        className={`mt-2 w-full rounded-xl bg-gradient-to-r from-[#8b5cf6] via-[#6366f1] to-[#3b82f6] py-3.5 text-xs sm:text-sm font-bold text-white shadow-[0_4px_20px_rgba(139,92,246,0.4)] transition-all duration-300 hover:opacity-95 hover:shadow-[0_6px_25px_rgba(139,92,246,0.6)] flex items-center justify-center gap-2 ${
+        className={`mt-2 w-full rounded-xl bg-gradient-to-r from-[#2563eb] via-[#6366f1] to-[#3b82f6] py-3.5 text-xs sm:text-sm font-bold text-white shadow-[0_4px_20px_rgba(59, 130, 246,0.4)] transition-all duration-300 hover:opacity-95 hover:shadow-[0_6px_25px_rgba(59, 130, 246,0.6)] flex items-center justify-center gap-2 ${
           loading ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >

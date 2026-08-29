@@ -59,7 +59,7 @@ export default function ChipInput({
 
       {/* LABEL */}
       <label className="text-sm font-medium text-richblack-100">
-        {label} <sup className="text-pink-400">*</sup>
+        {label} <sup className="text-blue-400">*</sup>
       </label>
 
       {/* INPUT CONTAINER */}
@@ -75,7 +75,7 @@ export default function ChipInput({
             <button
               type="button"
               onClick={() => handleDeleteChip(index)}
-              className="rounded-full bg-black/20 p-1 hover:bg-black/40 transition"
+              className="rounded-full bg-[#0B1120]lack/20 p-1 hover:bg-[#0B1120]lack/40 transition"
             >
               <MdClose className="text-xs" />
             </button>
@@ -95,7 +95,7 @@ export default function ChipInput({
 
       {/* ERROR */}
       {errors[name] && (
-        <span className="text-xs text-pink-400">
+        <span className="text-xs text-blue-400">
           {label} is required
         </span>
       )}

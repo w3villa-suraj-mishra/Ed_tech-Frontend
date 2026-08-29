@@ -52,16 +52,16 @@ export default function CoursesTable({ courses, setCourses }) {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-8 px-5 py-3.5 bg-[#0c0e1a] rounded-2xl border border-purple-900/30 shadow-xl">
+      <div className="flex justify-between items-center mb-8 px-5 py-3.5 bg-[#0c0e1a] rounded-2xl border border-blue-950/30 shadow-xl">
         {/* "Select All" Checkbox */}
         <div className="flex items-center gap-3">
           <input
             type="checkbox"
             checked={selectAll}
             onChange={toggleSelectAll}
-            className="w-4 h-4 cursor-pointer accent-purple-500 rounded border-purple-900 focus:ring-0"
+            className="w-4 h-4 cursor-pointer accent-blue-500 rounded border-blue-950 focus:ring-0"
           />
-          <div className="text-xs font-bold text-purple-200 uppercase tracking-wider">
+          <div className="text-xs font-bold text-blue-200 uppercase tracking-wider">
             Select All
           </div>
         </div>
@@ -81,7 +81,7 @@ export default function CoursesTable({ courses, setCourses }) {
           }}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 ${
             loading || selectedCourses.length === 0
-              ? 'bg-purple-950/30 text-purple-400/40 cursor-not-allowed border border-purple-900/20'
+              ? 'bg-blue-950/30 text-blue-400/40 cursor-not-allowed border border-blue-950/20'
               : 'bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-950/50 active:scale-95'
           }`}
         >
@@ -92,17 +92,17 @@ export default function CoursesTable({ courses, setCourses }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-10">
         {courses?.length === 0 ? (
-          <div className="col-span-full py-16 flex flex-col items-center justify-center text-center space-y-3 bg-[#0c0e1a] border border-purple-900/30 rounded-2xl">
-            <div className="w-14 h-14 rounded-2xl bg-purple-900/20 flex items-center justify-center text-purple-400">
+          <div className="col-span-full py-16 flex flex-col items-center justify-center text-center space-y-3 bg-[#0c0e1a] border border-blue-950/30 rounded-2xl">
+            <div className="w-14 h-14 rounded-2xl bg-blue-950/20 flex items-center justify-center text-blue-400">
               <VscPlayCircle size={32} />
             </div>
             <h3 className="text-lg font-bold text-white">No Courses Created Yet</h3>
-            <p className="text-xs text-purple-300/60 max-w-sm">
+            <p className="text-xs text-blue-300/60 max-w-sm">
               You haven't created any courses. Click below to add your first course and start teaching!
             </p>
             <button
               onClick={() => navigate("/dashboard/add-course")}
-              className="mt-2 px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl transition"
+              className="mt-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-800 text-white text-xs font-bold rounded-xl transition"
             >
               Add New Course
             </button>
@@ -113,7 +113,7 @@ export default function CoursesTable({ courses, setCourses }) {
             return (
             <div
               key={courseId}
-              className="group flex flex-col bg-[#0c0e1a] border border-purple-900/30 rounded-2xl overflow-hidden hover:border-purple-500/40 transition-all duration-300 shadow-xl"
+              className="group flex flex-col bg-[#0c0e1a] border border-blue-950/30 rounded-2xl overflow-hidden hover:border-blue-500/40 transition-all duration-300 shadow-xl"
             >
               {/* CARD IMAGE */}
               <div className="relative aspect-video overflow-hidden">
@@ -123,7 +123,7 @@ export default function CoursesTable({ courses, setCourses }) {
                   onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/600x400/1e293b/a8b2d1?text=No+Image" }}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
+                <div className="absolute inset-0 bg-[#0B1120]lack/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
                   <button
                     disabled={loading}
                     onClick={() => navigate(`/courses/${courseId}`)}
@@ -153,7 +153,7 @@ export default function CoursesTable({ courses, setCourses }) {
                 {/* STATUS BADGE */}
                 <div className="absolute top-4 right-4">
                   {course.status === COURSE_STATUS.DRAFT ? (
-                    <span className="flex items-center gap-1.5 px-3 py-1 bg-pink-900/80 backdrop-blur-md text-pink-100 rounded-full text-xs font-semibold border border-pink-500/30">
+                    <span className="flex items-center gap-1.5 px-3 py-1 bg-blue-950/80 backdrop-blur-md text-blue-100 rounded-full text-xs font-semibold border border-blue-500/30">
                       <HiClock size={14} />
                       Draft
                     </span>
@@ -209,7 +209,7 @@ export default function CoursesTable({ courses, setCourses }) {
                           ₹{course?.pricing?.finalPrice || course?.price}
                         </span>
                         {course?.pricing?.discountPercentage > 0 && (
-                          <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-1.5 py-0.5 rounded">
+                          <span className="text-[10px] bg-[#0B1120]merald-500/20 text-emerald-400 font-bold px-1.5 py-0.5 rounded">
                             {course?.pricing?.discountPercentage}% OFF
                           </span>
                         )}
@@ -253,7 +253,7 @@ export default function CoursesTable({ courses, setCourses }) {
                           btn2Handler: () => setConfirmationModal(null),
                         })
                       }
-                      className="px-4 py-2.5 rounded-xl bg-richblack-700 text-pink-300 hover:bg-red-600 hover:text-white transition-all duration-300 flex items-center justify-center active:scale-95 border border-richblack-600"
+                      className="px-4 py-2.5 rounded-xl bg-richblack-700 text-blue-300 hover:bg-red-600 hover:text-white transition-all duration-300 flex items-center justify-center active:scale-95 border border-richblack-600"
                       title="Delete"
                     >
                       <RiDeleteBin6Line size={16} />

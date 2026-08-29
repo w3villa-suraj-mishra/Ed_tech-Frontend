@@ -109,7 +109,7 @@ const GlobalDashboard = () => {
     <div className="space-y-6 text-white pb-10">
       
       {/* 1. WELCOME BANNER SECTION */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#0e111f] border border-purple-500/20 rounded-2xl p-6 shadow-[0_0_20px_rgba(168,85,247,0.1)]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#0e111f] border border-blue-500/20 rounded-2xl p-6 shadow-[0_0_20px_rgba(37, 99, 235,0.1)]">
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2">
             Welcome back, {userName} <span className="animate-bounce inline-block">👋</span>
@@ -121,7 +121,7 @@ const GlobalDashboard = () => {
         <div className="flex items-center gap-3">
           <Link
             to="/courses"
-            className="px-4 py-2.5 rounded-xl bg-purple-600/20 text-purple-300 border border-purple-500/30 text-xs font-bold hover:bg-purple-600/30 transition-all flex items-center gap-2"
+            className="px-4 py-2.5 rounded-xl bg-blue-600/20 text-blue-300 border border-blue-500/30 text-xs font-bold hover:bg-blue-600/30 transition-all flex items-center gap-2"
           >
             <span>Explore Courses</span>
             <VscArrowRight />
@@ -133,12 +133,12 @@ const GlobalDashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         
         {/* Card 1: Enrolled Courses */}
-        <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-purple-500/40 transition-all">
+        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
           <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-8 h-8 rounded-xl bg-purple-900/30 text-purple-400 flex items-center justify-center text-base">
+            <div className="w-8 h-8 rounded-xl bg-blue-950/30 text-blue-400 flex items-center justify-center text-base">
               <VscBook />
             </div>
-            <span className="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-emerald-400 font-bold bg-[#0B1120]merald-500/10 px-2 py-0.5 rounded-full">
               Live
             </span>
           </div>
@@ -152,7 +152,7 @@ const GlobalDashboard = () => {
         </div>
 
         {/* Card 2: Hours Learned */}
-        <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-purple-500/40 transition-all">
+        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
           <div className="flex items-center justify-between text-richblack-400">
             <div className="w-8 h-8 rounded-xl bg-indigo-900/30 text-indigo-400 flex items-center justify-center text-base">
               <VscCoverage />
@@ -171,12 +171,12 @@ const GlobalDashboard = () => {
         </div>
 
         {/* Card 3: Lessons Completed */}
-        <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-purple-500/40 transition-all">
+        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
           <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-8 h-8 rounded-xl bg-emerald-900/30 text-emerald-400 flex items-center justify-center text-base">
+            <div className="w-8 h-8 rounded-xl bg-[#0B1120]merald-900/30 text-emerald-400 flex items-center justify-center text-base">
               <VscPass />
             </div>
-            <span className="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-emerald-400 font-bold bg-[#0B1120]merald-500/10 px-2 py-0.5 rounded-full">
               Total
             </span>
           </div>
@@ -190,7 +190,7 @@ const GlobalDashboard = () => {
         </div>
 
         {/* Card 4: Day Streak */}
-        <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-purple-500/40 transition-all">
+        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
           <div className="flex items-center justify-between text-richblack-400">
             <div className="w-8 h-8 rounded-xl bg-amber-900/30 text-amber-400 flex items-center justify-center text-base">
               <VscFlame />
@@ -209,12 +209,12 @@ const GlobalDashboard = () => {
         </div>
 
         {/* Card 5: Certificates Earned */}
-        <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-purple-500/40 transition-all">
+        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
           <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-8 h-8 rounded-xl bg-purple-900/30 text-purple-400 flex items-center justify-center text-base">
+            <div className="w-8 h-8 rounded-xl bg-blue-950/30 text-blue-400 flex items-center justify-center text-base">
               <AiOutlineTrophy />
             </div>
-            <span className="text-[10px] text-purple-400 font-bold bg-purple-500/10 px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-blue-400 font-bold bg-blue-500/10 px-2 py-0.5 rounded-full">
               Earned
             </span>
           </div>
@@ -222,7 +222,7 @@ const GlobalDashboard = () => {
             <span className="text-2xl font-extrabold text-white block">{certificatesEarned}</span>
             <span className="text-xs text-richblack-300 font-medium">Certificates Earned</span>
           </div>
-          <div className="mt-2 text-[10px] text-purple-400 font-medium flex items-center gap-1">
+          <div className="mt-2 text-[10px] text-blue-400 font-medium flex items-center gap-1">
             <span>↑ {certificatesEarned > 0 ? "100%" : "0%"} vs last month</span>
           </div>
         </div>
@@ -233,7 +233,7 @@ const GlobalDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* CONTINUE LEARNING SECTION */}
-        <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-5 flex flex-col justify-between">
+        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-5 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
               <h2 className="text-base font-bold text-white flex items-center gap-2">
@@ -241,7 +241,7 @@ const GlobalDashboard = () => {
               </h2>
               <Link
                 to="/dashboard/enrolled-courses"
-                className="text-xs font-semibold text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1"
+                className="text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1"
               >
                 <span>View All Courses</span>
                 <VscArrowRight />
@@ -257,7 +257,7 @@ const GlobalDashboard = () => {
                   return (
                     <div
                       key={course._id}
-                      className="p-3.5 rounded-xl bg-[#141728] border border-white/5 hover:border-purple-500/30 transition-all flex items-center justify-between gap-3 group"
+                      className="p-3.5 rounded-xl bg-[#141728] border border-white/5 hover:border-blue-500/30 transition-all flex items-center justify-between gap-3 group"
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <img
@@ -273,7 +273,7 @@ const GlobalDashboard = () => {
                           {/* Progress Bar Container */}
                           <div className="w-full bg-[#070913] h-1.5 rounded-full overflow-hidden mt-2 max-w-[180px]">
                             <div
-                              className="bg-gradient-to-r from-purple-500 to-indigo-500 h-full rounded-full transition-all duration-300"
+                              className="bg-gradient-to-r from-blue-500 to-indigo-500 h-full rounded-full transition-all duration-300"
                               style={{ width: `${progressPct}%` }}
                             />
                           </div>
@@ -285,7 +285,7 @@ const GlobalDashboard = () => {
 
                       <button
                         onClick={() => navigate(`/view-course/${course._id}`)}
-                        className="px-3 py-1.5 rounded-lg bg-purple-600/20 text-purple-300 border border-purple-500/30 text-xs font-bold hover:bg-purple-600 hover:text-white transition-all shrink-0 flex items-center gap-1"
+                        className="px-3 py-1.5 rounded-lg bg-blue-600/20 text-blue-300 border border-blue-500/30 text-xs font-bold hover:bg-blue-600 hover:text-white transition-all shrink-0 flex items-center gap-1"
                       >
                         <span>Continue</span>
                         <VscPlay className="text-[10px]" />
@@ -296,11 +296,11 @@ const GlobalDashboard = () => {
               </div>
             ) : (
               <div className="py-10 text-center text-richblack-400 space-y-3">
-                <VscBook className="text-3xl mx-auto text-purple-400/50" />
+                <VscBook className="text-3xl mx-auto text-blue-400/50" />
                 <p className="text-xs">You haven't enrolled in any courses yet.</p>
                 <Link
                   to="/courses"
-                  className="inline-block px-4 py-2 rounded-xl bg-purple-600 text-white text-xs font-bold hover:bg-purple-700 transition-all shadow-[0_0_12px_rgba(168,85,247,0.4)]"
+                  className="inline-block px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-800 transition-all shadow-[0_0_12px_rgba(37, 99, 235,0.4)]"
                 >
                   Explore Courses
                 </Link>
@@ -310,11 +310,11 @@ const GlobalDashboard = () => {
         </div>
 
         {/* LEARNING OVERVIEW SECTION */}
-        <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-5 flex flex-col justify-between">
+        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-5 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
               <h2 className="text-base font-bold text-white">Learning Overview</h2>
-              <span className="text-xs bg-purple-900/30 text-purple-300 border border-purple-500/30 px-2.5 py-1 rounded-full font-semibold">
+              <span className="text-xs bg-blue-950/30 text-blue-300 border border-blue-500/30 px-2.5 py-1 rounded-full font-semibold">
                 This Week
               </span>
             </div>
@@ -326,8 +326,8 @@ const GlobalDashboard = () => {
                 <svg className="absolute inset-0 w-full h-full p-2 pointer-events-none" preserveAspectRatio="none" viewBox="0 0 100 50">
                   <defs>
                     <linearGradient id="purpleGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#a855f7" stopOpacity="0.4" />
-                      <stop offset="100%" stopColor="#a855f7" stopOpacity="0.0" />
+                      <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.4" />
+                      <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
                     </linearGradient>
                   </defs>
                   {/* Dynamic path based on user completed lessons activity */}
@@ -335,12 +335,12 @@ const GlobalDashboard = () => {
                     <>
                       <path
                         d="M 0,45 Q 16,35 32,25 T 64,15 T 100,28 L 100,50 L 0,50 Z"
-                        fill="url(#purpleGrad)"
+                        fill="url(#blueGrad)"
                       />
                       <path
                         d="M 0,45 Q 16,35 32,25 T 64,15 T 100,28"
                         fill="none"
-                        stroke="#a855f7"
+                        stroke="#3b82f6"
                         strokeWidth="3"
                         strokeLinecap="round"
                       />
@@ -354,7 +354,7 @@ const GlobalDashboard = () => {
                       <path
                         d="M 0,45 Q 25,43 50,42 T 100,40"
                         fill="none"
-                        stroke="#a855f7"
+                        stroke="#3b82f6"
                         strokeWidth="2.5"
                         strokeDasharray="4 4"
                       />
@@ -371,13 +371,13 @@ const GlobalDashboard = () => {
                       <div
                         className={`w-3 h-3 rounded-full transition-all duration-300 ${
                           isToday
-                            ? 'bg-purple-400 ring-4 ring-purple-500/40 shadow-[0_0_12px_#a855f7] scale-125'
+                            ? 'bg-blue-400 ring-4 ring-blue-500/40 shadow-[0_0_12px_#3b82f6] scale-125'
                             : totalCompletedLessons > 0 && idx <= todayIndex
-                            ? 'bg-purple-500/80'
-                            : 'bg-purple-900/40'
+                            ? 'bg-blue-500/80'
+                            : 'bg-blue-950/40'
                         }`}
                       />
-                      <span className={`text-[10px] font-semibold ${isToday ? 'text-purple-300 font-bold' : 'text-richblack-400'}`}>
+                      <span className={`text-[10px] font-semibold ${isToday ? 'text-blue-300 font-bold' : 'text-richblack-400'}`}>
                         {day}
                       </span>
                     </div>
@@ -395,7 +395,7 @@ const GlobalDashboard = () => {
                 <div className="bg-[#0e111f] p-3 rounded-xl border border-white/5">
                   <span className="text-[10px] text-richblack-400 block font-medium">Lessons Completed</span>
                   <span className="text-sm font-black text-white">{totalCompletedLessons} Lessons</span>
-                  <span className="text-[9px] text-purple-400 block font-medium mt-0.5">↑ Completed</span>
+                  <span className="text-[9px] text-blue-400 block font-medium mt-0.5">↑ Completed</span>
                 </div>
               </div>
 
@@ -409,17 +409,17 @@ const GlobalDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* RECENT ACTIVITY */}
-        <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-5">
+        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-5">
           <div className="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
             <h2 className="text-base font-bold text-white">Recent Activity</h2>
-            <span className="text-xs text-purple-400 font-semibold">Live Logs</span>
+            <span className="text-xs text-blue-400 font-semibold">Live Logs</span>
           </div>
 
           <div className="space-y-3">
             {enrolledCourses.length > 0 ? (
               enrolledCourses.slice(0, 3).map((course, idx) => (
                 <div key={course._id || idx} className="flex items-center gap-3 p-3 rounded-xl bg-[#141728] border border-white/5">
-                  <div className="w-8 h-8 rounded-xl bg-purple-900/40 text-purple-400 flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-xl bg-blue-950/40 text-blue-400 flex items-center justify-center shrink-0">
                     <VscBook />
                   </div>
                   <div className="flex flex-col min-w-0 flex-1">
@@ -442,10 +442,10 @@ const GlobalDashboard = () => {
         </div>
 
         {/* CERTIFICATES & ACHIEVEMENTS */}
-        <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-5">
+        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-5">
           <div className="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
             <h2 className="text-base font-bold text-white">Certificates & Achievements</h2>
-            <span className="text-xs text-purple-400 font-semibold">
+            <span className="text-xs text-blue-400 font-semibold">
               {certificatesEarned} Earned
             </span>
           </div>
@@ -455,7 +455,7 @@ const GlobalDashboard = () => {
               {completedCoursesList.map((course) => (
                 <div key={course._id} className="flex items-center justify-between p-3 rounded-xl bg-[#141728] border border-white/5">
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-8 h-8 rounded-xl bg-emerald-900/40 text-emerald-400 flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-xl bg-[#0B1120]merald-900/40 text-emerald-400 flex items-center justify-center shrink-0">
                       <AiOutlineTrophy />
                     </div>
                     <div className="flex flex-col min-w-0">
@@ -467,7 +467,7 @@ const GlobalDashboard = () => {
                   </div>
                   <button
                     onClick={() => navigate(`/s/courses/${course._id}/certificate`)}
-                    className="px-3 py-1 rounded-lg bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold hover:bg-emerald-600 hover:text-white transition-all shrink-0"
+                    className="px-3 py-1 rounded-lg bg-[#0B1120]merald-600/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold hover:bg-[#0B1120]merald-600 hover:text-white transition-all shrink-0"
                   >
                     View
                   </button>
@@ -485,9 +485,9 @@ const GlobalDashboard = () => {
       </div>
 
       {/* 5. BOTTOM MOTIVATIONAL CTA BANNER */}
-      <div className="bg-gradient-to-r from-purple-900/50 via-[#141728] to-indigo-900/50 border border-purple-500/30 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-[0_0_30px_rgba(168,85,247,0.2)]">
+      <div className="bg-gradient-to-r from-blue-950/50 via-[#141728] to-indigo-900/50 border border-blue-500/30 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-[0_0_30px_rgba(37, 99, 235,0.2)]">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-purple-600/30 text-purple-300 border border-purple-500/40 flex items-center justify-center text-2xl shrink-0 shadow-[0_0_15px_rgba(168,85,247,0.3)]">
+          <div className="w-12 h-12 rounded-2xl bg-blue-600/30 text-blue-300 border border-blue-500/40 flex items-center justify-center text-2xl shrink-0 shadow-[0_0_15px_rgba(37, 99, 235,0.3)]">
             🚀
           </div>
           <div>
@@ -500,7 +500,7 @@ const GlobalDashboard = () => {
 
         <Link
           to="/courses"
-          className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs font-extrabold hover:opacity-95 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] text-center shrink-0 flex items-center justify-center gap-2"
+          className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-extrabold hover:opacity-95 transition-all shadow-[0_0_20px_rgba(37, 99, 235,0.4)] text-center shrink-0 flex items-center justify-center gap-2"
         >
           <span>Explore New Courses</span>
           <VscArrowRight />

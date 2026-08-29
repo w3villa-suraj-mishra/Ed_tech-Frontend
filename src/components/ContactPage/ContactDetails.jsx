@@ -43,10 +43,10 @@ const ContactDetails = () => {
         {waysToReach.map((item, index) => (
           <div
             key={index}
-            className="bg-[#0e111f]/90 border border-white/10 hover:border-purple-500/40 rounded-2xl p-4 sm:p-5 flex items-start justify-between gap-4 transition-all duration-300 group shadow-md"
+            className="bg-[#0e111f]/90 border border-white/10 hover:border-blue-500/40 rounded-2xl p-4 sm:p-5 flex items-start justify-between gap-4 transition-all duration-300 group shadow-md"
           >
             <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-xl bg-purple-900/30 border border-purple-500/30 flex items-center justify-center text-purple-400 text-base shrink-0 group-hover:scale-105 transition-transform">
+              <div className="w-10 h-10 rounded-xl bg-blue-950/30 border border-blue-500/30 flex items-center justify-center text-blue-400 text-base shrink-0 group-hover:scale-105 transition-transform">
                 {item.icon}
               </div>
               <div className="space-y-0.5">
@@ -56,13 +56,13 @@ const ContactDetails = () => {
                 <p className="text-xs text-richblack-400 font-normal">
                   {item.desc}
                 </p>
-                <div className="text-xs font-semibold text-purple-300 mt-1 truncate max-w-[220px] sm:max-w-[260px]">
+                <div className="text-xs font-semibold text-blue-300 mt-1 truncate max-w-[220px] sm:max-w-[260px]">
                   {item.value}
                 </div>
               </div>
             </div>
 
-            <span className="text-richblack-500 group-hover:text-purple-400 group-hover:translate-x-1 transition-all text-xs pt-1.5">
+            <span className="text-richblack-500 group-hover:text-blue-400 group-hover:translate-x-1 transition-all text-xs pt-1.5">
               <FaArrowRight />
             </span>
           </div>

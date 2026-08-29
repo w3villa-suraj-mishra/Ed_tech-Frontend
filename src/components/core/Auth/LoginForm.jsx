@@ -130,7 +130,7 @@ useEffect(() => {
       {/* Expanded Neon Background Blobs */}
       <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-200 rounded-full blur-[150px] opacity-[0.15] animate-pulse"></div>
       <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-yellow-50 rounded-full blur-[180px] opacity-[0.08]"></div>
-      <div className="absolute top-[20%] left-[10%] w-[300px] h-[300px] bg-purple-500 rounded-full blur-[120px] opacity-[0.05]"></div>
+      <div className="absolute top-[20%] left-[10%] w-[300px] h-[300px] bg-blue-500 rounded-full blur-[120px] opacity-[0.05]"></div>
 
       <div className="mx-auto flex w-11/12 max-w-[1160px] flex-col-reverse justify-between gap-y-12 py-12 md:flex-row md:gap-y-0 md:gap-x-12 relative z-10">
 
@@ -152,7 +152,7 @@ useEffect(() => {
           <form onSubmit={handleOnSubmit} className="flex w-full flex-col gap-y-4">
             <label className="w-full">
               <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-richblack-5">
-                Email Address <sup className="text-pink-200">*</sup>
+                Email Address <sup className="text-blue-200">*</sup>
               </p>
               <input
                 required
@@ -167,7 +167,7 @@ useEffect(() => {
 
             <label className="relative">
               <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-richblack-5">
-                Password <sup className="text-pink-200">*</sup>
+                Password <sup className="text-blue-200">*</sup>
               </p>
               <input
                 required

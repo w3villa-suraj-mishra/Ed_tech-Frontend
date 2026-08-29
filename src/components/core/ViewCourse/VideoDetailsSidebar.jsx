@@ -162,7 +162,7 @@ const VideoDetailsSidebar = ({ setReviewModal }) => {
                             {lecture.title}
                           </p>
                           {lecture.isFreeVideo && (
-                            <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded shrink-0">
+                            <span className="text-[10px] bg-[#0B1120]merald-500/20 text-emerald-400 px-1.5 py-0.5 rounded shrink-0">
                               Free
                             </span>
                           )}

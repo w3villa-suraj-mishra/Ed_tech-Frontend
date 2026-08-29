@@ -88,7 +88,7 @@ export default function Cart() {
         {cart.length > 0 && (
           <button
             onClick={() => dispatch(resetCart())}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-900/30 border border-purple-500/20 text-purple-300 text-xs font-semibold hover:bg-purple-600 hover:text-white transition-all self-start sm:self-auto"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-950/30 border border-blue-500/20 text-blue-300 text-xs font-semibold hover:bg-blue-600 hover:text-white transition-all self-start sm:self-auto"
           >
             <VscTrash /> Clear Cart
           </button>
@@ -96,7 +96,7 @@ export default function Cart() {
       </div>
 
       {cart.length > 0 && (
-        <div className="text-xs font-bold text-purple-400">
+        <div className="text-xs font-bold text-blue-400">
           {totalItems} Course{totalItems > 1 ? "s" : ""} in Cart
         </div>
       )}
@@ -121,10 +121,10 @@ export default function Cart() {
                 return (
                   <div
                     key={courseId}
-                    className="bg-[#0e111f] border border-purple-500/20 hover:border-purple-500/40 rounded-2xl p-4 sm:p-5 transition-all duration-300 shadow-[0_0_20px_rgba(168,85,247,0.08)] flex flex-col sm:flex-row items-start justify-between gap-4 relative group"
+                    className="bg-[#0e111f] border border-blue-500/20 hover:border-blue-500/40 rounded-2xl p-4 sm:p-5 transition-all duration-300 shadow-[0_0_20px_rgba(37, 99, 235,0.08)] flex flex-col sm:flex-row items-start justify-between gap-4 relative group"
                   >
                     {/* Course Thumbnail */}
-                    <div className="relative aspect-video w-full sm:w-44 rounded-xl overflow-hidden bg-purple-900/30 border border-purple-500/20 shrink-0">
+                    <div className="relative aspect-video w-full sm:w-44 rounded-xl overflow-hidden bg-blue-950/30 border border-blue-500/20 shrink-0">
                       <img
                         src={course.thumbnail}
                         alt={course.courseName}
@@ -135,7 +135,7 @@ export default function Cart() {
                     {/* Details Column */}
                     <div className="space-y-2 min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-extrabold uppercase bg-purple-900/40 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-md">
+                        <span className="text-[10px] font-extrabold uppercase bg-blue-950/40 text-blue-300 border border-blue-500/30 px-2 py-0.5 rounded-md">
                           BESTSELLER
                         </span>
                       </div>
@@ -184,7 +184,7 @@ export default function Cart() {
                         {itemDiscountPct > 0 && (
                           <div className="flex items-center gap-1.5 justify-end text-[11px]">
                             <span className="text-richblack-400 line-through">₹{origPrice.toLocaleString()}</span>
-                            <span className="bg-purple-900/40 text-purple-300 font-bold px-1.5 py-0.5 rounded text-[10px]">
+                            <span className="bg-blue-950/40 text-blue-300 font-bold px-1.5 py-0.5 rounded text-[10px]">
                               {itemDiscountPct}% OFF
                             </span>
                           </div>
@@ -198,9 +198,9 @@ export default function Cart() {
             </div>
 
             {/* SECURE CHECKOUT BADGE */}
-            <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-[0_0_15px_rgba(168,85,247,0.06)]">
+            <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-[0_0_15px_rgba(37, 99, 235,0.06)]">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-purple-900/30 text-purple-400 flex items-center justify-center text-lg shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-blue-950/30 text-blue-400 flex items-center justify-center text-lg shrink-0">
                   <VscLock />
                 </div>
                 <div>
@@ -210,10 +210,10 @@ export default function Cart() {
               </div>
 
               <div className="flex items-center gap-2 shrink-0">
-                <span className="bg-purple-900/30 border border-purple-500/20 text-purple-300 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
+                <span className="bg-blue-950/30 border border-blue-500/20 text-blue-300 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
                   🔒 SSL Secured
                 </span>
-                <span className="bg-emerald-900/30 border border-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
+                <span className="bg-[#0B1120]merald-900/30 border border-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
                   ✓ 100% Safe
                 </span>
               </div>
@@ -222,7 +222,7 @@ export default function Cart() {
           </div>
 
           {/* RIGHT COLUMN: ORDER SUMMARY */}
-          <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-6 space-y-6 shadow-[0_0_25px_rgba(168,85,247,0.1)] sticky top-6">
+          <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-6 space-y-6 shadow-[0_0_25px_rgba(37, 99, 235,0.1)] sticky top-6">
             <h2 className="text-lg font-bold text-white border-b border-white/10 pb-3">Order Summary</h2>
 
             <div className="space-y-4 text-xs">
@@ -277,19 +277,19 @@ export default function Cart() {
             {/* Guarantees List */}
             {/* <div className="border-t border-white/10 pt-4 space-y-2.5 text-xs text-richblack-300"> */}
               {/* <div className="flex items-center gap-2.5">
-                <span className="text-purple-400">♾️</span>
+                <span className="text-blue-400">♾️</span>
                 <span>Lifetime Access</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <VscDeviceMobile className="text-purple-400 text-sm" />
+                <VscDeviceMobile className="text-blue-400 text-sm" />
                 <span>Access on Mobile & TV</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <span className="text-purple-400">📜</span>
+                <span className="text-blue-400">📜</span>
                 <span>Certificate of Completion</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <span className="text-purple-400">🎧</span>
+                <span className="text-blue-400">🎧</span>
                 <span>24/7 Support</span> */}
               {/* </div> */}
             {/* </div> */}
@@ -299,15 +299,15 @@ export default function Cart() {
         </div>
       ) : (
         /* EMPTY CART STATE */
-        <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-12 text-center text-richblack-300 space-y-4 shadow-[0_0_20px_rgba(168,85,247,0.08)]">
-          <VscBook className="text-5xl mx-auto text-purple-400/40" />
+        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-12 text-center text-richblack-300 space-y-4 shadow-[0_0_20px_rgba(37, 99, 235,0.08)]">
+          <VscBook className="text-5xl mx-auto text-blue-400/40" />
           <h3 className="text-lg font-bold text-white">Your cart is empty</h3>
           <p className="text-xs text-richblack-400 max-w-sm mx-auto">
             Looks like you haven't added any courses to your cart yet. Explore our top courses and start learning today.
           </p>
           <button
             onClick={() => navigate("/dashboard/buy-courses")}
-            className="px-6 py-3 rounded-xl bg-purple-600 text-white text-xs font-bold hover:bg-purple-700 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] inline-flex items-center gap-2 mt-2"
+            className="px-6 py-3 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-800 transition-all shadow-[0_0_20px_rgba(37, 99, 235,0.4)] inline-flex items-center gap-2 mt-2"
           >
             <span>Explore Courses</span>
             <VscArrowRight />
@@ -329,10 +329,10 @@ export default function Cart() {
               return (
                 <div
                   key={courseId}
-                  className="bg-[#0e111f] border border-purple-500/20 hover:border-purple-500/40 rounded-2xl overflow-hidden transition-all duration-300 shadow-[0_0_15px_rgba(168,85,247,0.06)] flex flex-col justify-between group"
+                  className="bg-[#0e111f] border border-blue-500/20 hover:border-blue-500/40 rounded-2xl overflow-hidden transition-all duration-300 shadow-[0_0_15px_rgba(37, 99, 235,0.06)] flex flex-col justify-between group"
                 >
                   <div>
-                    <div className="relative aspect-video w-full overflow-hidden bg-purple-900/30">
+                    <div className="relative aspect-video w-full overflow-hidden bg-blue-950/30">
                       <img
                         src={course.thumbnail}
                         alt={course.courseName}
@@ -340,7 +340,7 @@ export default function Cart() {
                       />
                       <button
                         onClick={() => dispatch(addToCart(course))}
-                        className="absolute top-3 right-3 p-2 rounded-xl bg-black/60 text-white hover:text-purple-400 backdrop-blur-sm transition-colors"
+                        className="absolute top-3 right-3 p-2 rounded-xl bg-[#0B1120]lack/60 text-white hover:text-blue-400 backdrop-blur-sm transition-colors"
                         title="Add to Cart"
                       >
                         <VscHeart />
@@ -348,7 +348,7 @@ export default function Cart() {
                     </div>
 
                     <div className="p-4 space-y-2">
-                      <h3 className="font-bold text-sm text-white line-clamp-1 group-hover:text-purple-300 transition-colors">
+                      <h3 className="font-bold text-sm text-white line-clamp-1 group-hover:text-blue-300 transition-colors">
                         {course.courseName}
                       </h3>
                       <p className="text-xs text-richblack-400 line-clamp-2 leading-relaxed">
@@ -368,7 +368,7 @@ export default function Cart() {
                       <span className="text-sm font-extrabold text-white">₹{price.toLocaleString()}</span>
                       <button
                         onClick={() => navigate(`/courses/${courseId}`)}
-                        className="px-3 py-1.5 rounded-lg bg-purple-600/20 text-purple-300 border border-purple-500/30 text-[11px] font-bold hover:bg-purple-600 hover:text-white transition-all"
+                        className="px-3 py-1.5 rounded-lg bg-blue-600/20 text-blue-300 border border-blue-500/30 text-[11px] font-bold hover:bg-blue-600 hover:text-white transition-all"
                       >
                         View
                       </button>

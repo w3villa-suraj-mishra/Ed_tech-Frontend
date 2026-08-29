@@ -106,7 +106,7 @@ export default function TopicPractice() {
         {/* Header & Filter Card */}
         <div className="bg-[#111422] border border-white/10 rounded-2xl p-6 space-y-4">
           <div className="flex items-center gap-3">
-            <FaFilter className="text-[#a855f7] text-xl" />
+            <FaFilter className="text-[#3b82f6] text-xl" />
             <div>
               <h1 className="text-xl font-bold text-white">Topic Practice</h1>
               <p className="text-xs text-richblack-300">Select Category → Topic → Difficulty to start practicing free</p>
@@ -119,7 +119,7 @@ export default function TopicPractice() {
               <select
                 value={selectedCategory}
                 onChange={(e) => { setSelectedCategory(e.target.value); setSelectedTopic(''); }}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#a855f7]"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#3b82f6]"
               >
                 <option value="" className="bg-[#111422]">All Categories</option>
                 {categories.map(c => <option key={c.id} value={c.id} className="bg-[#111422]">{c.name}</option>)}
@@ -131,7 +131,7 @@ export default function TopicPractice() {
               <select
                 value={selectedTopic}
                 onChange={(e) => setSelectedTopic(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#a855f7]"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#3b82f6]"
               >
                 <option value="" className="bg-[#111422]">All Topics</option>
                 {selectedCategoryObj?.topics?.map(t => (
@@ -145,7 +145,7 @@ export default function TopicPractice() {
               <select
                 value={selectedDifficulty}
                 onChange={(e) => setSelectedDifficulty(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#a855f7]"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#3b82f6]"
               >
                 <option value="Easy" className="bg-[#111422]">Easy</option>
                 <option value="Medium" className="bg-[#111422]">Medium</option>
@@ -156,7 +156,7 @@ export default function TopicPractice() {
 
           <button
             onClick={handleFetchQuestions}
-            className="w-full py-2.5 bg-[#a855f7] hover:bg-[#9333ea] text-white text-xs font-bold rounded-xl transition-all shadow-md"
+            className="w-full py-2.5 bg-[#3b82f6] hover:bg-[#1d4ed8] text-white text-xs font-bold rounded-xl transition-all shadow-md"
           >
             Load Questions
           </button>
@@ -164,7 +164,7 @@ export default function TopicPractice() {
 
         {/* RESULT VIEW */}
         {result ? (
-          <div className="bg-[#111422] border border-purple-500/30 rounded-3xl p-8 text-center space-y-6">
+          <div className="bg-[#111422] border border-blue-500/30 rounded-3xl p-8 text-center space-y-6">
             <h2 className="text-2xl font-bold">Practice Completed!</h2>
             <div className="grid grid-cols-3 gap-4">
               <div className="bg-white/5 p-4 rounded-2xl"><span className="block text-xs text-richblack-300">Score</span><span className="text-lg font-black text-[#FFD60A]">{result.score}</span></div>
@@ -173,7 +173,7 @@ export default function TopicPractice() {
             </div>
             <button
               onClick={() => handleFetchQuestions()}
-              className="px-6 py-2.5 bg-[#a855f7] text-white font-bold text-xs rounded-xl"
+              className="px-6 py-2.5 bg-[#3b82f6] text-white font-bold text-xs rounded-xl"
             >
               Practice More
             </button>
@@ -183,7 +183,7 @@ export default function TopicPractice() {
             <div className="bg-[#111422] border border-white/10 rounded-2xl p-6 space-y-6">
               <div className="flex justify-between items-center text-xs text-richblack-300">
                 <span>Question {currentIndex + 1} of {questions.length}</span>
-                <span className="font-bold text-[#a855f7]">{questions[currentIndex].difficulty}</span>
+                <span className="font-bold text-[#3b82f6]">{questions[currentIndex].difficulty}</span>
               </div>
 
               <h2 className="text-lg font-bold">{questions[currentIndex].title}</h2>
@@ -196,7 +196,7 @@ export default function TopicPractice() {
                       key={opt.id}
                       onClick={() => handleSelectOption(questions[currentIndex].id, opt.id)}
                       className={`p-4 rounded-xl border cursor-pointer ${
-                        isSelected ? 'bg-[#a855f7]/20 border-[#a855f7] text-white font-bold' : 'bg-white/5 border-white/10 text-richblack-200'
+                        isSelected ? 'bg-[#3b82f6]/20 border-[#3b82f6] text-white font-bold' : 'bg-white/5 border-white/10 text-richblack-200'
                       }`}
                     >
                       {opt.optionText}
@@ -216,7 +216,7 @@ export default function TopicPractice() {
                 {currentIndex < questions.length - 1 ? (
                   <button
                     onClick={() => setCurrentIndex(prev => prev + 1)}
-                    className="px-5 py-2 bg-[#a855f7] text-white font-bold text-xs rounded-xl"
+                    className="px-5 py-2 bg-[#3b82f6] text-white font-bold text-xs rounded-xl"
                   >
                     Next
                   </button>

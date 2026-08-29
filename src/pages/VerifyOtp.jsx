@@ -208,7 +208,7 @@ function VerifyOtp() {
   return (
     <div className="min-h-[calc(100vh-3.5rem)] grid place-items-center bg-[#070913] relative overflow-hidden font-['Inter',sans-serif] px-4">
       {/* Glow Effects */}
-      <div className="absolute top-[-10%] left-[-10%] w-[450px] h-[450px] bg-purple-600 rounded-full blur-[160px] opacity-[0.15] animate-pulse"></div>
+      <div className="absolute top-[-10%] left-[-10%] w-[450px] h-[450px] bg-blue-600 rounded-full blur-[160px] opacity-[0.15] animate-pulse"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[450px] h-[450px] bg-yellow-500 rounded-full blur-[160px] opacity-[0.08]"></div>
 
       {loading ? (
@@ -217,7 +217,7 @@ function VerifyOtp() {
           <p className="text-richblack-25 text-base font-semibold animate-pulse">Creating your account...</p>
         </div>
       ) : (
-        <div className="max-w-[460px] w-full p-8 rounded-3xl bg-[#0c0e1a] border border-purple-900/40 shadow-2xl relative z-10 space-y-6">
+        <div className="max-w-[460px] w-full p-8 rounded-3xl bg-[#0c0e1a] border border-blue-950/40 shadow-2xl relative z-10 space-y-6">
           
           {/* Header */}
           <div className="space-y-2">
@@ -230,8 +230,8 @@ function VerifyOtp() {
             
             {/* DYNAMIC REGISTERED EMAIL DISPLAY BADGE */}
             {signupData?.email && (
-              <div className="inline-flex items-center gap-2 bg-purple-950/60 border border-purple-500/30 px-3.5 py-1.5 rounded-xl text-yellow-50 text-xs sm:text-sm font-semibold mt-1">
-                <HiOutlineMail className="text-purple-400 text-base shrink-0" />
+              <div className="inline-flex items-center gap-2 bg-blue-950/60 border border-blue-500/30 px-3.5 py-1.5 rounded-xl text-yellow-50 text-xs sm:text-sm font-semibold mt-1">
+                <HiOutlineMail className="text-blue-400 text-base shrink-0" />
                 <span className="truncate max-w-[280px]">{signupData.email}</span>
               </div>
             )}
@@ -254,7 +254,7 @@ function VerifyOtp() {
                   style={{
                     boxShadow: "inset 0px -1px 0px rgba(255, 255, 255, 0.18)",
                   }}
-                  className="w-[45px] sm:w-[54px] h-[52px] sm:h-[60px] border border-purple-900/50 bg-[#121526] rounded-xl text-white text-xl font-bold text-center focus:border-yellow-50 focus:outline-none transition-all shadow-inner"
+                  className="w-[45px] sm:w-[54px] h-[52px] sm:h-[60px] border border-blue-950/50 bg-[#121526] rounded-xl text-white text-xl font-bold text-center focus:border-yellow-50 focus:outline-none transition-all shadow-inner"
                 />
               ))}
             </div>
@@ -269,7 +269,7 @@ function VerifyOtp() {
           </form>
 
           {/* Footer Actions */}
-          <div className="pt-2 border-t border-purple-900/30 flex items-center justify-between text-xs sm:text-sm">
+          <div className="pt-2 border-t border-blue-950/30 flex items-center justify-between text-xs sm:text-sm">
             <Link to="/signup">
               <span className="text-richblack-200 flex items-center gap-x-1.5 hover:text-white transition-all font-medium">
                 <BiArrowBack className="text-base" /> Back To Signup

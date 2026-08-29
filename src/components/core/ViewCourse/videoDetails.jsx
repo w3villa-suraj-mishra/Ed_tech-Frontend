@@ -186,7 +186,7 @@ const VideoDetails = () => {
       </div>
 
       {/* VIDEO PLAYER AREA */}
-      <div className="relative w-full bg-black h-[70vh] overflow-hidden group border-b border-white/5">
+      <div className="relative w-full bg-[#0B1120]lack h-[70vh] overflow-hidden group border-b border-white/5">
         {videoLoading && !videoError && (
           <div className="absolute inset-0 z-10 flex items-center justify-center bg-richblack-900/50 backdrop-blur-sm">
             <div className="w-12 h-12 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin" />
@@ -245,7 +245,7 @@ const VideoDetails = () => {
 
         {/* AUTOPLAY OVERLAY */}
         {videoEnded && autoplay && !isLastVideo() && countdown > 0 && (
-          <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
+          <div className="absolute inset-0 bg-[#0B1120]lack/70 flex items-center justify-center">
             <div className="text-center space-y-4">
               <div className="w-16 h-16 rounded-full border-4 border-yellow-400 flex items-center justify-center mx-auto text-white text-2xl font-bold animate-pulse">
                 {countdown}
@@ -301,7 +301,7 @@ const VideoDetails = () => {
               <BsCheckCircleFill /> Mark Done
             </button>
           ) : (
-            <span className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500/10 text-emerald-400 text-sm font-semibold border border-emerald-500/20">
+            <span className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#0B1120]merald-500/10 text-emerald-400 text-sm font-semibold border border-emerald-500/20">
               <BsCheckCircleFill /> Completed
             </span>
           )}

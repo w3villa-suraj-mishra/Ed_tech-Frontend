@@ -191,7 +191,7 @@ function ArticlesInner() {
                   <span
                     className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
                       art.published
-                        ? 'bg-emerald-500/20 text-emerald-400'
+                        ? 'bg-[#0B1120]merald-500/20 text-emerald-400'
                         : 'bg-amber-500/20 text-amber-400'
                     }`}
                   >

@@ -44,7 +44,7 @@ const RequirementField = ({ name, label, register, errors, setValue, getValues }
 
       {/* LABEL */}
       <label className="text-sm font-medium text-richblack-100">
-        {label} <sup className="text-pink-400">*</sup>
+        {label} <sup className="text-blue-400">*</sup>
       </label>
 
       {/* INPUT + BUTTON */}
@@ -83,7 +83,7 @@ const RequirementField = ({ name, label, register, errors, setValue, getValues }
               <button
                 type='button'
                 onClick={() => handleRemoveRequirement(index)}
-                className="text-xs text-pink-400 opacity-0 group-hover:opacity-100 transition hover:text-pink-300"
+                className="text-xs text-blue-400 opacity-0 group-hover:opacity-100 transition hover:text-blue-300"
               >
                 Remove
               </button>
@@ -95,7 +95,7 @@ const RequirementField = ({ name, label, register, errors, setValue, getValues }
 
       {/* ERROR */}
       {errors[name] && (
-        <span className="text-xs text-pink-400">
+        <span className="text-xs text-blue-400">
           {label} is required
         </span>
       )}

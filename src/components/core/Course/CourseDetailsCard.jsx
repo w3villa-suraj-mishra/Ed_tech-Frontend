@@ -82,7 +82,7 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
                   ₹ {course?.pricing?.finalPrice || CurrentPrice}
                 </span>
                 {course?.pricing?.discountPercentage > 0 && (
-                  <span className="text-xs bg-emerald-500/20 text-emerald-400 font-bold px-2.5 py-1 rounded-full">
+                  <span className="text-xs bg-[#0B1120]merald-500/20 text-emerald-400 font-bold px-2.5 py-1 rounded-full">
                     {course?.pricing?.discountPercentage}% OFF
                   </span>
                 )}
@@ -135,12 +135,12 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
                 
                 {/* FREE PLAN CARD */}
                 <div className={`p-3 rounded-xl border flex items-center justify-between transition-all ${
-                  userPlan === 'free' ? 'border-emerald-500/50 bg-emerald-950/20' : 'border-richblack-700 bg-richblack-900/60'
+                  userPlan === 'free' ? 'border-emerald-500/50 bg-[#0B1120]merald-950/20' : 'border-richblack-700 bg-richblack-900/60'
                 }`}>
                   <div>
                     <span className="font-bold text-white text-sm block flex items-center gap-1.5">
                       FREE
-                      {userPlan === 'free' && <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-1.5 py-0.2 rounded">✓ CURRENT</span>}
+                      {userPlan === 'free' && <span className="text-[10px] bg-[#0B1120]merald-500/20 text-emerald-400 font-bold px-1.5 py-0.2 rounded">✓ CURRENT</span>}
                     </span>
                     <span className="text-xs text-richblack-300">First 2 videos only</span>
                   </div>
@@ -148,7 +148,7 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
                     onClick={() => handleBuyCourse('free')}
                     disabled={userPlan === 'gold' || userPlan === 'silver'}
                     className={`px-3 py-1.5 rounded-lg font-medium text-xs transition ${
-                      userPlan === 'free' ? 'bg-emerald-600 text-white cursor-default' :
+                      userPlan === 'free' ? 'bg-[#0B1120]merald-600 text-white cursor-default' :
                       (userPlan === 'gold' || userPlan === 'silver') ? 'bg-richblack-800 text-richblack-500 cursor-not-allowed border border-richblack-700' :
                       'bg-richblack-700 hover:bg-richblack-600 text-white'
                     }`}
@@ -166,7 +166,7 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
                       <span className="font-bold text-blue-300 text-sm">SILVER</span>
                       <span className="text-[10px] bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded">1 Year</span>
                       {userPlan !== 'silver' && userPlan !== 'gold' && (
-                        <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">30% OFF</span>
+                        <span className="text-[10px] bg-[#0B1120]merald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">30% OFF</span>
                       )}
                     </div>
                     <span className="text-xs text-richblack-300 block">

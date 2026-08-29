@@ -153,7 +153,7 @@ export default function StudentCoursePracticePage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="px-3 py-1 bg-purple-50 text-purple-700 font-extrabold text-xs rounded-full border border-purple-200">
+          <span className="px-3 py-1 bg-blue-50 text-blue-800 font-extrabold text-xs rounded-full border border-blue-200">
             🎯 Course Tests
           </span>
         </div>
@@ -228,7 +228,7 @@ export default function StudentCoursePracticePage() {
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="px-2.5 py-1 rounded-md text-[10px] font-extrabold bg-purple-50 text-purple-700 border border-purple-200 uppercase tracking-wider">
+                      <span className="px-2.5 py-1 rounded-md text-[10px] font-extrabold bg-blue-50 text-blue-800 border border-blue-200 uppercase tracking-wider">
                         {test.testType || 'Course Test'}
                       </span>
                       <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1">

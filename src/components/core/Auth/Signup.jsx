@@ -119,7 +119,7 @@ function Signup() {
     <div className="min-h-[calc(100vh-4rem)] bg-[#070913] text-white font-inter py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center relative overflow-hidden">
       
       {/* Background Ambient Glows */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-600/10 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-600/10 blur-[150px] rounded-full pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[500px] h-[500px] bg-blue-600/10 blur-[150px] rounded-full pointer-events-none" />
 
       <div className="max-w-[1280px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center relative z-10">
@@ -131,10 +131,10 @@ function Signup() {
           <div className="mb-6">
             <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight flex items-center gap-2">
               <span>Create your account</span>
-              <span className="text-purple-400 text-2xl">✨</span>
+              <span className="text-blue-400 text-2xl">✨</span>
             </h1>
             <p className="text-slate-400 text-sm sm:text-base mt-2">
-              Join millions of learners and start your <span className="text-purple-400 font-semibold">coding</span> journey today.
+              Join millions of learners and start your <span className="text-blue-400 font-semibold">coding</span> journey today.
             </p>
           </div>
 
@@ -149,7 +149,7 @@ function Signup() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-200 mb-1.5">
-                  First Name <span className="text-purple-400">*</span>
+                  First Name <span className="text-blue-400">*</span>
                 </label>
                 <input
                   required
@@ -158,13 +158,13 @@ function Signup() {
                   value={firstName}
                   onChange={handleOnChange}
                   placeholder="Enter first name"
-                  className="w-full rounded-xl bg-[#0b0e1b] border border-purple-500/20 px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
+                  className="w-full rounded-xl bg-[#0b0e1b] border border-blue-500/20 px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-semibold text-slate-200 mb-1.5">
-                  Last Name <span className="text-purple-400">*</span>
+                  Last Name <span className="text-blue-400">*</span>
                 </label>
                 <input
                   required
@@ -173,7 +173,7 @@ function Signup() {
                   value={lastName}
                   onChange={handleOnChange}
                   placeholder="Enter last name"
-                  className="w-full rounded-xl bg-[#0b0e1b] border border-purple-500/20 px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
+                  className="w-full rounded-xl bg-[#0b0e1b] border border-blue-500/20 px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                 />
               </div>
             </div>
@@ -181,7 +181,7 @@ function Signup() {
             {/* Email Address */}
             <div>
               <label className="block text-xs font-semibold text-slate-200 mb-1.5">
-                Email Address <span className="text-purple-400">*</span>
+                Email Address <span className="text-blue-400">*</span>
               </label>
               <input
                 required
@@ -190,14 +190,14 @@ function Signup() {
                 value={email}
                 onChange={handleOnChange}
                 placeholder="Enter email address"
-                className="w-full rounded-xl bg-[#0b0e1b] border border-purple-500/20 px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
+                className="w-full rounded-xl bg-[#0b0e1b] border border-blue-500/20 px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
               />
             </div>
 
             {/* Password */}
             <div>
               <label className="block text-xs font-semibold text-slate-200 mb-1.5">
-                Create Password <span className="text-purple-400">*</span>
+                Create Password <span className="text-blue-400">*</span>
               </label>
               <div className="relative">
                 <input
@@ -207,7 +207,7 @@ function Signup() {
                   value={password}
                   onChange={handleOnChange}
                   placeholder="Enter password"
-                  className="w-full rounded-xl bg-[#0b0e1b] border border-purple-500/20 px-4 py-3 pr-10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
+                  className="w-full rounded-xl bg-[#0b0e1b] border border-blue-500/20 px-4 py-3 pr-10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                 />
                 <button
                   type="button"
@@ -222,7 +222,7 @@ function Signup() {
             {/* Confirm Password */}
             <div>
               <label className="block text-xs font-semibold text-slate-200 mb-1.5">
-                Confirm Password <span className="text-purple-400">*</span>
+                Confirm Password <span className="text-blue-400">*</span>
               </label>
               <div className="relative">
                 <input
@@ -232,7 +232,7 @@ function Signup() {
                   value={confirmPassword}
                   onChange={handleOnChange}
                   placeholder="Confirm password"
-                  className="w-full rounded-xl bg-[#0b0e1b] border border-purple-500/20 px-4 py-3 pr-10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
+                  className="w-full rounded-xl bg-[#0b0e1b] border border-blue-500/20 px-4 py-3 pr-10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                 />
                 <button
                   type="button"
@@ -251,15 +251,15 @@ function Signup() {
                 id="terms"
                 checked={agreedTerms}
                 onChange={(e) => setAgreedTerms(e.target.checked)}
-                className="w-4 h-4 rounded bg-[#0b0e1b] border-purple-500/40 text-purple-600 focus:ring-purple-500 accent-purple-600 cursor-pointer"
+                className="w-4 h-4 rounded bg-[#0b0e1b] border-blue-500/40 text-blue-600 focus:ring-blue-500 accent-blue-600 cursor-pointer"
               />
               <label htmlFor="terms" className="text-xs text-slate-400 cursor-pointer select-none">
                 I agree to the{" "}
-                <Link to="/terms" className="text-purple-400 underline hover:text-purple-300">
+                <Link to="/terms" className="text-blue-400 underline hover:text-blue-300">
                   Terms of Service
                 </Link>{" "}
                 and{" "}
-                <Link to="/privacy-policy" className="text-purple-400 underline hover:text-purple-300">
+                <Link to="/privacy-policy" className="text-blue-400 underline hover:text-blue-300">
                   Privacy Policy
                 </Link>
                 .
@@ -270,7 +270,7 @@ function Signup() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold py-3 text-sm transition-all shadow-[0_0_20px_rgba(168,85,247,0.3)] active:scale-[0.99] disabled:opacity-50"
+              className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold py-3 text-sm transition-all shadow-[0_0_20px_rgba(37, 99, 235,0.3)] active:scale-[0.99] disabled:opacity-50"
             >
               {loading ? "Creating Account..." : "Create Account"}
             </button>
@@ -314,7 +314,7 @@ function Signup() {
             {/* Login Redirect Footer */}
             <p className="text-center text-xs text-slate-400 pt-4">
               Already have an account?{" "}
-              <Link to="/login" className="text-purple-400 font-semibold hover:underline">
+              <Link to="/login" className="text-blue-400 font-semibold hover:underline">
                 Log in
               </Link>
             </p>
@@ -325,17 +325,17 @@ function Signup() {
 
         {/* RIGHT COLUMN: Feature Preview Card */}
         <div className="lg:col-span-5 w-full max-w-lg mx-auto lg:mx-0">
-          <div className="bg-[#0e111f] border border-purple-500/20 rounded-3xl p-6 sm:p-8 shadow-[0_0_30px_rgba(168,85,247,0.1)] flex flex-col gap-6 relative overflow-hidden">
+          <div className="bg-[#0e111f] border border-blue-500/20 rounded-3xl p-6 sm:p-8 shadow-[0_0_30px_rgba(37, 99, 235,0.1)] flex flex-col gap-6 relative overflow-hidden">
             
             {/* Top Image Banner */}
-            <div className="relative rounded-2xl overflow-hidden h-52 bg-purple-950/40">
+            <div className="relative rounded-2xl overflow-hidden h-52 bg-blue-950/40">
               <img
                 src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&auto=format&fit=crop&q=80"
                 alt="Students collaboration"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0e111f] via-transparent to-transparent" />
-              <div className="absolute bottom-4 left-4 w-10 h-10 rounded-xl bg-purple-600 flex items-center justify-center text-white text-xl shadow-lg">
+              <div className="absolute bottom-4 left-4 w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white text-xl shadow-lg">
                 <VscCode />
               </div>
             </div>
@@ -343,7 +343,7 @@ function Signup() {
             {/* Main Feature Content */}
             <div className="space-y-4">
               <h2 className="text-xl sm:text-2xl font-bold text-white leading-tight">
-                Start learning. Start <span className="text-purple-400">building.</span>
+                Start learning. Start <span className="text-blue-400">building.</span>
               </h2>
               <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
                 Unlock your potential with world-class courses and hands-on projects.
@@ -353,7 +353,7 @@ function Signup() {
             {/* Feature List */}
             <div className="space-y-4 pt-2">
               <div className="flex items-start gap-3.5">
-                <div className="w-9 h-9 rounded-xl bg-purple-900/30 border border-purple-500/30 flex items-center justify-center text-purple-400 text-lg shrink-0 mt-0.5">
+                <div className="w-9 h-9 rounded-xl bg-blue-950/30 border border-blue-500/30 flex items-center justify-center text-blue-400 text-lg shrink-0 mt-0.5">
                   <VscBook />
                 </div>
                 <div>
@@ -363,7 +363,7 @@ function Signup() {
               </div>
 
               <div className="flex items-start gap-3.5">
-                <div className="w-9 h-9 rounded-xl bg-purple-900/30 border border-purple-500/30 flex items-center justify-center text-purple-400 text-lg shrink-0 mt-0.5">
+                <div className="w-9 h-9 rounded-xl bg-blue-950/30 border border-blue-500/30 flex items-center justify-center text-blue-400 text-lg shrink-0 mt-0.5">
                   <VscCode />
                 </div>
                 <div>
@@ -373,7 +373,7 @@ function Signup() {
               </div>
 
               <div className="flex items-start gap-3.5">
-                <div className="w-9 h-9 rounded-xl bg-purple-900/30 border border-purple-500/30 flex items-center justify-center text-purple-400 text-lg shrink-0 mt-0.5">
+                <div className="w-9 h-9 rounded-xl bg-blue-950/30 border border-blue-500/30 flex items-center justify-center text-blue-400 text-lg shrink-0 mt-0.5">
                   <AiOutlineTrophy />
                 </div>
                 <div>

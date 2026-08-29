@@ -234,7 +234,7 @@ const Home = () => {
                 {/* Hero Action Buttons */}
                 <div className='flex flex-row flex-wrap items-center justify-center gap-5 mt-8'>
                     <Link to={primaryLink}>
-                        <button className='flex items-center gap-3 bg-[#8b5cf6] hover:bg-[#7c3aed] text-white font-semibold text-base px-6 py-3.5 rounded-2xl transition-all duration-300 shadow-[0_0_20px_rgba(139,92,246,0.5)] hover:shadow-[0_0_25px_rgba(139,92,246,0.7)] hover:scale-105'>
+                        <button className='flex items-center gap-3 bg-[#2563eb] hover:bg-[#7c3aed] text-white font-semibold text-base px-6 py-3.5 rounded-2xl transition-all duration-300 shadow-[0_0_20px_rgba(59, 130, 246,0.5)] hover:shadow-[0_0_25px_rgba(59, 130, 246,0.7)] hover:scale-105'>
                             <FaRocket className='text-lg' />
                             <span>{primaryText}</span>
                         </button>
@@ -252,7 +252,7 @@ const Home = () => {
                 <div className='w-full max-w-4xl mt-6 py-4 px-4 flex flex-wrap items-center justify-around gap-4 text-white bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl'>
                     {/* Stat 1: Learners */}
                     <div className='flex items-center gap-3.5'>
-                        <div className='text-[#a855f7] text-2xl p-2 bg-[#a855f7]/10 rounded-xl'>
+                        <div className='text-[#3b82f6] text-2xl p-2 bg-[#3b82f6]/10 rounded-xl'>
                             <FaUsers />
                         </div>
                         <div className='flex flex-col'>
@@ -267,7 +267,7 @@ const Home = () => {
 
                     {/* Stat 2: Courses */}
                     <div className='flex items-center gap-3.5'>
-                        <div className='text-[#a855f7] text-2xl p-2 bg-[#a855f7]/10 rounded-xl'>
+                        <div className='text-[#3b82f6] text-2xl p-2 bg-[#3b82f6]/10 rounded-xl'>
                             <FaBookOpen />
                         </div>
                         <div className='flex flex-col'>
@@ -282,7 +282,7 @@ const Home = () => {
 
                     {/* Stat 3: Projects */}
                     <div className='flex items-center gap-3.5'>
-                        <div className='text-[#a855f7] text-2xl p-2 bg-[#a855f7]/10 rounded-xl'>
+                        <div className='text-[#3b82f6] text-2xl p-2 bg-[#3b82f6]/10 rounded-xl'>
                             <FaCode />
                         </div>
                         <div className='flex flex-col'>
@@ -326,7 +326,7 @@ const Home = () => {
                 {/* 1. POPULAR CATEGORIES SECTION */}
                 <div className='w-full max-w-[1260px] my-6 px-4 text-center'>
                     <h2 className='text-3xl sm:text-4xl font-extrabold tracking-tight text-white'>
-                        Popular <span className='text-[#a855f7]'>Categories</span>
+                        Popular <span className='text-[#3b82f6]'>Categories</span>
                     </h2>
                     <p className='text-sm text-richblack-300 mt-2 font-medium'>
                         Explore top technologies and skills
@@ -340,12 +340,12 @@ const Home = () => {
                                 <Link
                                     key={cat._id || idx}
                                     to={cat.link}
-                                    className='bg-[#111422]/90 hover:bg-[#161a2e] border border-white/10 hover:border-[#a855f7]/50 rounded-2xl p-5 flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-1.5 shadow-lg group'
+                                    className='bg-[#111422]/90 hover:bg-[#161a2e] border border-white/10 hover:border-[#3b82f6]/50 rounded-2xl p-5 flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-1.5 shadow-lg group'
                                 >
-                                    <div className='w-12 h-12 rounded-2xl bg-[#a855f7]/15 flex items-center justify-center text-[#a855f7] text-xl group-hover:scale-110 transition-transform duration-300 shadow-[0_0_15px_rgba(168,85,247,0.2)]'>
+                                    <div className='w-12 h-12 rounded-2xl bg-[#3b82f6]/15 flex items-center justify-center text-[#3b82f6] text-xl group-hover:scale-110 transition-transform duration-300 shadow-[0_0_15px_rgba(37, 99, 235,0.2)]'>
                                         <IconComponent />
                                     </div>
-                                    <h3 className='text-sm font-bold text-white mt-4 line-clamp-1 group-hover:text-[#a855f7] transition-colors'>
+                                    <h3 className='text-sm font-bold text-white mt-4 line-clamp-1 group-hover:text-[#3b82f6] transition-colors'>
                                         {cat.name}
                                     </h3>
                                     <p className='text-[11px] text-richblack-300 mt-2 line-clamp-2 leading-relaxed min-h-[32px]'>
@@ -363,7 +363,7 @@ const Home = () => {
                     <div className='mt-6 flex justify-center'>
                         <button
                             onClick={() => setShowAllCatModal(true)}
-                            className='flex items-center gap-2 bg-[#121624] hover:bg-[#1c2238] border border-[#a855f7]/40 hover:border-[#a855f7] text-white text-xs font-bold px-6 py-2.5 rounded-full transition-all duration-300 shadow-md group'
+                            className='flex items-center gap-2 bg-[#121624] hover:bg-[#1c2238] border border-[#3b82f6]/40 hover:border-[#3b82f6] text-white text-xs font-bold px-6 py-2.5 rounded-full transition-all duration-300 shadow-md group'
                         >
                             <span>View All Categories ({dbCategories.length || categoryDesignPresets.length})</span>
                             <span className='group-hover:translate-x-1 transition-transform'>→</span>
@@ -373,8 +373,8 @@ const Home = () => {
 
                 {/* ALL CATEGORIES MODAL */}
                 {showAllCatModal && (
-                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-                        <div className="bg-[#0e111f] border border-purple-500/30 max-w-4xl w-full rounded-3xl p-6 sm:p-8 text-white space-y-6 shadow-[0_0_40px_rgba(168,85,247,0.3)] max-h-[85vh] overflow-y-auto">
+                    <div className="fixed inset-0 bg-[#0B1120]lack/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+                        <div className="bg-[#0e111f] border border-blue-500/30 max-w-4xl w-full rounded-3xl p-6 sm:p-8 text-white space-y-6 shadow-[0_0_40px_rgba(37, 99, 235,0.3)] max-h-[85vh] overflow-y-auto">
                             <div className="flex items-center justify-between border-b border-white/10 pb-4">
                                 <div>
                                     <h2 className="text-xl font-extrabold text-white">All Course Categories</h2>
@@ -402,19 +402,19 @@ const Home = () => {
                                             key={categoryId || idx}
                                             to={targetLink}
                                             onClick={() => setShowAllCatModal(false)}
-                                            className="bg-[#141728] hover:bg-[#1c213b] border border-purple-500/20 hover:border-purple-500/50 rounded-2xl p-4 flex items-center gap-3 transition-all duration-300 hover:-translate-y-1 shadow-md group"
+                                            className="bg-[#141728] hover:bg-[#1c213b] border border-blue-500/20 hover:border-blue-500/50 rounded-2xl p-4 flex items-center gap-3 transition-all duration-300 hover:-translate-y-1 shadow-md group"
                                         >
-                                            <div className="w-11 h-11 rounded-xl bg-purple-900/30 text-purple-400 flex items-center justify-center text-lg shrink-0 group-hover:scale-110 transition-transform">
+                                            <div className="w-11 h-11 rounded-xl bg-blue-950/30 text-blue-400 flex items-center justify-center text-lg shrink-0 group-hover:scale-110 transition-transform">
                                                 <IconComponent />
                                             </div>
                                             <div className="min-w-0 flex-1">
-                                                <h3 className="font-bold text-sm text-white group-hover:text-purple-300 truncate transition-colors">
+                                                <h3 className="font-bold text-sm text-white group-hover:text-blue-300 truncate transition-colors">
                                                     {cat.name || preset.name}
                                                 </h3>
                                                 <p className="text-[11px] text-richblack-400 truncate">
                                                     {cat.description || preset.description}
                                                 </p>
-                                                <span className="text-[10px] text-purple-400 font-semibold block mt-0.5">
+                                                <span className="text-[10px] text-blue-400 font-semibold block mt-0.5">
                                                     {formatStatNumber(count)} Courses
                                                 </span>
                                             </div>
@@ -429,7 +429,7 @@ const Home = () => {
                 {/* 2. START LEARNING IN 3 SIMPLE STEPS SECTION */}
                 <div className='w-full max-w-[1260px] my-6 px-4 text-center'>
                     <h2 className='text-3xl sm:text-4xl font-extrabold tracking-tight text-white'>
-                        Start Learning in <span className='text-[#a855f7]'>3 Simple Steps</span>
+                        Start Learning in <span className='text-[#3b82f6]'>3 Simple Steps</span>
                     </h2>
                     <p className='text-sm text-richblack-300 mt-2 font-medium'>
                         Your journey to become a developer starts here
@@ -437,7 +437,7 @@ const Home = () => {
 
                     <div className='relative mt-6 max-w-4xl mx-auto'>
                         {/* Connected Dotted Line for desktop */}
-                        <div className='hidden md:block absolute top-7 left-[15%] right-[15%] h-[2px] border-b-2 border-dashed border-[#a855f7]/40 z-0'></div>
+                        <div className='hidden md:block absolute top-7 left-[15%] right-[15%] h-[2px] border-b-2 border-dashed border-[#3b82f6]/40 z-0'></div>
 
                         {/* Steps Grid */}
                         <div className='grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10'>
@@ -445,7 +445,7 @@ const Home = () => {
                                 const StepIcon = step.icon;
                                 return (
                                     <div key={step.id} className='flex flex-col items-center text-center px-4'>
-                                        <div className='w-14 h-14 rounded-full bg-[#0d0f1a] border-2 border-[#a855f7] flex items-center justify-center text-[#a855f7] text-xl shadow-[0_0_20px_rgba(168,85,247,0.5)] transition-transform hover:scale-110'>
+                                        <div className='w-14 h-14 rounded-full bg-[#0d0f1a] border-2 border-[#3b82f6] flex items-center justify-center text-[#3b82f6] text-xl shadow-[0_0_20px_rgba(37, 99, 235,0.5)] transition-transform hover:scale-110'>
                                             <StepIcon />
                                         </div>
                                         <h3 className='text-base font-bold text-white mt-5'>
@@ -565,7 +565,7 @@ const Home = () => {
                 {/* FEATURED COURSES SECTION */}
                 <div className='w-full max-w-[1260px] mx-auto py-6 px-4 text-center'>
                     <h2 className='text-3xl sm:text-4xl font-extrabold tracking-tight text-white'>
-                        Featured <span className='text-[#a855f7]'>Courses</span>
+                        Featured <span className='text-[#3b82f6]'>Courses</span>
                     </h2>
                     <p className='text-sm text-richblack-300 mt-2 font-medium mb-6'>
                         Hand-picked top courses for you
@@ -589,7 +589,7 @@ const Home = () => {
                                     <div
                                         key={course._id || course.id || index}
                                         onClick={() => window.location.href = `/courses/${course._id || course.id}`}
-                                        className='bg-[#111422]/90 hover:bg-[#161a2e] border border-white/10 hover:border-[#a855f7]/50 rounded-2xl overflow-hidden flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 shadow-xl cursor-pointer group'
+                                        className='bg-[#111422]/90 hover:bg-[#161a2e] border border-white/10 hover:border-[#3b82f6]/50 rounded-2xl overflow-hidden flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 shadow-xl cursor-pointer group'
                                     >
                                         <div>
                                             {/* Card Header Thumbnail / Gradient */}
@@ -597,8 +597,8 @@ const Home = () => {
                                                 {/* Badge */}
                                                 <span className={`absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-extrabold tracking-wider z-10 text-white ${
                                                     index % 4 === 0 ? 'bg-amber-500' :
-                                                    index % 4 === 1 ? 'bg-purple-600' :
-                                                    index % 4 === 2 ? 'bg-emerald-500' : 'bg-blue-600'
+                                                    index % 4 === 1 ? 'bg-blue-600' :
+                                                    index % 4 === 2 ? 'bg-[#0B1120]merald-500' : 'bg-blue-600'
                                                 }`}>
                                                     {badge}
                                                 </span>
@@ -610,7 +610,7 @@ const Home = () => {
                                                         className='w-full h-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-105'
                                                     />
                                                 ) : (
-                                                    <div className='w-16 h-16 rounded-2xl bg-[#a855f7]/20 flex items-center justify-center text-[#a855f7] text-3xl shadow-inner'>
+                                                    <div className='w-16 h-16 rounded-2xl bg-[#3b82f6]/20 flex items-center justify-center text-[#3b82f6] text-3xl shadow-inner'>
                                                         <FaCode />
                                                     </div>
                                                 )}
@@ -618,7 +618,7 @@ const Home = () => {
 
                                             {/* Card Content */}
                                             <div className='p-5'>
-                                                <h3 className='text-base font-bold text-white line-clamp-2 leading-snug group-hover:text-[#a855f7] transition-colors min-h-[44px]'>
+                                                <h3 className='text-base font-bold text-white line-clamp-2 leading-snug group-hover:text-[#3b82f6] transition-colors min-h-[44px]'>
                                                     {course.courseName}
                                                 </h3>
 
@@ -656,8 +656,8 @@ const Home = () => {
                         </div>
                     ) : (
                         /* Styled Empty State Card (Full Width Container) */
-                        <div className='bg-[#111422]/90 border border-purple-500/20 rounded-3xl p-10 w-full max-w-full mx-auto flex flex-col items-center justify-center text-center shadow-[0_0_30px_rgba(168,85,247,0.1)] my-6'>
-                            <div className='w-16 h-16 rounded-2xl bg-purple-900/30 border border-purple-500/30 flex items-center justify-center text-purple-400 text-3xl mb-4 shadow-inner'>
+                        <div className='bg-[#111422]/90 border border-blue-500/20 rounded-3xl p-10 w-full max-w-full mx-auto flex flex-col items-center justify-center text-center shadow-[0_0_30px_rgba(37, 99, 235,0.1)] my-6'>
+                            <div className='w-16 h-16 rounded-2xl bg-blue-950/30 border border-blue-500/30 flex items-center justify-center text-blue-400 text-3xl mb-4 shadow-inner'>
                                 <FaBookOpen />
                             </div>
                             <h3 className='text-xl sm:text-2xl font-extrabold text-white mb-2'>
@@ -672,7 +672,7 @@ const Home = () => {
                     {/* View All Courses Button */}
                     <div className='mt-8 flex justify-center'>
                         <Link to='/courses'>
-                            <button className='flex items-center gap-2 bg-[#121624] hover:bg-[#1c2238] border border-[#a855f7]/40 hover:border-[#a855f7] text-white text-xs font-bold px-6 py-2.5 rounded-full transition-all duration-300 shadow-md group'>
+                            <button className='flex items-center gap-2 bg-[#121624] hover:bg-[#1c2238] border border-[#3b82f6]/40 hover:border-[#3b82f6] text-white text-xs font-bold px-6 py-2.5 rounded-full transition-all duration-300 shadow-md group'>
                                 <span>View All Courses</span>
                                 <span className='group-hover:translate-x-1 transition-transform'>→</span>
                             </button>

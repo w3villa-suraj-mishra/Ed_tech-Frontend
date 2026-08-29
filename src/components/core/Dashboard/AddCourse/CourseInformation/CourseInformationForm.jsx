@@ -165,29 +165,29 @@ export default function CourseInformationForm() {
     return (
      <form
   onSubmit={handleSubmit(onSubmit)}
-  className="max-w-4xl mx-auto space-y-8 rounded-2xl bg-[#0c0e1a] border border-purple-900/30 p-6 sm:p-8 shadow-2xl"
+  className="max-w-4xl mx-auto space-y-8 rounded-2xl bg-[#0c0e1a] border border-blue-950/30 p-6 sm:p-8 shadow-2xl"
 >
   <div className="space-y-6">
 
     {/* HEADER */}
-    <div className="border-b border-purple-900/30 pb-4">
+    <div className="border-b border-blue-950/30 pb-4">
       <h2 className="text-xl font-bold text-white tracking-tight">
         Course Information
       </h2>
-      <p className="text-xs text-purple-300/70 mt-1">
+      <p className="text-xs text-blue-300/70 mt-1">
         Fill in the details to create or update your course.
       </p>
     </div>
 
     {/* TITLE */}
     <div className="flex flex-col gap-2">
-      <label className="text-xs font-semibold text-purple-200">
+      <label className="text-xs font-semibold text-blue-200">
         Course Title <sup className="text-red-400">*</sup>
       </label>
       <input
         {...register("courseTitle", { required: true })}
         placeholder="e.g. Complete MERN Stack Bootcamp"
-        className="w-full rounded-xl bg-[#070913] px-4 py-3 text-xs text-white border border-purple-900/40 focus:border-purple-500 outline-none transition"
+        className="w-full rounded-xl bg-[#070913] px-4 py-3 text-xs text-white border border-blue-950/40 focus:border-blue-500 outline-none transition"
       />
       {errors.courseTitle && (
         <span className="text-[11px] font-semibold text-red-400">Title is required</span>
@@ -196,13 +196,13 @@ export default function CourseInformationForm() {
 
     {/* DESCRIPTION */}
     <div className="flex flex-col gap-2">
-      <label className="text-xs font-semibold text-purple-200">
+      <label className="text-xs font-semibold text-blue-200">
         Short Description <sup className="text-red-400">*</sup>
       </label>
       <textarea
         {...register("courseShortDesc", { required: true })}
         placeholder="Enter short overview of the course"
-        className="w-full min-h-[110px] rounded-xl bg-[#070913] px-4 py-3 text-xs text-white border border-purple-900/40 focus:border-purple-500 outline-none transition"
+        className="w-full min-h-[110px] rounded-xl bg-[#070913] px-4 py-3 text-xs text-white border border-blue-950/40 focus:border-blue-500 outline-none transition"
       />
       {errors.courseShortDesc && (
         <span className="text-[11px] font-semibold text-red-400">Description is required</span>
@@ -211,16 +211,16 @@ export default function CourseInformationForm() {
 
     {/* PRICE */}
     <div className="flex flex-col gap-2">
-      <label className="text-xs font-semibold text-purple-200">
+      <label className="text-xs font-semibold text-blue-200">
         Course Price <sup className="text-red-400">*</sup>
       </label>
       <div className="relative">
         <input
           {...register("coursePrice", { required: true })}
           placeholder="0.00"
-          className="w-full rounded-xl bg-[#070913] px-10 py-3 text-xs text-white border border-purple-900/40 focus:border-purple-500 outline-none"
+          className="w-full rounded-xl bg-[#070913] px-10 py-3 text-xs text-white border border-blue-950/40 focus:border-blue-500 outline-none"
         />
-        <HiOutlineCurrencyRupee className="absolute left-3 top-1/2 -translate-y-1/2 text-purple-400 text-lg" />
+        <HiOutlineCurrencyRupee className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400 text-lg" />
       </div>
       {errors.coursePrice && (
         <span className="text-[11px] font-semibold text-red-400">Price is required</span>
@@ -229,12 +229,12 @@ export default function CourseInformationForm() {
 
     {/* CATEGORY */}
     <div className="flex flex-col gap-2">
-      <label className="text-xs font-semibold text-purple-200">
+      <label className="text-xs font-semibold text-blue-200">
         Course Category <sup className="text-red-400">*</sup>
       </label>
       <select
         {...register("courseCategory", { required: true })}
-        className="w-full rounded-xl bg-[#070913] px-4 py-3 text-xs text-white border border-purple-900/40 focus:border-purple-500 outline-none"
+        className="w-full rounded-xl bg-[#070913] px-4 py-3 text-xs text-white border border-blue-950/40 focus:border-blue-500 outline-none"
       >
         <option value="">Choose Category</option>
         {courseCategories?.map((cat, i) => (
@@ -269,13 +269,13 @@ export default function CourseInformationForm() {
 
     {/* BENEFITS */}
     <div className="flex flex-col gap-2">
-      <label className="text-xs font-semibold text-purple-200">
+      <label className="text-xs font-semibold text-blue-200">
         Course Benefits <sup className="text-red-400">*</sup>
       </label>
       <textarea
         {...register("courseBenefits", { required: true })}
         placeholder="Enter key benefits students will gain"
-        className="w-full min-h-[100px] rounded-xl bg-[#070913] px-4 py-3 text-xs text-white border border-purple-900/40 focus:border-purple-500 outline-none"
+        className="w-full min-h-[100px] rounded-xl bg-[#070913] px-4 py-3 text-xs text-white border border-blue-950/40 focus:border-blue-500 outline-none"
       />
       {errors.courseBenefits && (
         <span className="text-[11px] font-semibold text-red-400">Benefits are required</span>
@@ -293,12 +293,12 @@ export default function CourseInformationForm() {
     />
 
     {/* BUTTONS */}
-    <div className="flex justify-end gap-4 pt-4 border-t border-purple-900/30">
+    <div className="flex justify-end gap-4 pt-4 border-t border-blue-950/30">
       {editCourse && (
         <button
           type="button"
           onClick={() => dispatch(setStep(2))}
-          className="px-5 py-2.5 rounded-xl border border-purple-900/40 text-purple-300 hover:bg-purple-950/30 text-xs font-bold transition"
+          className="px-5 py-2.5 rounded-xl border border-blue-950/40 text-blue-300 hover:bg-blue-950/30 text-xs font-bold transition"
         >
           Continue to Builder
         </button>
@@ -307,7 +307,7 @@ export default function CourseInformationForm() {
       <button
         disabled={loading}
         type="submit"
-        className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-purple-950/50 transition-all hover:scale-[1.02]"
+        className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-800 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-950/50 transition-all hover:scale-[1.02]"
       >
         <span>{!editCourse ? "Next Step" : "Save Changes"}</span>
         <MdNavigateNext size={18} />

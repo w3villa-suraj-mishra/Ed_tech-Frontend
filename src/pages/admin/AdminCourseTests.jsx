@@ -142,7 +142,7 @@ function AdminCourseTestsInner() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-2 bg-purple-500/20 text-purple-400 rounded-xl text-xl">🎓</span>
+            <span className="p-2 bg-blue-500/20 text-blue-400 rounded-xl text-xl">🎓</span>
             <h1 className="text-2xl font-bold text-[#F1F2FF]">Course-Specific Practice Tests</h1>
           </div>
           <p className="text-xs text-[#AFB2BF] mt-1">Exclusive tests restricted to enrolled students of the specific course.</p>
@@ -239,7 +239,7 @@ function AdminCourseTestsInner() {
                         setSelectedTestIds(prev => prev.filter(id => !fIds.includes(id)));
                       }
                     }}
-                    className="w-4 h-4 rounded border-gray-600 bg-[#161D29] text-purple-600 focus:ring-purple-500 cursor-pointer"
+                    className="w-4 h-4 rounded border-gray-600 bg-[#161D29] text-blue-600 focus:ring-blue-500 cursor-pointer"
                   />
                 </th>
                 <th className="px-5 py-3.5">Test Title</th>
@@ -260,7 +260,7 @@ function AdminCourseTestsInner() {
                 </tr>
               ) : (
                 filteredTests.map((t) => (
-                  <tr key={t.id} className={`transition ${selectedTestIds.includes(t.id) ? 'bg-purple-500/10 hover:bg-purple-500/15' : 'hover:bg-[#1f2736]'}`}>
+                  <tr key={t.id} className={`transition ${selectedTestIds.includes(t.id) ? 'bg-blue-500/10 hover:bg-blue-500/15' : 'hover:bg-[#1f2736]'}`}>
                     <td className="px-4 py-4 text-center">
                       <input
                         type="checkbox"
@@ -272,7 +272,7 @@ function AdminCourseTestsInner() {
                             setSelectedTestIds(prev => prev.filter(id => id !== t.id));
                           }
                         }}
-                        className="w-4 h-4 rounded border-gray-600 bg-[#090D16] text-purple-600 focus:ring-purple-500 cursor-pointer"
+                        className="w-4 h-4 rounded border-gray-600 bg-[#090D16] text-blue-600 focus:ring-blue-500 cursor-pointer"
                       />
                     </td>
                     <td className="px-5 py-4 font-bold">
@@ -280,7 +280,7 @@ function AdminCourseTestsInner() {
                       {t.description && <p className="text-[11px] font-normal text-[#838894] truncate max-w-xs">{t.description}</p>}
                     </td>
                     <td className="px-5 py-4">
-                      <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                      <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-blue-500/20 text-blue-400 border border-blue-500/30">
                         {t.testType}
                       </span>
                     </td>
@@ -288,7 +288,7 @@ function AdminCourseTestsInner() {
                     <td className="px-5 py-4 text-[#AFB2BF]">{t.duration} Mins</td>
                     <td className="px-5 py-4">
                       <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                        t.status === 'published' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-yellow-500/20 text-yellow-400'
+                        t.status === 'published' ? 'bg-[#0B1120]merald-500/20 text-emerald-400' : 'bg-yellow-500/20 text-yellow-400'
                       }`}>
                         {t.status}
                       </span>
@@ -336,7 +336,7 @@ function AdminCourseTestsInner() {
             <div className="grid grid-cols-2 gap-4 bg-[#090D16] p-4 rounded-xl border border-[#2C333F]">
               <div>
                 <p className="text-slate-500 uppercase text-[10px] font-bold">Scope</p>
-                <p className="font-bold text-purple-400">COURSE-SPECIFIC</p>
+                <p className="font-bold text-blue-400">COURSE-SPECIFIC</p>
               </div>
               <div>
                 <p className="text-slate-500 uppercase text-[10px] font-bold">Total Questions</p>

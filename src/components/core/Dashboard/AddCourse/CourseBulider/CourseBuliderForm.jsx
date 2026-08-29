@@ -109,7 +109,7 @@ const CourseBuilderForm = () => {
           {/* INPUT */}
           <div className='flex flex-col gap-2'>
             <label htmlFor='sectionName' className='text-sm text-richblack-200'>
-              Section Name <sup className='text-pink-400'>*</sup>
+              Section Name <sup className='text-blue-400'>*</sup>
             </label>
 
             <input
@@ -120,7 +120,7 @@ const CourseBuilderForm = () => {
             />
 
             {errors.sectionName && (
-              <span className='text-sm text-pink-400'>
+              <span className='text-sm text-blue-400'>
                 Section Name is required
               </span>
             )}

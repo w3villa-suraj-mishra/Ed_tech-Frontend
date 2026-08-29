@@ -8,9 +8,9 @@ const Footer = ({ logoAsset, socialAssets }) => {
   const { token } = useSelector((state) => state.auth);
 
   return (
-    <footer className="w-full bg-[#070913] text-richblack-300 font-sans border-t border-purple-900/30 relative">
+    <footer className="w-full bg-[#070913] text-richblack-300 font-sans border-t border-blue-950/30 relative">
       {/* Top Accent Gradient Line from screenshot */}
-      {/* <div className="w-full h-1 bg-gradient-to-r from-purple-800 via-purple-500 to-indigo-600"></div> */}
+      {/* <div className="w-full h-1 bg-gradient-to-r from-blue-900 via-blue-500 to-indigo-600"></div> */}
 
       <div className="w-11/12 max-w-[1260px] mx-auto py-4 px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12 pb-4 border-b border-richblack-800">
@@ -22,7 +22,7 @@ const Footer = ({ logoAsset, socialAssets }) => {
               {logoAsset ? (
                 <img src={logoAsset} alt="CodeLearn Logo" className="h-10 w-auto object-contain" />
               ) : (
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-700 flex items-center justify-center text-white font-bold text-xl shadow-lg border border-purple-400/30 group-hover:scale-105 transition-transform">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white font-bold text-xl shadow-lg border border-blue-400/30 group-hover:scale-105 transition-transform">
                   <FaCode />
                 </div>
               )}
@@ -43,41 +43,41 @@ const Footer = ({ logoAsset, socialAssets }) => {
             {/* Social Media Circular Buttons */}
             <div className="flex items-center gap-3 mt-2">
               {socialAssets?.twitter ? (
-                <a href={socialAssets.twitter} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full bg-[#121626] border border-white/10 flex items-center justify-center text-richblack-300 hover:text-white hover:border-purple-500 hover:bg-purple-600/20 transition-all">
+                <a href={socialAssets.twitter} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full bg-[#121626] border border-white/10 flex items-center justify-center text-richblack-300 hover:text-white hover:border-blue-500 hover:bg-blue-600/20 transition-all">
                   <img src={socialAssets.twitter} alt="Twitter" className="w-4 h-4 object-contain" />
                 </a>
               ) : (
-                <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="Twitter" className="w-9 h-9 rounded-full bg-[#121626] border border-white/10 flex items-center justify-center text-richblack-300 hover:text-white hover:border-purple-500 hover:bg-purple-600/20 transition-all text-xs">
+                <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="Twitter" className="w-9 h-9 rounded-full bg-[#121626] border border-white/10 flex items-center justify-center text-richblack-300 hover:text-white hover:border-blue-500 hover:bg-blue-600/20 transition-all text-xs">
                   <FaTwitter />
                 </a>
               )}
 
               {socialAssets?.github ? (
-                <a href={socialAssets.github} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full bg-[#121626] border border-white/10 flex items-center justify-center text-richblack-300 hover:text-white hover:border-purple-500 hover:bg-purple-600/20 transition-all">
+                <a href={socialAssets.github} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full bg-[#121626] border border-white/10 flex items-center justify-center text-richblack-300 hover:text-white hover:border-blue-500 hover:bg-blue-600/20 transition-all">
                   <img src={socialAssets.github} alt="GitHub" className="w-4 h-4 object-contain" />
                 </a>
               ) : (
-                <a href="https://github.com" target="_blank" rel="noreferrer" aria-label="GitHub" className="w-9 h-9 rounded-full bg-[#121626] border border-white/10 flex items-center justify-center text-richblack-300 hover:text-white hover:border-purple-500 hover:bg-purple-600/20 transition-all text-xs">
+                <a href="https://github.com" target="_blank" rel="noreferrer" aria-label="GitHub" className="w-9 h-9 rounded-full bg-[#121626] border border-white/10 flex items-center justify-center text-richblack-300 hover:text-white hover:border-blue-500 hover:bg-blue-600/20 transition-all text-xs">
                   <FaGithub />
                 </a>
               )}
 
               {socialAssets?.linkedin ? (
-                <a href={socialAssets.linkedin} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full bg-[#121626] border border-white/10 flex items-center justify-center text-richblack-300 hover:text-white hover:border-purple-500 hover:bg-purple-600/20 transition-all">
+                <a href={socialAssets.linkedin} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full bg-[#121626] border border-white/10 flex items-center justify-center text-richblack-300 hover:text-white hover:border-blue-500 hover:bg-blue-600/20 transition-all">
                   <img src={socialAssets.linkedin} alt="LinkedIn" className="w-4 h-4 object-contain" />
                 </a>
               ) : (
-                <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="w-9 h-9 rounded-full bg-[#121626] border border-white/10 flex items-center justify-center text-richblack-300 hover:text-white hover:border-purple-500 hover:bg-purple-600/20 transition-all text-xs">
+                <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="w-9 h-9 rounded-full bg-[#121626] border border-white/10 flex items-center justify-center text-richblack-300 hover:text-white hover:border-blue-500 hover:bg-blue-600/20 transition-all text-xs">
                   <FaLinkedinIn />
                 </a>
               )}
 
               {socialAssets?.youtube ? (
-                <a href={socialAssets.youtube} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full bg-[#121626] border border-white/10 flex items-center justify-center text-richblack-300 hover:text-white hover:border-purple-500 hover:bg-purple-600/20 transition-all">
+                <a href={socialAssets.youtube} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full bg-[#121626] border border-white/10 flex items-center justify-center text-richblack-300 hover:text-white hover:border-blue-500 hover:bg-blue-600/20 transition-all">
                   <img src={socialAssets.youtube} alt="YouTube" className="w-4 h-4 object-contain" />
                 </a>
               ) : (
-                <a href="https://youtube.com" target="_blank" rel="noreferrer" aria-label="YouTube" className="w-9 h-9 rounded-full bg-[#121626] border border-white/10 flex items-center justify-center text-richblack-300 hover:text-white hover:border-purple-500 hover:bg-purple-600/20 transition-all text-xs">
+                <a href="https://youtube.com" target="_blank" rel="noreferrer" aria-label="YouTube" className="w-9 h-9 rounded-full bg-[#121626] border border-white/10 flex items-center justify-center text-richblack-300 hover:text-white hover:border-blue-500 hover:bg-blue-600/20 transition-all text-xs">
                   <FaYoutube />
                 </a>
               )}

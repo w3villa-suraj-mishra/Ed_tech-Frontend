@@ -161,11 +161,11 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
         {/* Header Controls: View Toggle + Sort Dropdown */}
         <div className="flex items-center gap-3 self-start sm:self-auto">
           {/* Grid / List View Toggle */}
-          <div className="bg-[#0e111f] border border-purple-500/20 rounded-xl p-1 flex items-center gap-1">
+          <div className="bg-[#0e111f] border border-blue-500/20 rounded-xl p-1 flex items-center gap-1">
             <button
               onClick={() => setViewMode("grid")}
               className={`p-1.5 rounded-lg text-xs transition-all ${
-                viewMode === "grid" ? "bg-purple-600 text-white shadow-[0_0_10px_rgba(168,85,247,0.3)]" : "text-richblack-400 hover:text-white"
+                viewMode === "grid" ? "bg-blue-600 text-white shadow-[0_0_10px_rgba(37, 99, 235,0.3)]" : "text-richblack-400 hover:text-white"
               }`}
               title="Grid View"
             >
@@ -174,7 +174,7 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
             <button
               onClick={() => setViewMode("list")}
               className={`p-1.5 rounded-lg text-xs transition-all ${
-                viewMode === "list" ? "bg-purple-600 text-white shadow-[0_0_10px_rgba(168,85,247,0.3)]" : "text-richblack-400 hover:text-white"
+                viewMode === "list" ? "bg-blue-600 text-white shadow-[0_0_10px_rgba(37, 99, 235,0.3)]" : "text-richblack-400 hover:text-white"
               }`}
               title="List View"
             >
@@ -186,7 +186,7 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
           <select
             value={sortOption}
             onChange={(e) => setSortOption(e.target.value)}
-            className="bg-[#0e111f] border border-purple-500/20 text-xs font-semibold text-richblack-200 rounded-xl px-3 py-2 outline-none focus:border-purple-500 transition-colors"
+            className="bg-[#0e111f] border border-blue-500/20 text-xs font-semibold text-richblack-200 rounded-xl px-3 py-2 outline-none focus:border-blue-500 transition-colors"
           >
             <option value="recently-accessed">Recently Accessed</option>
             <option value="name-asc">Title: A to Z</option>
@@ -199,9 +199,9 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
         {/* Enrolled Courses */}
-        <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-purple-500/40 transition-all">
+        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
           <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-8 h-8 rounded-xl bg-purple-900/30 text-purple-400 flex items-center justify-center text-base">
+            <div className="w-8 h-8 rounded-xl bg-blue-950/30 text-blue-400 flex items-center justify-center text-base">
               <VscBook />
             </div>
           </div>
@@ -215,7 +215,7 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
         </div>
 
         {/* Hours Learned */}
-        <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-purple-500/40 transition-all">
+        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
           <div className="flex items-center justify-between text-richblack-400">
             <div className="w-8 h-8 rounded-xl bg-indigo-900/30 text-indigo-400 flex items-center justify-center text-base">
               <VscCoverage />
@@ -231,9 +231,9 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
         </div>
 
         {/* Lessons Completed */}
-        <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-purple-500/40 transition-all">
+        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
           <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-8 h-8 rounded-xl bg-emerald-900/30 text-emerald-400 flex items-center justify-center text-base">
+            <div className="w-8 h-8 rounded-xl bg-[#0B1120]merald-900/30 text-emerald-400 flex items-center justify-center text-base">
               <VscPass />
             </div>
           </div>
@@ -247,7 +247,7 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
         </div>
 
         {/* Day Streak */}
-        <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-purple-500/40 transition-all">
+        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
           <div className="flex items-center justify-between text-richblack-400">
             <div className="w-8 h-8 rounded-xl bg-amber-900/30 text-amber-400 flex items-center justify-center text-base">
               <VscFlame />
@@ -279,13 +279,13 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
               onClick={() => setActiveSubTab(tab.id)}
               className={`text-xs font-bold transition-all relative pb-2 whitespace-nowrap ${
                 activeSubTab === tab.id
-                  ? "text-purple-400"
+                  ? "text-blue-400"
                   : "text-richblack-400 hover:text-white"
               }`}
             >
               {tab.label}
               {activeSubTab === tab.id && (
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-500 rounded-full shadow-[0_0_8px_#a855f7]" />
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]" />
               )}
             </button>
           ))}
@@ -299,7 +299,7 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
             placeholder="Search your courses..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full sm:w-64 bg-[#0e111f] border border-purple-500/20 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-purple-500 transition-colors"
+            className="w-full sm:w-64 bg-[#0e111f] border border-blue-500/20 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-blue-500 transition-colors"
           />
         </div>
       </div>
@@ -330,20 +330,20 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
             return (
               <div
                 key={courseId}
-                className="bg-[#0e111f] border border-purple-500/20 hover:border-purple-500/50 rounded-2xl p-4 sm:p-5 transition-all duration-300 shadow-[0_0_20px_rgba(168,85,247,0.08)] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-5 relative group"
+                className="bg-[#0e111f] border border-blue-500/20 hover:border-blue-500/50 rounded-2xl p-4 sm:p-5 transition-all duration-300 shadow-[0_0_20px_rgba(37, 99, 235,0.08)] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-5 relative group"
               >
                 {/* Course Thumbnail & Details Left Column */}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 min-w-0 flex-1">
                   <div 
                     onClick={() => navigate(`/courses/${courseId}`)}
-                    className="relative aspect-video w-full sm:w-44 rounded-xl overflow-hidden bg-purple-900/30 border border-purple-500/20 shrink-0 cursor-pointer group-hover:border-purple-500/60"
+                    className="relative aspect-video w-full sm:w-44 rounded-xl overflow-hidden bg-blue-950/30 border border-blue-500/20 shrink-0 cursor-pointer group-hover:border-blue-500/60"
                   >
                     <img
                       src={course.thumbnail}
                       alt={course.courseName}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <div className="absolute inset-0 bg-purple-900/20 group-hover:opacity-0 transition-opacity" />
+                    <div className="absolute inset-0 bg-blue-950/20 group-hover:opacity-0 transition-opacity" />
                   </div>
 
                   <div className="space-y-2 min-w-0 flex-1">
@@ -353,7 +353,7 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
                         currentPlan === 'gold' ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-[0_0_8px_rgba(245,158,11,0.2)]' :
                         currentPlan === 'silver' ? 'bg-blue-500/20 text-blue-300 border-blue-500/40 shadow-[0_0_8px_rgba(59,130,246,0.2)]' :
                         currentPlan === 'expired' ? 'bg-red-500/20 text-red-400 border-red-500/40' :
-                        'bg-purple-900/40 text-purple-300 border-purple-500/30'
+                        'bg-blue-950/40 text-blue-300 border-blue-500/30'
                       }`}>
                         {currentPlan === 'gold' ? 'GOLD • ACTIVE' :
                          currentPlan === 'silver' ? 'SILVER • ACTIVE' :
@@ -376,7 +376,7 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
 
                     <h3 
                       onClick={() => navigate(`/courses/${courseId}`)}
-                      className="font-bold text-base text-white hover:text-purple-400 cursor-pointer transition-colors truncate max-w-full"
+                      className="font-bold text-base text-white hover:text-blue-400 cursor-pointer transition-colors truncate max-w-full"
                     >
                       {course.courseName}
                     </h3>
@@ -402,12 +402,12 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
                 {/* Progress Bar & Continue CTA Right Column */}
                 <div className="flex flex-col sm:flex-row md:flex-col items-start sm:items-center md:items-end justify-between md:justify-center gap-3 shrink-0 border-t md:border-t-0 border-white/10 pt-3 md:pt-0">
                   <div className="w-full sm:w-44 md:text-right space-y-1">
-                    <div className="flex items-center justify-between md:justify-end gap-2 text-xs font-bold text-purple-400">
+                    <div className="flex items-center justify-between md:justify-end gap-2 text-xs font-bold text-blue-400">
                       <span>{progressPct}% Complete</span>
                     </div>
                     <div className="w-full bg-[#070913] h-2 rounded-full overflow-hidden">
                       <div
-                        className="bg-gradient-to-r from-purple-500 to-indigo-500 h-full rounded-full transition-all duration-300"
+                        className="bg-gradient-to-r from-blue-500 to-indigo-500 h-full rounded-full transition-all duration-300"
                         style={{ width: `${progressPct}%` }}
                       />
                     </div>
@@ -430,7 +430,7 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
                       <div className="flex items-center gap-2 flex-1 sm:flex-none">
                         <button
                           onClick={() => navigate(`/s/courses/${courseId}/take`)}
-                          className="px-3.5 py-2 rounded-xl bg-purple-600/20 text-purple-300 border border-purple-500/30 text-xs font-bold hover:bg-purple-600 hover:text-white transition-all flex items-center gap-1.5"
+                          className="px-3.5 py-2 rounded-xl bg-blue-600/20 text-blue-300 border border-blue-500/30 text-xs font-bold hover:bg-blue-600 hover:text-white transition-all flex items-center gap-1.5"
                         >
                           <span>Continue Learning</span>
                           <VscPlay className="text-[10px]" />
@@ -485,16 +485,16 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
                     <div className="relative">
                       <button
                         onClick={() => setOpenMenuId(openMenuId === courseId ? null : courseId)}
-                        className="p-2.5 rounded-xl bg-[#070913] border border-purple-500/20 text-richblack-400 hover:text-white transition-colors"
+                        className="p-2.5 rounded-xl bg-[#070913] border border-blue-500/20 text-richblack-400 hover:text-white transition-colors"
                       >
                         <VscEllipsis />
                       </button>
 
                       {openMenuId === courseId && (
-                        <div className="absolute right-0 bottom-full mb-2 w-52 bg-[#0e111f] border border-purple-500/30 rounded-xl p-2 shadow-2xl z-20 space-y-1 text-xs">
+                        <div className="absolute right-0 bottom-full mb-2 w-52 bg-[#0e111f] border border-blue-500/30 rounded-xl p-2 shadow-2xl z-20 space-y-1 text-xs">
                           {/* CURRENT PLAN DISPLAY HEADER IN MENU */}
                           <div className="px-2 py-1 border-b border-white/10 text-[11px] font-bold text-richblack-300">
-                            Current Plan: <span className="text-purple-400 uppercase">{currentPlan === 'expired' ? 'SILVER EXPIRED' : currentPlan.toUpperCase()}</span>
+                            Current Plan: <span className="text-blue-400 uppercase">{currentPlan === 'expired' ? 'SILVER EXPIRED' : currentPlan.toUpperCase()}</span>
                             {currentPlan === 'silver' && formattedExpiryDate && (
                               <div className="text-[10px] text-richblack-400 font-normal">Valid Until: {formattedExpiryDate}</div>
                             )}
@@ -561,7 +561,7 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
                                 setOpenMenuId(null);
                                 navigate(`/courses/${courseId}`);
                               }}
-                              className="w-full text-left px-2.5 py-1.5 text-richblack-200 hover:text-white hover:bg-purple-600/20 rounded-lg font-medium"
+                              className="w-full text-left px-2.5 py-1.5 text-richblack-200 hover:text-white hover:bg-blue-600/20 rounded-lg font-medium"
                             >
                               View Details
                             </button>
@@ -571,7 +571,7 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
                                   setOpenMenuId(null);
                                   navigate(`/s/courses/${courseId}/certificate`);
                                 }}
-                                className="w-full text-left px-2.5 py-1.5 text-purple-300 hover:bg-purple-600/20 rounded-lg font-medium"
+                                className="w-full text-left px-2.5 py-1.5 text-blue-300 hover:bg-blue-600/20 rounded-lg font-medium"
                               >
                                 View Certificate
                               </button>
@@ -589,8 +589,8 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
         </div>
       ) : (
         /* EMPTY STATE */
-        <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-12 text-center text-richblack-300 space-y-3 shadow-[0_0_20px_rgba(168,85,247,0.08)]">
-          <VscBook className="text-4xl mx-auto text-purple-400/50" />
+        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-12 text-center text-richblack-300 space-y-3 shadow-[0_0_20px_rgba(37, 99, 235,0.08)]">
+          <VscBook className="text-4xl mx-auto text-blue-400/50" />
           <h3 className="text-base font-bold text-white">No courses found</h3>
           <p className="text-xs text-richblack-400 max-w-sm mx-auto">
             {activeSubTab === "completed"
@@ -599,7 +599,7 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
           </p>
           <button
             onClick={() => setActiveSubTab("buy")}
-            className="px-5 py-2.5 rounded-xl bg-purple-600 text-white text-xs font-bold hover:bg-purple-700 transition-all shadow-[0_0_15px_rgba(168,85,247,0.4)] inline-block mt-2"
+            className="px-5 py-2.5 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-800 transition-all shadow-[0_0_15px_rgba(37, 99, 235,0.4)] inline-block mt-2"
           >
             Explore Courses
           </button>
@@ -607,9 +607,9 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
       )}
 
       {/* 5. BOTTOM RECOMMENDED CTA BANNER */}
-      <div className="bg-gradient-to-r from-purple-900/50 via-[#0e111f] to-indigo-900/50 border border-purple-500/30 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-[0_0_30px_rgba(168,85,247,0.2)]">
+      <div className="bg-gradient-to-r from-blue-950/50 via-[#0e111f] to-indigo-900/50 border border-blue-500/30 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-[0_0_30px_rgba(37, 99, 235,0.2)]">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-purple-600/30 text-purple-300 border border-purple-500/40 flex items-center justify-center text-2xl shrink-0 shadow-[0_0_15px_rgba(168,85,247,0.3)]">
+          <div className="w-12 h-12 rounded-2xl bg-blue-600/30 text-blue-300 border border-blue-500/40 flex items-center justify-center text-2xl shrink-0 shadow-[0_0_15px_rgba(37, 99, 235,0.3)]">
             🎓
           </div>
           <div>
@@ -622,7 +622,7 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
 
         <button
           onClick={() => setActiveSubTab("buy")}
-          className="px-6 py-3 rounded-xl bg-purple-600 text-white text-xs font-extrabold hover:bg-purple-700 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] text-center shrink-0 flex items-center justify-center gap-2"
+          className="px-6 py-3 rounded-xl bg-blue-600 text-white text-xs font-extrabold hover:bg-blue-800 transition-all shadow-[0_0_20px_rgba(37, 99, 235,0.4)] text-center shrink-0 flex items-center justify-center gap-2"
         >
           <span>Explore Courses</span>
           <VscArrowRight />

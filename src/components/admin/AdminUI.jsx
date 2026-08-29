@@ -6,7 +6,7 @@ export function StatusBadge({ status }) {
     Draft:     'bg-yellow-500/15 text-yellow-400 border-yellow-500/30',
     Superadmin:'bg-[#FFD60A]/15 text-[#FFD60A] border-[#FFD60A]/30',
     Admin:     'bg-blue-500/15 text-blue-400 border-blue-500/30',
-    Instructor:'bg-purple-500/15 text-purple-400 border-purple-500/30',
+    Instructor:'bg-blue-500/15 text-blue-400 border-blue-500/30',
     Student:   'bg-[#AFB2BF]/15 text-[#AFB2BF] border-[#AFB2BF]/30',
     Scheduled: 'bg-blue-500/15 text-blue-400 border-blue-500/30',
     Live:      'bg-red-500/15 text-red-400 border-red-500/30',
@@ -89,7 +89,7 @@ export function StatCard({ label, value, icon, color = 'yellow' }) {
     yellow: 'from-[#FFD60A]/10 to-transparent border-[#FFD60A]/20 text-[#FFD60A]',
     blue:   'from-blue-500/10 to-transparent border-blue-500/20 text-blue-400',
     green:  'from-green-500/10 to-transparent border-green-500/20 text-green-400',
-    purple: 'from-purple-500/10 to-transparent border-purple-500/20 text-purple-400',
+    purple: 'from-blue-500/10 to-transparent border-blue-500/20 text-blue-400',
     red:    'from-red-500/10 to-transparent border-red-500/20 text-red-400',
     gray:   'from-[#585D69]/10 to-transparent border-[#585D69]/20 text-[#AFB2BF]',
   };

@@ -81,7 +81,7 @@ const NestedView = ({ handleChangeEditSectionName }) => {
                   btn1Handler: () => handleDeleteSection(sId),
                   btn2Handler: () => setConfirmationModal(null),
                 })}
-                className='text-pink-400 hover:scale-110 transition'
+                className='text-blue-400 hover:scale-110 transition'
               >
                 <RiDeleteBin6Line />
               </button>
@@ -127,7 +127,7 @@ const NestedView = ({ handleChangeEditSectionName }) => {
                       btn1Handler: () => handleDeleteSubSection(subId, sId),
                       btn2Handler: () => setConfirmationModal(null),
                     })}
-                    className='text-pink-400 hover:scale-110 transition'
+                    className='text-blue-400 hover:scale-110 transition'
                   >
                     <RiDeleteBin6Line />
                   </button>

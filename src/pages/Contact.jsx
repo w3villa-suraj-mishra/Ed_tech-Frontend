@@ -113,21 +113,21 @@ const Contact = () => {
       {/* 1. HERO HEADER */}
       <section className="relative py-16 px-4 text-center max-w-[1260px] mx-auto">
         {/* Floating Icons Background Graphics */}
-        <div className="absolute top-10 left-10 lg:left-20 w-12 h-12 rounded-2xl bg-purple-900/20 border border-purple-500/30 flex items-center justify-center text-purple-400 text-xl hidden sm:flex shadow-[0_0_20px_rgba(168,85,247,0.3)] animate-pulse">
+        <div className="absolute top-10 left-10 lg:left-20 w-12 h-12 rounded-2xl bg-blue-950/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-xl hidden sm:flex shadow-[0_0_20px_rgba(37, 99, 235,0.3)] animate-pulse">
           <FaCommentAlt />
         </div>
-        <div className="absolute top-10 right-10 lg:right-20 w-12 h-12 rounded-2xl bg-purple-900/20 border border-purple-500/30 flex items-center justify-center text-purple-400 text-xl hidden sm:flex shadow-[0_0_20px_rgba(168,85,247,0.3)] animate-pulse">
+        <div className="absolute top-10 right-10 lg:right-20 w-12 h-12 rounded-2xl bg-blue-950/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-xl hidden sm:flex shadow-[0_0_20px_rgba(37, 99, 235,0.3)] animate-pulse">
           <FaEnvelope />
         </div>
 
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-900/40 border border-purple-500/30 text-purple-300 text-xs font-bold mb-4">
-          <span className="w-2 h-2 rounded-full bg-purple-400 animate-ping"></span>
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-950/40 border border-blue-500/30 text-blue-300 text-xs font-bold mb-4">
+          <span className="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span>
           <span>Get in Touch</span>
         </div>
 
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
           We're Here to Help You <br className="hidden sm:inline" />
-          on Your <span className="text-[#a855f7]">Learning Journey</span>
+          on Your <span className="text-[#3b82f6]">Learning Journey</span>
         </h1>
 
         <p className="text-xs sm:text-sm text-richblack-300 max-w-xl mx-auto mt-3 font-normal leading-relaxed">
@@ -155,7 +155,7 @@ const Contact = () => {
       {/* 3. FREQUENTLY ASKED QUESTIONS SECTION */}
       <section className="max-w-[1260px] mx-auto px-4 py-12 text-center">
         <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-8">
-          Frequently Asked <span className="text-[#a855f7]">Questions</span>
+          Frequently Asked <span className="text-[#3b82f6]">Questions</span>
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 text-left">
@@ -163,10 +163,10 @@ const Contact = () => {
             <div
               key={faq.id}
               onClick={() => setActiveModalCategory(faq)}
-              className="bg-[#0e111f]/90 border border-white/10 hover:border-purple-500/40 rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-lg cursor-pointer group"
+              className="bg-[#0e111f]/90 border border-white/10 hover:border-blue-500/40 rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-lg cursor-pointer group"
             >
               <div className="space-y-3">
-                <div className="w-10 h-10 rounded-xl bg-purple-900/30 border border-purple-500/30 flex items-center justify-center text-purple-400 text-lg group-hover:scale-105 transition-transform">
+                <div className="w-10 h-10 rounded-xl bg-blue-950/30 border border-blue-500/30 flex items-center justify-center text-blue-400 text-lg group-hover:scale-105 transition-transform">
                   {faq.icon}
                 </div>
                 <h3 className="text-sm font-bold text-white leading-snug">
@@ -177,7 +177,7 @@ const Contact = () => {
                 </p>
               </div>
 
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-purple-400 mt-4 group-hover:text-purple-300 transition-colors">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-blue-400 mt-4 group-hover:text-blue-300 transition-colors">
                 <span>View FAQ</span>
                 <FaArrowRight className="text-[10px] group-hover:translate-x-1 transition-transform" />
               </div>
@@ -188,17 +188,17 @@ const Contact = () => {
 
       {/* 4. JOIN COMMUNITY BANNER */}
       <section className="max-w-[1260px] mx-auto px-4 py-10">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0e111f] via-[#16142e] to-[#0e111f] border border-purple-500/30 p-8 sm:p-10 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-2xl text-left">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0e111f] via-[#16142e] to-[#0e111f] border border-blue-500/30 p-8 sm:p-10 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-2xl text-left">
           {/* Ambient Glow */}
-          <div className="absolute -left-20 top-0 w-60 h-60 bg-purple-600 opacity-20 blur-3xl pointer-events-none"></div>
+          <div className="absolute -left-20 top-0 w-60 h-60 bg-blue-600 opacity-20 blur-3xl pointer-events-none"></div>
 
           <div className="flex items-start sm:items-center gap-5 relative z-10">
-            <div className="w-14 h-14 rounded-2xl bg-purple-600/30 border border-purple-500/40 flex items-center justify-center text-purple-300 text-2xl shrink-0 shadow-lg">
+            <div className="w-14 h-14 rounded-2xl bg-blue-600/30 border border-blue-500/40 flex items-center justify-center text-blue-300 text-2xl shrink-0 shadow-lg">
               <FaUsers />
             </div>
             <div>
               <h3 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-                Join a Community of <span className="text-[#a855f7]">{learnersCount} Learners</span>
+                Join a Community of <span className="text-[#3b82f6]">{learnersCount} Learners</span>
               </h3>
               <p className="text-xs sm:text-sm text-richblack-300 mt-1 font-normal">
                 Learn, build, and grow together with CodeLearn.
@@ -206,7 +206,7 @@ const Contact = () => {
 
               <div className="mt-5">
                 <Link to="/courses">
-                  <button className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold px-6 py-3 rounded-xl transition-all shadow-md shadow-purple-900/40">
+                  <button className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold px-6 py-3 rounded-xl transition-all shadow-md shadow-blue-950/40">
                     <span>Explore Courses</span>
                     <FaArrowRight className="text-xs" />
                   </button>
@@ -217,10 +217,10 @@ const Contact = () => {
 
           {/* Graphic Avatar illustration placeholder */}
           <div className="hidden lg:flex items-center gap-4 relative z-10 opacity-90">
-            <div className="w-24 h-24 rounded-2xl bg-purple-900/40 border border-purple-500/30 p-2 flex items-center justify-center">
+            <div className="w-24 h-24 rounded-2xl bg-blue-950/40 border border-blue-500/30 p-2 flex items-center justify-center">
               <span className="text-4xl">👨‍💻</span>
             </div>
-            <div className="w-24 h-24 rounded-2xl bg-purple-900/40 border border-purple-500/30 p-2 flex items-center justify-center">
+            <div className="w-24 h-24 rounded-2xl bg-blue-950/40 border border-blue-500/30 p-2 flex items-center justify-center">
               <span className="text-4xl">👩‍💻</span>
             </div>
           </div>
@@ -229,20 +229,20 @@ const Contact = () => {
 
       {/* FAQ POPUP MODAL */}
       {activeModalCategory && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="bg-[#0e111f] border border-purple-500/40 rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-[0_0_50px_rgba(168,85,247,0.3)] text-left animate-in fade-in zoom-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0B1120]lack/80 backdrop-blur-sm p-4">
+          <div className="bg-[#0e111f] border border-blue-500/40 rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-[0_0_50px_rgba(37, 99, 235,0.3)] text-left animate-in fade-in zoom-in duration-200">
             
             {/* Close Button */}
             <button
               onClick={() => setActiveModalCategory(null)}
-              className="absolute top-5 right-5 w-8 h-8 rounded-full bg-richblack-800 hover:bg-purple-900/50 border border-white/10 flex items-center justify-center text-richblack-300 hover:text-white transition-colors"
+              className="absolute top-5 right-5 w-8 h-8 rounded-full bg-richblack-800 hover:bg-blue-950/50 border border-white/10 flex items-center justify-center text-richblack-300 hover:text-white transition-colors"
             >
               <FaTimes className="text-sm" />
             </button>
 
             {/* Modal Header */}
             <div className="flex items-center gap-3.5 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-purple-600/30 border border-purple-500/40 flex items-center justify-center text-purple-400 text-lg">
+              <div className="w-10 h-10 rounded-xl bg-blue-600/30 border border-blue-500/40 flex items-center justify-center text-blue-400 text-lg">
                 {activeModalCategory.icon}
               </div>
               <div>
@@ -259,11 +259,11 @@ const Contact = () => {
             <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
               {activeModalCategory.questions.map((item, idx) => (
                 <div key={idx} className="bg-[#141728] border border-white/10 rounded-2xl p-4 space-y-2">
-                  <h4 className="text-xs sm:text-sm font-bold text-purple-300 flex items-start gap-2">
-                    <span className="text-purple-400 font-black">Q.</span>
+                  <h4 className="text-xs sm:text-sm font-bold text-blue-300 flex items-start gap-2">
+                    <span className="text-blue-400 font-black">Q.</span>
                     <span>{item.q}</span>
                   </h4>
-                  <p className="text-xs text-richblack-300 leading-relaxed font-normal pl-4 border-l-2 border-purple-500/40">
+                  <p className="text-xs text-richblack-300 leading-relaxed font-normal pl-4 border-l-2 border-blue-500/40">
                     {item.a}
                   </p>
                 </div>
@@ -274,7 +274,7 @@ const Contact = () => {
             <div className="mt-6 pt-4 border-t border-white/10 flex justify-end">
               <button
                 onClick={() => setActiveModalCategory(null)}
-                className="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition-all shadow-md"
+                className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition-all shadow-md"
               >
                 Close FAQ
               </button>

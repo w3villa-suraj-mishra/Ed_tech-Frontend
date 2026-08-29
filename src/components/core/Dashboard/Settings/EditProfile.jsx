@@ -168,7 +168,7 @@ export default function EditProfile() {
               defaultValue={user?.firstName}
             />
             {errors.firstName && (
-              <span className="text-xs text-pink-400">
+              <span className="text-xs text-blue-400">
                 Please enter your first name.
               </span>
             )}
@@ -183,7 +183,7 @@ export default function EditProfile() {
               defaultValue={user?.lastName}
             />
             {errors.lastName && (
-              <span className="text-xs text-pink-400">
+              <span className="text-xs text-blue-400">
                 Please enter your last name.
               </span>
             )}
@@ -196,7 +196,7 @@ export default function EditProfile() {
             <label className="text-sm text-richblack-300">Date of Birth</label>
             <input
               type="date"
-              className="rounded-lg border border-richblack-600 bg-richblack-800 px-4 py-3 text-white focus:ring-2 focus:ring-purple-500 outline-none transition-all"
+              className="rounded-lg border border-richblack-600 bg-richblack-800 px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
               {...register("dateOfBirth")}
               defaultValue={user?.additionalDetails?.dateOfBirth}
             />
@@ -205,7 +205,7 @@ export default function EditProfile() {
           <div className="flex flex-col gap-2 lg:w-[48%]">
             <label className="text-sm text-richblack-300">Gender</label>
             <select
-              className="rounded-lg border border-richblack-600 bg-richblack-800 px-4 py-3 text-white focus:ring-2 focus:ring-purple-500 outline-none transition-all"
+              className="rounded-lg border border-richblack-600 bg-richblack-800 px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
               {...register("gender", { required: true })}
               defaultValue={user?.additionalDetails?.gender}
             >

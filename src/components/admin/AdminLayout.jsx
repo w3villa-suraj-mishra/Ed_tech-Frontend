@@ -212,7 +212,7 @@ export default function AdminLayout({ children }) {
                   <div className="px-5 py-4 flex items-center justify-between border-b border-[#252C3A]">
                     <div className="flex items-center gap-2">
                       <h3 className="font-bold text-base">Notifications</h3>
-                      <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                      <span className="w-2 h-2 rounded-full bg-[#0B1120]merald-500"></span>
                     </div>
                   </div>
 
@@ -222,7 +222,7 @@ export default function AdminLayout({ children }) {
                       onClick={() => setTabFilter('all')}
                       className={`pb-2.5 px-3 border-b-2 transition-all ${
                         tabFilter === 'all'
-                          ? 'border-purple-500 text-white font-bold'
+                          ? 'border-blue-500 text-white font-bold'
                           : 'border-transparent hover:text-slate-300'
                       }`}
                     >
@@ -232,7 +232,7 @@ export default function AdminLayout({ children }) {
                       onClick={() => setTabFilter('unread')}
                       className={`pb-2.5 px-3 border-b-2 transition-all ${
                         tabFilter === 'unread'
-                          ? 'border-purple-500 text-white font-bold'
+                          ? 'border-blue-500 text-white font-bold'
                           : 'border-transparent hover:text-slate-300'
                       }`}
                     >

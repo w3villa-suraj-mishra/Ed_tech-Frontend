@@ -62,7 +62,7 @@ const TimelineSection = () => {
                 />
 
               <div className='absolute 
-    bg-black/60 backdrop-blur-md
+    bg-[#0B1120]lack/60 backdrop-blur-md
     flex flex-row text-white uppercase py-7
     left-[50%] translate-x-[-50%] translate-y-[-50%]
     rounded-xl shadow-2xl border border-white/20'>

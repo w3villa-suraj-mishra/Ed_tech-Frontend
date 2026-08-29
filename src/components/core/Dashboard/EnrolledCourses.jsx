@@ -77,7 +77,7 @@ export default function EnrolledCourses() {
                   alt={course.courseName}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <div className="absolute inset-0 bg-[#0B1120]lack/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                    <BsPlayCircleFill size={50} className="text-yellow-400" />
                 </div>
               </div>

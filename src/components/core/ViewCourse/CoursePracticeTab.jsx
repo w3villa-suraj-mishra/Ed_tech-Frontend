@@ -112,7 +112,7 @@ export default function CoursePracticeTab() {
                     onClick={() => handleSelectOption(q.id, opt.id)}
                     className={`p-3 rounded-xl text-left text-xs font-medium border transition-all ${
                       answers[q.id] === opt.id
-                        ? 'bg-purple-500/20 border-purple-500 text-white font-bold'
+                        ? 'bg-blue-500/20 border-blue-500 text-white font-bold'
                         : 'bg-richblack-900 border-richblack-700 text-richblack-300 hover:bg-richblack-700'
                     }`}
                   >
@@ -141,7 +141,7 @@ export default function CoursePracticeTab() {
   if (attemptResult) {
     return (
       <div className="p-8 max-w-xl mx-auto text-center space-y-6 bg-richblack-800 border border-richblack-700 rounded-3xl mt-10 text-white">
-        <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-3xl mx-auto">
+        <div className="w-16 h-16 rounded-full bg-[#0B1120]merald-500/20 text-emerald-400 flex items-center justify-center text-3xl mx-auto">
           <FaCheckCircle />
         </div>
         <h2 className="text-2xl font-bold">Test Submitted!</h2>
@@ -187,10 +187,10 @@ export default function CoursePracticeTab() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {tests.map((test) => (
-            <div key={test.id} className="bg-richblack-800 border border-richblack-700 rounded-2xl p-5 hover:border-purple-500/50 transition-all space-y-4">
+            <div key={test.id} className="bg-richblack-800 border border-richblack-700 rounded-2xl p-5 hover:border-blue-500/50 transition-all space-y-4">
               <div className="flex justify-between items-start">
                 <div>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">
                     {test.testType}
                   </span>
                   <h3 className="text-lg font-bold text-white mt-2">{test.title}</h3>
@@ -199,13 +199,13 @@ export default function CoursePracticeTab() {
               <p className="text-xs text-richblack-300 line-clamp-2">{test.description || 'Practice your course material'}</p>
 
               <div className="flex items-center justify-between pt-3 border-t border-richblack-700/50 text-xs text-richblack-400">
-                <span className="flex items-center gap-1.5"><FaClock className="text-purple-400" /> {test.duration} Mins</span>
+                <span className="flex items-center gap-1.5"><FaClock className="text-blue-400" /> {test.duration} Mins</span>
                 <span className="flex items-center gap-1.5"><FaAward className="text-yellow-400" /> {test.totalMarks} Marks</span>
               </div>
 
               <button
                 onClick={() => handleStartTest(test)}
-                className="w-full py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-lg transition-all"
+                className="w-full py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-lg transition-all"
               >
                 <FaPlay className="text-[10px]" /> Start Practice Test
               </button>

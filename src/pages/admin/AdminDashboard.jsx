@@ -42,14 +42,14 @@ function DashboardInner() {
         <>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
             <StatCard label="Total Users"      value={fmt(stats?.totalUsers)}       icon="👥" color="blue" />
-            <StatCard label="Students"         value={fmt(stats?.totalStudents)}     icon="🎓" color="purple" />
+            <StatCard label="Students"         value={fmt(stats?.totalStudents)}     icon="🎓" color="blue" />
             <StatCard label="Instructors"      value={fmt(stats?.totalInstructors)}  icon="👨‍🏫" color="green" />
             <StatCard label="Admins"           value={fmt(stats?.totalAdmins)}       icon="🛡️"  color="yellow" />
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <StatCard label="Total Courses"    value={fmt(stats?.totalCourses)}      icon="📚" color="blue" />
             <StatCard label="Published"        value={fmt(stats?.publishedCourses)}  icon="✅" color="green" />
-            <StatCard label="Enrollments"      value={fmt(stats?.totalEnrollments)}  icon="📋" color="purple" />
+            <StatCard label="Enrollments"      value={fmt(stats?.totalEnrollments)}  icon="📋" color="blue" />
             <StatCard label="Reviews"          value={fmt(stats?.totalReviews)}      icon="⭐" color="yellow" />
           </div>
         </>

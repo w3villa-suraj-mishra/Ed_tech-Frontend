@@ -132,7 +132,7 @@ const HelpSupport = () => {
     <div className="space-y-6 text-white max-w-6xl mx-auto pb-10">
       
       {/* 1. HEADER SECTION */}
-      <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-6 relative overflow-hidden shadow-[0_0_25px_rgba(168,85,247,0.1)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+      <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-6 relative overflow-hidden shadow-[0_0_25px_rgba(37, 99, 235,0.1)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div className="space-y-1 max-w-xl">
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Help & Support</h1>
           <p className="text-xs sm:text-sm text-richblack-300">
@@ -142,12 +142,12 @@ const HelpSupport = () => {
 
         {/* Headphones Graphic & Create Ticket Action */}
         <div className="flex items-center gap-4 shrink-0">
-          <div className="hidden md:flex w-16 h-16 rounded-2xl bg-purple-900/40 text-purple-300 border border-purple-500/30 items-center justify-center text-3xl shadow-[0_0_15px_rgba(168,85,247,0.3)]">
+          <div className="hidden md:flex w-16 h-16 rounded-2xl bg-blue-950/40 text-blue-300 border border-blue-500/30 items-center justify-center text-3xl shadow-[0_0_15px_rgba(37, 99, 235,0.3)]">
             🎧
           </div>
           <button
             onClick={() => setShowTicketModal(true)}
-            className="px-5 py-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-extrabold transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] flex items-center gap-2"
+            className="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-800 text-white text-xs font-extrabold transition-all shadow-[0_0_20px_rgba(37, 99, 235,0.4)] flex items-center gap-2"
           >
             <VscAdd className="text-base" />
             <span>Create a New Ticket</span>
@@ -163,12 +163,12 @@ const HelpSupport = () => {
           placeholder="Search help articles, topics or keywords..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full bg-[#0e111f] border border-purple-500/20 rounded-2xl pl-11 pr-4 py-3.5 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-purple-500 transition-colors shadow-inner"
+          className="w-full bg-[#0e111f] border border-blue-500/20 rounded-2xl pl-11 pr-4 py-3.5 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-blue-500 transition-colors shadow-inner"
         />
       </div>
 
       {/* 3. GET IN TOUCH (4 CARDS GRID) */}
-      <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-6 space-y-4">
+      <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-6 space-y-4">
         <div>
           <h2 className="text-base font-bold text-white">Get in Touch</h2>
           <p className="text-xs text-richblack-400">Choose the best way to reach us</p>
@@ -177,22 +177,22 @@ const HelpSupport = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           
           {/* Email Support */}
-          <div className="p-4 rounded-xl bg-[#141728] border border-white/5 hover:border-purple-500/30 transition-all flex items-start gap-3 group cursor-pointer">
-            <div className="w-9 h-9 rounded-xl bg-purple-900/40 text-purple-400 flex items-center justify-center shrink-0">
+          <div className="p-4 rounded-xl bg-[#141728] border border-white/5 hover:border-blue-500/30 transition-all flex items-start gap-3 group cursor-pointer">
+            <div className="w-9 h-9 rounded-xl bg-blue-950/40 text-blue-400 flex items-center justify-center shrink-0">
               <VscMail className="text-lg" />
             </div>
             <div className="flex flex-col min-w-0 flex-1">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-white">Email Support</span>
-                <VscArrowRight className="text-xs text-richblack-400 group-hover:text-purple-400 group-hover:translate-x-1 transition-all" />
+                <VscArrowRight className="text-xs text-richblack-400 group-hover:text-blue-400 group-hover:translate-x-1 transition-all" />
               </div>
               <span className="text-[10px] text-richblack-400 mt-0.5">Get help via email</span>
-              <span className="text-[10px] text-purple-300 font-medium truncate mt-1">support@codelearn.com</span>
+              <span className="text-[10px] text-blue-300 font-medium truncate mt-1">support@codelearn.com</span>
             </div>
           </div>
 
           {/* Live Chat */}
-          <div className="p-4 rounded-xl bg-[#141728] border border-white/5 hover:border-purple-500/30 transition-all flex items-start gap-3 group cursor-pointer">
+          <div className="p-4 rounded-xl bg-[#141728] border border-white/5 hover:border-blue-500/30 transition-all flex items-start gap-3 group cursor-pointer">
             <div className="w-9 h-9 rounded-xl bg-indigo-900/40 text-indigo-400 flex items-center justify-center shrink-0">
               <VscCommentDiscussion className="text-lg" />
             </div>
@@ -207,8 +207,8 @@ const HelpSupport = () => {
           </div>
 
           {/* Phone Support */}
-          <div className="p-4 rounded-xl bg-[#141728] border border-white/5 hover:border-purple-500/30 transition-all flex items-start gap-3 group cursor-pointer">
-            <div className="w-9 h-9 rounded-xl bg-emerald-900/40 text-emerald-400 flex items-center justify-center shrink-0">
+          <div className="p-4 rounded-xl bg-[#141728] border border-white/5 hover:border-blue-500/30 transition-all flex items-start gap-3 group cursor-pointer">
+            <div className="w-9 h-9 rounded-xl bg-[#0B1120]merald-900/40 text-emerald-400 flex items-center justify-center shrink-0">
               <VscCallIncoming className="text-lg" />
             </div>
             <div className="flex flex-col min-w-0 flex-1">
@@ -222,7 +222,7 @@ const HelpSupport = () => {
           </div>
 
           {/* Community */}
-          <div className="p-4 rounded-xl bg-[#141728] border border-white/5 hover:border-purple-500/30 transition-all flex items-start gap-3 group cursor-pointer">
+          <div className="p-4 rounded-xl bg-[#141728] border border-white/5 hover:border-blue-500/30 transition-all flex items-start gap-3 group cursor-pointer">
             <div className="w-9 h-9 rounded-xl bg-amber-900/40 text-amber-400 flex items-center justify-center shrink-0">
               <VscOrganization className="text-lg" />
             </div>
@@ -243,7 +243,7 @@ const HelpSupport = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* LEFT COLUMN: FAQs & TICKETS TABS */}
-        <div className="lg:col-span-2 bg-[#0e111f] border border-purple-500/20 rounded-2xl p-6 flex flex-col justify-between space-y-6">
+        <div className="lg:col-span-2 bg-[#0e111f] border border-blue-500/20 rounded-2xl p-6 flex flex-col justify-between space-y-6">
           <div>
             <h2 className="text-base font-bold text-white mb-4">Frequently Asked Questions</h2>
 
@@ -252,24 +252,24 @@ const HelpSupport = () => {
               <button
                 onClick={() => setActiveTab("faqs")}
                 className={`text-xs font-bold transition-all relative pb-2 ${
-                  activeTab === "faqs" ? "text-purple-400" : "text-richblack-400 hover:text-white"
+                  activeTab === "faqs" ? "text-blue-400" : "text-richblack-400 hover:text-white"
                 }`}
               >
                 FAQs
                 {activeTab === "faqs" && (
-                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-500 rounded-full shadow-[0_0_8px_#a855f7]" />
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]" />
                 )}
               </button>
 
               <button
                 onClick={() => setActiveTab("tickets")}
                 className={`text-xs font-bold transition-all relative pb-2 ${
-                  activeTab === "tickets" ? "text-purple-400" : "text-richblack-400 hover:text-white"
+                  activeTab === "tickets" ? "text-blue-400" : "text-richblack-400 hover:text-white"
                 }`}
               >
                 My Tickets ({tickets.length})
                 {activeTab === "tickets" && (
-                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-500 rounded-full shadow-[0_0_8px_#a855f7]" />
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]" />
                 )}
               </button>
             </div>
@@ -281,7 +281,7 @@ const HelpSupport = () => {
                   filteredFaqs.map((faq) => (
                     <div
                       key={faq.id}
-                      className="bg-[#141728] border border-white/5 hover:border-purple-500/30 rounded-xl overflow-hidden transition-all"
+                      className="bg-[#141728] border border-white/5 hover:border-blue-500/30 rounded-xl overflow-hidden transition-all"
                     >
                       <button
                         onClick={() => setOpenFaq(openFaq === faq.id ? null : faq.id)}
@@ -289,7 +289,7 @@ const HelpSupport = () => {
                       >
                         <span>{faq.q}</span>
                         <VscChevronDown
-                          className={`text-base transition-transform duration-200 text-purple-400 shrink-0 ${
+                          className={`text-base transition-transform duration-200 text-blue-400 shrink-0 ${
                             openFaq === faq.id ? "rotate-180" : ""
                           }`}
                         />
@@ -320,7 +320,7 @@ const HelpSupport = () => {
                     >
                       <div className="flex items-center justify-between">
                         <h3 className="font-bold text-sm text-white">{ticket.subject}</h3>
-                        <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-2.5 py-0.5 rounded-full">
+                        <span className="text-[10px] bg-[#0B1120]merald-500/20 text-emerald-400 font-bold px-2.5 py-0.5 rounded-full">
                           {ticket.status}
                         </span>
                       </div>
@@ -330,7 +330,7 @@ const HelpSupport = () => {
                   ))
                 ) : (
                   <div className="py-10 text-center text-richblack-400 space-y-2">
-                    <VscQuestion className="text-3xl mx-auto text-purple-400/50" />
+                    <VscQuestion className="text-3xl mx-auto text-blue-400/50" />
                     <p className="text-xs font-bold text-white">No Support Tickets Found</p>
                     <p className="text-[11px] text-richblack-400">
                       You haven't submitted any support tickets yet. Click above to create one.
@@ -342,9 +342,9 @@ const HelpSupport = () => {
           </div>
 
           {/* STILL NEED HELP BANNER */}
-          <div className="p-4 rounded-xl bg-purple-900/20 border border-purple-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-4 mt-4">
+          <div className="p-4 rounded-xl bg-blue-950/20 border border-blue-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-4 mt-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-purple-600/30 text-purple-300 flex items-center justify-center text-sm shrink-0">
+              <div className="w-8 h-8 rounded-full bg-blue-600/30 text-blue-300 flex items-center justify-center text-sm shrink-0">
                 ❓
               </div>
               <div>
@@ -354,7 +354,7 @@ const HelpSupport = () => {
             </div>
             <button
               onClick={() => setShowTicketModal(true)}
-              className="px-4 py-2 rounded-xl bg-purple-600 text-white text-xs font-bold hover:bg-purple-700 transition-all shrink-0 self-end sm:self-auto shadow-[0_0_12px_rgba(168,85,247,0.3)]"
+              className="px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-800 transition-all shrink-0 self-end sm:self-auto shadow-[0_0_12px_rgba(37, 99, 235,0.3)]"
             >
               Contact Support
             </button>
@@ -365,12 +365,12 @@ const HelpSupport = () => {
         <div className="space-y-6">
           
           {/* Popular Help Articles Card */}
-          <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-5 space-y-4">
+          <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-5 space-y-4">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <h2 className="text-sm font-bold text-white">Popular Help Articles</h2>
               <button
                 onClick={() => navigate("/dashboard/articles")}
-                className="text-[11px] text-purple-400 font-semibold hover:text-purple-300 transition-colors cursor-pointer"
+                className="text-[11px] text-blue-400 font-semibold hover:text-blue-300 transition-colors cursor-pointer"
               >
                 View All ↗
               </button>
@@ -381,32 +381,32 @@ const HelpSupport = () => {
                 <div
                   key={article.id}
                   onClick={() => setSelectedArticle(article)}
-                  className="p-3 rounded-xl bg-[#141728] border border-white/5 hover:border-purple-500/40 hover:bg-purple-900/10 transition-all flex items-center gap-3 cursor-pointer group active:scale-[0.98]"
+                  className="p-3 rounded-xl bg-[#141728] border border-white/5 hover:border-blue-500/40 hover:bg-blue-950/10 transition-all flex items-center gap-3 cursor-pointer group active:scale-[0.98]"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-purple-900/30 text-purple-400 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                  <div className="w-8 h-8 rounded-lg bg-blue-950/30 text-blue-400 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                     <VscFileCode className="text-base" />
                   </div>
                   <div className="flex flex-col min-w-0 flex-1">
-                    <span className="text-xs font-bold text-white group-hover:text-purple-300 transition-colors truncate">
+                    <span className="text-xs font-bold text-white group-hover:text-blue-300 transition-colors truncate">
                       {article.title}
                     </span>
                     <span className="text-[10px] text-richblack-400 truncate">
                       {article.desc}
                     </span>
                   </div>
-                  <VscArrowRight className="text-xs text-richblack-400 group-hover:text-purple-400 group-hover:translate-x-1 transition-all shrink-0" />
+                  <VscArrowRight className="text-xs text-richblack-400 group-hover:text-blue-400 group-hover:translate-x-1 transition-all shrink-0" />
                 </div>
               ))}
             </div>
           </div>
 
           {/* Support Hours Card */}
-          <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-5 space-y-4">
+          <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-5 space-y-4">
             <h2 className="text-sm font-bold text-white border-b border-white/10 pb-3">Support Hours</h2>
 
             <div className="space-y-4 text-xs">
               <div className="flex items-start gap-3">
-                <div className="w-7 h-7 rounded-lg bg-purple-900/30 text-purple-400 flex items-center justify-center shrink-0">
+                <div className="w-7 h-7 rounded-lg bg-blue-950/30 text-blue-400 flex items-center justify-center shrink-0">
                   <FiClock className="text-sm" />
                 </div>
                 <div>
@@ -426,7 +426,7 @@ const HelpSupport = () => {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-7 h-7 rounded-lg bg-emerald-900/30 text-emerald-400 flex items-center justify-center shrink-0">
+                <div className="w-7 h-7 rounded-lg bg-[#0B1120]merald-900/30 text-emerald-400 flex items-center justify-center shrink-0">
                   <AiOutlineCheckCircle className="text-sm" />
                 </div>
                 <div>
@@ -443,8 +443,8 @@ const HelpSupport = () => {
 
       {/* CREATE TICKET MODAL */}
       {showTicketModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#0e111f] border border-purple-500/30 max-w-md w-full rounded-2xl p-6 text-white space-y-4 shadow-[0_0_30px_rgba(168,85,247,0.3)]">
+        <div className="fixed inset-0 bg-[#0B1120]lack/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#0e111f] border border-blue-500/30 max-w-md w-full rounded-2xl p-6 text-white space-y-4 shadow-[0_0_30px_rgba(37, 99, 235,0.3)]">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <h2 className="font-bold text-base text-white">Create Support Ticket</h2>
               <button
@@ -471,7 +471,7 @@ const HelpSupport = () => {
                     value={ticketSubject}
                     onChange={(e) => setTicketSubject(e.target.value)}
                     placeholder="e.g. Payment successful but course not assigned"
-                    className="w-full bg-[#141728] border border-purple-500/20 rounded-xl px-3.5 py-2.5 text-white placeholder-richblack-500 focus:outline-none focus:border-purple-500"
+                    className="w-full bg-[#141728] border border-blue-500/20 rounded-xl px-3.5 py-2.5 text-white placeholder-richblack-500 focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
@@ -483,7 +483,7 @@ const HelpSupport = () => {
                     value={ticketMsg}
                     onChange={(e) => setTicketMsg(e.target.value)}
                     placeholder="Provide details about your query or transaction ID..."
-                    className="w-full bg-[#141728] border border-purple-500/20 rounded-xl px-3.5 py-2.5 text-white placeholder-richblack-500 focus:outline-none focus:border-purple-500"
+                    className="w-full bg-[#141728] border border-blue-500/20 rounded-xl px-3.5 py-2.5 text-white placeholder-richblack-500 focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
@@ -498,7 +498,7 @@ const HelpSupport = () => {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="px-5 py-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white rounded-xl font-bold transition-colors shadow-[0_0_12px_rgba(168,85,247,0.3)]"
+                    className="px-5 py-2 bg-blue-600 hover:bg-blue-800 disabled:opacity-50 text-white rounded-xl font-bold transition-colors shadow-[0_0_12px_rgba(37, 99, 235,0.3)]"
                   >
                     {submitting ? "Submitting..." : "Submit Ticket"}
                   </button>
@@ -511,8 +511,8 @@ const HelpSupport = () => {
 
       {/* ARTICLE DETAILS MODAL */}
       {selectedArticle && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#0e111f] border border-purple-500/30 max-w-lg w-full rounded-2xl p-6 text-white space-y-4 shadow-[0_0_30px_rgba(168,85,247,0.3)]">
+        <div className="fixed inset-0 bg-[#0B1120]lack/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#0e111f] border border-blue-500/30 max-w-lg w-full rounded-2xl p-6 text-white space-y-4 shadow-[0_0_30px_rgba(37, 99, 235,0.3)]">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <h2 className="font-bold text-base text-white">{selectedArticle.title}</h2>
               <button
@@ -524,7 +524,7 @@ const HelpSupport = () => {
             </div>
 
             <div className="space-y-3 text-xs leading-relaxed text-richblack-300">
-              <p className="font-semibold text-purple-300">{selectedArticle.desc}</p>
+              <p className="font-semibold text-blue-300">{selectedArticle.desc}</p>
               <p>
                 Welcome to the official CodeLearn guide for <strong>{selectedArticle.title}</strong>. This article covers step-by-step instructions on accessing your account, tracking your course progress, and resolving common payment or enrollment questions.
               </p>
@@ -541,7 +541,7 @@ const HelpSupport = () => {
             <div className="flex justify-end pt-2 border-t border-white/10">
               <button
                 onClick={() => setSelectedArticle(null)}
-                className="px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold transition-all shadow-[0_0_12px_rgba(168,85,247,0.3)]"
+                className="px-5 py-2 bg-blue-600 hover:bg-blue-800 text-white rounded-xl text-xs font-bold transition-all shadow-[0_0_12px_rgba(37, 99, 235,0.3)]"
               >
                 Close Article
               </button>

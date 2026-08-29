@@ -111,7 +111,7 @@ export default function DailyQuiz() {
   if (loading) {
     return (
       <div className="min-h-screen bg-richblack-900 text-white flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-[#a855f7] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-12 h-12 border-4 border-[#3b82f6] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -120,8 +120,8 @@ export default function DailyQuiz() {
   if (result) {
     return (
       <div className="min-h-screen bg-richblack-900 text-white py-12 px-4 font-sans">
-        <div className="max-w-2xl mx-auto bg-[#111422] border border-purple-500/30 rounded-3xl p-8 shadow-[0_0_30px_rgba(168,85,247,0.15)] text-center space-y-6">
-          <div className="w-20 h-20 rounded-full bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-[#a855f7] text-3xl mx-auto">
+        <div className="max-w-2xl mx-auto bg-[#111422] border border-blue-500/30 rounded-3xl p-8 shadow-[0_0_30px_rgba(37, 99, 235,0.15)] text-center space-y-6">
+          <div className="w-20 h-20 rounded-full bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-[#3b82f6] text-3xl mx-auto">
             🏆
           </div>
 
@@ -170,7 +170,7 @@ export default function DailyQuiz() {
             </button>
             <button
               onClick={() => { setResult(null); setCurrentIndex(0); setSelectedAnswers({}); fetchQuiz(); }}
-              className="flex-1 py-3 bg-[#a855f7] hover:bg-[#9333ea] text-white font-bold rounded-xl text-xs transition-all flex items-center justify-center gap-2"
+              className="flex-1 py-3 bg-[#3b82f6] hover:bg-[#1d4ed8] text-white font-bold rounded-xl text-xs transition-all flex items-center justify-center gap-2"
             >
               <FaRedo /> Try Again
             </button>
@@ -193,7 +193,7 @@ export default function DailyQuiz() {
             <p className="text-xs text-richblack-300">Question {currentIndex + 1} of {questions.length}</p>
           </div>
 
-          <div className="flex items-center gap-2 bg-purple-500/10 border border-purple-500/30 px-4 py-2 rounded-xl text-[#a855f7] text-xs font-mono font-bold">
+          <div className="flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 px-4 py-2 rounded-xl text-[#3b82f6] text-xs font-mono font-bold">
             <FaClock />
             <span>{formatTime(timeLeft)}</span>
           </div>
@@ -215,13 +215,13 @@ export default function DailyQuiz() {
                     onClick={() => handleSelectOption(currentQ.id, opt.id)}
                     className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 flex items-center justify-between ${
                       isSelected
-                        ? 'bg-[#a855f7]/20 border-[#a855f7] text-white font-semibold shadow-[0_0_15px_rgba(168,85,247,0.2)]'
+                        ? 'bg-[#3b82f6]/20 border-[#3b82f6] text-white font-semibold shadow-[0_0_15px_rgba(37, 99, 235,0.2)]'
                         : 'bg-white/5 border-white/10 hover:border-white/20 text-richblack-200'
                     }`}
                   >
                     <span className="text-sm">{opt.optionText}</span>
                     <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                      isSelected ? 'border-[#a855f7] bg-[#a855f7]' : 'border-white/30'
+                      isSelected ? 'border-[#3b82f6] bg-[#3b82f6]' : 'border-white/30'
                     }`}>
                       {isSelected && <div className="w-2 h-2 rounded-full bg-white"></div>}
                     </div>
@@ -243,7 +243,7 @@ export default function DailyQuiz() {
               {currentIndex < questions.length - 1 ? (
                 <button
                   onClick={() => setCurrentIndex(prev => prev + 1)}
-                  className="px-6 py-2.5 bg-[#a855f7] hover:bg-[#9333ea] text-xs font-bold rounded-xl transition-all flex items-center gap-2"
+                  className="px-6 py-2.5 bg-[#3b82f6] hover:bg-[#1d4ed8] text-xs font-bold rounded-xl transition-all flex items-center gap-2"
                 >
                   <span>Next</span> <FaArrowRight />
                 </button>

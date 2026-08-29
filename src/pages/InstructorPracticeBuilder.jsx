@@ -429,7 +429,7 @@ export default function InstructorPracticeBuilder() {
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
               activeTab === tab.id
-                ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/30'
+                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
                 : 'bg-[#161D29] text-[#AFB2BF] hover:bg-[#2C333F] hover:text-white'
             }`}
           >
@@ -448,7 +448,7 @@ export default function InstructorPracticeBuilder() {
                 onClick={() => setQTypeFilter(cat === 'All' ? '' : cat)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                   (qTypeFilter === cat || (cat === 'All' && !qTypeFilter))
-                    ? 'bg-purple-600 text-white shadow-md'
+                    ? 'bg-blue-600 text-white shadow-md'
                     : 'bg-[#161D29] text-[#AFB2BF] border border-[#2C333F] hover:text-white'
                 }`}
               >
@@ -517,7 +517,7 @@ export default function InstructorPracticeBuilder() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredTests.map((test) => (
                 <div key={test.id} className={`bg-[#161D29] border rounded-3xl p-6 flex flex-col justify-between space-y-4 transition-all relative ${
-                  selectedTestIds.includes(test.id) ? 'border-purple-500 bg-purple-500/5' : 'border-[#2C333F] hover:border-purple-500/50'
+                  selectedTestIds.includes(test.id) ? 'border-blue-500 bg-blue-500/5' : 'border-[#2C333F] hover:border-blue-500/50'
                 }`}>
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
@@ -532,15 +532,15 @@ export default function InstructorPracticeBuilder() {
                               setSelectedTestIds((prev) => prev.filter((id) => id !== test.id));
                             }
                           }}
-                          className="w-4 h-4 rounded border-gray-600 bg-[#090D16] text-purple-600 focus:ring-purple-500 cursor-pointer"
+                          className="w-4 h-4 rounded border-gray-600 bg-[#090D16] text-blue-600 focus:ring-blue-500 cursor-pointer"
                         />
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">
                           {test.testType}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                          test.status === 'published' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'
+                          test.status === 'published' ? 'bg-[#0B1120]merald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'
                         }`}>
                           {test.status?.toUpperCase()}
                         </span>
@@ -589,14 +589,14 @@ export default function InstructorPracticeBuilder() {
                       className={`flex-1 py-2 text-xs font-bold rounded-xl border transition ${
                         test.status === 'published'
                           ? 'border-amber-500/40 text-amber-400 hover:bg-amber-500/10'
-                          : 'border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10'
+                          : 'border-emerald-500/40 text-emerald-400 hover:bg-[#0B1120]merald-500/10'
                       }`}
                     >
                       {test.status === 'published' ? 'Unpublish' : 'Publish'}
                     </button>
                     <button
                       onClick={() => handleViewAttempts(test)}
-                      className="flex-1 py-2 bg-purple-600/20 border border-purple-500/30 text-purple-300 hover:bg-purple-600/30 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5"
+                      className="flex-1 py-2 bg-blue-600/20 border border-blue-500/30 text-blue-300 hover:bg-blue-600/30 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5"
                     >
                       <FaUserGraduate /> Attempts
                     </button>
@@ -681,7 +681,7 @@ export default function InstructorPracticeBuilder() {
                           setSelectedQuestionIdsForDelete(prev => prev.filter(id => !fIds.includes(id)));
                         }
                       }}
-                      className="w-4 h-4 rounded border-gray-600 bg-[#161D29] text-purple-600 focus:ring-purple-500 cursor-pointer"
+                      className="w-4 h-4 rounded border-gray-600 bg-[#161D29] text-blue-600 focus:ring-blue-500 cursor-pointer"
                     />
                     Select All Questions
                   </label>
@@ -689,7 +689,7 @@ export default function InstructorPracticeBuilder() {
                 </div>
                 {filteredQuestions.map((q) => (
                   <div key={q.id} className={`p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-[#1C2432] transition ${
-                    selectedQuestionIdsForDelete.includes(q.id) ? 'bg-purple-500/5' : ''
+                    selectedQuestionIdsForDelete.includes(q.id) ? 'bg-blue-500/5' : ''
                   }`}>
                     <div className="flex items-start sm:items-center gap-3">
                       <input
@@ -702,12 +702,12 @@ export default function InstructorPracticeBuilder() {
                             setSelectedQuestionIdsForDelete((prev) => prev.filter((id) => id !== q.id));
                           }
                         }}
-                        className="w-4 h-4 mt-1 sm:mt-0 rounded border-gray-600 bg-[#090D16] text-purple-600 focus:ring-purple-500 cursor-pointer"
+                        className="w-4 h-4 mt-1 sm:mt-0 rounded border-gray-600 bg-[#090D16] text-blue-600 focus:ring-blue-500 cursor-pointer"
                       />
                       <div className="space-y-1 max-w-2xl">
                         <div className="flex items-center gap-2">
                           <span className="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 text-[10px] font-bold">{q.type}</span>
-                          <span className="px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 text-[10px] font-bold">{q.difficulty}</span>
+                          <span className="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 text-[10px] font-bold">{q.difficulty}</span>
                           <span className="text-[10px] text-gray-400">{q.marks} Mark(s)</span>
                         </div>
                         <p className="text-sm font-semibold text-white">{q.title}</p>
@@ -817,7 +817,7 @@ export default function InstructorPracticeBuilder() {
                   <button
                     type="button"
                     onClick={handleAddMcqOption}
-                    className="px-3 py-1.5 bg-purple-600/20 text-purple-300 border border-purple-500/30 hover:bg-purple-600/30 text-xs font-bold rounded-xl flex items-center gap-1.5 transition"
+                    className="px-3 py-1.5 bg-blue-600/20 text-blue-300 border border-blue-500/30 hover:bg-blue-600/30 text-xs font-bold rounded-xl flex items-center gap-1.5 transition"
                   >
                     <FaPlus /> Add Option
                   </button>
@@ -874,7 +874,7 @@ export default function InstructorPracticeBuilder() {
                       key={idx}
                       className={`flex-1 p-3.5 rounded-xl border text-xs font-bold cursor-pointer flex items-center justify-center gap-2 transition ${
                         opt.isCorrect
-                          ? 'bg-purple-600/30 border-purple-500 text-white'
+                          ? 'bg-blue-600/30 border-blue-500 text-white'
                           : 'bg-[#090D16] border-[#2C333F] text-gray-400 hover:border-gray-500'
                       }`}
                     >
@@ -972,8 +972,8 @@ export default function InstructorPracticeBuilder() {
                 onClick={() => saveQuestion(true)}
                 className={`flex-1 py-3 font-bold text-xs rounded-xl shadow-lg flex items-center justify-center gap-2 transition ${
                   isSubmittingQuestion
-                    ? 'bg-purple-900/50 text-purple-300 cursor-not-allowed'
-                    : 'bg-purple-600 hover:bg-purple-500 text-white'
+                    ? 'bg-blue-950/50 text-blue-300 cursor-not-allowed'
+                    : 'bg-blue-600 hover:bg-blue-500 text-white'
                 }`}
               >
                 {isSubmittingQuestion ? (
@@ -1059,7 +1059,7 @@ export default function InstructorPracticeBuilder() {
                       <td className="p-4">
                         <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                           att.percentage >= (selectedTestForAttempts?.passingPercentage || 40)
-                            ? 'bg-emerald-500/20 text-emerald-400'
+                            ? 'bg-[#0B1120]merald-500/20 text-emerald-400'
                             : 'bg-red-500/20 text-red-400'
                         }`}>
                           {att.percentage >= (selectedTestForAttempts?.passingPercentage || 40) ? 'PASSED' : 'FAILED'}

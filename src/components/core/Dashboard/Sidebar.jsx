@@ -26,7 +26,7 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className="flex md:h-[calc(100vh-4rem)] md:sticky md:top-16 w-full md:w-64 shrink-0 flex-col border-b md:border-b-0 md:border-r border-purple-900/30 bg-[#070913] py-6">
+      <div className="flex md:h-[calc(100vh-4rem)] md:sticky md:top-16 w-full md:w-64 shrink-0 flex-col border-b md:border-b-0 md:border-r border-blue-950/30 bg-[#070913] py-6">
         <div className="flex flex-col">
           <SidebarLink
             link={{ name: "My Profile", path: "/dashboard/my-profile" }}
@@ -40,7 +40,7 @@ const Sidebar = () => {
             )
           })}
         </div>
-        <div className="mx-auto mt-6 mb-6 h-[1px] w-10/12 bg-purple-900/30" />
+        <div className="mx-auto mt-6 mb-6 h-[1px] w-10/12 bg-blue-950/30" />
         <div className="flex flex-col">
           <SidebarLink
             link={{ name: "Settings", path: "/dashboard/settings" }}
@@ -60,7 +60,7 @@ const Sidebar = () => {
             className="px-6 py-2.5 mx-3 my-0.5 text-sm font-semibold text-richblack-300 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-200"
           >
             <div className="flex items-center gap-x-3">
-              <VscSignOut className="text-lg text-purple-400" />
+              <VscSignOut className="text-lg text-blue-400" />
               <span>Logout</span>
             </div>
           </button>

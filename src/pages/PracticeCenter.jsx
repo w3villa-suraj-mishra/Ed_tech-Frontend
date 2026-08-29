@@ -66,7 +66,7 @@ export default function PracticeCenter() {
       title: 'Coding Practice',
       count: `${overview?.codingCount ?? 0} Challenges`,
       desc: 'Solve interactive algorithmic & web development programming problems.',
-      icon: <FaLaptopCode className="text-pink-400 text-2xl" />,
+      icon: <FaLaptopCode className="text-blue-400 text-2xl" />,
       tag: 'HANDS-ON',
       link: '/practice/coding'
     },
@@ -84,7 +84,7 @@ export default function PracticeCenter() {
       title: 'Topic Practice',
       count: `${overview?.topicPracticeCount ?? 0} Topics Available`,
       desc: 'Filter questions by category, topic, and difficulty to master specific concepts.',
-      icon: <FaBookReader className="text-[#a855f7] text-2xl" />,
+      icon: <FaBookReader className="text-[#3b82f6] text-2xl" />,
       tag: 'CONCEPT-WISE',
       link: '/practice/topic'
     },
@@ -113,14 +113,14 @@ export default function PracticeCenter() {
       <div className="max-w-[1260px] mx-auto space-y-8">
         
         {/* Banner Section */}
-        <div className="relative rounded-3xl bg-gradient-to-r from-[#111422] via-[#1a1435] to-[#111422] border border-purple-500/20 p-8 sm:p-10 shadow-[0_0_30px_rgba(168,85,247,0.15)] overflow-hidden">
-          <div className="absolute right-0 top-0 w-96 h-96 bg-[#a855f7]/10 rounded-full blur-3xl -z-0"></div>
+        <div className="relative rounded-3xl bg-gradient-to-r from-[#111422] via-[#1a1435] to-[#111422] border border-blue-500/20 p-8 sm:p-10 shadow-[0_0_30px_rgba(37, 99, 235,0.15)] overflow-hidden">
+          <div className="absolute right-0 top-0 w-96 h-96 bg-[#3b82f6]/10 rounded-full blur-3xl -z-0"></div>
           <div className="relative z-10 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-[#a855f7] text-xs font-bold mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-[#3b82f6] text-xs font-bold mb-4">
               <span>🚀 100% FREE FOR ALL LOGGED-IN LEARNERS</span>
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
-              CodeLearn <span className="text-[#a855f7]">Practice Center</span>
+              CodeLearn <span className="text-[#3b82f6]">Practice Center</span>
             </h1>
             <p className="mt-3 text-sm sm:text-base text-richblack-300 leading-relaxed font-medium">
               Sharpen your coding skills with daily quizzes, topic tests, full-length mock exams, and real tech interview questions. Unlimited attempts with instant dynamic score analytics.
@@ -134,7 +134,7 @@ export default function PracticeCenter() {
             <div
               key={card.id}
               onClick={() => navigate(card.link)}
-              className="group bg-[#111422] border border-white/10 hover:border-purple-500/50 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_10px_25px_rgba(168,85,247,0.2)] flex flex-col justify-between cursor-pointer"
+              className="group bg-[#111422] border border-white/10 hover:border-blue-500/50 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_10px_25px_rgba(37, 99, 235,0.2)] flex flex-col justify-between cursor-pointer"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
@@ -145,12 +145,12 @@ export default function PracticeCenter() {
                     {card.tag}
                   </span>
                 </div>
-                <h2 className="text-xl font-bold text-white group-hover:text-[#a855f7] transition-colors">
+                <h2 className="text-xl font-bold text-white group-hover:text-[#3b82f6] transition-colors">
                   {card.title}
                 </h2>
-                <p className="text-xs text-[#a855f7] font-semibold mt-0.5 mb-3 h-4 flex items-center">
+                <p className="text-xs text-[#3b82f6] font-semibold mt-0.5 mb-3 h-4 flex items-center">
                   {loading ? (
-                    <span className="w-16 h-3 bg-purple-500/20 rounded animate-pulse inline-block"></span>
+                    <span className="w-16 h-3 bg-blue-500/20 rounded animate-pulse inline-block"></span>
                   ) : (
                     card.count
                   )}
@@ -160,9 +160,9 @@ export default function PracticeCenter() {
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-white/5 flex items-center justify-between text-xs font-bold text-white group-hover:text-[#a855f7]">
+              <div className="pt-4 border-t border-white/5 flex items-center justify-between text-xs font-bold text-white group-hover:text-[#3b82f6]">
                 <span>Start Practicing</span>
-                <FaArrowRightIcon className="group-hover:translate-x-1 transition-transform text-[#a855f7]" />
+                <FaArrowRightIcon className="group-hover:translate-x-1 transition-transform text-[#3b82f6]" />
               </div>
             </div>
           ))}
@@ -171,7 +171,7 @@ export default function PracticeCenter() {
         {/* Previous Attempts & Analytics Bar */}
         <div className="bg-[#111422] border border-white/10 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-[#a855f7] text-2xl">
+            <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-[#3b82f6] text-2xl">
               <FaHistoryIcon />
             </div>
             <div>
@@ -183,7 +183,7 @@ export default function PracticeCenter() {
           </div>
           <button
             onClick={() => navigate('/practice/attempts')}
-            className="w-full sm:w-auto px-6 py-3 bg-[#a855f7] hover:bg-[#9333ea] text-white text-xs font-bold rounded-xl shadow-lg transition-all"
+            className="w-full sm:w-auto px-6 py-3 bg-[#3b82f6] hover:bg-[#1d4ed8] text-white text-xs font-bold rounded-xl shadow-lg transition-all"
           >
             View Attempts History ({overview?.userAttemptsCount || 0})
           </button>

@@ -142,7 +142,7 @@ const Catalog = () => {
             e.stopPropagation();
             navigate(`/view-course/${courseId}/section/${course.courseContent?.[0]?._id || "1"}/sub-section/${course.courseContent?.[0]?.subSection?.[0]?._id || "1"}`);
           }}
-          className="w-full py-3 bg-purple-600/20 border border-purple-500/40 text-purple-300 rounded-xl text-xs font-bold transition-all hover:bg-purple-600 hover:text-white flex items-center justify-center gap-1.5"
+          className="w-full py-3 bg-blue-600/20 border border-blue-500/40 text-blue-300 rounded-xl text-xs font-bold transition-all hover:bg-blue-600 hover:text-white flex items-center justify-center gap-1.5"
         >
           <span>Continue Learning</span>
           <VscArrowRight />
@@ -161,7 +161,7 @@ const Catalog = () => {
               navigate(`/courses/${courseId}`);
             }
           }}
-          className="w-full py-3 bg-emerald-600/20 border border-emerald-500/40 text-emerald-300 rounded-xl text-xs font-bold transition-all hover:bg-emerald-600 hover:text-white flex items-center justify-center gap-1.5"
+          className="w-full py-3 bg-[#0B1120]merald-600/20 border border-emerald-500/40 text-emerald-300 rounded-xl text-xs font-bold transition-all hover:bg-[#0B1120]merald-600 hover:text-white flex items-center justify-center gap-1.5"
         >
           <span>Start Learning</span>
           <VscArrowRight />
@@ -180,7 +180,7 @@ const Catalog = () => {
             navigate("/dashboard/cart");
           }
         }}
-        className="w-full py-3 bg-transparent text-white border border-purple-500/40 rounded-xl text-xs font-bold transition-all hover:bg-purple-600 hover:border-purple-600 shadow-[0_0_12px_rgba(168,85,247,0.2)] flex items-center justify-center gap-1.5"
+        className="w-full py-3 bg-transparent text-white border border-blue-500/40 rounded-xl text-xs font-bold transition-all hover:bg-blue-600 hover:border-blue-600 shadow-[0_0_12px_rgba(37, 99, 235,0.2)] flex items-center justify-center gap-1.5"
       >
         <span>Enroll Now</span>
         <VscArrowRight />
@@ -196,7 +196,7 @@ const Catalog = () => {
         {/* 1. PAGE HEADER */}
         <div className="text-center space-y-3 max-w-2xl mx-auto">
           <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-            Explore Our <span className="bg-gradient-to-r from-purple-400 via-purple-300 to-indigo-400 bg-clip-text text-transparent">Course Catalog</span>
+            Explore Our <span className="bg-gradient-to-r from-blue-400 via-blue-300 to-indigo-400 bg-clip-text text-transparent">Course Catalog</span>
           </h1>
           <p className="text-xs sm:text-sm text-richblack-300 font-medium leading-relaxed">
             Discover thousands of courses designed to help you advance your career in tech.
@@ -215,7 +215,7 @@ const Catalog = () => {
                 setSearchQuery(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full bg-[#101424] border border-purple-500/20 rounded-full pl-11 pr-4 py-3 text-xs sm:text-sm text-white placeholder-richblack-400 focus:outline-none focus:border-purple-500 transition-all shadow-[0_0_15px_rgba(168,85,247,0.06)]"
+              className="w-full bg-[#101424] border border-blue-500/20 rounded-full pl-11 pr-4 py-3 text-xs sm:text-sm text-white placeholder-richblack-400 focus:outline-none focus:border-blue-500 transition-all shadow-[0_0_15px_rgba(37, 99, 235,0.06)]"
             />
           </div>
 
@@ -223,7 +223,7 @@ const Catalog = () => {
             <select
               value={selectedCategory}
               onChange={(e) => handleCategorySelect(e.target.value)}
-              className="w-full appearance-none bg-[#101424] border border-purple-500/20 rounded-full px-5 py-3 pr-10 text-xs sm:text-sm text-white outline-none cursor-pointer focus:border-purple-500 transition-all"
+              className="w-full appearance-none bg-[#101424] border border-blue-500/20 rounded-full px-5 py-3 pr-10 text-xs sm:text-sm text-white outline-none cursor-pointer focus:border-blue-500 transition-all"
             >
               <option value="all">All Categories</option>
               {categories.map((cat) => {
@@ -245,8 +245,8 @@ const Catalog = () => {
             onClick={() => handleCategorySelect("all")}
             className={`px-4 py-2 rounded-full text-xs font-bold transition-all border ${
               selectedCategory === "all"
-                ? "bg-purple-600 border-purple-500 text-white shadow-[0_0_12px_rgba(168,85,247,0.4)]"
-                : "bg-[#101424] border-white/10 text-richblack-300 hover:text-white hover:border-purple-500/40"
+                ? "bg-blue-600 border-blue-500 text-white shadow-[0_0_12px_rgba(37, 99, 235,0.4)]"
+                : "bg-[#101424] border-white/10 text-richblack-300 hover:text-white hover:border-blue-500/40"
             }`}
           >
             All
@@ -260,8 +260,8 @@ const Catalog = () => {
                 onClick={() => handleCategorySelect(catId)}
                 className={`px-4 py-2 rounded-full text-xs font-bold transition-all border ${
                   isSelected
-                    ? "bg-purple-600 border-purple-500 text-white shadow-[0_0_12px_rgba(168,85,247,0.4)]"
-                    : "bg-[#101424] border-white/10 text-richblack-300 hover:text-white hover:border-purple-500/40"
+                    ? "bg-blue-600 border-blue-500 text-white shadow-[0_0_12px_rgba(37, 99, 235,0.4)]"
+                    : "bg-[#101424] border-white/10 text-richblack-300 hover:text-white hover:border-blue-500/40"
                 }`}
               >
                 {cat.name}
@@ -274,11 +274,11 @@ const Catalog = () => {
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, idx) => (
-              <div key={idx} className="bg-[#0e111f] rounded-2xl p-4 border border-purple-500/10 space-y-4 animate-pulse">
-                <div className="h-44 w-full bg-purple-900/20 rounded-xl" />
-                <div className="h-5 bg-purple-900/20 rounded-md w-3/4" />
-                <div className="h-4 bg-purple-900/20 rounded-md w-full" />
-                <div className="h-10 bg-purple-900/20 rounded-xl" />
+              <div key={idx} className="bg-[#0e111f] rounded-2xl p-4 border border-blue-500/10 space-y-4 animate-pulse">
+                <div className="h-44 w-full bg-blue-950/20 rounded-xl" />
+                <div className="h-5 bg-blue-950/20 rounded-md w-3/4" />
+                <div className="h-4 bg-blue-950/20 rounded-md w-full" />
+                <div className="h-10 bg-blue-950/20 rounded-xl" />
               </div>
             ))}
           </div>
@@ -297,24 +297,24 @@ const Catalog = () => {
                 <div
                   key={courseId}
                   onClick={() => navigate(`/courses/${courseId}`)}
-                  className="bg-[#0e111f] border border-purple-500/20 hover:border-purple-500/50 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1.5 shadow-[0_0_20px_rgba(168,85,247,0.08)] flex flex-col justify-between cursor-pointer group"
+                  className="bg-[#0e111f] border border-blue-500/20 hover:border-blue-500/50 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1.5 shadow-[0_0_20px_rgba(37, 99, 235,0.08)] flex flex-col justify-between cursor-pointer group"
                 >
                   <div>
                     {/* Course Thumbnail */}
-                    <div className="relative aspect-video w-full overflow-hidden bg-purple-900/20">
+                    <div className="relative aspect-video w-full overflow-hidden bg-blue-950/20">
                       <img
                         src={course.thumbnail}
                         alt={course.courseName}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
-                      <span className="absolute top-3 right-3 text-[10px] font-extrabold uppercase bg-black/60 backdrop-blur-md text-white border border-white/10 px-2.5 py-1 rounded-md">
+                      <span className="absolute top-3 right-3 text-[10px] font-extrabold uppercase bg-[#0B1120]lack/60 backdrop-blur-md text-white border border-white/10 px-2.5 py-1 rounded-md">
                         {categoryName}
                       </span>
                     </div>
 
                     {/* Card Content */}
                     <div className="p-5 space-y-3">
-                      <h3 className="font-bold text-base text-white line-clamp-1 group-hover:text-purple-300 transition-colors">
+                      <h3 className="font-bold text-base text-white line-clamp-1 group-hover:text-blue-300 transition-colors">
                         {course.courseName}
                       </h3>
 
@@ -325,7 +325,7 @@ const Catalog = () => {
                       {/* Course Metadata */}
                       <div className="flex items-center gap-4 text-[11px] text-richblack-400 pt-1">
                         <span className="flex items-center gap-1">
-                          <VscBook className="text-purple-400" />
+                          <VscBook className="text-blue-400" />
                           <span>{totalSections} Sections</span>
                         </span>
                         <span className="flex items-center gap-1">
@@ -355,7 +355,7 @@ const Catalog = () => {
                           ₹{currentPrice.toLocaleString()}
                         </span>
                         {discountPct > 0 && (
-                          <span className="text-[10px] font-bold bg-purple-900/40 text-purple-300 border border-purple-500/30 px-1.5 py-0.5 rounded">
+                          <span className="text-[10px] font-bold bg-blue-950/40 text-blue-300 border border-blue-500/30 px-1.5 py-0.5 rounded">
                             {discountPct}% OFF
                           </span>
                         )}
@@ -371,7 +371,7 @@ const Catalog = () => {
           </div>
         ) : (
           /* EMPTY STATE */
-          <div className="bg-[#0e111f] border border-purple-500/20 rounded-2xl p-12 text-center text-richblack-300 space-y-4 max-w-lg mx-auto shadow-[0_0_20px_rgba(168,85,247,0.08)]">
+          <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-12 text-center text-richblack-300 space-y-4 max-w-lg mx-auto shadow-[0_0_20px_rgba(37, 99, 235,0.08)]">
             <div className="text-4xl">🔍</div>
             <h3 className="text-lg font-bold text-white">No Courses Found</h3>
             <p className="text-xs text-richblack-400">
@@ -383,7 +383,7 @@ const Catalog = () => {
                 setSearchParams({});
                 setSearchQuery("");
               }}
-              className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition-all shadow-[0_0_15px_rgba(168,85,247,0.3)] inline-block"
+              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-800 text-white text-xs font-bold transition-all shadow-[0_0_15px_rgba(37, 99, 235,0.3)] inline-block"
             >
               Clear Filters
             </button>
@@ -396,7 +396,7 @@ const Catalog = () => {
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="w-8 h-8 rounded-lg bg-[#101424] border border-white/10 hover:border-purple-500/40 flex items-center justify-center text-richblack-300 hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-all"
+              className="w-8 h-8 rounded-lg bg-[#101424] border border-white/10 hover:border-blue-500/40 flex items-center justify-center text-richblack-300 hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-all"
             >
               <VscChevronLeft />
             </button>
@@ -410,8 +410,8 @@ const Catalog = () => {
                   onClick={() => setCurrentPage(pageNum)}
                   className={`w-8 h-8 rounded-lg font-bold text-xs transition-all ${
                     isActive
-                      ? "bg-purple-600 text-white shadow-[0_0_10px_rgba(168,85,247,0.5)]"
-                      : "bg-[#101424] border border-white/10 text-richblack-300 hover:text-white hover:border-purple-500/40"
+                      ? "bg-blue-600 text-white shadow-[0_0_10px_rgba(37, 99, 235,0.5)]"
+                      : "bg-[#101424] border border-white/10 text-richblack-300 hover:text-white hover:border-blue-500/40"
                   }`}
                 >
                   {pageNum}
@@ -422,7 +422,7 @@ const Catalog = () => {
             <button
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
-              className="w-8 h-8 rounded-lg bg-[#101424] border border-white/10 hover:border-purple-500/40 flex items-center justify-center text-richblack-300 hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-all"
+              className="w-8 h-8 rounded-lg bg-[#101424] border border-white/10 hover:border-blue-500/40 flex items-center justify-center text-richblack-300 hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-all"
             >
               <VscChevronRight />
             </button>

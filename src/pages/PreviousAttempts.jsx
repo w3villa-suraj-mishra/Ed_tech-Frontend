@@ -57,7 +57,7 @@ export default function PreviousAttempts() {
                 ) : (
                   attempts.map((a) => (
                     <tr key={a.id} className="hover:bg-white/5">
-                      <td className="px-5 py-4 font-bold text-[#a855f7]">{a.testType}</td>
+                      <td className="px-5 py-4 font-bold text-[#3b82f6]">{a.testType}</td>
                       <td className="px-5 py-4 font-extrabold text-[#FFD60A]">{a.score} / {a.totalMarks}</td>
                       <td className="px-5 py-4 text-emerald-400 font-bold">{a.accuracy}%</td>
                       <td className="px-5 py-4 text-richblack-300">{Math.round(a.timeTaken / 60)} mins</td>
