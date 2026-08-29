@@ -801,20 +801,62 @@ export default function StudentCourseTestRunner() {
                       )}
 
                       {runResult && (
-                        <div className="p-3 bg-slate-900 border border-slate-800 rounded-xl space-y-3 font-mono text-[11px] max-h-[160px] overflow-y-auto">
+                        <div className="p-3 bg-slate-900 border border-slate-800 rounded-xl space-y-3 font-mono text-[11px] max-h-[260px] overflow-y-auto">
                           {/* RATE LIMIT EXCEEDED ERROR */}
                           {runResult.code === 'RATE_LIMIT_EXCEEDED' && (
-                            <div className="p-2.5 bg-amber-950/60 border border-amber-800/80 rounded-lg text-amber-300 flex items-center gap-2">
-                              <FiAlertTriangle size={16} className="shrink-0" />
-                              <span>{runResult.message || 'Too many code executions. Please wait a moment and try again.'}</span>
+                            <div className="p-3 bg-amber-950/80 border border-amber-800 rounded-xl text-amber-300 flex items-center gap-2">
+                              <FiAlertTriangle size={18} className="shrink-0 text-amber-400" />
+                              <div className="space-y-0.5">
+                                <span className="font-bold block text-xs">Rate Limit Exceeded</span>
+                                <p className="text-[11px]">{runResult.message || 'Too many code executions. Please wait a moment and try again.'}</p>
+                              </div>
                             </div>
                           )}
 
                           {/* EXECUTOR UNAVAILABLE ERROR */}
                           {runResult.code === 'CODE_EXECUTOR_UNAVAILABLE' && (
-                            <div className="p-2.5 bg-red-950/60 border border-red-800/80 rounded-lg text-red-300 flex items-center gap-2">
-                              <FiXCircle size={16} className="shrink-0" />
-                              <span>{runResult.message || 'Code execution is temporarily unavailable. Please try again later.'}</span>
+                            <div className="p-3 bg-red-950/80 border border-red-800 rounded-xl text-red-300 flex items-center gap-2">
+                              <FiXCircle size={18} className="shrink-0 text-red-400" />
+                              <div className="space-y-0.5">
+                                <span className="font-bold block text-xs">Executor Unavailable</span>
+                                <p className="text-[11px]">{runResult.message || 'Code execution is temporarily unavailable. Please try again later.'}</p>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* DEDICATED COMPILATION ERROR PANEL */}
+                          {runResult.success && runResult.status === 'COMPILATION_ERROR' && (
+                            <div className="p-3 bg-amber-950/90 border border-amber-800 rounded-xl text-amber-200 space-y-2">
+                              <div className="flex items-center gap-2 font-bold text-xs text-amber-400 border-b border-amber-800/80 pb-1.5">
+                                <FiAlertTriangle size={16} /> Compilation Error
+                              </div>
+                              <pre className="text-[11px] font-mono whitespace-pre-wrap leading-relaxed text-amber-100 bg-amber-950/50 p-2.5 rounded-lg border border-amber-900 overflow-x-auto">
+                                {runResult.compileOutput || runResult.stderr || 'Syntax or Compilation Error occurred.'}
+                              </pre>
+                            </div>
+                          )}
+
+                          {/* DEDICATED RUNTIME ERROR PANEL */}
+                          {runResult.success && runResult.status === 'RUNTIME_ERROR' && (
+                            <div className="p-3 bg-red-950/90 border border-red-800 rounded-xl text-red-200 space-y-2">
+                              <div className="flex items-center gap-2 font-bold text-xs text-red-400 border-b border-red-800/80 pb-1.5">
+                                <FiXCircle size={16} /> Runtime Error
+                              </div>
+                              <pre className="text-[11px] font-mono whitespace-pre-wrap leading-relaxed text-red-100 bg-red-950/50 p-2.5 rounded-lg border border-red-900 overflow-x-auto">
+                                {runResult.stderr || 'Runtime Exception Occurred'}
+                              </pre>
+                            </div>
+                          )}
+
+                          {/* DEDICATED TIME LIMIT EXCEEDED PANEL */}
+                          {runResult.success && runResult.status === 'TIME_LIMIT_EXCEEDED' && (
+                            <div className="p-3 bg-amber-950/90 border border-amber-800 rounded-xl text-amber-200 space-y-2">
+                              <div className="flex items-center gap-2 font-bold text-xs text-amber-400 border-b border-amber-800/80 pb-1.5">
+                                <FiClock size={16} /> Time Limit Exceeded
+                              </div>
+                              <p className="text-[11px] text-amber-200">
+                                Your program exceeded the maximum execution time limit. Please optimize any loops or recursion.
+                              </p>
                             </div>
                           )}
 
@@ -823,19 +865,33 @@ export default function StudentCourseTestRunner() {
                             <div className="space-y-2">
                               <div className="flex items-center justify-between text-[10px] text-slate-400 pb-1 border-b border-slate-800">
                                 <span>Summary: <strong className={runResult.allPassed ? 'text-emerald-400' : 'text-amber-400'}>{runResult.passedTests} / {runResult.totalTests} Passed</strong></span>
+                                {runResult.executionTime > 0 && <span>Time: {runResult.executionTime}s</span>}
                               </div>
                               {runResult.testResults?.map((tc, idx) => (
-                                <div key={idx} className={`p-2.5 rounded-lg border space-y-1 ${tc.passed ? 'bg-emerald-950/30 border-emerald-800/60' : 'bg-red-950/30 border-red-800/60'}`}>
+                                <div key={idx} className={`p-3 rounded-xl border space-y-1.5 ${tc.passed ? 'bg-emerald-950/30 border-emerald-800/60' : 'bg-red-950/30 border-red-800/60'}`}>
                                   <div className="flex items-center justify-between font-bold">
                                     <span className={tc.passed ? 'text-emerald-400' : 'text-red-400'}>
                                       {tc.passed ? '✓' : '✗'} Test Case #{tc.testCaseIndex}
                                     </span>
-                                    <span className="text-[10px] text-slate-400">{tc.status} • {tc.executionTime ? `${tc.executionTime}s` : '0.1s'}</span>
+                                    <span className="text-[10px] text-slate-400">{tc.status} • {tc.executionTime ? `${tc.executionTime}s` : '0.01s'}</span>
                                   </div>
                                   <div className="text-slate-300"><span className="text-slate-500">Input:</span> {tc.input}</div>
                                   <div className="text-slate-300"><span className="text-slate-500">Expected Output:</span> {tc.expectedOutput}</div>
                                   <div className="text-slate-300"><span className="text-slate-500">Actual Output:</span> {tc.actualOutput || tc.stdout || '(no output)'}</div>
-                                  {tc.stderr && <div className="text-red-400 text-[10px] pt-1"><span className="text-red-500 font-bold">Error:</span> {tc.stderr}</div>}
+
+                                  {tc.stderr && (
+                                    <div className="mt-2 p-2.5 bg-red-950/80 border border-red-800/80 rounded-lg text-red-200 font-mono text-[11px]">
+                                      <span className="font-bold text-red-400 block mb-1">Runtime Exception / Traceback:</span>
+                                      <pre className="whitespace-pre-wrap overflow-x-auto text-[11px] text-red-100">{tc.stderr}</pre>
+                                    </div>
+                                  )}
+
+                                  {tc.compileOutput && (
+                                    <div className="mt-2 p-2.5 bg-amber-950/80 border border-amber-800/80 rounded-lg text-amber-200 font-mono text-[11px]">
+                                      <span className="font-bold text-amber-400 block mb-1">Compilation Output:</span>
+                                      <pre className="whitespace-pre-wrap overflow-x-auto text-[11px] text-amber-100">{tc.compileOutput}</pre>
+                                    </div>
+                                  )}
                                 </div>
                               ))}
                             </div>
@@ -843,17 +899,23 @@ export default function StudentCourseTestRunner() {
 
                           {/* RAW STDOUT / STDERR OUTPUT */}
                           {runResult.success && activeConsoleTab === 'output' && (
-                            <div className="space-y-2">
+                            <div className="space-y-3">
                               {runResult.testResults?.map((tc, idx) => (
-                                <div key={idx} className="space-y-1">
-                                  <span className="text-slate-500 font-bold text-[10px]">Test Case #{tc.testCaseIndex} Output:</span>
-                                  <pre className="bg-[#0D1117] p-2 rounded text-emerald-400 text-[10px] overflow-x-auto whitespace-pre-wrap">
-                                    {tc.stdout || tc.actualOutput || '(no stdout)'}
-                                  </pre>
-                                  {tc.stderr && (
-                                    <pre className="bg-red-950/40 p-2 rounded text-red-400 text-[10px] overflow-x-auto whitespace-pre-wrap">
-                                      {tc.stderr}
+                                <div key={idx} className="space-y-1.5 p-2.5 bg-slate-950 rounded-lg border border-slate-800">
+                                  <span className="text-slate-400 font-bold text-[10px]">Test Case #{tc.testCaseIndex} Logs:</span>
+                                  <div>
+                                    <span className="text-slate-500 text-[10px] block">stdout:</span>
+                                    <pre className="bg-[#0D1117] p-2 rounded text-emerald-400 text-[10px] overflow-x-auto whitespace-pre-wrap">
+                                      {tc.stdout || tc.actualOutput || '(no stdout)'}
                                     </pre>
+                                  </div>
+                                  {tc.stderr && (
+                                    <div>
+                                      <span className="text-red-400 text-[10px] block">stderr:</span>
+                                      <pre className="bg-red-950/40 p-2 rounded text-red-300 text-[10px] overflow-x-auto whitespace-pre-wrap">
+                                        {tc.stderr}
+                                      </pre>
+                                    </div>
                                   )}
                                 </div>
                               ))}
