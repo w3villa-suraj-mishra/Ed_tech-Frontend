@@ -26,8 +26,8 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className="flex md:h-[calc(100vh-4rem)] md:sticky md:top-16 w-full md:w-64 shrink-0 flex-col border-b md:border-b-0 md:border-r border-blue-950/30 bg-[#070913] py-6">
-        <div className="flex flex-col">
+      <div className="flex md:flex-col overflow-x-auto md:overflow-x-visible custom-scrollbar whitespace-nowrap md:whitespace-normal border-b md:border-b-0 md:border-r border-blue-950/30 bg-[#070913] py-3 md:py-6 px-2 md:px-0 gap-1.5 md:gap-0 shrink-0 md:w-64 md:h-[calc(100vh-4rem)] md:sticky md:top-16">
+        <div className="flex flex-row md:flex-col gap-1.5 md:gap-0">
           <SidebarLink
             link={{ name: "My Profile", path: "/dashboard/my-profile" }}
             iconName="VscAccount"
@@ -40,8 +40,8 @@ const Sidebar = () => {
             )
           })}
         </div>
-        <div className="mx-auto mt-6 mb-6 h-[1px] w-10/12 bg-blue-950/30" />
-        <div className="flex flex-col">
+        <div className="hidden md:block mx-auto mt-6 mb-6 h-[1px] w-10/12 bg-blue-950/30" />
+        <div className="flex flex-row md:flex-col gap-1.5 md:gap-0">
           <SidebarLink
             link={{ name: "Settings", path: "/dashboard/settings" }}
             iconName="VscSettingsGear"

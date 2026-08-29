@@ -4,7 +4,7 @@ export default function DeleteConfirm({ isOpen, onClose, onConfirm, title = 'Del
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-[#0B1120]lack/70 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
       <div className="relative bg-[#161D29] border border-red-500/30 rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">
         <div className="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4 text-2xl">⚠️</div>
         <h3 className="text-lg font-bold text-[#F1F2FF] mb-2">{title}</h3>

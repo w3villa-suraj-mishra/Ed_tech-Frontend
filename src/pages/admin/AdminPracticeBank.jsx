@@ -501,7 +501,7 @@ function AdminPracticeBankInner() {
                       <td className="px-5 py-4 font-medium max-w-sm truncate">{q.title}</td>
                       <td className="px-5 py-4">
                         <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                          q.scope === 'COURSE' ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30' : 'bg-[#0B1120]merald-500/20 text-emerald-400 border border-emerald-500/30'
+                          q.scope === 'COURSE' ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                         }`}>
                           {q.scope === 'COURSE' ? 'Course' : 'Global'}
                         </span>

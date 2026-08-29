@@ -141,7 +141,7 @@ export default function CoursePracticeTab() {
   if (attemptResult) {
     return (
       <div className="p-8 max-w-xl mx-auto text-center space-y-6 bg-richblack-800 border border-richblack-700 rounded-3xl mt-10 text-white">
-        <div className="w-16 h-16 rounded-full bg-[#0B1120]merald-500/20 text-emerald-400 flex items-center justify-center text-3xl mx-auto">
+        <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-3xl mx-auto">
           <FaCheckCircle />
         </div>
         <h2 className="text-2xl font-bold">Test Submitted!</h2>

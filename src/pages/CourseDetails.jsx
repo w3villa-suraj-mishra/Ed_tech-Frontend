@@ -105,10 +105,10 @@ const CourseDetails = () => {
           {/* STATUS BADGE */}
           <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full mb-5
             ${course.status === 'Published'
-              ? 'bg-[#0B1120]merald-500/10 text-emerald-400 border border-emerald-500/20'
+              ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
               : 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'}`
           }>
-            <span className={`w-1.5 h-1.5 rounded-full ${course.status === 'Published' ? 'bg-[#0B1120]merald-400' : 'bg-yellow-400'}`} />
+            <span className={`w-1.5 h-1.5 rounded-full ${course.status === 'Published' ? 'bg-emerald-400' : 'bg-yellow-400'}`} />
             {course.status}
           </span>
 

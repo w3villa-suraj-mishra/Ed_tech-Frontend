@@ -288,7 +288,7 @@ function AdminCourseTestsInner() {
                     <td className="px-5 py-4 text-[#AFB2BF]">{t.duration} Mins</td>
                     <td className="px-5 py-4">
                       <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                        t.status === 'published' ? 'bg-[#0B1120]merald-500/20 text-emerald-400' : 'bg-yellow-500/20 text-yellow-400'
+                        t.status === 'published' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-yellow-500/20 text-yellow-400'
                       }`}>
                         {t.status}
                       </span>

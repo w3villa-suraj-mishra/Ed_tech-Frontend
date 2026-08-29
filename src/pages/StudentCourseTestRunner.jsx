@@ -435,7 +435,7 @@ export default function StudentCourseTestRunner() {
                   key={ans.id || idx}
                   className={`bg-white border rounded-2xl p-6 space-y-4 shadow-sm ${
                     isCorrect
-                      ? 'border-emerald-200 bg-[#0B1120]merald-50/20'
+                      ? 'border-emerald-200 bg-emerald-50/20'
                       : isUnanswered
                       ? 'border-amber-200 bg-amber-50/10'
                       : 'border-red-200 bg-red-50/20'
@@ -446,7 +446,7 @@ export default function StudentCourseTestRunner() {
                     <span
                       className={`px-3 py-1 rounded-full text-[10px] font-extrabold flex items-center gap-1 ${
                         isCorrect
-                          ? 'bg-[#0B1120]merald-100 text-emerald-700'
+                          ? 'bg-emerald-100 text-emerald-700'
                           : isUnanswered
                           ? 'bg-amber-100 text-amber-800'
                           : 'bg-red-100 text-red-700'
@@ -510,7 +510,7 @@ export default function StudentCourseTestRunner() {
 
                         let styleClass = 'bg-slate-50 border-slate-200 text-slate-700';
                         if (isOptCorrect) {
-                          styleClass = 'bg-[#0B1120]merald-100 border-emerald-500 text-emerald-900 font-bold';
+                          styleClass = 'bg-emerald-100 border-emerald-500 text-emerald-900 font-bold';
                         } else if (isSelected && !isOptCorrect) {
                           styleClass = 'bg-red-100 border-red-500 text-red-900 font-bold';
                         }
@@ -528,12 +528,12 @@ export default function StudentCourseTestRunner() {
                                 </span>
                               )}
                               {isSelected && isOptCorrect && (
-                                <span className="text-emerald-800 bg-[#0B1120]merald-200/60 px-2 py-0.5 rounded">
+                                <span className="text-emerald-800 bg-emerald-200/60 px-2 py-0.5 rounded">
                                   Student Answer ✓
                                 </span>
                               )}
                               {!isSelected && isOptCorrect && (
-                                <span className="text-emerald-800 bg-[#0B1120]merald-200/60 px-2 py-0.5 rounded">
+                                <span className="text-emerald-800 bg-emerald-200/60 px-2 py-0.5 rounded">
                                   Correct Answer ✓
                                 </span>
                               )}
@@ -587,7 +587,7 @@ export default function StudentCourseTestRunner() {
                 {attemptResult.percentage ?? Math.round(((attemptResult.score || 0) / (attemptResult.totalMarks || 10)) * 100)}%
               </p>
             </div>
-            <div className="p-4 bg-[#0B1120]merald-50 border border-emerald-200 rounded-2xl">
+            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl">
               <span className="text-[10px] font-bold text-emerald-600 block uppercase tracking-wider">Correct</span>
               <p className="text-lg font-bold text-emerald-700 mt-0.5">
                 {attemptResult.correctAnswers ?? attemptResult.correctCount ?? 0}
@@ -756,7 +756,7 @@ export default function StudentCourseTestRunner() {
                         <button
                           onClick={() => handleRunCode(currentQuestion)}
                           disabled={codeRunning}
-                          className="px-4 py-1.5 bg-[#0B1120]merald-500 hover:bg-[#0B1120]merald-600 text-slate-950 font-extrabold rounded-xl text-xs shadow transition flex items-center gap-1.5 disabled:opacity-50"
+                          className="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold rounded-xl text-xs shadow transition flex items-center gap-1.5 disabled:opacity-50"
                         >
                           {codeRunning ? (
                             <>
@@ -827,7 +827,7 @@ export default function StudentCourseTestRunner() {
                           {runResult && runResult.status && (
                             <span className={`px-2.5 py-0.5 rounded font-mono text-[10px] font-bold ${
                               runResult.allPassed || runResult.status === 'ACCEPTED'
-                                ? 'bg-[#0B1120]merald-950 text-emerald-400 border border-emerald-800'
+                                ? 'bg-emerald-950 text-emerald-400 border border-emerald-800'
                                 : 'bg-red-950 text-red-400 border border-red-800'
                             }`}>
                               {runResult.status}
@@ -927,7 +927,7 @@ export default function StudentCourseTestRunner() {
                                 {runResult.executionTime > 0 && <span>Time: {runResult.executionTime}s</span>}
                               </div>
                               {runResult.testResults?.map((tc, idx) => (
-                                <div key={idx} className={`p-3 rounded-xl border space-y-1.5 ${tc.passed ? 'bg-[#0B1120]merald-950/30 border-emerald-800/60' : 'bg-red-950/30 border-red-800/60'}`}>
+                                <div key={idx} className={`p-3 rounded-xl border space-y-1.5 ${tc.passed ? 'bg-emerald-950/30 border-emerald-800/60' : 'bg-red-950/30 border-red-800/60'}`}>
                                   <div className="flex items-center justify-between font-bold">
                                     <span className={tc.passed ? 'text-emerald-400' : 'text-red-400'}>
                                       {tc.passed ? '✓' : '✗'} Test Case #{tc.testCaseIndex}
@@ -1011,7 +1011,7 @@ export default function StudentCourseTestRunner() {
 
                 {/* RESET CONFIRMATION MODAL */}
                 {showResetConfirm && (
-                  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1120]lack/80 backdrop-blur-sm">
+                  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
                     <div className="bg-white rounded-2xl p-6 max-w-sm w-full space-y-4 text-center shadow-2xl">
                       <h3 className="font-bold text-base text-slate-900">Reset Code to Starter Template?</h3>
                       <p className="text-xs text-slate-500">Your currently typed code for this question will be lost.</p>
@@ -1122,7 +1122,7 @@ export default function StudentCourseTestRunner() {
                 if (isCurrent) {
                   btnClass = 'bg-indigo-600 text-white font-black shadow';
                 } else if (isAnswered) {
-                  btnClass = 'bg-[#0B1120]merald-100 text-emerald-800 font-bold border border-emerald-300';
+                  btnClass = 'bg-emerald-100 text-emerald-800 font-bold border border-emerald-300';
                 }
 
                 return (
@@ -1143,7 +1143,7 @@ export default function StudentCourseTestRunner() {
               <span className="w-3 h-3 rounded bg-indigo-600 inline-block" /> Current Question
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded bg-[#0B1120]merald-100 border border-emerald-300 inline-block" /> Answered
+              <span className="w-3 h-3 rounded bg-emerald-100 border border-emerald-300 inline-block" /> Answered
             </div>
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded bg-slate-100 inline-block" /> Unanswered

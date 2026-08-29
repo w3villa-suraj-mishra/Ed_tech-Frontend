@@ -165,7 +165,7 @@ const InstructorDashboard = () => {
           {/* CARD 2: TOTAL STUDENTS */}
           <div className="bg-[#0c0e1a] border border-blue-950/30 rounded-2xl p-5 shadow-xl hover:border-emerald-500/40 transition-all group">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-[#0B1120]merald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-xl bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
                 <FiUsers size={22} />
               </div>
               <div>
@@ -312,7 +312,7 @@ const InstructorDashboard = () => {
                       {coursesData.map((c) => (
                         <div key={c._id || c.id} className="flex items-center justify-between p-3 rounded-xl bg-blue-950/20 border border-blue-950/20 text-xs">
                           <span className="font-semibold text-blue-200 truncate max-w-xs">{c.courseName}</span>
-                          <span className="font-bold text-emerald-400 px-3 py-1 bg-[#0B1120]merald-500/10 rounded-full border border-emerald-500/20">
+                          <span className="font-bold text-emerald-400 px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20">
                             {c.totalStudentsEnrolled} Enrolled
                           </span>
                         </div>
@@ -357,7 +357,7 @@ const InstructorDashboard = () => {
                           <span className="font-semibold text-blue-200 truncate max-w-xs">{c.courseName}</span>
                           <span className={`px-3 py-1 rounded-full font-bold uppercase text-[10px] tracking-wider ${
                             c.status === 'Published'
-                              ? 'bg-[#0B1120]merald-500/20 text-emerald-400 border border-emerald-500/30'
+                              ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                               : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
                           }`}>
                             {c.status || 'Draft'}

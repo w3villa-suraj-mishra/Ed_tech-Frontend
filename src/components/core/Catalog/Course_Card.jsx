@@ -51,7 +51,7 @@ const Course_Card = ({course, Height}) => {
                     Rs. {course?.pricing?.finalPrice || course?.price}
                   </span>
                   {course?.pricing?.discountPercentage > 0 && (
-                    <span className="text-xs bg-[#0B1120]merald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded">
+                    <span className="text-xs bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded">
                       {course?.pricing?.discountPercentage}% OFF
                     </span>
                   )}

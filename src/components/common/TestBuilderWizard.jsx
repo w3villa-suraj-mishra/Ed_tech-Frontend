@@ -488,7 +488,7 @@ export default function TestBuilderWizard({
   const isEditingTest = Boolean(initialTest?.id || testForm.id);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#0B1120]lack/80 backdrop-blur-md overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
       <div className="bg-[#161D29] border border-[#2C333F] rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden font-['Inter',sans-serif]">
         
         {/* HEADER & STEP WIZARD PROGRESS */}
@@ -731,7 +731,7 @@ export default function TestBuilderWizard({
                             <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-semibold text-[10px]">
                               {q.difficulty}
                             </span>
-                            <span className="px-2 py-0.5 rounded bg-[#0B1120]merald-500/20 text-emerald-300 font-bold text-[10px]">
+                            <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold text-[10px]">
                               {q.marks} Marks
                             </span>
                           </div>
@@ -879,7 +879,7 @@ export default function TestBuilderWizard({
 
       {/* INLINE QUESTION DRAWER MODAL */}
       {isInlineDrawerOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1120]lack/85 backdrop-blur-md">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
           <div className="bg-[#161D29] border border-[#2C333F] rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden font-['Inter',sans-serif]">
             <div className="bg-[#090D16] p-4 border-b border-[#2C333F] flex items-center justify-between">
               <h3 className="font-bold text-white text-sm flex items-center gap-2">
@@ -1252,7 +1252,7 @@ export default function TestBuilderWizard({
 
       {/* QUESTION BANK PICKER MODAL */}
       {isBankOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1120]lack/85 backdrop-blur-md">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
           <div className="bg-[#161D29] border border-[#2C333F] rounded-2xl w-full max-w-3xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden font-['Inter',sans-serif]">
             <div className="bg-[#090D16] p-4 border-b border-[#2C333F] flex items-center justify-between">
               <h3 className="font-bold text-white text-sm flex items-center gap-2">

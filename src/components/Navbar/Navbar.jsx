@@ -24,6 +24,7 @@ const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [theme, setTheme] = useState(localStorage.getItem('userTheme') || 'dark');
   const [profileOpen, setProfileOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const profileRef = useRef(null);
   const searchInputRef = useRef(null);
 
@@ -393,8 +394,109 @@ const Navbar = () => {
 
         </div>
 
+          {/* Mobile Hamburger Menu Button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2 rounded-xl text-richblack-200 hover:text-white bg-[#141728] border border-white/10 text-lg"
+            aria-label="Toggle Mobile Menu"
+          >
+            {isMobileMenuOpen ? '✕' : '☰'}
+          </button>
+
         </div>
       </div>
+
+      {/* MOBILE SLIDE-OVER NAVIGATION DRAWER */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 top-[65px] z-[100] bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="bg-[#0b0e1b] border-b border-blue-500/30 p-5 space-y-4 max-h-[85vh] overflow-y-auto custom-scrollbar">
+            <div className="flex flex-col space-y-3 font-medium text-sm text-richblack-100">
+              <Link
+                to="/courses"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="py-2 px-3 rounded-xl hover:bg-blue-950/40 hover:text-white transition-colors"
+              >
+                📚 Courses
+              </Link>
+              <Link
+                to="/catalog"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="py-2 px-3 rounded-xl hover:bg-blue-950/40 hover:text-white transition-colors"
+              >
+                🏷️ Categories
+              </Link>
+              <Link
+                to="/practice"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="py-2 px-3 rounded-xl hover:bg-blue-950/40 hover:text-white transition-colors"
+              >
+                ⚡ Practice Center
+              </Link>
+              <Link
+                to="/about"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="py-2 px-3 rounded-xl hover:bg-blue-950/40 hover:text-white transition-colors"
+              >
+                ℹ️ About Us
+              </Link>
+              <Link
+                to="/contact"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="py-2 px-3 rounded-xl hover:bg-blue-950/40 hover:text-white transition-colors"
+              >
+                📞 Contact
+              </Link>
+
+              {token === null && (
+                <div className="pt-4 border-t border-white/10 flex flex-col gap-2.5">
+                  <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                    <button className="w-full py-2.5 rounded-xl border border-blue-500/40 bg-[#121124] text-xs font-semibold text-white">
+                      Log In
+                    </button>
+                  </Link>
+                  <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)}>
+                    <button className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#3b82f6] to-[#2563eb] text-xs font-bold text-white shadow-md">
+                      Sign Up
+                    </button>
+                  </Link>
+                </div>
+              )}
+
+              {token !== null && (
+                <div className="pt-4 border-t border-white/10 space-y-2">
+                  <div className="text-xs text-blue-400 font-bold px-3">MY ACCOUNT</div>
+                  <Link
+                    to="/dashboard/my-profile"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center gap-3 py-2 px-3 rounded-xl hover:bg-blue-950/40 text-xs"
+                  >
+                    <VscDashboard className="text-blue-400 text-sm" />
+                    <span>Dashboard</span>
+                  </Link>
+                  <Link
+                    to="/dashboard/enrolled-courses"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center gap-3 py-2 px-3 rounded-xl hover:bg-blue-950/40 text-xs"
+                  >
+                    <VscBook className="text-blue-400 text-sm" />
+                    <span>My Courses</span>
+                  </Link>
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      dispatch(logout(navigate));
+                    }}
+                    className="w-full flex items-center gap-3 py-2 px-3 rounded-xl hover:bg-red-500/20 text-red-400 text-xs text-left"
+                  >
+                    <VscSignOut className="text-sm" />
+                    <span>Logout</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };

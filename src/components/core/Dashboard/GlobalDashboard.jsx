@@ -138,7 +138,7 @@ const GlobalDashboard = () => {
             <div className="w-8 h-8 rounded-xl bg-blue-950/30 text-blue-400 flex items-center justify-center text-base">
               <VscBook />
             </div>
-            <span className="text-[10px] text-emerald-400 font-bold bg-[#0B1120]merald-500/10 px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full">
               Live
             </span>
           </div>
@@ -173,10 +173,10 @@ const GlobalDashboard = () => {
         {/* Card 3: Lessons Completed */}
         <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
           <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-8 h-8 rounded-xl bg-[#0B1120]merald-900/30 text-emerald-400 flex items-center justify-center text-base">
+            <div className="w-8 h-8 rounded-xl bg-emerald-900/30 text-emerald-400 flex items-center justify-center text-base">
               <VscPass />
             </div>
-            <span className="text-[10px] text-emerald-400 font-bold bg-[#0B1120]merald-500/10 px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full">
               Total
             </span>
           </div>
@@ -455,7 +455,7 @@ const GlobalDashboard = () => {
               {completedCoursesList.map((course) => (
                 <div key={course._id} className="flex items-center justify-between p-3 rounded-xl bg-[#141728] border border-white/5">
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-8 h-8 rounded-xl bg-[#0B1120]merald-900/40 text-emerald-400 flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-xl bg-emerald-900/40 text-emerald-400 flex items-center justify-center shrink-0">
                       <AiOutlineTrophy />
                     </div>
                     <div className="flex flex-col min-w-0">
@@ -467,7 +467,7 @@ const GlobalDashboard = () => {
                   </div>
                   <button
                     onClick={() => navigate(`/s/courses/${course._id}/certificate`)}
-                    className="px-3 py-1 rounded-lg bg-[#0B1120]merald-600/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold hover:bg-[#0B1120]merald-600 hover:text-white transition-all shrink-0"
+                    className="px-3 py-1 rounded-lg bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold hover:bg-emerald-600 hover:text-white transition-all shrink-0"
                   >
                     View
                   </button>

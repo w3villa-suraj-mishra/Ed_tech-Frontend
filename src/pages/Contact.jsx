@@ -229,7 +229,7 @@ const Contact = () => {
 
       {/* FAQ POPUP MODAL */}
       {activeModalCategory && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0B1120]lack/80 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
           <div className="bg-[#0e111f] border border-blue-500/40 rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-[0_0_50px_rgba(37, 99, 235,0.3)] text-left animate-in fade-in zoom-in duration-200">
             
             {/* Close Button */}

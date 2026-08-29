@@ -213,7 +213,7 @@ export default function Cart() {
                 <span className="bg-blue-950/30 border border-blue-500/20 text-blue-300 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
                   🔒 SSL Secured
                 </span>
-                <span className="bg-[#0B1120]merald-900/30 border border-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
+                <span className="bg-emerald-900/30 border border-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
                   ✓ 100% Safe
                 </span>
               </div>
@@ -340,7 +340,7 @@ export default function Cart() {
                       />
                       <button
                         onClick={() => dispatch(addToCart(course))}
-                        className="absolute top-3 right-3 p-2 rounded-xl bg-[#0B1120]lack/60 text-white hover:text-blue-400 backdrop-blur-sm transition-colors"
+                        className="absolute top-3 right-3 p-2 rounded-xl bg-black/60 text-white hover:text-blue-400 backdrop-blur-sm transition-colors"
                         title="Add to Cart"
                       >
                         <VscHeart />

@@ -161,7 +161,7 @@ const Catalog = () => {
               navigate(`/courses/${courseId}`);
             }
           }}
-          className="w-full py-3 bg-[#0B1120]merald-600/20 border border-emerald-500/40 text-emerald-300 rounded-xl text-xs font-bold transition-all hover:bg-[#0B1120]merald-600 hover:text-white flex items-center justify-center gap-1.5"
+          className="w-full py-3 bg-emerald-600/20 border border-emerald-500/40 text-emerald-300 rounded-xl text-xs font-bold transition-all hover:bg-emerald-600 hover:text-white flex items-center justify-center gap-1.5"
         >
           <span>Start Learning</span>
           <VscArrowRight />
@@ -307,7 +307,7 @@ const Catalog = () => {
                         alt={course.courseName}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
-                      <span className="absolute top-3 right-3 text-[10px] font-extrabold uppercase bg-[#0B1120]lack/60 backdrop-blur-md text-white border border-white/10 px-2.5 py-1 rounded-md">
+                      <span className="absolute top-3 right-3 text-[10px] font-extrabold uppercase bg-black/60 backdrop-blur-md text-white border border-white/10 px-2.5 py-1 rounded-md">
                         {categoryName}
                       </span>
                     </div>

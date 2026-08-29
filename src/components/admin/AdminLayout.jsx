@@ -152,11 +152,20 @@ export default function AdminLayout({ children }) {
       {/* Main */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Topbar */}
-        <header className={`h-16 border-b flex items-center justify-between px-6 flex-shrink-0 ${
+        <header className={`h-16 border-b flex items-center justify-between px-4 sm:px-6 flex-shrink-0 ${
           isLight ? 'bg-white border-slate-200' : 'bg-[#161D29] border-[#2C333F]'
         }`}>
-          <div className={`text-sm capitalize font-medium ${isLight ? 'text-slate-600' : 'text-[#AFB2BF]'}`}>
-            {location.pathname.replace('/admin/', '').replace(/-/g, ' ') || 'Dashboard'}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="md:hidden p-2 rounded-lg text-[#AFB2BF] hover:text-white bg-[#2C333F]"
+              aria-label="Toggle Admin Sidebar"
+            >
+              ☰
+            </button>
+            <div className={`text-sm capitalize font-medium ${isLight ? 'text-slate-600' : 'text-[#AFB2BF]'}`}>
+              {location.pathname.replace('/admin/', '').replace(/-/g, ' ') || 'Dashboard'}
+            </div>
           </div>
 
           <div className="flex items-center gap-5">
@@ -212,7 +221,7 @@ export default function AdminLayout({ children }) {
                   <div className="px-5 py-4 flex items-center justify-between border-b border-[#252C3A]">
                     <div className="flex items-center gap-2">
                       <h3 className="font-bold text-base">Notifications</h3>
-                      <span className="w-2 h-2 rounded-full bg-[#0B1120]merald-500"></span>
+                      <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                     </div>
                   </div>
 

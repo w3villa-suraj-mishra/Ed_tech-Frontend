@@ -233,7 +233,7 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
         {/* Lessons Completed */}
         <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
           <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-8 h-8 rounded-xl bg-[#0B1120]merald-900/30 text-emerald-400 flex items-center justify-center text-base">
+            <div className="w-8 h-8 rounded-xl bg-emerald-900/30 text-emerald-400 flex items-center justify-center text-base">
               <VscPass />
             </div>
           </div>

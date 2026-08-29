@@ -540,7 +540,7 @@ export default function InstructorPracticeBuilder() {
                       </div>
                       <div className="flex items-center gap-2">
                         <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                          test.status === 'published' ? 'bg-[#0B1120]merald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'
+                          test.status === 'published' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'
                         }`}>
                           {test.status?.toUpperCase()}
                         </span>
@@ -589,7 +589,7 @@ export default function InstructorPracticeBuilder() {
                       className={`flex-1 py-2 text-xs font-bold rounded-xl border transition ${
                         test.status === 'published'
                           ? 'border-amber-500/40 text-amber-400 hover:bg-amber-500/10'
-                          : 'border-emerald-500/40 text-emerald-400 hover:bg-[#0B1120]merald-500/10'
+                          : 'border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10'
                       }`}
                     >
                       {test.status === 'published' ? 'Unpublish' : 'Publish'}
@@ -1059,7 +1059,7 @@ export default function InstructorPracticeBuilder() {
                       <td className="p-4">
                         <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                           att.percentage >= (selectedTestForAttempts?.passingPercentage || 40)
-                            ? 'bg-[#0B1120]merald-500/20 text-emerald-400'
+                            ? 'bg-emerald-500/20 text-emerald-400'
                             : 'bg-red-500/20 text-red-400'
                         }`}>
                           {att.percentage >= (selectedTestForAttempts?.passingPercentage || 40) ? 'PASSED' : 'FAILED'}

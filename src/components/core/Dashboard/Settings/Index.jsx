@@ -618,7 +618,7 @@ export default function Settings() {
 
       {/* DELETE ACCOUNT CONFIRMATION MODAL */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-[#0B1120]lack/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-[#0e111f] border border-red-500/40 max-w-md w-full rounded-2xl p-6 text-white space-y-4 shadow-[0_0_30px_rgba(239,68,68,0.3)]">
             <div className="flex items-center gap-3 border-b border-white/10 pb-3">
               <div className="w-10 h-10 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center text-xl shrink-0">

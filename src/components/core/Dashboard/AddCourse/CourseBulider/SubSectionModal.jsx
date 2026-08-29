@@ -98,7 +98,7 @@ const SubSectionModal = ({ modalData, setModalData, add = false, view = false, e
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0B1120]lack/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
 
       <div className="w-[90%] max-w-lg rounded-2xl bg-richblack-800 p-6 shadow-2xl">
 

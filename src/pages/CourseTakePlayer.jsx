@@ -548,7 +548,7 @@ const CourseTakePlayer = () => {
             </div>
           ) : currentLecture?.videoUrl ? (
             <div className="w-full max-w-5xl mx-auto px-4 md:px-8 py-4 flex items-center justify-center">
-              <div className="w-full bg-[#0B1120]lack rounded-xl overflow-hidden shadow-lg border border-slate-200 flex items-center justify-center">
+              <div className="w-full bg-black rounded-xl overflow-hidden shadow-lg border border-slate-200 flex items-center justify-center">
                 <video
                   key={currentLecture._id}
                   src={currentLecture.videoUrl}

@@ -208,7 +208,7 @@ const HelpSupport = () => {
 
           {/* Phone Support */}
           <div className="p-4 rounded-xl bg-[#141728] border border-white/5 hover:border-blue-500/30 transition-all flex items-start gap-3 group cursor-pointer">
-            <div className="w-9 h-9 rounded-xl bg-[#0B1120]merald-900/40 text-emerald-400 flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-emerald-900/40 text-emerald-400 flex items-center justify-center shrink-0">
               <VscCallIncoming className="text-lg" />
             </div>
             <div className="flex flex-col min-w-0 flex-1">
@@ -320,7 +320,7 @@ const HelpSupport = () => {
                     >
                       <div className="flex items-center justify-between">
                         <h3 className="font-bold text-sm text-white">{ticket.subject}</h3>
-                        <span className="text-[10px] bg-[#0B1120]merald-500/20 text-emerald-400 font-bold px-2.5 py-0.5 rounded-full">
+                        <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-2.5 py-0.5 rounded-full">
                           {ticket.status}
                         </span>
                       </div>
@@ -426,7 +426,7 @@ const HelpSupport = () => {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-7 h-7 rounded-lg bg-[#0B1120]merald-900/30 text-emerald-400 flex items-center justify-center shrink-0">
+                <div className="w-7 h-7 rounded-lg bg-emerald-900/30 text-emerald-400 flex items-center justify-center shrink-0">
                   <AiOutlineCheckCircle className="text-sm" />
                 </div>
                 <div>
@@ -443,7 +443,7 @@ const HelpSupport = () => {
 
       {/* CREATE TICKET MODAL */}
       {showTicketModal && (
-        <div className="fixed inset-0 bg-[#0B1120]lack/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-[#0e111f] border border-blue-500/30 max-w-md w-full rounded-2xl p-6 text-white space-y-4 shadow-[0_0_30px_rgba(37, 99, 235,0.3)]">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <h2 className="font-bold text-base text-white">Create Support Ticket</h2>
@@ -511,7 +511,7 @@ const HelpSupport = () => {
 
       {/* ARTICLE DETAILS MODAL */}
       {selectedArticle && (
-        <div className="fixed inset-0 bg-[#0B1120]lack/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-[#0e111f] border border-blue-500/30 max-w-lg w-full rounded-2xl p-6 text-white space-y-4 shadow-[0_0_30px_rgba(37, 99, 235,0.3)]">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <h2 className="font-bold text-base text-white">{selectedArticle.title}</h2>

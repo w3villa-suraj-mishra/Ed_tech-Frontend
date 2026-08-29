@@ -231,7 +231,7 @@ const MyProfile = () => {
         {/* Lessons Completed */}
         <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
           <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-8 h-8 rounded-xl bg-[#0B1120]merald-900/30 text-emerald-400 flex items-center justify-center text-base">
+            <div className="w-8 h-8 rounded-xl bg-emerald-900/30 text-emerald-400 flex items-center justify-center text-base">
               <VscPass />
             </div>
           </div>
@@ -405,7 +405,7 @@ const MyProfile = () => {
 
             <div>
               <span className="text-richblack-400 text-[11px] block">Account Status</span>
-              <span className="inline-block text-[10px] font-bold bg-[#0B1120]merald-500/20 text-emerald-400 px-2.5 py-0.5 rounded-full mt-1">
+              <span className="inline-block text-[10px] font-bold bg-emerald-500/20 text-emerald-400 px-2.5 py-0.5 rounded-full mt-1">
                 Active
               </span>
             </div>

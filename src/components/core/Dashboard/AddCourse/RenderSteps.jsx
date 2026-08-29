@@ -36,7 +36,7 @@ const RenderSteps = () => {
                     step === item.id
                       ? "border-blue-400 bg-blue-600 text-white shadow-lg shadow-blue-950/50"
                       : step > item.id
-                      ? "border-emerald-500/40 bg-[#0B1120]merald-600 text-white"
+                      ? "border-emerald-500/40 bg-emerald-600 text-white"
                       : "border-blue-950/40 bg-[#0c0e1a] text-blue-400/60"
                   }`}
                 >
@@ -50,7 +50,7 @@ const RenderSteps = () => {
               {item.id !== steps.length && (
                 <div
                   className={`h-0.5 w-[25%] mx-2 transition-all ${
-                    step > item.id ? "bg-[#0B1120]merald-500" : "bg-blue-950/40"
+                    step > item.id ? "bg-emerald-500" : "bg-blue-950/40"
                   }`}
                 />
               )}

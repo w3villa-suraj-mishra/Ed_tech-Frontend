@@ -123,7 +123,7 @@ export default function CoursesTable({ courses, setCourses }) {
                   onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/600x400/1e293b/a8b2d1?text=No+Image" }}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-[#0B1120]lack/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
                   <button
                     disabled={loading}
                     onClick={() => navigate(`/courses/${courseId}`)}
@@ -209,7 +209,7 @@ export default function CoursesTable({ courses, setCourses }) {
                           ₹{course?.pricing?.finalPrice || course?.price}
                         </span>
                         {course?.pricing?.discountPercentage > 0 && (
-                          <span className="text-[10px] bg-[#0B1120]merald-500/20 text-emerald-400 font-bold px-1.5 py-0.5 rounded">
+                          <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-1.5 py-0.5 rounded">
                             {course?.pricing?.discountPercentage}% OFF
                           </span>
                         )}

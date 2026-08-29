@@ -75,7 +75,7 @@ export default function ChipInput({
             <button
               type="button"
               onClick={() => handleDeleteChip(index)}
-              className="rounded-full bg-[#0B1120]lack/20 p-1 hover:bg-[#0B1120]lack/40 transition"
+              className="rounded-full bg-black/20 p-1 hover:bg-black/40 transition"
             >
               <MdClose className="text-xs" />
             </button>

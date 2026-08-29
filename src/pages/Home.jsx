@@ -373,7 +373,7 @@ const Home = () => {
 
                 {/* ALL CATEGORIES MODAL */}
                 {showAllCatModal && (
-                    <div className="fixed inset-0 bg-[#0B1120]lack/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
                         <div className="bg-[#0e111f] border border-blue-500/30 max-w-4xl w-full rounded-3xl p-6 sm:p-8 text-white space-y-6 shadow-[0_0_40px_rgba(37, 99, 235,0.3)] max-h-[85vh] overflow-y-auto">
                             <div className="flex items-center justify-between border-b border-white/10 pb-4">
                                 <div>
@@ -598,7 +598,7 @@ const Home = () => {
                                                 <span className={`absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-extrabold tracking-wider z-10 text-white ${
                                                     index % 4 === 0 ? 'bg-amber-500' :
                                                     index % 4 === 1 ? 'bg-blue-600' :
-                                                    index % 4 === 2 ? 'bg-[#0B1120]merald-500' : 'bg-blue-600'
+                                                    index % 4 === 2 ? 'bg-emerald-500' : 'bg-blue-600'
                                                 }`}>
                                                     {badge}
                                                 </span>
