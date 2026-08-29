@@ -582,17 +582,25 @@ export default function InstructorPracticeBuilder() {
             </div>
           </div>
 
-          {tests.length === 0 ? (
-            <div className="p-12 text-center bg-[#161D29] border border-[#2C333F] rounded-3xl space-y-3">
-              <div className="text-4xl">📝</div>
-              <h3 className="text-base font-bold text-white">No Practice Tests Created</h3>
-              <p className="text-xs text-[#AFB2BF]">
-                Create course tests or quizzes to help your enrolled students practice.
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {tests.filter(t => !qTypeFilter || t.testType === qTypeFilter).map((test) => (
+          {(() => {
+            const filteredTests = tests.filter(t => !qTypeFilter || t.testType === qTypeFilter);
+            if (filteredTests.length === 0) {
+              return (
+                <div className="p-12 text-center bg-[#161D29] border border-[#2C333F] rounded-3xl space-y-3">
+                  <div className="text-4xl">📝</div>
+                  <h3 className="text-base font-bold text-white">No Practice Tests Found</h3>
+                  <p className="text-xs text-[#AFB2BF]">
+                    {qTypeFilter
+                      ? `No practice tests created for category "${qTypeFilter}".`
+                      : 'Create course tests or quizzes to help your enrolled students practice.'}
+                  </p>
+                </div>
+              );
+            }
+
+            return (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredTests.map((test) => (
                 <div key={test.id} className={`bg-[#161D29] border rounded-3xl p-6 flex flex-col justify-between space-y-4 transition-all relative ${
                   selectedTestIds.includes(test.id) ? 'border-purple-500 bg-purple-500/5' : 'border-[#2C333F] hover:border-purple-500/50'
                 }`}>
@@ -671,7 +679,8 @@ export default function InstructorPracticeBuilder() {
                 </div>
               ))}
             </div>
-          )}
+          );
+        })()}
         </div>
       )}
 
