@@ -122,7 +122,7 @@ function App() {
     );
   }
 
-  const isPlayerRoute = location.pathname.startsWith("/s/courses");
+  const isPlayerRoute = location.pathname.startsWith("/s/courses") && !location.pathname.includes("/take/pratice-test");
 
   return (
     <div className={`min-h-screen bg-richblack-900 ${isPlayerRoute ? "h-screen overflow-hidden flex flex-col" : ""}`}>
