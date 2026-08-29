@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
     "@rails/actioncable": "^8.1.300",
     "@ramonak/react-progress-bar": "^5.4.0",
     "@reduxjs/toolkit": "^2.11.2",
