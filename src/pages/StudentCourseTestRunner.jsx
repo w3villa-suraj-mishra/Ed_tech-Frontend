@@ -220,27 +220,26 @@ export default function StudentCourseTestRunner() {
     );
   }
 
-  if (errorMessage || !test) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 font-['Inter',sans-serif]">
-        <div className="max-w-md w-full bg-white rounded-2xl p-8 border border-slate-200 shadow-xl text-center space-y-4">
-          <div className="text-3xl">⚠️</div>
-          <h2 className="text-lg font-bold text-slate-900">Test Not Found</h2>
-          <p className="text-xs text-slate-600">{errorMessage || 'The requested practice test is unavailable.'}</p>
-          <button
-            onClick={() => navigate(`/s/courses/${courseId}/take/pratice-test`)}
-            className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl transition"
-          >
-            Back to Course Tests
-          </button>
+  // ================= ANSWER REVIEW ROUTE / VIEW =================
+  if (attemptId || detailedAttempt) {
+    if (errorMessage) {
+      return (
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 font-['Inter',sans-serif]">
+          <div className="max-w-md w-full bg-white rounded-2xl p-8 border border-slate-200 shadow-xl text-center space-y-4">
+            <div className="text-3xl">⚠️</div>
+            <h2 className="text-lg font-bold text-slate-900">Review Unavailable</h2>
+            <p className="text-xs text-slate-600">{errorMessage}</p>
+            <button
+              onClick={() => navigate(`/s/courses/${courseId}/take/pratice-test`)}
+              className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl transition font-bold"
+            >
+              Back to Course Practice
+            </button>
+          </div>
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  // ================= 9. RESULT VIEW & 10. ANSWER REVIEW =================
-  if (detailedAttempt || attemptId) {
-    const isPassed = detailedAttempt?.status === 'Passed' || detailedAttempt?.percentage >= 40;
     const testTitle = test?.title || detailedAttempt?.test?.title || 'Practice Test';
 
     return (
@@ -374,6 +373,24 @@ export default function StudentCourseTestRunner() {
               );
             })}
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (errorMessage || !test) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 font-['Inter',sans-serif]">
+        <div className="max-w-md w-full bg-white rounded-2xl p-8 border border-slate-200 shadow-xl text-center space-y-4">
+          <div className="text-3xl">⚠️</div>
+          <h2 className="text-lg font-bold text-slate-900">Test Not Found</h2>
+          <p className="text-xs text-slate-600">{errorMessage || 'The requested practice test is unavailable.'}</p>
+          <button
+            onClick={() => navigate(`/s/courses/${courseId}/take/pratice-test`)}
+            className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl transition"
+          >
+            Back to Course Tests
+          </button>
         </div>
       </div>
     );

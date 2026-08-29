@@ -185,6 +185,7 @@ function App() {
           <Route path="/s/courses/:courseId/take/pratice-test" element={<StudentCoursePracticePage />} />
           <Route path="/s/courses/:courseId/take/pratice-test/:testId" element={<StudentCourseTestRunner />} />
           <Route path="/s/courses/:courseId/take/pratice-test/:testId/review/:attemptId" element={<StudentCourseTestRunner />} />
+          <Route path="/courses/:courseId/take/pratice-test/:testId/review/:attemptId" element={<StudentCourseTestRunner />} />
           <Route path="/s/courses/:courseId/certificate" element={<CourseCertificatePage />} />
           <Route path="/certificate/verify/:certificateId" element={<CourseCertificatePage />} />
           <Route path="/courses/:courseId"    element={<CourseDetails />} />
