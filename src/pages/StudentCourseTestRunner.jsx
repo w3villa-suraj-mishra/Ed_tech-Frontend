@@ -41,6 +41,33 @@ const getMonacoLang = (langStr) => {
   return 'python';
 };
 
+const getCodingDetails = (q) => {
+  if (!q || !q.codingDetails) return { testCases: [] };
+  let cd = q.codingDetails;
+  if (typeof cd === 'string') {
+    try {
+      cd = JSON.parse(cd);
+    } catch (e) {
+      return { testCases: [] };
+    }
+  }
+  let tcs = cd.testCases;
+  if (typeof tcs === 'string') {
+    try {
+      tcs = JSON.parse(tcs);
+    } catch (e) {
+      tcs = [];
+    }
+  }
+  if (!Array.isArray(tcs)) {
+    tcs = [];
+  }
+  return {
+    ...cd,
+    testCases: tcs
+  };
+};
+
 export default function StudentCourseTestRunner() {
   const { courseId, testId, attemptId } = useParams();
   const navigate = useNavigate();
@@ -592,8 +619,10 @@ export default function StudentCourseTestRunner() {
 
   // ================= ACTIVE TEST TAKING PAGE =================
   const currentQuestion = questions[currentQuestionIndex];
-  const currentCode = currentQuestion ? (answers[currentQuestion.id] !== undefined ? answers[currentQuestion.id] : (currentQuestion.codingDetails?.starterCode || '')) : '';
-  const currentLang = currentQuestion ? (selectedLanguages[currentQuestion.id] || currentQuestion.codingDetails?.language || 'Python') : 'Python';
+  const activeCodingDetails = getCodingDetails(currentQuestion);
+  const visibleExampleCases = (activeCodingDetails.testCases || []).filter(tc => !tc.isHidden);
+  const currentCode = currentQuestion ? (answers[currentQuestion.id] !== undefined ? answers[currentQuestion.id] : (activeCodingDetails.starterCode || '')) : '';
+  const currentLang = currentQuestion ? (selectedLanguages[currentQuestion.id] || activeCodingDetails.language || 'Python') : 'Python';
 
   return (
     <div className="h-screen bg-slate-50 text-slate-800 font-['Inter',sans-serif] flex flex-col overflow-hidden">
@@ -642,58 +671,58 @@ export default function StudentCourseTestRunner() {
           {currentQuestion ? (
             currentQuestion.type === 'Coding' ? (
               <div className="flex-1 flex flex-col lg:flex-row gap-6 min-h-[500px] w-full">
-                {/* LEFT: PROBLEM DETAILS */}
-                <div className="flex-1 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm overflow-y-auto space-y-4 text-xs max-h-[700px]">
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                    <span className="font-bold text-slate-400">Question {currentQuestionIndex + 1} of {questions.length}</span>
-                    <span className="px-2.5 py-0.5 rounded-full font-extrabold bg-indigo-100 text-indigo-700 text-[10px]">Coding ({currentQuestion.marks || 1} Marks)</span>
-                  </div>
-
-                  <h2 className="text-base font-bold text-slate-900">{currentQuestion.title}</h2>
-
-                  {currentQuestion.codingDetails?.problemStatement && (
-                    <div>
-                      <h4 className="font-bold text-slate-700 mb-1">Problem Statement</h4>
-                      <p className="text-slate-600 leading-relaxed whitespace-pre-line">{currentQuestion.codingDetails.problemStatement}</p>
-                    </div>
-                  )}
-
-                  {currentQuestion.codingDetails?.inputFormat && (
-                    <div>
-                      <h4 className="font-bold text-slate-700 mb-1">Input Format</h4>
-                      <p className="text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100">{currentQuestion.codingDetails.inputFormat}</p>
-                    </div>
-                  )}
-
-                  {currentQuestion.codingDetails?.outputFormat && (
-                    <div>
-                      <h4 className="font-bold text-slate-700 mb-1">Output Format</h4>
-                      <p className="text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100">{currentQuestion.codingDetails.outputFormat}</p>
-                    </div>
-                  )}
-
-                  {currentQuestion.codingDetails?.constraints && (
-                    <div>
-                      <h4 className="font-bold text-slate-700 mb-1">Constraints</h4>
-                      <code className="text-slate-700 bg-slate-100 px-2 py-1 rounded">{currentQuestion.codingDetails.constraints}</code>
-                    </div>
-                  )}
-
-                  {currentQuestion.codingDetails?.testCases?.filter(tc => !tc.isHidden).length > 0 && (
-                    <div>
-                      <h4 className="font-bold text-slate-700 mb-2">Visible Example Test Cases</h4>
-                      <div className="space-y-2">
-                        {currentQuestion.codingDetails.testCases.filter(tc => !tc.isHidden).map((tc, idx) => (
-                          <div key={idx} className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-1 font-mono text-[11px]">
-                            <span className="font-bold text-slate-500 block text-[10px]">Sample #{idx + 1}</span>
-                            <div><span className="text-slate-400">Input:</span> {tc.input}</div>
-                            <div><span className="text-slate-400">Expected Output:</span> {tc.output || tc.expectedOutput}</div>
-                          </div>
-                        ))}
+                    {/* LEFT: PROBLEM DETAILS */}
+                    <div className="flex-1 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm overflow-y-auto space-y-4 text-xs max-h-[700px]">
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <span className="font-bold text-slate-400">Question {currentQuestionIndex + 1} of {questions.length}</span>
+                        <span className="px-2.5 py-0.5 rounded-full font-extrabold bg-indigo-100 text-indigo-700 text-[10px]">Coding ({currentQuestion.marks || 1} Marks)</span>
                       </div>
+
+                      <h2 className="text-base font-bold text-slate-900">{currentQuestion.title}</h2>
+
+                      {activeCodingDetails.problemStatement && (
+                        <div>
+                          <h4 className="font-bold text-slate-700 mb-1">Problem Statement</h4>
+                          <p className="text-slate-600 leading-relaxed whitespace-pre-line">{activeCodingDetails.problemStatement}</p>
+                        </div>
+                      )}
+
+                      {activeCodingDetails.inputFormat && (
+                        <div>
+                          <h4 className="font-bold text-slate-700 mb-1">Input Format</h4>
+                          <p className="text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100">{activeCodingDetails.inputFormat}</p>
+                        </div>
+                      )}
+
+                      {activeCodingDetails.outputFormat && (
+                        <div>
+                          <h4 className="font-bold text-slate-700 mb-1">Output Format</h4>
+                          <p className="text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100">{activeCodingDetails.outputFormat}</p>
+                        </div>
+                      )}
+
+                      {activeCodingDetails.constraints && (
+                        <div>
+                          <h4 className="font-bold text-slate-700 mb-1">Constraints</h4>
+                          <code className="text-slate-700 bg-slate-100 px-2 py-1 rounded">{activeCodingDetails.constraints}</code>
+                        </div>
+                      )}
+
+                      {visibleExampleCases.length > 0 && (
+                        <div>
+                          <h4 className="font-bold text-slate-700 mb-2">Visible Example Test Cases</h4>
+                          <div className="space-y-2">
+                            {visibleExampleCases.map((tc, idx) => (
+                              <div key={idx} className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-1 font-mono text-[11px]">
+                                <span className="font-bold text-slate-500 block text-[10px]">Sample #{idx + 1}</span>
+                                <div><span className="text-slate-400">Input:</span> {tc.input}</div>
+                                <div><span className="text-slate-400">Expected Output:</span> {tc.output || tc.expectedOutput}</div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
 
                 {/* RIGHT: REAL MONACO CODE EDITOR & EXECUTION CONSOLE */}
                 <div className="flex-1 flex flex-col space-y-4">
