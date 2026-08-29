@@ -336,32 +336,6 @@ const Navbar = () => {
                       <span>Practice</span>
                     </Link>
 
-                    <Link
-                      to="/about"
-                      onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
-                    >
-                      <VscInfo className="text-sm text-blue-400" />
-                      <span>About Us</span>
-                    </Link>
-
-                    <Link
-                      to="/contact"
-                      onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
-                    >
-                      <VscCallIncoming className="text-sm text-blue-400" />
-                      <span>Contact Us</span>
-                    </Link>
-
-                    <Link
-                      to="/dashboard/global"
-                      onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
-                    >
-                      <VscDashboard className="text-sm text-blue-400" />
-                      <span>Dashboard</span>
-                    </Link>
 
                     <Link
                       to="/dashboard/enrolled-courses"
@@ -415,6 +389,34 @@ const Navbar = () => {
                     >
                       <VscBell className="text-sm text-blue-400" />
                       <span>Notifications</span>
+                    </Link>
+
+
+                    <Link
+                      to="/about"
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
+                    >
+                      <VscInfo className="text-sm text-blue-400" />
+                      <span>About Us</span>
+                    </Link>
+
+                    <Link
+                      to="/contact"
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
+                    >
+                      <VscCallIncoming className="text-sm text-blue-400" />
+                      <span>Contact Us</span>
+                    </Link>
+
+                    <Link
+                      to="/dashboard/global"
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
+                    >
+                      <VscDashboard className="text-sm text-blue-400" />
+                      <span>Dashboard</span>
                     </Link>
                   </div>
 
