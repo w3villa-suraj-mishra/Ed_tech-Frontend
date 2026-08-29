@@ -1,17 +1,19 @@
-import React from 'react'
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { BsFillCaretRightFill } from "react-icons/bs"
 import { FaShareSquare } from "react-icons/fa"
 import { ACCOUNT_TYPE } from "../../../utils/constants"
 import { addToCart } from "../../../services/slices/cartSlice";
+import { courseEndpoints } from "../../../services/apis";
+import { apiConnector } from "../../../services/apiConnector";
 
 function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
   const { user } = useSelector((state) => state.profile)
   const { token } = useSelector((state) => state.auth)
   const navigate = useNavigate()
+  const location = useLocation()
   const dispatch = useDispatch()
 
   const {
@@ -19,6 +21,54 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
     price: CurrentPrice,
     _id: courseId,
   } = course
+
+  const [couponInput, setCouponInput] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [couponError, setCouponError] = useState('');
+  const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
+
+  // Read code query param if passed from Claim Now announcement
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const codeParam = searchParams.get('code');
+    if (codeParam) {
+      setCouponInput(codeParam.toUpperCase());
+    }
+  }, [location.search]);
+
+  const handleApplyCoupon = async (overrideCode = null, overridePlan = 'gold') => {
+    const targetCode = (overrideCode || couponInput).trim();
+    if (!targetCode) return;
+
+    setIsValidatingCoupon(true);
+    setCouponError('');
+    try {
+      const headers = token ? { Authorization: `Bearer ${token}` } : null;
+      const res = await apiConnector(
+        'POST',
+        courseEndpoints.VALIDATE_OFFER_API,
+        {
+          code: targetCode,
+          courseId: courseId || course?.id,
+          plan: overridePlan
+        },
+        headers
+      );
+
+      if (res.data?.success && res.data?.data) {
+        setAppliedCoupon(res.data.data);
+        toast.success(`Coupon ${res.data.data.code} applied!`);
+      } else {
+        setAppliedCoupon(null);
+        setCouponError(res.data?.message || 'Invalid coupon code');
+      }
+    } catch (err) {
+      setAppliedCoupon(null);
+      setCouponError(err.response?.data?.message || err.message || 'Coupon validation failed');
+    } finally {
+      setIsValidatingCoupon(false);
+    }
+  };
 
   const enrollment = course?.userEnrollment || (user?.enrollments?.find(e => String(e.courseId || e.course?.id) === String(courseId || course?.id)));
   const isSilverExpired = enrollment?.plan === 'silver' && enrollment?.expiresAt && new Date(enrollment.expiresAt) <= new Date();
@@ -202,14 +252,14 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
                     </button>
                   ) : userPlan === 'expired' ? (
                     <button
-                      onClick={() => handleBuyCourse('silver')}
+                      onClick={() => handleBuyCourse('silver', appliedCoupon?.code)}
                       className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white font-semibold text-xs shadow-md transition"
                     >
                       Renew Silver
                     </button>
                   ) : (
                     <button
-                      onClick={() => handleBuyCourse('silver')}
+                      onClick={() => handleBuyCourse('silver', appliedCoupon?.code)}
                       className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white font-semibold text-xs shadow-md transition"
                     >
                       Buy Silver
@@ -245,20 +295,89 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
                     </button>
                   ) : userPlan === 'silver' ? (
                     <button
-                      onClick={() => handleBuyCourse('gold')}
+                      onClick={() => handleBuyCourse('gold', appliedCoupon?.code)}
                       className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-black font-extrabold text-xs shadow-md transition animate-pulse"
                     >
                       Upgrade to Gold
                     </button>
                   ) : (
                     <button
-                      onClick={() => handleBuyCourse('gold')}
+                      onClick={() => handleBuyCourse('gold', appliedCoupon?.code)}
                       className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-black font-semibold text-xs shadow-md transition"
                     >
                       Buy Gold
                     </button>
                   )}
                 </div>
+
+                {/* PROMO / COUPON CODE SECTION */}
+                {userPlan !== 'gold' && (
+                  <div className="pt-2 border-t border-richblack-700/60">
+                    <label className="block text-[11px] font-bold text-richblack-300 mb-1.5 uppercase tracking-wider">
+                      Have a Promo / Coupon Code?
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="e.g. RAKSHA50"
+                        value={couponInput}
+                        onChange={(e) => {
+                          setCouponInput(e.target.value.toUpperCase());
+                          if (appliedCoupon) {
+                            setAppliedCoupon(null);
+                            setCouponError('');
+                          }
+                        }}
+                        className="flex-1 px-3 py-1.5 bg-richblack-900 border border-richblack-700 rounded-lg text-white text-xs uppercase tracking-wider focus:outline-none focus:border-yellow-400"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleApplyCoupon}
+                        disabled={isValidatingCoupon || !couponInput.trim()}
+                        className="px-3.5 py-1.5 bg-yellow-400 hover:bg-yellow-300 disabled:opacity-50 text-black font-bold text-xs rounded-lg transition"
+                      >
+                        {isValidatingCoupon ? '...' : appliedCoupon ? 'Re-Apply' : 'Apply'}
+                      </button>
+                    </div>
+
+                    {couponError && (
+                      <p className="mt-1 text-[11px] text-red-400 font-medium">
+                        ❌ {couponError}
+                      </p>
+                    )}
+
+                    {appliedCoupon && (
+                      <div className="mt-2.5 p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-xs space-y-1">
+                        <div className="flex items-center justify-between text-emerald-400 font-bold">
+                          <span>✓ {appliedCoupon.code} Applied</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setAppliedCoupon(null);
+                              setCouponInput('');
+                              setCouponError('');
+                            }}
+                            className="text-[10px] text-richblack-400 hover:text-white underline font-normal"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                        <div className="flex items-center justify-between text-richblack-300 text-[11px]">
+                          <span>Original Price</span>
+                          <span>₹{appliedCoupon.originalAmount}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-emerald-400 text-[11px] font-semibold">
+                          <span>Discount Savings</span>
+                          <span>-₹{appliedCoupon.discountAmount}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-white font-extrabold border-t border-emerald-500/20 pt-1 mt-1">
+                          <span>Payable Amount</span>
+                          <span className="text-yellow-400 text-sm">₹{appliedCoupon.finalAmount}</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* ADD TO CART (Only if not Gold) */}
                 {userPlan !== 'gold' && (

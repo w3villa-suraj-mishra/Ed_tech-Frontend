@@ -51,7 +51,7 @@ const CourseDetails = () => {
     );
   };
 
-  const handleBuyCourse = (plan = 'gold') => {
+  const handleBuyCourse = (plan = 'gold', couponCode = null) => {
     if (!token) {
       setConfirmationModal({
         text1: 'You are not logged in!',
@@ -63,7 +63,7 @@ const CourseDetails = () => {
       });
       return;
     }
-    buyCourse(token, [courseId], user, navigate, dispatch, plan);
+    buyCourse(token, [courseId], user, navigate, dispatch, plan, couponCode);
   };
 
   const getTotalLectures = () => {

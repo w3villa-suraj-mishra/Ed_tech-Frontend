@@ -6,13 +6,13 @@ import { resetCart } from "../../services/slices/cartSlice";
 
 const { COURSE_PAYMENT_API, COURSE_VERIFY_API } = studentEndpoints;
 
-export async function buyCourse(token, courses, userDetails, navigate, dispatch, plan = 'gold') {
+export async function buyCourse(token, courses, userDetails, navigate, dispatch, plan = 'gold', couponCode = null) {
     const toastId = toast.loading("Processing...");
     try {
         const orderResponse = await apiConnector(
             "POST",
             COURSE_PAYMENT_API,
-            { courses, plan },
+            { courses, plan, couponCode },
             {
                 Authorization: `Bearer ${token}`,
             }

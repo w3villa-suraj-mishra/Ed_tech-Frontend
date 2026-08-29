@@ -54,6 +54,7 @@ export const courseEndpoints = {
   GET_CERTIFICATE_API: BASE_URL + "/course/getCertificate",
   VERIFY_CERTIFICATE_API: BASE_URL + "/certificate/verify",
   GET_HOMEPAGE_STATS_API: BASE_URL + "/course/getHomePageStats",
+  VALIDATE_OFFER_API: BASE_URL + "/offers/validate",
 }
 
 // NOTIFICATIONS ENDPOINTS

@@ -101,7 +101,13 @@ export default function AnnouncementBanner() {
 
   const handleCtaClick = () => {
     if (!announcement || !announcement.ctaUrl) return;
-    const url = announcement.ctaUrl.trim();
+    let url = announcement.ctaUrl.trim();
+    
+    // Append promo code if present in announcement highlightText
+    if (announcement.highlightText && !url.includes('code=')) {
+      const separator = url.includes('?') ? '&' : '?';
+      url = `${url}${separator}code=${encodeURIComponent(announcement.highlightText.trim())}`;
+    }
 
     if (url.startsWith('http://') || url.startsWith('https://')) {
       window.open(url, '_blank', 'noopener,noreferrer');
