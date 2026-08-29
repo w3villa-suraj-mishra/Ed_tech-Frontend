@@ -316,15 +316,68 @@ const Navbar = () => {
                 />
               </button>
 
-              {/* Desktop Account Dropdown */}
+              {/* Account Dropdown */}
               {profileOpen && (
-                <div className="absolute right-0 mt-3 w-56 rounded-2xl bg-[#0e111f] border border-blue-500/30 text-richblack-100 shadow-[0_10px_30px_rgba(0,0,0,0.9),0_0_20px_rgba(37,99,235,0.25)] z-50 overflow-hidden py-2 animate-in fade-in slide-in-from-top-2 duration-150">
+                <div className="absolute right-0 mt-3 w-60 max-h-[80vh] overflow-y-auto custom-scrollbar rounded-2xl bg-[#0e111f] border border-blue-500/30 text-richblack-100 shadow-[0_10px_30px_rgba(0,0,0,0.9),0_0_20px_rgba(37,99,235,0.25)] z-50 py-2 animate-in fade-in slide-in-from-top-2 duration-150">
                   
                   <div className="px-4 py-2 border-b border-white/10 mb-1">
                     <h3 className="font-semibold text-xs text-white">My Account</h3>
                     <p className="text-[10px] text-richblack-400 truncate">{user?.email}</p>
                   </div>
 
+                  {/* Quick Navigation (Mobile Only) */}
+                  <div className="md:hidden border-b border-white/10 pb-1.5 mb-1.5 space-y-0.5">
+                    <div className="px-4 py-1 text-[10px] font-bold text-blue-400 uppercase tracking-wider">
+                      Navigation
+                    </div>
+
+                    <Link
+                      to="/practice"
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
+                    >
+                      <span className="text-sm">⚡</span>
+                      <span>Practice Center</span>
+                    </Link>
+
+                    <Link
+                      to="/courses"
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
+                    >
+                      <span className="text-sm">📚</span>
+                      <span>All Courses</span>
+                    </Link>
+
+                    <Link
+                      to="/catalog"
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
+                    >
+                      <span className="text-sm">🏷️</span>
+                      <span>Categories</span>
+                    </Link>
+
+                    <Link
+                      to="/about"
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
+                    >
+                      <span className="text-sm">ℹ️</span>
+                      <span>About Us</span>
+                    </Link>
+
+                    <Link
+                      to="/contact"
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
+                    >
+                      <span className="text-sm">📞</span>
+                      <span>Contact Us</span>
+                    </Link>
+                  </div>
+
+                  {/* Dynamic User Account Links */}
                   <div className="space-y-0.5">
                     <Link
                       to="/dashboard/global"
