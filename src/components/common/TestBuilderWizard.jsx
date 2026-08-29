@@ -47,8 +47,9 @@ export default function TestBuilderWizard({
   const [bankDifficultyFilter, setBankDifficultyFilter] = useState('All');
   const [pickerSelectedIds, setPickerSelectedIds] = useState([]);
 
-  // Inline Question Creation Drawer/Modal State
+  // Inline Question Creation & Editing Drawer/Modal State
   const [isInlineDrawerOpen, setIsInlineDrawerOpen] = useState(false);
+  const [editingQuestionId, setEditingQuestionId] = useState(null);
   const [isSubmittingQ, setIsSubmittingQ] = useState(false);
   const [qForm, setQForm] = useState({
     title: '',
@@ -265,15 +266,56 @@ export default function TestBuilderWizard({
     return true;
   };
 
+  const handleEditQuestion = (q) => {
+    setEditingQuestionId(q.id);
+    setQForm({
+      title: q.title || '',
+      type: q.type || 'MCQ',
+      difficulty: q.difficulty || 'Easy',
+      marks: q.marks || 1,
+      explanation: q.explanation || '',
+      options: Array.isArray(q.options) && q.options.length > 0 
+        ? q.options.map(opt => ({ optionText: opt.optionText || opt.text || '', isCorrect: Boolean(opt.isCorrect) }))
+        : (q.type === 'True / False' || q.type === 'True/False' ? [
+            { optionText: 'True', isCorrect: true },
+            { optionText: 'False', isCorrect: false }
+          ] : [
+            { optionText: '', isCorrect: true },
+            { optionText: '', isCorrect: false }
+          ]),
+      codingDetails: q.codingDetails || {
+        problemStatement: '',
+        inputFormat: '',
+        outputFormat: '',
+        constraints: '',
+        language: 'python',
+        starterCode: 'def solve():\n    # Write your solution here\n    pass',
+        testCases: [{ input: '', expectedOutput: '', isHidden: false }]
+      },
+      interviewDetails: q.interviewDetails || { expectedAnswer: '', keyPoints: '' }
+    });
+    setIsInlineDrawerOpen(true);
+  };
+
   const saveInlineQuestion = async (shouldAddAnother = false) => {
     if (isSubmittingQ) return;
     if (!validateInlineQuestion()) return;
 
     setIsSubmittingQ(true);
     try {
-      const endpoint = role === 'ADMIN'
-        ? practiceEndpoints.ADMIN_QUESTIONS
-        : practiceEndpoints.INSTRUCTOR_GET_QUESTIONS;
+      const isEditingQ = Boolean(editingQuestionId);
+      let endpoint = '';
+      let method = isEditingQ ? 'PUT' : 'POST';
+
+      if (isEditingQ) {
+        endpoint = role === 'ADMIN'
+          ? `${practiceEndpoints.ADMIN_QUESTIONS}/${editingQuestionId}`
+          : `${practiceEndpoints.INSTRUCTOR_GET_QUESTIONS}/${editingQuestionId}`;
+      } else {
+        endpoint = role === 'ADMIN'
+          ? practiceEndpoints.ADMIN_QUESTIONS
+          : practiceEndpoints.INSTRUCTOR_GET_QUESTIONS;
+      }
 
       const payload = {
         ...qForm,
@@ -281,16 +323,21 @@ export default function TestBuilderWizard({
         courseId: testForm.scope === 'COURSE' ? Number(testForm.courseId) : null
       };
 
-      const res = await apiConnector('POST', endpoint, payload, {
+      const res = await apiConnector(method, endpoint, payload, {
         Authorization: `Bearer ${token}`
       });
 
       if (res.data?.success) {
-        const createdQ = res.data.data;
-        toast.success('Question saved to Question Bank & attached! 🎯');
+        const savedQ = res.data.data;
+        toast.success(isEditingQ ? 'Question updated successfully! 🎯' : 'Question saved to Question Bank & attached! 🎯');
 
-        // Immediately attach to current test in step 2
-        setSelectedQuestions(prev => [...prev, createdQ]);
+        if (isEditingQ) {
+          setSelectedQuestions(prev => prev.map(q => (q.id === editingQuestionId ? savedQ : q)));
+        } else {
+          setSelectedQuestions(prev => [...prev, savedQ]);
+        }
+
+        setEditingQuestionId(null);
 
         // Reset Question Form
         setQForm({
@@ -315,7 +362,7 @@ export default function TestBuilderWizard({
         }
       }
     } catch (err) {
-      toast.error(err?.response?.data?.message || 'Failed to create question');
+      toast.error(err?.response?.data?.message || 'Failed to save question');
     } finally {
       setIsSubmittingQ(false);
     }
@@ -620,7 +667,31 @@ export default function TestBuilderWizard({
                 </div>
                 <div className="flex items-center gap-3 w-full sm:w-auto">
                   <button
-                    onClick={() => setIsInlineDrawerOpen(true)}
+                    onClick={() => {
+                      setEditingQuestionId(null);
+                      setQForm({
+                        title: '',
+                        type: 'MCQ',
+                        difficulty: 'Easy',
+                        marks: 1,
+                        explanation: '',
+                        options: [
+                          { optionText: '', isCorrect: true },
+                          { optionText: '', isCorrect: false }
+                        ],
+                        codingDetails: {
+                          problemStatement: '',
+                          inputFormat: '',
+                          outputFormat: '',
+                          constraints: '',
+                          language: 'python',
+                          starterCode: 'def solve():\n    # Write your solution here\n    pass',
+                          testCases: [{ input: '', expectedOutput: '', isHidden: false }]
+                        },
+                        interviewDetails: { expectedAnswer: '', keyPoints: '' }
+                      });
+                      setIsInlineDrawerOpen(true);
+                    }}
                     className="flex-1 sm:flex-initial px-4 py-2.5 bg-[#FFD60A] hover:bg-yellow-400 text-black font-bold rounded-xl flex items-center justify-center gap-1.5 transition shadow-md"
                   >
                     <FaPlus /> Create New Question
@@ -683,6 +754,13 @@ export default function TestBuilderWizard({
                           title="Move Down"
                         >
                           <FaArrowDown />
+                        </button>
+                        <button
+                          onClick={() => handleEditQuestion(q)}
+                          className="p-2 text-yellow-400 hover:bg-yellow-500/10 bg-[#161D29] rounded-lg transition"
+                          title="Edit Question"
+                        >
+                          <FaEdit />
                         </button>
                         <button
                           onClick={() => handleRemoveQuestion(q.id)}
@@ -805,7 +883,7 @@ export default function TestBuilderWizard({
           <div className="bg-[#161D29] border border-[#2C333F] rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden font-['Inter',sans-serif]">
             <div className="bg-[#090D16] p-4 border-b border-[#2C333F] flex items-center justify-between">
               <h3 className="font-bold text-white text-sm flex items-center gap-2">
-                <span>➕</span> Create New Question & Add to Test
+                <span>{editingQuestionId ? '✏️' : '➕'}</span> {editingQuestionId ? 'Edit Question Details' : 'Create New Question & Add to Test'}
               </h3>
               <button onClick={() => setIsInlineDrawerOpen(false)} className="text-slate-400 hover:text-white">
                 <FaTimes />
@@ -1137,19 +1215,35 @@ export default function TestBuilderWizard({
             <div className="bg-[#090D16] p-4 border-t border-[#2C333F] flex items-center justify-end gap-3">
               <button
                 type="button"
-                disabled={isSubmittingQ}
-                onClick={() => saveInlineQuestion(true)}
-                className="px-4 py-2 bg-[#2C333F] hover:bg-[#3d4554] text-yellow-400 font-bold rounded-xl transition disabled:opacity-50"
+                onClick={() => {
+                  setIsInlineDrawerOpen(false);
+                  setEditingQuestionId(null);
+                }}
+                className="px-4 py-2 bg-[#161D29] text-slate-300 hover:text-white rounded-xl transition"
               >
-                Save & Add Another
+                Cancel
               </button>
+              {!editingQuestionId && (
+                <button
+                  type="button"
+                  disabled={isSubmittingQ}
+                  onClick={() => saveInlineQuestion(true)}
+                  className="px-4 py-2 bg-[#2C333F] hover:bg-[#3d4554] text-yellow-400 font-bold rounded-xl transition disabled:opacity-50"
+                >
+                  Save & Add Another
+                </button>
+              )}
               <button
                 type="button"
                 disabled={isSubmittingQ}
                 onClick={() => saveInlineQuestion(false)}
                 className="px-5 py-2 bg-[#FFD60A] hover:bg-yellow-400 text-black font-bold rounded-xl transition disabled:opacity-50"
               >
-                Save & Add to Test
+                {isSubmittingQ
+                  ? 'Saving...'
+                  : editingQuestionId
+                  ? 'Update Question 🎯'
+                  : 'Save & Add to Test'}
               </button>
             </div>
           </div>
