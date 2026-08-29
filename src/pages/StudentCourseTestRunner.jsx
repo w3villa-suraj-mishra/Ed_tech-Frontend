@@ -17,7 +17,9 @@ import {
   FiRefreshCw,
   FiPlay,
   FiCode,
-  FiAlertTriangle
+  FiAlertTriangle,
+  FiMaximize2,
+  FiMinimize2
 } from 'react-icons/fi';
 
 const SUPPORTED_LANGUAGES = [
@@ -96,6 +98,7 @@ export default function StudentCourseTestRunner() {
   const [runResult, setRunResult] = useState(null);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [activeConsoleTab, setActiveConsoleTab] = useState('testcases'); // 'testcases' | 'output' | 'errors'
+  const [isConsoleExpanded, setIsConsoleExpanded] = useState(false);
 
   useEffect(() => {
     if (!token) {
@@ -770,7 +773,9 @@ export default function StudentCourseTestRunner() {
                     </div>
 
                     {/* MONACO CODE EDITOR WORKSPACE */}
-                    <div className="flex-1 relative rounded-xl overflow-hidden border border-slate-800 min-h-[280px]">
+                    <div className={`relative rounded-xl overflow-hidden border border-slate-800 transition-all duration-300 ${
+                      isConsoleExpanded ? 'h-[160px] shrink-0 min-h-0' : 'flex-1 min-h-[220px]'
+                    }`}>
                       <Editor
                         height="100%"
                         language={getMonacoLang(currentLang)}
@@ -799,8 +804,10 @@ export default function StudentCourseTestRunner() {
                     </div>
 
                     {/* EXECUTION CONSOLE & TEST CASES DISPLAY */}
-                    <div className="mt-4 border-t border-slate-800 pt-3 space-y-2 shrink-0">
-                      <div className="flex items-center justify-between">
+                    <div className={`mt-3 border-t border-slate-800 pt-3 flex flex-col transition-all duration-300 ${
+                      isConsoleExpanded ? 'flex-1 h-full min-h-0 overflow-hidden space-y-2' : 'shrink-0 max-h-[200px] space-y-2'
+                    }`}>
+                      <div className="flex items-center justify-between shrink-0">
                         <div className="flex items-center gap-2 text-xs font-bold">
                           <button
                             onClick={() => setActiveConsoleTab('testcases')}
@@ -815,15 +822,27 @@ export default function StudentCourseTestRunner() {
                             Output & Logs
                           </button>
                         </div>
-                        {runResult && runResult.status && (
-                          <span className={`px-2.5 py-0.5 rounded font-mono text-[10px] font-bold ${
-                            runResult.allPassed || runResult.status === 'ACCEPTED'
-                              ? 'bg-emerald-950 text-emerald-400 border border-emerald-800'
-                              : 'bg-red-950 text-red-400 border border-red-800'
-                          }`}>
-                            {runResult.status}
-                          </span>
-                        )}
+
+                        <div className="flex items-center gap-3">
+                          {runResult && runResult.status && (
+                            <span className={`px-2.5 py-0.5 rounded font-mono text-[10px] font-bold ${
+                              runResult.allPassed || runResult.status === 'ACCEPTED'
+                                ? 'bg-emerald-950 text-emerald-400 border border-emerald-800'
+                                : 'bg-red-950 text-red-400 border border-red-800'
+                            }`}>
+                              {runResult.status}
+                            </span>
+                          )}
+
+                          <button
+                            onClick={() => setIsConsoleExpanded(!isConsoleExpanded)}
+                            className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-emerald-400 transition flex items-center gap-1.5 text-xs font-bold border border-slate-700 shadow-sm"
+                            title={isConsoleExpanded ? "Restore Editor Workspace" : "Expand Console Logs Upwards"}
+                          >
+                            {isConsoleExpanded ? <FiMinimize2 size={13} /> : <FiMaximize2 size={13} />}
+                            <span>{isConsoleExpanded ? "Collapse Logs" : "Expand Logs"}</span>
+                          </button>
+                        </div>
                       </div>
 
                       {/* CONSOLE CONTENT */}
@@ -839,7 +858,9 @@ export default function StudentCourseTestRunner() {
                       )}
 
                       {runResult && (
-                        <div className="p-3 bg-slate-900 border border-slate-800 rounded-xl space-y-3 font-mono text-[11px] max-h-[260px] overflow-y-auto">
+                        <div className={`p-3 bg-slate-900 border border-slate-800 rounded-xl space-y-3 font-mono text-[11px] overflow-y-auto ${
+                          isConsoleExpanded ? 'flex-1 h-full max-h-none' : 'max-h-[150px]'
+                        }`}>
                           {/* RATE LIMIT EXCEEDED ERROR */}
                           {runResult.code === 'RATE_LIMIT_EXCEEDED' && (
                             <div className="p-3 bg-amber-950/80 border border-amber-800 rounded-xl text-amber-300 flex items-center gap-2">
