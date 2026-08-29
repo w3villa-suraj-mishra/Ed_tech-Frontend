@@ -19,8 +19,8 @@ export default function AnnouncementBanner() {
     const fetchBanner = async () => {
       try {
         const res = await getActiveAnnouncement(token);
-        if (isMounted && res?.data?.success && res.data.data) {
-          const item = res.data.data;
+        if (isMounted && res?.data?.success && (res.data.data || res.data.announcement)) {
+          const item = res.data.data || res.data.announcement;
           
           // Check session storage dismissal fallback for unauthenticated users
           const localDismissed = sessionStorage.getItem(`dismissed_announcement_${item.id}`);

@@ -134,8 +134,8 @@ function App() {
       {!location.pathname.startsWith("/t/u/activeCourses") &&
        !isPlayerRoute && (
         <>
-          <Navbar />
           <AnnouncementBanner />
+          <Navbar />
         </>
       )}
       <div className="main-content bg-richblack-900" style={{ flex: 1, minHeight: 0 }}>

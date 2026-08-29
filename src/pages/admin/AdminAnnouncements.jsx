@@ -189,15 +189,21 @@ export default function AdminAnnouncements() {
     }
 
     try {
+      const payload = {
+        ...formData,
+        startAt: formData.startAt ? new Date(formData.startAt).toISOString() : null,
+        endAt: formData.endAt ? new Date(formData.endAt).toISOString() : null
+      };
+
       if (editingId) {
-        const res = await updateAdminAnnouncement(editingId, formData);
+        const res = await updateAdminAnnouncement(editingId, payload);
         if (res?.data?.success) {
           toast.success('Announcement updated successfully');
           setModalOpen(false);
           fetchAnnouncements();
         }
       } else {
-        const res = await createAdminAnnouncement(formData);
+        const res = await createAdminAnnouncement(payload);
         if (res?.data?.success) {
           toast.success('Announcement created successfully');
           setModalOpen(false);

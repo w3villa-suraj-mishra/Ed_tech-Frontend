@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import { VscSignOut, VscDashboard, VscBook, VscAccount, VscBell, VscGear, VscCode } from "react-icons/vsc";
+import { VscSignOut, VscDashboard, VscBook, VscAccount, VscBell, VscGear, VscCode, VscInfo, VscCallIncoming, VscTag } from "react-icons/vsc";
 import { logout } from "../../services/operations/authAPI";
 import { fetchCourseCategories, getAllCourses } from "../../services/operations/courseDetailsAPI";
 import NotificationBell from './NotificationBell';
@@ -325,37 +325,17 @@ const Navbar = () => {
                     <p className="text-[10px] text-richblack-400 truncate">{user?.email}</p>
                   </div>
 
-                  {/* Quick Navigation (Mobile Only) */}
-                  <div className="md:hidden border-b border-white/10 pb-1.5 mb-1.5 space-y-0.5">
-                    <div className="px-4 py-1 text-[10px] font-bold text-blue-400 uppercase tracking-wider">
-                      Navigation
-                    </div>
+                  {/* Dynamic User Account Links */}
+                  <div className="space-y-0.5">
+                    
 
                     <Link
                       to="/practice"
                       onClick={() => setProfileOpen(false)}
                       className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
                     >
-                      <span className="text-sm">⚡</span>
-                      <span>Practice Center</span>
-                    </Link>
-
-                    <Link
-                      to="/courses"
-                      onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
-                    >
-                      <span className="text-sm">📚</span>
-                      <span>All Courses</span>
-                    </Link>
-
-                    <Link
-                      to="/catalog"
-                      onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
-                    >
-                      <span className="text-sm">🏷️</span>
-                      <span>Categories</span>
+                      <VscCode className="text-sm text-blue-400" />
+                      <span>Practice</span>
                     </Link>
 
                     <Link
@@ -363,7 +343,7 @@ const Navbar = () => {
                       onClick={() => setProfileOpen(false)}
                       className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
                     >
-                      <span className="text-sm">ℹ️</span>
+                      <VscInfo className="text-sm text-blue-400" />
                       <span>About Us</span>
                     </Link>
 
@@ -372,13 +352,13 @@ const Navbar = () => {
                       onClick={() => setProfileOpen(false)}
                       className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
                     >
-                      <span className="text-sm">📞</span>
+                      <VscCallIncoming className="text-sm text-blue-400" />
                       <span>Contact Us</span>
                     </Link>
-                  </div>
+                  
 
-                  {/* Dynamic User Account Links */}
-                  <div className="space-y-0.5">
+                  
+                  
                     <Link
                       to="/dashboard/global"
                       onClick={() => setProfileOpen(false)}
