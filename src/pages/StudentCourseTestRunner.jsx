@@ -784,7 +784,16 @@ export default function StudentCourseTestRunner() {
                           automaticLayout: true,
                           lineNumbers: 'on',
                           wordWrap: 'on',
-                          padding: { top: 12 }
+                          padding: { top: 12 },
+                          scrollbar: {
+                            vertical: 'hidden',
+                            horizontal: 'hidden',
+                            handleMouseWheel: true,
+                            verticalHasArrows: false,
+                            horizontalHasArrows: false,
+                            verticalScrollbarSize: 0,
+                            horizontalScrollbarSize: 0
+                          }
                         }}
                       />
                     </div>
