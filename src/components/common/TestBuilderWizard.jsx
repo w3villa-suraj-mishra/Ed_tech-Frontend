@@ -65,6 +65,38 @@ export default function TestBuilderWizard({
   const [submittingTest, setSubmittingTest] = useState(false);
 
   useEffect(() => {
+    if (isOpen) {
+      setStep(1);
+      setTestForm({
+        title: '',
+        description: '',
+        testType: 'MCQ',
+        scope: role === 'ADMIN' ? initialScope : 'COURSE',
+        courseId: initialCourseId || (courses.length > 0 ? (courses[0].id || courses[0]._id) : ''),
+        duration: 20,
+        passingPercentage: 50,
+        status: 'published'
+      });
+      setSelectedQuestions([]);
+      setIsInlineDrawerOpen(false);
+      setIsBankOpen(false);
+      setQForm({
+        title: '',
+        type: 'MCQ',
+        difficulty: 'Easy',
+        marks: 1,
+        explanation: '',
+        options: [
+          { optionText: '', isCorrect: true },
+          { optionText: '', isCorrect: false }
+        ],
+        codingDetails: { language: 'javascript', problemStatement: '', starterCode: '', testCases: '' },
+        interviewDetails: { expectedAnswer: '', keyPoints: '' }
+      });
+    }
+  }, [isOpen, role, initialScope, initialCourseId, courses]);
+
+  useEffect(() => {
     if (courses.length > 0 && !testForm.courseId) {
       setTestForm(prev => ({ ...prev, courseId: courses[0].id || courses[0]._id }));
     }
