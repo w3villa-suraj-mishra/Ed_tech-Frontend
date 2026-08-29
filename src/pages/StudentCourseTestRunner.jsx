@@ -17,7 +17,7 @@ import {
 } from 'react-icons/fi';
 
 export default function StudentCourseTestRunner() {
-  const { courseId, testId } = useParams();
+  const { courseId, testId, attemptId } = useParams();
   const navigate = useNavigate();
   const { token } = useSelector((state) => state.auth);
 
@@ -37,21 +37,23 @@ export default function StudentCourseTestRunner() {
   // Result & Review State
   const [attemptResult, setAttemptResult] = useState(null);
   const [detailedAttempt, setDetailedAttempt] = useState(null);
-  const [showReview, setShowReview] = useState(false);
 
   useEffect(() => {
     if (!token) {
       navigate('/login');
       return;
     }
-    if (courseId && testId) {
+    if (courseId && testId && attemptId) {
+      // Direct Review Route Access or Page Refresh
+      loadAttemptDetails(attemptId);
+    } else if (courseId && testId) {
       loadCourseTest();
     }
-  }, [courseId, testId, token]);
+  }, [courseId, testId, attemptId, token]);
 
   // Timer Countdown Effect
   useEffect(() => {
-    if (!test || attemptResult || timeLeftSeconds <= 0) return;
+    if (!test || attemptResult || timeLeftSeconds <= 0 || attemptId) return;
 
     const timer = setInterval(() => {
       setTimeLeftSeconds((prev) => {
@@ -65,14 +67,13 @@ export default function StudentCourseTestRunner() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [test, attemptResult, timeLeftSeconds]);
+  }, [test, attemptResult, timeLeftSeconds, attemptId]);
 
   const loadCourseTest = async () => {
     setLoading(true);
     setNotEnrolled(false);
     setErrorMessage('');
     try {
-      // Backend validates authenticated user + enrollment + scope + published course test
       const res = await apiConnector(
         'GET',
         `${practiceEndpoints.GET_COURSE_PRACTICE}/${courseId}?testId=${testId}`,
@@ -145,20 +146,37 @@ export default function StudentCourseTestRunner() {
     }
   };
 
-  const loadAttemptDetails = async (attemptId) => {
+  const loadAttemptDetails = async (targetAttemptId) => {
+    setLoading(true);
+    setErrorMessage('');
     try {
       const res = await apiConnector(
         'GET',
-        `${practiceEndpoints.GET_ATTEMPT_DETAILS}/${attemptId}`,
+        `${practiceEndpoints.GET_ATTEMPT_DETAILS}/${targetAttemptId}?courseId=${courseId}&testId=${testId}`,
         null,
         { Authorization: `Bearer ${token}` }
       );
       if (res.data?.success) {
-        setDetailedAttempt(res.data.data);
-        setShowReview(true);
+        const data = res.data.data;
+        setDetailedAttempt(data);
+        if (data.test) setTest(data.test);
       }
     } catch (err) {
       console.error('Fetch review answers error:', err);
+      if (err.response?.status === 403) {
+        setErrorMessage(err.response?.data?.message || 'Access Denied: You do not have permission to view this review.');
+      } else {
+        setErrorMessage(err.response?.data?.message || 'Unable to load test review.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReviewClick = () => {
+    const targetAttemptId = attemptResult?.id || attemptResult?.attemptId;
+    if (targetAttemptId) {
+      navigate(`/s/courses/${courseId}/take/pratice-test/${testId}/review/${targetAttemptId}`);
     }
   };
 
@@ -221,109 +239,148 @@ export default function StudentCourseTestRunner() {
   }
 
   // ================= 9. RESULT VIEW & 10. ANSWER REVIEW =================
-  if (attemptResult) {
-    const isPassed = attemptResult.isPassed;
+  if (detailedAttempt || attemptId) {
+    const isPassed = detailedAttempt?.status === 'Passed' || detailedAttempt?.percentage >= 40;
+    const testTitle = test?.title || detailedAttempt?.test?.title || 'Practice Test';
 
-    if (showReview && detailedAttempt) {
-      return (
-        <div className="min-h-screen bg-slate-50 text-slate-800 font-['Inter',sans-serif] flex flex-col">
-          <header className="h-16 border-b border-slate-200 bg-white flex items-center justify-between px-6 shrink-0 sticky top-0 z-20 shadow-sm">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setShowReview(false)}
-                className="p-2 rounded-lg hover:bg-slate-100 text-indigo-700 transition flex items-center gap-1.5 text-xs font-bold"
-              >
-                <FiArrowLeft size={16} /> Back to Summary
-              </button>
-              <div className="h-4 w-px bg-slate-200" />
-              <h1 className="font-bold text-sm text-slate-900">
-                Answer Review — {test.title}
-              </h1>
+    return (
+      <div className="min-h-screen bg-slate-50 text-slate-800 font-['Inter',sans-serif] flex flex-col">
+        <header className="h-16 border-b border-slate-200 bg-white flex items-center justify-between px-6 shrink-0 sticky top-0 z-20 shadow-sm">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate(`/s/courses/${courseId}/take/pratice-test`)}
+              className="p-2 rounded-lg hover:bg-slate-100 text-indigo-700 transition flex items-center gap-1.5 text-xs font-bold"
+            >
+              <FiArrowLeft size={16} /> Back to Course Practice
+            </button>
+            <div className="h-4 w-px bg-slate-200" />
+            <h1 className="font-bold text-sm text-slate-900">
+              Answer Review — {testTitle}
+            </h1>
+          </div>
+        </header>
+
+        <div className="flex-1 max-w-4xl w-full mx-auto p-6 space-y-6">
+          {/* TOP METRICS STRIP */}
+          {detailedAttempt && (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+              <div>
+                <span className="text-[10px] font-bold text-slate-400 block uppercase">Score</span>
+                <p className="text-base font-black text-slate-900">{detailedAttempt.score} / {detailedAttempt.totalMarks}</p>
+              </div>
+              <div>
+                <span className="text-[10px] font-bold text-slate-400 block uppercase">Percentage</span>
+                <p className="text-base font-black text-indigo-600">{detailedAttempt.percentage}%</p>
+              </div>
+              <div>
+                <span className="text-[10px] font-bold text-emerald-600 block uppercase">Correct</span>
+                <p className="text-base font-bold text-emerald-700">{detailedAttempt.correctCount}</p>
+              </div>
+              <div>
+                <span className="text-[10px] font-bold text-red-600 block uppercase">Incorrect</span>
+                <p className="text-base font-bold text-red-700">{detailedAttempt.wrongCount}</p>
+              </div>
             </div>
-          </header>
+          )}
 
-          <div className="flex-1 max-w-4xl w-full mx-auto p-6 space-y-6">
-            <div className="space-y-6">
-              {detailedAttempt.answers?.map((ans, idx) => {
-                const q = ans.question || {};
-                const selectedOpt = ans.selectedOption || {};
-                const correctOpt = q.options?.find((o) => o.isCorrect || o.is_correct);
+          <div className="space-y-6">
+            {detailedAttempt?.answers?.map((ans, idx) => {
+              const q = ans.question || {};
+              const selectedOpt = ans.selectedOption || {};
+              const correctOpt = q.options?.find((o) => o.isCorrect || o.is_correct);
 
-                const isCorrect = ans.isCorrect;
+              const isCorrect = ans.isCorrect;
+              const isUnanswered = !ans.selectedOptionId && !ans.userCode && !ans.userInterviewAnswer;
 
-                return (
-                  <div
-                    key={ans.id || idx}
-                    className={`bg-white border rounded-2xl p-6 space-y-4 shadow-sm ${
-                      isCorrect ? 'border-emerald-200 bg-emerald-50/20' : 'border-red-200 bg-red-50/20'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-xs text-slate-500">Question {idx + 1}</span>
-                      <span
-                        className={`px-3 py-1 rounded-full text-[10px] font-extrabold flex items-center gap-1 ${
-                          isCorrect ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
-                        }`}
-                      >
-                        {isCorrect ? <FiCheckCircle size={12} /> : <FiXCircle size={12} />}
-                        {isCorrect ? 'CORRECT (+1)' : 'INCORRECT (0)'}
-                      </span>
-                    </div>
-
-                    <h3 className="font-bold text-sm text-slate-900">{q.title}</h3>
-
-                    {/* OPTIONS REVIEW */}
-                    <div className="space-y-2 pt-2">
-                      {q.options?.map((opt) => {
-                        const isSelected = selectedOpt?.id === opt.id;
-                        const isOptCorrect = opt.isCorrect || opt.is_correct;
-
-                        let styleClass = 'bg-slate-50 border-slate-200 text-slate-700';
-
-                        if (isOptCorrect) {
-                          styleClass = 'bg-emerald-100 border-emerald-500 text-emerald-900 font-bold';
-                        } else if (isSelected && !isOptCorrect) {
-                          styleClass = 'bg-red-100 border-red-500 text-red-900 font-bold';
-                        }
-
-                        return (
-                          <div
-                            key={opt.id}
-                            className={`p-3.5 rounded-xl border text-xs flex items-center justify-between ${styleClass}`}
-                          >
-                            <span>{opt.optionText}</span>
-                            <div className="flex items-center gap-2 text-[10px] font-extrabold">
-                              {isSelected && !isOptCorrect && (
-                                <span className="text-red-700 bg-red-200/60 px-2 py-0.5 rounded">
-                                  Your Answer (Wrong)
-                                </span>
-                              )}
-                              {isOptCorrect && (
-                                <span className="text-emerald-800 bg-emerald-200/60 px-2 py-0.5 rounded">
-                                  Correct Answer
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    {/* EXPLANATION */}
-                    {q.explanation && (
-                      <div className="p-4 bg-indigo-50/60 border border-indigo-100 rounded-xl text-xs text-indigo-900 space-y-1">
-                        <span className="font-bold block text-indigo-700">💡 Explanation:</span>
-                        <p>{q.explanation}</p>
-                      </div>
-                    )}
+              return (
+                <div
+                  key={ans.id || idx}
+                  className={`bg-white border rounded-2xl p-6 space-y-4 shadow-sm ${
+                    isCorrect
+                      ? 'border-emerald-200 bg-emerald-50/20'
+                      : isUnanswered
+                      ? 'border-amber-200 bg-amber-50/10'
+                      : 'border-red-200 bg-red-50/20'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-xs text-slate-500">Question {idx + 1}</span>
+                    <span
+                      className={`px-3 py-1 rounded-full text-[10px] font-extrabold flex items-center gap-1 ${
+                        isCorrect
+                          ? 'bg-emerald-100 text-emerald-700'
+                          : isUnanswered
+                          ? 'bg-amber-100 text-amber-800'
+                          : 'bg-red-100 text-red-700'
+                      }`}
+                    >
+                      {isCorrect ? <FiCheckCircle size={12} /> : isUnanswered ? <FiHelpCircle size={12} /> : <FiXCircle size={12} />}
+                      {isCorrect ? 'CORRECT (+1)' : isUnanswered ? 'NOT ANSWERED' : 'INCORRECT (0)'}
+                    </span>
                   </div>
-                );
-              })}
-            </div>
+
+                  <h3 className="font-bold text-sm text-slate-900">{q.title}</h3>
+
+                  {/* OPTIONS REVIEW */}
+                  <div className="space-y-2 pt-2">
+                    {q.options?.map((opt) => {
+                      const isSelected = selectedOpt?.id === opt.id;
+                      const isOptCorrect = opt.isCorrect || opt.is_correct;
+
+                      let styleClass = 'bg-slate-50 border-slate-200 text-slate-700';
+
+                      if (isOptCorrect) {
+                        styleClass = 'bg-emerald-100 border-emerald-500 text-emerald-900 font-bold';
+                      } else if (isSelected && !isOptCorrect) {
+                        styleClass = 'bg-red-100 border-red-500 text-red-900 font-bold';
+                      }
+
+                      return (
+                        <div
+                          key={opt.id}
+                          className={`p-3.5 rounded-xl border text-xs flex items-center justify-between ${styleClass}`}
+                        >
+                          <span>{opt.optionText}</span>
+                          <div className="flex items-center gap-2 text-[10px] font-extrabold">
+                            {isSelected && !isOptCorrect && (
+                              <span className="text-red-700 bg-red-200/60 px-2 py-0.5 rounded">
+                                Student Answer ❌
+                              </span>
+                            )}
+                            {isSelected && isOptCorrect && (
+                              <span className="text-emerald-800 bg-emerald-200/60 px-2 py-0.5 rounded">
+                                Student Answer ✓
+                              </span>
+                            )}
+                            {!isSelected && isOptCorrect && (
+                              <span className="text-emerald-800 bg-emerald-200/60 px-2 py-0.5 rounded">
+                                Correct Answer ✓
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* EXPLANATION */}
+                  {q.explanation && (
+                    <div className="p-4 bg-indigo-50/60 border border-indigo-100 rounded-xl text-xs text-indigo-900 space-y-1">
+                      <span className="font-bold block text-indigo-700">💡 Explanation:</span>
+                      <p>{q.explanation}</p>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
-      );
-    }
+      </div>
+    );
+  }
+
+  if (attemptResult) {
+    const isPassed = attemptResult.isPassed;
 
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 font-['Inter',sans-serif]">
@@ -340,7 +397,7 @@ export default function StudentCourseTestRunner() {
             <h2 className="text-2xl font-black text-slate-900">
               {isPassed ? 'Test Completed Successfully!' : 'Test Completed'}
             </h2>
-            <p className="text-xs font-semibold text-slate-500">{test.title}</p>
+            <p className="text-xs font-semibold text-slate-500">{test?.title}</p>
           </div>
 
           {/* METRICS SUMMARY GRID */}
@@ -348,7 +405,7 @@ export default function StudentCourseTestRunner() {
             <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl">
               <span className="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">Score</span>
               <p className="text-xl font-black text-slate-900 mt-1">
-                {attemptResult.score || 0} / {attemptResult.totalMarks || test.totalMarks || 10}
+                {attemptResult.score || 0} / {attemptResult.totalMarks || test?.totalMarks || 10}
               </p>
             </div>
             <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl">
@@ -373,7 +430,7 @@ export default function StudentCourseTestRunner() {
 
           <div className="pt-2 flex flex-col sm:flex-row gap-3">
             <button
-              onClick={() => loadAttemptDetails(attemptResult.id)}
+              onClick={handleReviewClick}
               className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition"
             >
               Review Answers
