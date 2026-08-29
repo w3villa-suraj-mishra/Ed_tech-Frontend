@@ -348,22 +348,26 @@ export default function StudentCourseTestRunner() {
             <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl">
               <span className="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">Score</span>
               <p className="text-xl font-black text-slate-900 mt-1">
-                {attemptResult.score} / {attemptResult.totalMarks}
+                {attemptResult.score || 0} / {attemptResult.totalMarks || test.totalMarks || 10}
               </p>
             </div>
             <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl">
               <span className="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">Percentage</span>
               <p className="text-xl font-black text-indigo-600 mt-1">
-                {attemptResult.percentage || Math.round((attemptResult.score / attemptResult.totalMarks) * 100)}%
+                {attemptResult.percentage ?? Math.round(((attemptResult.score || 0) / (attemptResult.totalMarks || 10)) * 100)}%
               </p>
             </div>
             <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl">
               <span className="text-[10px] font-bold text-emerald-600 block uppercase tracking-wider">Correct</span>
-              <p className="text-lg font-bold text-emerald-700 mt-0.5">{attemptResult.correctAnswers || 0}</p>
+              <p className="text-lg font-bold text-emerald-700 mt-0.5">
+                {attemptResult.correctAnswers ?? attemptResult.correctCount ?? 0}
+              </p>
             </div>
             <div className="p-4 bg-red-50 border border-red-200 rounded-2xl">
               <span className="text-[10px] font-bold text-red-600 block uppercase tracking-wider">Incorrect</span>
-              <p className="text-lg font-bold text-red-700 mt-0.5">{attemptResult.incorrectAnswers || 0}</p>
+              <p className="text-lg font-bold text-red-700 mt-0.5">
+                {attemptResult.incorrectAnswers ?? attemptResult.wrongCount ?? 0}
+              </p>
             </div>
           </div>
 
