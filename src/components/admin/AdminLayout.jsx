@@ -3,19 +3,31 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getNotifications } from '../../services/admin/adminAPI';
 
 const NAV = [
-  { label: 'Dashboard',     path: '/admin/dashboard',     icon: '📊', superOnly: false },
-  { label: 'Users',         path: '/admin/users',          icon: '👥', superOnly: false },
-  { label: 'Courses',       path: '/admin/courses',        icon: '📚', superOnly: false },
-  { label: 'Categories',    path: '/admin/categories',     icon: '🏷️', superOnly: false },
-  { label: 'Enrollments',   path: '/admin/enrollments',    icon: '📋', superOnly: false },
-  { label: 'Practice Bank', path: '/admin/practice-bank',  icon: '⚡', superOnly: false },
-  { label: 'Global Tests',  path: '/admin/global-tests',   icon: '🌐', superOnly: false },
-  { label: 'Course Tests',  path: '/admin/course-tests',   icon: '🎓', superOnly: false },
-  { label: 'Reviews',       path: '/admin/reviews',        icon: '⭐', superOnly: false },
-  { label: 'Articles',      path: '/admin/articles',       icon: '📰', superOnly: false },
-  { label: 'Announcements', path: '/admin/announcements', icon: '📢', superOnly: false },
-  { label: 'Offers & Coupons', path: '/admin/offers',     icon: '🏷️', superOnly: false },
-  { label: 'Contact Us',    path: '/admin/contacts',       icon: '✉️', superOnly: false },
+  { label: 'Dashboard',     path: '/admin/dashboard',     icon: '📊' },
+  { label: 'Users',         path: '/admin/users',          icon: '👥' },
+  { label: 'Courses',       path: '/admin/courses',        icon: '📚' },
+  { label: 'Categories',    path: '/admin/categories',     icon: '🏷️' },
+  { label: 'Enrollments',   path: '/admin/enrollments',    icon: '📋' },
+  {
+    group: 'Practice',
+    icon: '⚡',
+    children: [
+      { label: 'Practice Bank', path: '/admin/practice-bank',  icon: '⚡' },
+      { label: 'Global Tests',  path: '/admin/global-tests',   icon: '🌐' },
+      { label: 'Course Tests',  path: '/admin/course-tests',   icon: '🎓' },
+    ]
+  },
+  {
+    group: 'Announcements & Offers',
+    icon: '📢',
+    children: [
+      { label: 'Announcements', path: '/admin/announcements', icon: '📢' },
+      { label: 'Offers & Coupons', path: '/admin/offers',     icon: '🏷️' },
+    ]
+  },
+  { label: 'Reviews',       path: '/admin/reviews',        icon: '⭐' },
+  { label: 'Articles',      path: '/admin/articles',       icon: '📰' },
+  { label: 'Contact Us',    path: '/admin/contacts',       icon: '✉️' },
 ];
 
 export default function AdminLayout({ children }) {
@@ -24,6 +36,29 @@ export default function AdminLayout({ children }) {
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+
+  const [openGroups, setOpenGroups] = useState(() => {
+    try {
+      const saved = localStorage.getItem('adminOpenGroups');
+      return saved ? JSON.parse(saved) : ['Practice', 'Announcements & Offers'];
+    } catch {
+      return ['Practice', 'Announcements & Offers'];
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('adminOpenGroups', JSON.stringify(openGroups));
+    } catch {}
+  }, [openGroups]);
+
+  const toggleGroup = (groupName) => {
+    setOpenGroups((prev) =>
+      prev.includes(groupName)
+        ? prev.filter((g) => g !== groupName)
+        : [...prev, groupName]
+    );
+  };
 
   const [theme, setTheme]             = useState(localStorage.getItem('adminTheme') || 'dark');
   const [notifications, setNotifs]    = useState([]);
@@ -37,6 +72,18 @@ export default function AdminLayout({ children }) {
   useEffect(() => {
     localStorage.setItem('adminTheme', theme);
   }, [theme]);
+
+  // Auto-expand group if current path belongs to it
+  useEffect(() => {
+    NAV.forEach((item) => {
+      if (item.children) {
+        const hasActive = item.children.some((child) => location.pathname.startsWith(child.path));
+        if (hasActive) {
+          setOpenGroups((prev) => (prev.includes(item.group) ? prev : [...prev, item.group]));
+        }
+      }
+    });
+  }, [location.pathname]);
 
   // Handle ESC key for mobile drawer
   useEffect(() => {
@@ -101,8 +148,66 @@ export default function AdminLayout({ children }) {
     : notifications;
 
   const renderNavLinks = (isMobile = false) => (
-    <nav className="flex-1 overflow-y-auto py-4">
-      {NAV.map((item) => {
+    <nav className="flex-1 overflow-y-auto py-4 space-y-1">
+      {NAV.map((item, index) => {
+        if (item.children) {
+          const isExpanded = openGroups.includes(item.group);
+          const hasActiveChild = item.children.some((child) => location.pathname.startsWith(child.path));
+
+          return (
+            <div key={item.group || index} className="mx-2 mb-1">
+              <button
+                onClick={() => toggleGroup(item.group)}
+                title={!sidebarOpen && !isMobile ? item.group : ''}
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium cursor-pointer ${
+                  hasActiveChild
+                    ? 'text-[#FFD60A] font-bold'
+                    : isLight
+                      ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      : 'text-[#AFB2BF] hover:bg-[#2C333F] hover:text-white'
+                }`}
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className="text-base flex-shrink-0">{item.icon}</span>
+                  {(sidebarOpen || isMobile) && <span className="truncate">{item.group}</span>}
+                </div>
+                {(sidebarOpen || isMobile) && (
+                  <span className="text-xs transition-transform duration-200 ml-1">
+                    {isExpanded ? '▼' : '▶'}
+                  </span>
+                )}
+              </button>
+
+              {/* Subsections */}
+              {isExpanded && (
+                <div className={`mt-1 space-y-1 ${sidebarOpen || isMobile ? 'pl-4 border-l border-[#2C333F]/60 ml-3' : ''}`}>
+                  {item.children.map((child) => {
+                    const active = location.pathname.startsWith(child.path);
+                    return (
+                      <Link
+                        key={child.path}
+                        to={child.path}
+                        onClick={() => isMobile && setMobileDrawerOpen(false)}
+                        title={!sidebarOpen && !isMobile ? child.label : ''}
+                        className={`flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all duration-200 text-xs font-medium ${
+                          active
+                            ? 'bg-[#FFD60A]/10 text-[#FFD60A] border border-[#FFD60A]/20 font-bold'
+                            : isLight
+                              ? 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
+                              : 'text-[#838894] hover:bg-[#2C333F] hover:text-white'
+                        }`}
+                      >
+                        <span className="text-sm flex-shrink-0">{child.icon}</span>
+                        {(sidebarOpen || isMobile) && <span className="truncate">{child.label}</span>}
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        }
+
         const active = location.pathname.startsWith(item.path);
         return (
           <Link
