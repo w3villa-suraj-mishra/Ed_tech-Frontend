@@ -66,6 +66,8 @@ import AdminReviews      from "./pages/admin/AdminReviews";
 import AdminLiveSessions from "./pages/admin/AdminLiveSessions";
 import AdminContacts     from "./pages/admin/AdminContacts";
 import AdminArticles     from "./pages/admin/AdminArticles";
+import AdminAnnouncements from "./pages/admin/AdminAnnouncements";
+import AnnouncementBanner from "./components/Common/AnnouncementBanner";
 import { BASE_URL } from "./services/apis";
 
 const OAuthCallbackForwarder = () => {
@@ -115,6 +117,7 @@ function App() {
           <Route path="/admin/course-tests"  element={<AdminCourseTests />} />
           <Route path="/admin/reviews"      element={<AdminReviews />} />
           <Route path="/admin/articles"     element={<AdminArticles />} />
+          <Route path="/admin/announcements" element={<AdminAnnouncements />} />
           <Route path="/admin/live-sessions" element={<AdminLiveSessions />} />
           <Route path="/admin/contacts"     element={<AdminContacts />} />
         </Routes>
@@ -129,7 +132,12 @@ function App() {
       <ScrollToTop />
       <Toaster position="top-right" toastOptions={{ max: 1 }} />
       {!location.pathname.startsWith("/t/u/activeCourses") &&
-       !isPlayerRoute && <Navbar />}
+       !isPlayerRoute && (
+        <>
+          <Navbar />
+          <AnnouncementBanner />
+        </>
+      )}
       <div className="main-content bg-richblack-900" style={{ flex: 1, minHeight: 0 }}>
         <Routes>
           <Route path="/"                     element={<Home />} />

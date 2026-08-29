@@ -128,3 +128,10 @@ export const practiceEndpoints = {
   INSTRUCTOR_TOGGLE_TEST_STATUS: BASE_URL + "/instructor/practice/tests/",
   INSTRUCTOR_GET_TEST_ATTEMPTS: BASE_URL + "/instructor/practice/tests/",
 }
+
+// ANNOUNCEMENT ENDPOINTS
+export const announcementEndpoints = {
+  GET_ACTIVE_ANNOUNCEMENT_API: BASE_URL + "/announcements/active",
+  DISMISS_ANNOUNCEMENT_API: BASE_URL + "/announcements",
+  ADMIN_ANNOUNCEMENTS_API: BASE_URL + "/admin/announcements"
+}
