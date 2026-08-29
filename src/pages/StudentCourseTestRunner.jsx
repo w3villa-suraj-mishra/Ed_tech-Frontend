@@ -152,7 +152,7 @@ export default function StudentCourseTestRunner() {
     try {
       const res = await apiConnector(
         'GET',
-        `${practiceEndpoints.GET_ATTEMPT_DETAILS}/${targetAttemptId}?courseId=${courseId}&testId=${testId}`,
+        `${practiceEndpoints.GET_ATTEMPT_DETAILS}${targetAttemptId}?courseId=${courseId}&testId=${testId}`,
         null,
         { Authorization: `Bearer ${token}` }
       );
