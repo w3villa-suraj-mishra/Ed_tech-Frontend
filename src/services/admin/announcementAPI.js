@@ -47,12 +47,12 @@ export const deleteAdminAnnouncement = async (id) => {
 
 export const getActiveAnnouncement = async (userToken = null) => {
   const token = userToken || localStorage.getItem('token') || (localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).token : null);
-  const headers = token ? { Authorization: `Bearer ${token}` } : {};
-  return apiConnector('GET', announcementEndpoints.GET_ACTIVE_ANNOUNCEMENT_API, null, headers);
+  const headers = token && token !== 'null' ? { Authorization: `Bearer ${token}` } : {};
+  return apiConnector('GET', announcementEndpoints.GET_ACTIVE_ANNOUNCEMENT_API, null, headers, null, { skipAuthRedirect: true });
 };
 
 export const dismissAnnouncement = async (announcementId, userToken = null) => {
   const token = userToken || localStorage.getItem('token');
-  const headers = token ? { Authorization: `Bearer ${token}` } : {};
-  return apiConnector('POST', `${announcementEndpoints.DISMISS_ANNOUNCEMENT_API}/${announcementId}/dismiss`, null, headers);
+  const headers = token && token !== 'null' ? { Authorization: `Bearer ${token}` } : {};
+  return apiConnector('POST', `${announcementEndpoints.DISMISS_ANNOUNCEMENT_API}/${announcementId}/dismiss`, null, headers, null, { skipAuthRedirect: true });
 };
