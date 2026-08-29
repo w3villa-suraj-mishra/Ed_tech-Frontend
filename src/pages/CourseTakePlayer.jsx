@@ -331,10 +331,8 @@ const CourseTakePlayer = () => {
 
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setShowPractice(!showPractice)}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition shadow-sm ${
-              showPractice ? 'bg-purple-600 text-white hover:bg-purple-700' : 'bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100'
-            }`}
+            onClick={() => navigate('/practice')}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white transition shadow-sm"
           >
             <span>🎯 Practice / Tests</span>
           </button>
