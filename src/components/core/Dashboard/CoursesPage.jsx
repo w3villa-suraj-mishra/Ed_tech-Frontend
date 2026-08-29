@@ -448,7 +448,7 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
                           <VscPlay className="text-[10px]" />
                         </button>
                         <button
-                          onClick={() => handlePlanBuy('gold')}
+                          onClick={() => navigate(`/courses/${courseId}`)}
                           className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-black font-extrabold text-xs shadow-md transition"
                         >
                           Upgrade to Gold
@@ -457,13 +457,13 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
                     ) : currentPlan === 'expired' ? (
                       <div className="flex items-center gap-2 flex-1 sm:flex-none">
                         <button
-                          onClick={() => handlePlanBuy('silver')}
+                          onClick={() => navigate(`/courses/${courseId}`)}
                           className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white font-bold text-xs shadow-md transition"
                         >
                           Renew Silver
                         </button>
                         <button
-                          onClick={() => handlePlanBuy('gold')}
+                          onClick={() => navigate(`/courses/${courseId}`)}
                           className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-black font-extrabold text-xs shadow-md transition"
                         >
                           Upgrade to Gold
@@ -479,13 +479,13 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
                           Continue Free
                         </button>
                         <button
-                          onClick={() => handlePlanBuy('silver')}
+                          onClick={() => navigate(`/courses/${courseId}`)}
                           className="px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all"
                         >
                           Upgrade to Silver
                         </button>
                         <button
-                          onClick={() => handlePlanBuy('gold')}
+                          onClick={() => navigate(`/courses/${courseId}`)}
                           className="px-3 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 text-black font-extrabold text-xs hover:from-amber-300 hover:to-yellow-400 transition-all"
                         >
                           Upgrade to Gold
@@ -519,13 +519,13 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
                           {currentPlan === 'free' && (
                             <>
                               <button
-                                onClick={() => { setOpenMenuId(null); handlePlanBuy('silver'); }}
+                                onClick={() => { setOpenMenuId(null); navigate(`/courses/${courseId}`); }}
                                 className="w-full text-left px-2.5 py-1.5 text-blue-300 hover:bg-blue-900/30 rounded-lg font-medium"
                               >
                                 Upgrade to Silver
                               </button>
                               <button
-                                onClick={() => { setOpenMenuId(null); handlePlanBuy('gold'); }}
+                                onClick={() => { setOpenMenuId(null); navigate(`/courses/${courseId}`); }}
                                 className="w-full text-left px-2.5 py-1.5 text-amber-300 hover:bg-amber-900/30 rounded-lg font-medium"
                               >
                                 Upgrade to Gold
@@ -542,7 +542,7 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
                                 Silver ✓ Current Plan
                               </button>
                               <button
-                                onClick={() => { setOpenMenuId(null); handlePlanBuy('gold'); }}
+                                onClick={() => { setOpenMenuId(null); navigate(`/courses/${courseId}`); }}
                                 className="w-full text-left px-2.5 py-1.5 text-amber-300 hover:bg-amber-900/30 rounded-lg font-medium"
                               >
                                 Upgrade to Gold
