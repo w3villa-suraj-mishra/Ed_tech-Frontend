@@ -148,18 +148,18 @@ export default function AdminLayout({ children }) {
     : notifications;
 
   const renderNavLinks = (isMobile = false) => (
-    <nav className="flex-1 overflow-y-auto py-4 space-y-1">
+    <nav className="flex-1 overflow-y-auto py-2 space-y-0.5 custom-scrollbar">
       {NAV.map((item, index) => {
         if (item.children) {
           const isExpanded = openGroups.includes(item.group);
           const hasActiveChild = item.children.some((child) => location.pathname.startsWith(child.path));
 
           return (
-            <div key={item.group || index} className="mx-2 mb-1">
+            <div key={item.group || index} className="mx-1.5 mb-0.5">
               <button
                 onClick={() => toggleGroup(item.group)}
                 title={!sidebarOpen && !isMobile ? item.group : ''}
-                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium cursor-pointer ${
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-150 text-xs font-medium cursor-pointer ${
                   hasActiveChild
                     ? 'text-[#FFD60A] font-bold'
                     : isLight
@@ -167,12 +167,12 @@ export default function AdminLayout({ children }) {
                       : 'text-[#AFB2BF] hover:bg-[#2C333F] hover:text-white'
                 }`}
               >
-                <div className="flex items-center gap-3 min-w-0">
-                  <span className="text-base flex-shrink-0">{item.icon}</span>
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <span className="text-sm flex-shrink-0">{item.icon}</span>
                   {(sidebarOpen || isMobile) && <span className="truncate">{item.group}</span>}
                 </div>
                 {(sidebarOpen || isMobile) && (
-                  <span className="text-xs transition-transform duration-200 ml-1">
+                  <span className="text-[10px] transition-transform duration-200 ml-1">
                     {isExpanded ? '▼' : '▶'}
                   </span>
                 )}
@@ -180,7 +180,7 @@ export default function AdminLayout({ children }) {
 
               {/* Subsections */}
               {isExpanded && (
-                <div className={`mt-1 space-y-1 ${sidebarOpen || isMobile ? 'pl-4 border-l border-[#2C333F]/60 ml-3' : ''}`}>
+                <div className={`mt-0.5 space-y-0.5 ${sidebarOpen || isMobile ? 'pl-3 border-l border-[#2C333F]/60 ml-2.5' : ''}`}>
                   {item.children.map((child) => {
                     const active = location.pathname.startsWith(child.path);
                     return (
@@ -189,7 +189,7 @@ export default function AdminLayout({ children }) {
                         to={child.path}
                         onClick={() => isMobile && setMobileDrawerOpen(false)}
                         title={!sidebarOpen && !isMobile ? child.label : ''}
-                        className={`flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all duration-200 text-xs font-medium ${
+                        className={`flex items-center gap-2 px-2.5 py-1.5 rounded-md transition-all duration-150 text-xs font-medium ${
                           active
                             ? 'bg-[#FFD60A]/10 text-[#FFD60A] border border-[#FFD60A]/20 font-bold'
                             : isLight
@@ -197,7 +197,7 @@ export default function AdminLayout({ children }) {
                               : 'text-[#838894] hover:bg-[#2C333F] hover:text-white'
                         }`}
                       >
-                        <span className="text-sm flex-shrink-0">{child.icon}</span>
+                        <span className="text-xs flex-shrink-0">{child.icon}</span>
                         {(sidebarOpen || isMobile) && <span className="truncate">{child.label}</span>}
                       </Link>
                     );
@@ -215,7 +215,7 @@ export default function AdminLayout({ children }) {
             to={item.path}
             onClick={() => isMobile && setMobileDrawerOpen(false)}
             title={!sidebarOpen && !isMobile ? item.label : ''}
-            className={`flex items-center gap-3 px-4 py-3 mx-2 rounded-xl mb-1 transition-all duration-200 text-sm font-medium
+            className={`flex items-center gap-2.5 px-3 py-2 mx-1.5 rounded-lg mb-0.5 transition-all duration-150 text-xs font-medium
               ${active
                 ? 'bg-[#FFD60A]/10 text-[#FFD60A] border border-[#FFD60A]/20 font-bold'
                 : isLight
@@ -223,7 +223,7 @@ export default function AdminLayout({ children }) {
                   : 'text-[#AFB2BF] hover:bg-[#2C333F] hover:text-white'
               }`}
           >
-            <span className="text-base flex-shrink-0">{item.icon}</span>
+            <span className="text-sm flex-shrink-0">{item.icon}</span>
             {(sidebarOpen || isMobile) && <span className="truncate">{item.label}</span>}
           </Link>
         );
