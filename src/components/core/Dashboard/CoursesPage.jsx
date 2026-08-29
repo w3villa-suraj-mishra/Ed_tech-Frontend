@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserEnrolledCourses } from "../../../services/operations/profileAPI";
 import { getAllCourses } from "../../../services/operations/courseDetailsAPI";
+import { buyCourse } from "../../../services/operations/studentFeaturesAPI";
 import { addToCart } from "../../../services/slices/cartSlice";
 import { useNavigate } from "react-router-dom";
 import {
@@ -335,7 +336,6 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
             const formattedExpiryDate = enrollmentRecord?.expiresAt ? new Date(enrollmentRecord.expiresAt).toLocaleDateString('en-GB') : null;
 
             const handlePlanBuy = (planType) => {
-              const { buyCourse } = require("../../../services/operations/studentFeaturesAPI");
               buyCourse(token, [courseId], user, navigate, dispatch, planType);
             };
 
