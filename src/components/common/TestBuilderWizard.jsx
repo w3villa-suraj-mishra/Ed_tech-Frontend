@@ -16,6 +16,7 @@ export default function TestBuilderWizard({
   courses = [],
   initialScope = 'COURSE',
   initialCourseId = '',
+  initialTest = null,
   onSuccess
 }) {
   // Active Step: 1 = Details, 2 = Questions, 3 = Review
@@ -23,6 +24,7 @@ export default function TestBuilderWizard({
 
   // Step 1 Form Data
   const [testForm, setTestForm] = useState({
+    id: null,
     title: '',
     description: '',
     testType: 'MCQ',
@@ -77,17 +79,33 @@ export default function TestBuilderWizard({
   useEffect(() => {
     if (isOpen) {
       setStep(1);
-      setTestForm({
-        title: '',
-        description: '',
-        testType: 'MCQ',
-        scope: role === 'ADMIN' ? initialScope : 'COURSE',
-        courseId: initialCourseId || (courses.length > 0 ? (courses[0].id || courses[0]._id) : ''),
-        duration: 20,
-        passingPercentage: 50,
-        status: 'published'
-      });
-      setSelectedQuestions([]);
+      if (initialTest) {
+        setTestForm({
+          id: initialTest.id,
+          title: initialTest.title || '',
+          description: initialTest.description || '',
+          testType: initialTest.testType || 'MCQ',
+          scope: initialTest.scope || (role === 'ADMIN' ? initialScope : 'COURSE'),
+          courseId: initialTest.courseId || initialCourseId || (courses.length > 0 ? (courses[0].id || courses[0]._id) : ''),
+          duration: initialTest.duration || 20,
+          passingPercentage: initialTest.passingPercentage || 50,
+          status: initialTest.status || 'published'
+        });
+        setSelectedQuestions(initialTest.questions || []);
+      } else {
+        setTestForm({
+          id: null,
+          title: '',
+          description: '',
+          testType: 'MCQ',
+          scope: role === 'ADMIN' ? initialScope : 'COURSE',
+          courseId: initialCourseId || (courses.length > 0 ? (courses[0].id || courses[0]._id) : ''),
+          duration: 20,
+          passingPercentage: 50,
+          status: 'published'
+        });
+        setSelectedQuestions([]);
+      }
       setIsInlineDrawerOpen(false);
       setIsBankOpen(false);
       setQForm({
@@ -104,7 +122,7 @@ export default function TestBuilderWizard({
         interviewDetails: { expectedAnswer: '', keyPoints: '' }
       });
     }
-  }, [isOpen, role, initialScope, initialCourseId, courses]);
+  }, [isOpen, role, initialScope, initialCourseId, courses, initialTest]);
 
   useEffect(() => {
     if (courses.length > 0 && !testForm.courseId) {
@@ -345,10 +363,33 @@ export default function TestBuilderWizard({
     setSubmittingTest(true);
     try {
       const qIds = selectedQuestions.map(q => q.id);
+      let method = 'POST';
       let endpoint = '';
       let payload = {};
 
-      if (role === 'ADMIN') {
+      const isEditing = Boolean(initialTest?.id || testForm.id);
+      const testId = initialTest?.id || testForm.id;
+
+      if (isEditing) {
+        method = 'PUT';
+        endpoint = role === 'ADMIN' 
+          ? `${practiceEndpoints.ADMIN_TESTS}/${testId}`
+          : `${practiceEndpoints.INSTRUCTOR_TOGGLE_TEST_STATUS}${testId}`;
+        payload = {
+          title: testForm.title,
+          description: testForm.description,
+          testType: testForm.testType,
+          scope: testForm.scope,
+          courseId: testForm.scope === 'COURSE' ? Number(testForm.courseId) : null,
+          duration: Number(testForm.duration),
+          passingPercentage: Number(testForm.passingPercentage),
+          totalMarks: calculatedTotalMarks || 10,
+          numberOfQuestions: qIds.length,
+          status: targetStatus,
+          questionIds: qIds
+        };
+      } else if (role === 'ADMIN') {
+        method = 'POST';
         endpoint = practiceEndpoints.ADMIN_TESTS;
         payload = {
           title: testForm.title,
@@ -364,6 +405,7 @@ export default function TestBuilderWizard({
           questionIds: qIds
         };
       } else {
+        method = 'POST';
         endpoint = practiceEndpoints.INSTRUCTOR_CREATE_COURSE_TEST;
         payload = {
           courseId: Number(testForm.courseId),
@@ -378,12 +420,12 @@ export default function TestBuilderWizard({
         };
       }
 
-      const res = await apiConnector('POST', endpoint, payload, {
+      const res = await apiConnector(method, endpoint, payload, {
         Authorization: `Bearer ${token}`
       });
 
       if (res.data?.success) {
-        toast.success(`Test ${targetStatus === 'published' ? 'Published' : 'Saved as Draft'} Successfully! 🚀`);
+        toast.success(`Test ${isEditing ? 'Updated' : (targetStatus === 'published' ? 'Published' : 'Saved as Draft')} Successfully! 🚀`);
         if (onSuccess) onSuccess(res.data.data);
         onClose();
       }
@@ -396,6 +438,8 @@ export default function TestBuilderWizard({
 
   if (!isOpen) return null;
 
+  const isEditingTest = Boolean(initialTest?.id || testForm.id);
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
       <div className="bg-[#161D29] border border-[#2C333F] rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden font-['Inter',sans-serif]">
@@ -404,7 +448,7 @@ export default function TestBuilderWizard({
         <div className="bg-[#090D16] border-b border-[#2C333F] p-5 shrink-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <span>📝</span> Create Practice Test / Quiz
+              <span>{isEditingTest ? '✏️' : '📝'}</span> {isEditingTest ? 'Edit Practice Test / Quiz' : 'Create Practice Test / Quiz'}
             </h2>
             <p className="text-xs text-slate-400 mt-0.5">Professional EdTech Test Builder</p>
           </div>

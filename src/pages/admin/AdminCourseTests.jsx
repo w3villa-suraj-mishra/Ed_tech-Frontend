@@ -34,6 +34,8 @@ function AdminCourseTestsInner() {
   const [isWizardOpen, setIsWizardOpen] = useState(false);
   const [selectedTestForStats, setSelectedTestForStats] = useState(null);
 
+  const [editingTest, setEditingTest] = useState(null);
+
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedTestIds, setSelectedTestIds] = useState([]);
@@ -155,7 +157,10 @@ function AdminCourseTestsInner() {
             </button>
           )}
           <button
-            onClick={() => setIsWizardOpen(true)}
+            onClick={() => {
+              setEditingTest(null);
+              setIsWizardOpen(true);
+            }}
             className="px-4 py-2.5 bg-[#FFD60A] text-black font-bold text-xs rounded-xl flex items-center gap-2 shadow-lg hover:bg-yellow-400 transition"
           >
             <FaPlus /> Build Course Test
@@ -297,6 +302,16 @@ function AdminCourseTestsInner() {
                         <FaEye />
                       </button>
                       <button
+                        onClick={() => {
+                          setEditingTest(t);
+                          setIsWizardOpen(true);
+                        }}
+                        className="p-2 text-yellow-400 hover:bg-yellow-500/10 rounded-lg transition"
+                        title="Edit Course Test"
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
                         onClick={() => handleDeleteTest(t.id)}
                         className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition"
                         title="Delete Test"
@@ -350,17 +365,22 @@ function AdminCourseTestsInner() {
       {/* TEST BUILDER WIZARD MODAL */}
       <TestBuilderWizard
         isOpen={isWizardOpen}
-        onClose={() => setIsWizardOpen(false)}
+        onClose={() => {
+          setIsWizardOpen(false);
+          setEditingTest(null);
+        }}
         token={adminToken}
         role="ADMIN"
         courses={courses}
         initialScope="COURSE"
         initialCourseId={selectedCourseId}
-        onSuccess={(createdTest) => {
-          if (createdTest?.courseId) {
-            setSelectedCourseId(createdTest.courseId);
+        initialTest={editingTest}
+        onSuccess={(createdOrUpdatedTest) => {
+          if (createdOrUpdatedTest?.courseId) {
+            setSelectedCourseId(createdOrUpdatedTest.courseId);
           }
-          fetchCourseTests(createdTest?.courseId || selectedCourseId);
+          fetchCourseTests(createdOrUpdatedTest?.courseId || selectedCourseId);
+          setEditingTest(null);
         }}
       />
     </AdminLayout>

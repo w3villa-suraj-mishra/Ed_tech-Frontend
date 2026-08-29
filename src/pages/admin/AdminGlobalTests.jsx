@@ -5,7 +5,7 @@ import AdminModal from '../../components/admin/AdminModal';
 import { practiceEndpoints } from '../../services/apis';
 import { apiConnector } from '../../services/apiConnector';
 import { toast } from 'react-hot-toast';
-import { FaPlus, FaTrash, FaEye, FaGlobe, FaSearch, FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
+import { FaPlus, FaTrash, FaEye, FaEdit, FaGlobe, FaSearch, FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
 import TestBuilderWizard from '../../components/common/TestBuilderWizard';
 
 const TEST_CATEGORIES = [
@@ -31,6 +31,7 @@ function AdminGlobalTestsInner() {
   const [loading, setLoading] = useState(true);
   const [isWizardOpen, setIsWizardOpen] = useState(false);
   const [selectedTestForStats, setSelectedTestForStats] = useState(null);
+  const [editingTest, setEditingTest] = useState(null);
 
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -89,7 +90,10 @@ function AdminGlobalTestsInner() {
           <p className="text-xs text-[#AFB2BF] mt-1">Available to all registered students without requiring course purchase.</p>
         </div>
         <button
-          onClick={() => setIsWizardOpen(true)}
+          onClick={() => {
+            setEditingTest(null);
+            setIsWizardOpen(true);
+          }}
           className="px-4 py-2.5 bg-[#FFD60A] text-black font-bold text-xs rounded-xl flex items-center gap-2 shadow-lg hover:bg-yellow-400 transition"
         >
           <FaPlus /> Build Global Test
@@ -181,6 +185,16 @@ function AdminGlobalTestsInner() {
                         <FaEye />
                       </button>
                       <button
+                        onClick={() => {
+                          setEditingTest(t);
+                          setIsWizardOpen(true);
+                        }}
+                        className="p-2 text-yellow-400 hover:bg-yellow-500/10 rounded-lg transition"
+                        title="Edit Global Test"
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
                         onClick={() => handleDeleteTest(t.id)}
                         className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition"
                         title="Delete Test"
@@ -201,7 +215,7 @@ function AdminGlobalTestsInner() {
       {/* Stats Modal */}
       {selectedTestForStats && (
         <AdminModal isOpen={!!selectedTestForStats} title={`Test Details: ${selectedTestForStats.title}`} onClose={() => setSelectedTestForStats(null)}>
-          <div className="space-y-4 text-xs text-slate-300">
+          <div className="space-[#4] space-y-4 text-xs text-slate-300">
             <div className="grid grid-cols-2 gap-4 bg-[#090D16] p-4 rounded-xl border border-[#2C333F]">
               <div>
                 <p className="text-slate-500 uppercase text-[10px] font-bold">Scope</p>
@@ -234,12 +248,17 @@ function AdminGlobalTestsInner() {
       {/* TEST BUILDER WIZARD MODAL */}
       <TestBuilderWizard
         isOpen={isWizardOpen}
-        onClose={() => setIsWizardOpen(false)}
+        onClose={() => {
+          setIsWizardOpen(false);
+          setEditingTest(null);
+        }}
         token={adminToken}
         role="ADMIN"
         initialScope="GLOBAL"
+        initialTest={editingTest}
         onSuccess={() => {
           fetchGlobalTests();
+          setEditingTest(null);
         }}
       />
     </AdminLayout>

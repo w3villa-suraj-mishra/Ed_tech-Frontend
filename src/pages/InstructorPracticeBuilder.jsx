@@ -55,6 +55,7 @@ export default function InstructorPracticeBuilder() {
 
   // Test Builder Wizard Modal
   const [isWizardOpen, setIsWizardOpen] = useState(false);
+  const [editingTest, setEditingTest] = useState(null);
 
   useEffect(() => {
     fetchInstructorCourses();
@@ -543,6 +544,16 @@ export default function InstructorPracticeBuilder() {
                         }`}>
                           {test.status?.toUpperCase()}
                         </span>
+                        <button
+                          onClick={() => {
+                            setEditingTest(test);
+                            setIsWizardOpen(true);
+                          }}
+                          className="p-1.5 text-gray-400 hover:text-yellow-400 hover:bg-yellow-500/10 rounded-lg transition"
+                          title="Edit Test"
+                        >
+                          <FaEdit className="text-xs" />
+                        </button>
                         <button
                           onClick={() => handleSingleDeleteTest(test.id)}
                           className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition"
@@ -1067,16 +1078,21 @@ export default function InstructorPracticeBuilder() {
       {/* TEST BUILDER WIZARD MODAL */}
       <TestBuilderWizard
         isOpen={isWizardOpen}
-        onClose={() => setIsWizardOpen(false)}
+        onClose={() => {
+          setIsWizardOpen(false);
+          setEditingTest(null);
+        }}
         token={token}
         role="INSTRUCTOR"
         courses={courses}
         initialCourseId={selectedCourseId}
-        onSuccess={(createdTest) => {
-          if (createdTest?.courseId) {
-            setSelectedCourseId(createdTest.courseId);
+        initialTest={editingTest}
+        onSuccess={(createdOrUpdatedTest) => {
+          if (createdOrUpdatedTest?.courseId) {
+            setSelectedCourseId(createdOrUpdatedTest.courseId);
           }
-          fetchInstructorTests(createdTest?.courseId || selectedCourseId);
+          fetchInstructorTests(createdOrUpdatedTest?.courseId || selectedCourseId);
+          setEditingTest(null);
           setActiveTab('my-practice');
         }}
       />
