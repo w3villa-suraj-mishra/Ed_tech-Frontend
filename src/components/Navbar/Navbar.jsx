@@ -327,38 +327,6 @@ const Navbar = () => {
 
                   {/* Dynamic User Account Links */}
                   <div className="space-y-0.5">
-                    
-
-                    <Link
-                      to="/practice"
-                      onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
-                    >
-                      <VscCode className="text-sm text-blue-400" />
-                      <span>Practice</span>
-                    </Link>
-
-                    <Link
-                      to="/about"
-                      onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
-                    >
-                      <VscInfo className="text-sm text-blue-400" />
-                      <span>About Us</span>
-                    </Link>
-
-                    <Link
-                      to="/contact"
-                      onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
-                    >
-                      <VscCallIncoming className="text-sm text-blue-400" />
-                      <span>Contact Us</span>
-                    </Link>
-                  
-
-                  
-                  
                     <Link
                       to="/dashboard/global"
                       onClick={() => setProfileOpen(false)}
