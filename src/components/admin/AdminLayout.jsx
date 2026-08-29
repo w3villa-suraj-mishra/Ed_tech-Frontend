@@ -14,6 +14,7 @@ const NAV = [
   { label: 'Reviews',       path: '/admin/reviews',        icon: '⭐', superOnly: false },
   { label: 'Articles',      path: '/admin/articles',       icon: '📰', superOnly: false },
   { label: 'Announcements', path: '/admin/announcements', icon: '📢', superOnly: false },
+  { label: 'Offers & Coupons', path: '/admin/offers',     icon: '🏷️', superOnly: false },
   { label: 'Contact Us',    path: '/admin/contacts',       icon: '✉️', superOnly: false },
 ];
 
