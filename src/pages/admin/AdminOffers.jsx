@@ -8,7 +8,7 @@ import {
   duplicateOffer,
   deleteOffer
 } from '../../services/admin/offerAPI';
-import { getAdminCourses } from '../../services/admin/adminAPI';
+import { getCourses } from '../../services/admin/adminAPI';
 import toast from 'react-hot-toast';
 import {
   FiPlus,
@@ -83,7 +83,7 @@ export default function AdminOffers() {
 
   const fetchCoursesList = async () => {
     try {
-      const res = await getAdminCourses();
+      const res = await getCourses();
       if (res.data?.success) {
         setCourses(res.data.courses || []);
       }
