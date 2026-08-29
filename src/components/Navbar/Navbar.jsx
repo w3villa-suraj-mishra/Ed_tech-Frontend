@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
-import { AiOutlineShoppingCart, AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineShoppingCart } from "react-icons/ai";
 import { VscSignOut, VscDashboard, VscBook, VscAccount, VscBell, VscGear, VscCode } from "react-icons/vsc";
 import { logout } from "../../services/operations/authAPI";
 import { fetchCourseCategories, getAllCourses } from "../../services/operations/courseDetailsAPI";
 import NotificationBell from './NotificationBell';
+import { sidebarLinks } from '../../data/dashboard-links';
+import SidebarLink from '../core/Dashboard/SidebarLink';
 
 const Navbar = () => {
   const { token } = useSelector((state) => state.auth);
@@ -20,13 +22,11 @@ const Navbar = () => {
   const [courses, setCourses] = useState([]);
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [isCoursesOpen, setIsCoursesOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [theme, setTheme] = useState(localStorage.getItem('userTheme') || 'dark');
   const [profileOpen, setProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const profileRef = useRef(null);
-  const searchInputRef = useRef(null);
+
+  const userRole = user?.accountType || user?.account_type;
 
   useEffect(() => {
     const getCategories = async () => {
@@ -53,17 +53,6 @@ const Navbar = () => {
     getCoursesList();
   }, []);
 
-  const toggleTheme = () => {
-    const nextTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(nextTheme);
-    localStorage.setItem('userTheme', nextTheme);
-    if (nextTheme === 'light') {
-      document.documentElement.classList.add('light-mode-active');
-    } else {
-      document.documentElement.classList.remove('light-mode-active');
-    }
-  };
-
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
@@ -84,6 +73,7 @@ const Navbar = () => {
     };
   }, []);
 
+  // Lock Body Scroll when Mobile Drawer is Open
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -101,25 +91,37 @@ const Navbar = () => {
 
   return (
     <nav className="w-full bg-[#070913] border-b border-blue-950/30 sticky top-0 z-50 py-3">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-[#0b0e1b]/90 border border-blue-500/30 rounded-2xl sm:rounded-3xl px-4 sm:px-6 py-2.5 flex items-center justify-between shadow-[0_0_25px_rgba(37, 99, 235,0.15)] backdrop-blur-xl">
+      <div className="max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="bg-[#0b0e1b]/90 border border-blue-500/30 rounded-2xl sm:rounded-3xl px-3 sm:px-6 py-2 flex items-center justify-between shadow-[0_0_25px_rgba(37,99,235,0.15)] backdrop-blur-xl">
         
-        {/* BRAND LOGO */}
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-xl bg-[#141728] border border-blue-500/40 flex items-center justify-center text-blue-400 text-lg group-hover:scale-105 transition-transform shadow-[0_0_15px_rgba(37, 99, 235,0.3)]">
-            <VscCode />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-white font-black text-lg tracking-tight leading-none">
-              CodeLearn
-            </span>
-            <span className="text-[9px] text-richblack-400 font-medium tracking-widest uppercase mt-0.5">
-              Learn. Build. Grow.
-            </span>
-          </div>
-        </Link>
+        {/* BRAND LOGO & MOBILE HAMBURGER BUTTON */}
+        <div className="flex items-center gap-2.5">
+          {/* Mobile Hamburger Drawer Trigger Button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2 rounded-xl bg-blue-950/40 border border-blue-500/30 text-blue-300 hover:text-white transition-all text-base focus:outline-none shrink-0"
+            aria-label="Toggle Mobile Menu"
+          >
+            {isMobileMenuOpen ? '✕' : '☰'}
+          </button>
 
-        {/* NAVIGATION LINKS */}
+          {/* CodeLearn Logo */}
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 border border-blue-400/40 flex items-center justify-center text-white text-base group-hover:scale-105 transition-transform shadow-[0_0_15px_rgba(37,99,235,0.4)] shrink-0">
+              <VscCode />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-white font-extrabold text-sm sm:text-base tracking-tight leading-none">
+                CodeLearn
+              </span>
+              <span className="text-[8px] sm:text-[9px] text-blue-300 font-semibold tracking-widest uppercase mt-0.5">
+                LEARN. BUILD. GROW.
+              </span>
+            </div>
+          </Link>
+        </div>
+
+        {/* DESKTOP NAVIGATION LINKS */}
         <ul className="hidden md:flex items-center gap-x-6 lg:gap-x-8 text-richblack-200 text-xs sm:text-sm font-medium">
           
           {/* Courses Dropdown */}
@@ -139,7 +141,7 @@ const Navbar = () => {
 
             {isCoursesOpen && (
               <div className="absolute top-full left-0 pt-3 w-[280px] z-50">
-                <div className="bg-[#0e111f] rounded-2xl p-4 shadow-[0_10px_30px_rgba(0,0,0,0.9),0_0_20px_rgba(37, 99, 235,0.25)] border border-blue-500/30 text-white animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="bg-[#0e111f] rounded-2xl p-4 shadow-[0_10px_30px_rgba(0,0,0,0.9),0_0_20px_rgba(37,99,235,0.25)] border border-blue-500/30 text-white animate-in fade-in slide-in-from-top-2 duration-200">
                   <div className="absolute -top-1.5 left-6 w-3 h-3 bg-[#0e111f] rotate-45 border-t border-l border-blue-500/30" />
                   
                   <div className="px-2 pb-2 mb-2 border-b border-white/10 flex items-center justify-between">
@@ -207,7 +209,7 @@ const Navbar = () => {
 
             {isCatalogOpen && (
               <div className="absolute top-full left-1/2 -translate-x-1/2 pt-3 w-[260px] z-50">
-                <div className="bg-[#0e111f] rounded-2xl p-4 shadow-[0_10px_30px_rgba(0,0,0,0.9),0_0_20px_rgba(37, 99, 235,0.25)] border border-blue-500/30 text-white animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="bg-[#0e111f] rounded-2xl p-4 shadow-[0_10px_30px_rgba(0,0,0,0.9),0_0_20px_rgba(37,99,235,0.25)] border border-blue-500/30 text-white animate-in fade-in slide-in-from-top-2 duration-200">
                   <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#0e111f] rotate-45 border-t border-l border-blue-500/30" />
                   
                   <div className="px-2 pb-2 mb-2 border-b border-white/10 flex items-center justify-between">
@@ -275,31 +277,22 @@ const Navbar = () => {
           </li>
         </ul>
 
-        {/* ACTION CONTROLS */}
-        <div className="flex items-center gap-3">
+        {/* ACTION CONTROLS (Notification Bell + Profile Dropdown / Auth Buttons) */}
+        <div className="flex items-center gap-2.5">
 
           {/* Real-time Notification Bell */}
           <NotificationBell />
-
-          {/* Light / Dark Theme Switch Button */}
-          {/* <button
-            onClick={toggleTheme}
-            aria-label="Toggle Theme"
-            className="w-9 h-9 rounded-full bg-[#141728] border border-white/10 hover:border-blue-500/40 text-richblack-300 hover:text-white flex items-center justify-center transition-colors text-sm"
-          >
-            {theme === 'light' ? '🌙' : '☀️'}
-          </button> */}
 
           {/* Unauthenticated Login / Sign Up */}
           {token === null && (
             <div className="flex items-center gap-2.5">
               <Link to="/login">
-                <button className="px-4 py-2 rounded-xl border border-blue-500/40 bg-[#121124] text-xs font-semibold text-white hover:bg-blue-950/30 transition-all">
+                <button className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl border border-blue-500/40 bg-[#121124] text-xs font-semibold text-white hover:bg-blue-950/30 transition-all">
                   Log In
                 </button>
               </Link>
               <Link to="/signup">
-                <button className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#3b82f6] to-[#2563eb] text-xs font-bold text-white shadow-[0_0_15px_rgba(37, 99, 235,0.5)] hover:opacity-95 transition-all">
+                <button className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-[#3b82f6] to-[#2563eb] text-xs font-bold text-white shadow-[0_0_15px_rgba(37,99,235,0.5)] hover:opacity-95 transition-all">
                   Sign Up
                 </button>
               </Link>
@@ -317,13 +310,13 @@ const Navbar = () => {
                   src={user?.image}
                   alt={user?.first_name}
                   referrerPolicy="no-referrer"
-                  className="aspect-square w-[36px] rounded-full object-cover ring-2 ring-blue-500/80 hover:ring-blue-400 transition-all shadow-[0_0_12px_rgba(37, 99, 235,0.4)]"
+                  className="aspect-square w-[34px] sm:w-[36px] rounded-full object-cover ring-2 ring-blue-500/80 hover:ring-blue-400 transition-all shadow-[0_0_12px_rgba(37,99,235,0.4)]"
                 />
               </button>
 
-              {/* Account Dropdown */}
+              {/* Desktop Account Dropdown */}
               {profileOpen && (
-                <div className="absolute right-0 mt-3 w-56 rounded-2xl bg-[#0e111f] border border-blue-500/30 text-richblack-100 shadow-[0_10px_30px_rgba(0,0,0,0.9),0_0_20px_rgba(37, 99, 235,0.25)] z-50 overflow-hidden py-2 animate-in fade-in slide-in-from-top-2 duration-150">
+                <div className="absolute right-0 mt-3 w-56 rounded-2xl bg-[#0e111f] border border-blue-500/30 text-richblack-100 shadow-[0_10px_30px_rgba(0,0,0,0.9),0_0_20px_rgba(37,99,235,0.25)] z-50 overflow-hidden py-2 animate-in fade-in slide-in-from-top-2 duration-150">
                   
                   <div className="px-4 py-2 border-b border-white/10 mb-1">
                     <h3 className="font-semibold text-xs text-white">My Account</h3>
@@ -415,74 +408,91 @@ const Navbar = () => {
 
         </div>
 
-          {/* Mobile Hamburger Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 rounded-xl text-richblack-200 hover:text-white bg-[#141728] border border-white/10 text-lg"
-            aria-label="Toggle Mobile Menu"
-          >
-            {isMobileMenuOpen ? '✕' : '☰'}
-          </button>
-
         </div>
       </div>
 
-      {/* MOBILE SLIDE-OVER NAVIGATION DRAWER */}
+      {/* MOBILE SLIDE-IN OVERLAY SIDEBAR DRAWER */}
       {isMobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-[100] flex">
-          {/* Semi-transparent Backdrop Overlay */}
+        <div className="md:hidden fixed inset-0 z-[99999] flex">
+          {/* Dark Translucent Backdrop */}
           <div
-            className="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity"
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
             onClick={() => setIsMobileMenuOpen(false)}
             aria-hidden="true"
           />
 
-          {/* Top/Slide Drawer */}
-          <div className="fixed top-[60px] left-0 right-0 max-h-[85vh] bg-[#0b0e1b] border-b border-blue-500/30 p-5 space-y-4 overflow-y-auto custom-scrollbar shadow-2xl z-[101] animate-in fade-in slide-in-from-top duration-200">
-            <div className="flex flex-col space-y-3 font-medium text-sm text-richblack-100">
-              <Link
-                to="/courses"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-xl hover:bg-blue-950/40 hover:text-white transition-colors flex items-center gap-2"
-              >
-                <span>📚</span>
-                <span>Courses</span>
-              </Link>
-              <Link
-                to="/catalog"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-xl hover:bg-blue-950/40 hover:text-white transition-colors flex items-center gap-2"
-              >
-                <span>🏷️</span>
-                <span>Categories</span>
-              </Link>
-              <Link
-                to="/practice"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-xl hover:bg-blue-950/40 hover:text-white transition-colors flex items-center gap-2"
-              >
-                <span>⚡</span>
-                <span>Practice Center</span>
-              </Link>
-              <Link
-                to="/about"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-xl hover:bg-blue-950/40 hover:text-white transition-colors flex items-center gap-2"
-              >
-                <span>ℹ️</span>
-                <span>About Us</span>
-              </Link>
-              <Link
-                to="/contact"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-xl hover:bg-blue-950/40 hover:text-white transition-colors flex items-center gap-2"
-              >
-                <span>📞</span>
-                <span>Contact</span>
-              </Link>
+          {/* Left Slide-in Drawer */}
+          <aside className="fixed top-0 bottom-0 left-0 w-[280px] max-w-[85vw] bg-[#080b16] border-r border-blue-500/30 z-[100000] flex flex-col justify-between overflow-y-auto custom-scrollbar shadow-[15px_0_40px_rgba(0,0,0,0.9)] animate-in slide-in-from-left duration-300 p-4">
+            
+            {/* Drawer Header */}
+            <div>
+              <div className="flex items-center justify-between border-b border-blue-950/60 pb-4 mb-4">
+                <Link
+                  to="/"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5"
+                >
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 border border-blue-400/40 flex items-center justify-center text-white text-base shadow-[0_0_12px_rgba(37,99,235,0.4)]">
+                    <VscCode />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-white font-extrabold text-sm tracking-tight leading-none">CodeLearn</span>
+                    <span className="text-[8px] text-blue-300 font-semibold tracking-widest uppercase mt-0.5">LEARN. BUILD. GROW.</span>
+                  </div>
+                </Link>
 
-              {token === null && (
-                <div className="pt-4 border-t border-white/10 flex flex-col gap-2.5">
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="p-1.5 rounded-xl bg-blue-950/40 border border-blue-500/30 text-richblack-300 hover:text-white transition-all text-base"
+                  aria-label="Close Drawer"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Navigation Items (Role-Based) */}
+              <div className="flex flex-col gap-1">
+                <SidebarLink
+                  link={{ name: 'My Profile', path: '/dashboard/my-profile' }}
+                  iconName="VscAccount"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                />
+
+                {sidebarLinks.map((link) => {
+                  if (link.type && userRole !== link.type) return null;
+                  return (
+                    <SidebarLink
+                      key={link.id}
+                      link={link}
+                      iconName={link.icon}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Bottom Footer Actions */}
+            <div className="pt-4 border-t border-blue-950/60 mt-6 flex flex-col gap-1">
+              <SidebarLink
+                link={{ name: 'Settings', path: '/dashboard/settings' }}
+                iconName="VscSettingsGear"
+                onClick={() => setIsMobileMenuOpen(false)}
+              />
+
+              {token ? (
+                <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    dispatch(logout(navigate));
+                  }}
+                  className="px-4 py-2.5 mx-2 my-0.5 text-xs font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition-all duration-200 text-left cursor-pointer flex items-center gap-x-3"
+                >
+                  <VscSignOut className="text-base text-red-400" />
+                  <span>Logout</span>
+                </button>
+              ) : (
+                <div className="flex flex-col gap-2 pt-2 px-2">
                   <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
                     <button className="w-full py-2.5 rounded-xl border border-blue-500/40 bg-[#121124] text-xs font-semibold text-white">
                       Log In
@@ -495,40 +505,9 @@ const Navbar = () => {
                   </Link>
                 </div>
               )}
-
-              {token !== null && (
-                <div className="pt-4 border-t border-white/10 space-y-2">
-                  <div className="text-xs text-blue-400 font-bold px-3">MY ACCOUNT</div>
-                  <Link
-                    to="/dashboard/global"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center gap-3 py-2 px-3 rounded-xl hover:bg-blue-950/40 text-xs"
-                  >
-                    <VscDashboard className="text-blue-400 text-sm" />
-                    <span>Dashboard</span>
-                  </Link>
-                  <Link
-                    to="/dashboard/enrolled-courses"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center gap-3 py-2 px-3 rounded-xl hover:bg-blue-950/40 text-xs"
-                  >
-                    <VscBook className="text-blue-400 text-sm" />
-                    <span>My Courses</span>
-                  </Link>
-                  <button
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      dispatch(logout(navigate));
-                    }}
-                    className="w-full flex items-center gap-3 py-2 px-3 rounded-xl hover:bg-red-500/20 text-red-400 text-xs text-left cursor-pointer"
-                  >
-                    <VscSignOut className="text-sm" />
-                    <span>Logout</span>
-                  </button>
-                </div>
-              )}
             </div>
-          </div>
+
+          </aside>
         </div>
       )}
     </nav>
@@ -536,3 +515,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
