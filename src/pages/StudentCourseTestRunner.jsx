@@ -718,8 +718,8 @@ export default function StudentCourseTestRunner() {
                             {visibleExampleCases.map((tc, idx) => (
                               <div key={idx} className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-1 font-mono text-[11px]">
                                 <span className="font-bold text-slate-500 block text-[10px]">Sample #{idx + 1}</span>
-                                <div><span className="text-slate-400">Input:</span> {tc.input}</div>
-                                <div><span className="text-slate-400">Expected Output:</span> {tc.output || tc.expectedOutput}</div>
+                                <div><span className="text-slate-400">Input:</span> <span className="text-slate-800 font-bold">{tc.input !== undefined && tc.input !== null && String(tc.input).trim() !== '' ? String(tc.input) : '(none)'}</span></div>
+                                <div><span className="text-slate-400">Expected Output:</span> <span className="text-slate-800 font-bold">{tc.output !== undefined && tc.output !== null && String(tc.output).trim() !== '' ? String(tc.output) : (tc.expectedOutput !== undefined && tc.expectedOutput !== null && String(tc.expectedOutput).trim() !== '' ? String(tc.expectedOutput) : '(none)')}</span></div>
                               </div>
                             ))}
                           </div>
@@ -934,9 +934,32 @@ export default function StudentCourseTestRunner() {
                                     </span>
                                     <span className="text-[10px] text-slate-400">{tc.status} • {tc.executionTime ? `${tc.executionTime}s` : '0.01s'}</span>
                                   </div>
-                                  <div className="text-slate-300"><span className="text-slate-500">Input:</span> {tc.input}</div>
-                                  <div className="text-slate-300"><span className="text-slate-500">Expected Output:</span> {tc.expectedOutput}</div>
-                                  <div className="text-slate-300"><span className="text-slate-500">Actual Output:</span> {tc.actualOutput || tc.stdout || '(no output)'}</div>
+                                  <div className="text-slate-300 flex items-baseline gap-1 text-[11px]">
+                                    <span className="text-slate-400 font-semibold shrink-0">Input:</span>
+                                    <code className="text-emerald-300 font-mono bg-slate-900/80 px-2 py-0.5 rounded border border-slate-800 break-all">
+                                      {tc.input !== undefined && tc.input !== null && String(tc.input).trim() !== '' ? String(tc.input) : '(none)'}
+                                    </code>
+                                  </div>
+                                  <div className="text-slate-300 flex items-baseline gap-1 text-[11px]">
+                                    <span className="text-slate-400 font-semibold shrink-0">Expected Output:</span>
+                                    <code className="text-emerald-300 font-mono bg-slate-900/80 px-2 py-0.5 rounded border border-slate-800 break-all">
+                                      {tc.expectedOutput !== undefined && tc.expectedOutput !== null && String(tc.expectedOutput).trim() !== ''
+                                        ? String(tc.expectedOutput)
+                                        : (tc.output !== undefined && tc.output !== null && String(tc.output).trim() !== '' ? String(tc.output) : '(none)')}
+                                    </code>
+                                  </div>
+                                  <div className="text-slate-300 flex items-baseline gap-1 text-[11px]">
+                                    <span className="text-slate-400 font-semibold shrink-0">Actual Output:</span>
+                                    <code className={`font-mono bg-slate-900/80 px-2 py-0.5 rounded border border-slate-800 break-all ${
+                                      (tc.actualOutput !== undefined && tc.actualOutput !== null && String(tc.actualOutput).trim() !== '') || (tc.stdout !== undefined && tc.stdout !== null && String(tc.stdout).trim() !== '')
+                                        ? (tc.passed ? 'text-emerald-300' : 'text-red-300')
+                                        : 'text-slate-500 italic'
+                                    }`}>
+                                      {tc.actualOutput !== undefined && tc.actualOutput !== null && String(tc.actualOutput).trim() !== ''
+                                        ? String(tc.actualOutput)
+                                        : (tc.stdout !== undefined && tc.stdout !== null && String(tc.stdout).trim() !== '' ? String(tc.stdout) : '(no output)')}
+                                    </code>
+                                  </div>
 
                                   {tc.stderr && (
                                     <div className="mt-2 p-2.5 bg-red-950/80 border border-red-800/80 rounded-lg text-red-200 font-mono text-[11px]">
