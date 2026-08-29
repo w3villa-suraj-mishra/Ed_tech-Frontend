@@ -63,6 +63,9 @@ export default function AdminOffers() {
 
   const [courseSearch, setCourseSearch] = useState('');
 
+  const [coursesLoading, setCoursesLoading] = useState(false);
+  const [coursesError, setCoursesError] = useState('');
+
   const fetchOffers = async () => {
     setLoading(true);
     try {
@@ -82,13 +85,26 @@ export default function AdminOffers() {
   };
 
   const fetchCoursesList = async () => {
+    setCoursesLoading(true);
+    setCoursesError('');
     try {
       const res = await getCourses();
-      if (res.data?.success) {
-        setCourses(res.data.courses || []);
+      let rawCourses = [];
+      if (Array.isArray(res.data)) {
+        rawCourses = res.data;
+      } else if (res.data?.data?.courses) {
+        rawCourses = res.data.data.courses;
+      } else if (res.data?.courses) {
+        rawCourses = res.data.courses;
+      } else if (res.data?.data) {
+        rawCourses = Array.isArray(res.data.data) ? res.data.data : [];
       }
+      setCourses(rawCourses);
     } catch (err) {
-      console.error('Failed to load courses list for selection');
+      console.error('Failed to load courses list for selection:', err);
+      setCoursesError('Unable to load courses. Try again.');
+    } finally {
+      setCoursesLoading(false);
     }
   };
 
@@ -611,39 +627,93 @@ export default function AdminOffers() {
 
                   {formData.scope === 'SELECTED_COURSES' && (
                     <div className="bg-[#2C333F] p-3.5 rounded-xl border border-[#3E4553] space-y-3">
-                      <input
-                        type="text"
-                        placeholder="Search courses to select..."
-                        value={courseSearch}
-                        onChange={(e) => setCourseSearch(e.target.value)}
-                        className="w-full px-3 py-1.5 bg-[#161D29] border border-[#3E4553] rounded-lg text-white text-xs focus:outline-none focus:border-[#FFD60A]"
-                      />
-                      <div className="max-h-40 overflow-y-auto space-y-1.5 pr-1">
-                        {filteredCourses.map((course) => {
-                          const isSelected = formData.courseIds.includes(course.id);
-                          return (
-                            <label
-                              key={course.id}
-                              className={`flex items-center justify-between p-2 rounded-lg text-xs cursor-pointer transition-colors ${
-                                isSelected ? 'bg-[#FFD60A]/10 border border-[#FFD60A]/30 text-white' : 'hover:bg-[#161D29] text-[#AFB2BF]'
-                              }`}
-                            >
-                              <div className="flex items-center gap-2 truncate">
-                                <input
-                                  type="checkbox"
-                                  checked={isSelected}
-                                  onChange={() => toggleCourseSelection(course.id)}
-                                  className="accent-[#FFD60A]"
-                                />
-                                <span className="font-medium truncate">{course.courseName}</span>
-                              </div>
-                              <span className="font-mono text-[#FFD60A]">₹{course.price}</span>
-                            </label>
-                          );
-                        })}
+                      <div className="relative">
+                        <input
+                          type="text"
+                          placeholder="🔍 Search courses..."
+                          value={courseSearch}
+                          onChange={(e) => setCourseSearch(e.target.value)}
+                          className="w-full px-3 py-2 bg-[#161D29] border border-[#3E4553] rounded-lg text-white text-xs focus:outline-none focus:border-[#FFD60A]"
+                        />
                       </div>
-                      <div className="text-[11px] text-[#838894]">
-                        Selected: <strong className="text-white">{formData.courseIds.length}</strong> courses
+
+                      <div className="max-h-48 overflow-y-auto space-y-1.5 pr-1 custom-scrollbar">
+                        {coursesLoading ? (
+                          <div className="py-6 text-center text-xs text-[#AFB2BF]">
+                            Loading courses...
+                          </div>
+                        ) : coursesError ? (
+                          <div className="py-6 text-center text-xs text-red-400 flex flex-col items-center gap-2">
+                            <span>{coursesError}</span>
+                            <button
+                              type="button"
+                              onClick={fetchCoursesList}
+                              className="px-3 py-1 bg-[#161D29] border border-[#3E4553] rounded text-white text-xs hover:border-[#FFD60A]"
+                            >
+                              Try again
+                            </button>
+                          </div>
+                        ) : filteredCourses.length === 0 ? (
+                          <div className="py-6 text-center text-xs text-[#838894]">
+                            No courses available.
+                          </div>
+                        ) : (
+                          filteredCourses.map((course) => {
+                            const isSelected = formData.courseIds.includes(course.id);
+                            return (
+                              <label
+                                key={course.id}
+                                className={`flex items-center justify-between p-2 rounded-lg text-xs cursor-pointer transition-all ${
+                                  isSelected
+                                    ? 'bg-[#FFD60A]/10 border border-[#FFD60A]/40 text-white font-semibold'
+                                    : 'hover:bg-[#161D29] text-[#AFB2BF] border border-transparent'
+                                }`}
+                              >
+                                <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                                  <input
+                                    type="checkbox"
+                                    checked={isSelected}
+                                    onChange={() => toggleCourseSelection(course.id)}
+                                    className="accent-[#FFD60A] w-4 h-4 flex-shrink-0"
+                                  />
+                                  {course.thumbnail && (
+                                    <img
+                                      src={course.thumbnail}
+                                      alt=""
+                                      className="w-8 h-8 rounded object-cover flex-shrink-0 bg-[#161D29]"
+                                    />
+                                  )}
+                                  <div className="min-w-0 flex-1">
+                                    <div className="font-medium truncate text-white">{course.courseName}</div>
+                                    {course.Category?.name && (
+                                      <div className="text-[10px] text-[#838894] truncate">
+                                        {course.Category.name}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                                <span className="font-mono text-[#FFD60A] ml-2 flex-shrink-0">
+                                  ₹{course.price !== undefined ? course.price : 0}
+                                </span>
+                              </label>
+                            );
+                          })
+                        )}
+                      </div>
+
+                      <div className="flex items-center justify-between text-[11px] text-[#838894] border-t border-[#3E4553]/50 pt-2">
+                        <span>
+                          Selected: <strong className="text-[#FFD60A] font-bold">{formData.courseIds.length}</strong> {formData.courseIds.length === 1 ? 'course' : 'courses'}
+                        </span>
+                        {formData.courseIds.length > 0 && (
+                          <button
+                            type="button"
+                            onClick={() => setFormData({ ...formData, courseIds: [] })}
+                            className="text-[#AFB2BF] hover:text-white underline text-[10px]"
+                          >
+                            Clear Selection
+                          </button>
+                        )}
                       </div>
                     </div>
                   )}

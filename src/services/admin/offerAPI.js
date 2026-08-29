@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || 'https://ed-tech-backend-2kha.vercel.app';
+const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:5000';
 
 const getHeaders = (token) => {
   const adminToken = token || localStorage.getItem('adminToken');
