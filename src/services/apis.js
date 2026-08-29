@@ -117,6 +117,7 @@ export const practiceEndpoints = {
   ADMIN_BULK_DELETE_QUESTIONS: BASE_URL + "/admin/practice/questions/bulk-delete",
   ADMIN_BULK_QUESTIONS: BASE_URL + "/admin/practice/questions/bulk",
   ADMIN_TESTS: BASE_URL + "/admin/practice/tests",
+  ADMIN_BULK_DELETE_TESTS: BASE_URL + "/admin/practice/tests/bulk-delete",
   ADMIN_CATEGORIES: BASE_URL + "/admin/practice/categories",
   ADMIN_TOPICS: BASE_URL + "/admin/practice/topics",
   GET_COURSE_PRACTICE: BASE_URL + "/practice/course",

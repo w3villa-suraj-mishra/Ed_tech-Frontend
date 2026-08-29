@@ -26,6 +26,10 @@ export default function InstructorPracticeBuilder() {
   const [selectedTestForAttempts, setSelectedTestForAttempts] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Multiple Selection / Bulk Delete States
+  const [selectedTestIds, setSelectedTestIds] = useState([]);
+  const [selectedQuestionIdsForDelete, setSelectedQuestionIdsForDelete] = useState([]);
+
   // Question Filters
   const [qSearch, setQSearch] = useState('');
   const [qTypeFilter, setQTypeFilter] = useState('');
@@ -126,6 +130,67 @@ export default function InstructorPracticeBuilder() {
       }
     } catch (err) {
       console.error('Fetch instructor questions error:', err);
+    }
+  };
+
+  // Single & Bulk Delete Practice Tests
+  const handleSingleDeleteTest = async (testId) => {
+    if (!window.confirm('Are you sure you want to delete this test?')) return;
+    try {
+      const res = await apiConnector(
+        'DELETE',
+        `${practiceEndpoints.ADMIN_TESTS}/${testId}`,
+        null,
+        { Authorization: `Bearer ${token}` }
+      );
+      if (res.data?.success) {
+        toast.success('Test deleted successfully');
+        setSelectedTestIds((prev) => prev.filter((id) => id !== testId));
+        fetchInstructorTests();
+      }
+    } catch (err) {
+      toast.error('Failed to delete test');
+    }
+  };
+
+  const handleBulkDeleteTests = async () => {
+    if (selectedTestIds.length === 0) return;
+    if (!window.confirm(`Are you sure you want to delete ${selectedTestIds.length} selected test(s)?`)) return;
+    try {
+      const res = await apiConnector(
+        'POST',
+        practiceEndpoints.ADMIN_BULK_DELETE_TESTS,
+        { testIds: selectedTestIds },
+        { Authorization: `Bearer ${token}` }
+      );
+      if (res.data?.success) {
+        toast.success(res.data.message || 'Selected tests deleted successfully');
+        setSelectedTestIds([]);
+        fetchInstructorTests();
+      }
+    } catch (err) {
+      toast.error('Failed to delete selected tests');
+    }
+  };
+
+  // Single & Bulk Delete Questions
+  const handleBulkDeleteQuestions = async () => {
+    if (selectedQuestionIdsForDelete.length === 0) return;
+    if (!window.confirm(`Are you sure you want to delete ${selectedQuestionIdsForDelete.length} selected question(s)?`)) return;
+    try {
+      const res = await apiConnector(
+        'POST',
+        practiceEndpoints.ADMIN_BULK_DELETE_QUESTIONS,
+        { questionIds: selectedQuestionIdsForDelete },
+        { Authorization: `Bearer ${token}` }
+      );
+      if (res.data?.success) {
+        toast.success(res.data.message || 'Selected questions deleted successfully');
+        setSelectedQuestionIdsForDelete([]);
+        fetchInstructorQuestions();
+      }
+    } catch (err) {
+      toast.error('Failed to delete selected questions');
     }
   };
 
@@ -474,14 +539,44 @@ export default function InstructorPracticeBuilder() {
             ))}
           </div>
 
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg font-bold text-white">Course Practice Tests & Quizzes</h2>
-            <button
-              onClick={() => setActiveTab('create-test')}
-              className="px-4 py-2 bg-[#FFD60A] text-black text-xs font-bold rounded-xl hover:bg-yellow-400 flex items-center gap-2"
-            >
-              <FaPlus /> Create New Test
-            </button>
+          <div className="flex flex-wrap justify-between items-center gap-3">
+            <div className="flex items-center gap-3">
+              <h2 className="text-lg font-bold text-white">Course Practice Tests & Quizzes</h2>
+              {tests.length > 0 && (
+                <button
+                  onClick={() => {
+                    const visibleTests = tests.filter(t => !qTypeFilter || t.testType === qTypeFilter);
+                    const visibleIds = visibleTests.map(t => t.id);
+                    const allSelected = visibleIds.every(id => selectedTestIds.includes(id));
+                    if (allSelected) {
+                      setSelectedTestIds(prev => prev.filter(id => !visibleIds.includes(id)));
+                    } else {
+                      setSelectedTestIds(prev => Array.from(new Set([...prev, ...visibleIds])));
+                    }
+                  }}
+                  className="px-3 py-1.5 bg-[#161D29] border border-[#2C333F] text-xs font-bold text-[#AFB2BF] hover:text-white rounded-xl transition"
+                >
+                  {tests.filter(t => !qTypeFilter || t.testType === qTypeFilter).every(t => selectedTestIds.includes(t.id)) ? 'Deselect All' : 'Select All'}
+                </button>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2">
+              {selectedTestIds.length > 0 && (
+                <button
+                  onClick={handleBulkDeleteTests}
+                  className="px-4 py-2 bg-red-600/20 border border-red-500/40 text-red-400 text-xs font-bold rounded-xl hover:bg-red-600/30 flex items-center gap-2 transition"
+                >
+                  <FaTrashAlt /> Delete Selected ({selectedTestIds.length})
+                </button>
+              )}
+              <button
+                onClick={() => setActiveTab('create-test')}
+                className="px-4 py-2 bg-[#FFD60A] text-black text-xs font-bold rounded-xl hover:bg-yellow-400 flex items-center gap-2"
+              >
+                <FaPlus /> Create New Test
+              </button>
+            </div>
           </div>
 
           {tests.length === 0 ? (
@@ -495,17 +590,42 @@ export default function InstructorPracticeBuilder() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {tests.filter(t => !qTypeFilter || t.testType === qTypeFilter).map((test) => (
-                <div key={test.id} className="bg-[#161D29] border border-[#2C333F] rounded-3xl p-6 flex flex-col justify-between space-y-4 hover:border-purple-500/50 transition-all">
+                <div key={test.id} className={`bg-[#161D29] border rounded-3xl p-6 flex flex-col justify-between space-y-4 transition-all relative ${
+                  selectedTestIds.includes(test.id) ? 'border-purple-500 bg-purple-500/5' : 'border-[#2C333F] hover:border-purple-500/50'
+                }`}>
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-400 border border-purple-500/30">
-                        {test.testType}
-                      </span>
-                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                        test.status === 'published' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'
-                      }`}>
-                        {test.status?.toUpperCase()}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={selectedTestIds.includes(test.id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedTestIds((prev) => [...prev, test.id]);
+                            } else {
+                              setSelectedTestIds((prev) => prev.filter((id) => id !== test.id));
+                            }
+                          }}
+                          className="w-4 h-4 rounded border-gray-600 bg-[#090D16] text-purple-600 focus:ring-purple-500 cursor-pointer"
+                        />
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                          {test.testType}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                          test.status === 'published' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'
+                        }`}>
+                          {test.status?.toUpperCase()}
+                        </span>
+                        <button
+                          onClick={() => handleSingleDeleteTest(test.id)}
+                          className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition"
+                          title="Delete Test"
+                        >
+                          <FaTrash className="text-xs" />
+                        </button>
+                      </div>
                     </div>
 
                     <h3 className="text-base font-bold text-white line-clamp-1">{test.title}</h3>
@@ -588,6 +708,14 @@ export default function InstructorPracticeBuilder() {
                 <option value="Medium">Medium</option>
                 <option value="Hard">Hard</option>
               </select>
+              {selectedQuestionIdsForDelete.length > 0 && (
+                <button
+                  onClick={handleBulkDeleteQuestions}
+                  className="px-4 py-2 bg-red-600/20 border border-red-500/40 text-red-400 text-xs font-bold rounded-xl hover:bg-red-600/30 flex items-center gap-1.5 whitespace-nowrap transition"
+                >
+                  <FaTrashAlt /> Delete Selected ({selectedQuestionIdsForDelete.length})
+                </button>
+              )}
               <button
                 onClick={() => setActiveTab('create-question')}
                 className="px-4 py-2 bg-[#FFD60A] text-black text-xs font-bold rounded-xl whitespace-nowrap flex items-center gap-1.5"
@@ -602,15 +730,51 @@ export default function InstructorPracticeBuilder() {
               <div className="p-8 text-center text-xs text-[#AFB2BF]">No questions found in the Question Bank.</div>
             ) : (
               <div className="divide-y divide-[#2C333F]">
+                <div className="p-3 bg-[#090D16] border-b border-[#2C333F] flex items-center justify-between px-5">
+                  <label className="flex items-center gap-2 text-xs font-bold text-[#AFB2BF] cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={filteredQuestions.length > 0 && filteredQuestions.every(q => selectedQuestionIdsForDelete.includes(q.id))}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          const fIds = filteredQuestions.map(q => q.id);
+                          setSelectedQuestionIdsForDelete(prev => Array.from(new Set([...prev, ...fIds])));
+                        } else {
+                          const fIds = filteredQuestions.map(q => q.id);
+                          setSelectedQuestionIdsForDelete(prev => prev.filter(id => !fIds.includes(id)));
+                        }
+                      }}
+                      className="w-4 h-4 rounded border-gray-600 bg-[#161D29] text-purple-600 focus:ring-purple-500 cursor-pointer"
+                    />
+                    Select All Questions
+                  </label>
+                  <span className="text-[11px] text-gray-500">{filteredQuestions.length} Questions</span>
+                </div>
                 {filteredQuestions.map((q) => (
-                  <div key={q.id} className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-[#1C2432]">
-                    <div className="space-y-1 max-w-2xl">
-                      <div className="flex items-center gap-2">
-                        <span className="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 text-[10px] font-bold">{q.type}</span>
-                        <span className="px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 text-[10px] font-bold">{q.difficulty}</span>
-                        <span className="text-[10px] text-gray-400">{q.marks} Mark(s)</span>
+                  <div key={q.id} className={`p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-[#1C2432] transition ${
+                    selectedQuestionIdsForDelete.includes(q.id) ? 'bg-purple-500/5' : ''
+                  }`}>
+                    <div className="flex items-start sm:items-center gap-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedQuestionIdsForDelete.includes(q.id)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedQuestionIdsForDelete((prev) => [...prev, q.id]);
+                          } else {
+                            setSelectedQuestionIdsForDelete((prev) => prev.filter((id) => id !== q.id));
+                          }
+                        }}
+                        className="w-4 h-4 mt-1 sm:mt-0 rounded border-gray-600 bg-[#090D16] text-purple-600 focus:ring-purple-500 cursor-pointer"
+                      />
+                      <div className="space-y-1 max-w-2xl">
+                        <div className="flex items-center gap-2">
+                          <span className="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 text-[10px] font-bold">{q.type}</span>
+                          <span className="px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 text-[10px] font-bold">{q.difficulty}</span>
+                          <span className="text-[10px] text-gray-400">{q.marks} Mark(s)</span>
+                        </div>
+                        <p className="text-sm font-semibold text-white">{q.title}</p>
                       </div>
-                      <p className="text-sm font-semibold text-white">{q.title}</p>
                     </div>
 
                     <div className="flex items-center gap-2">
