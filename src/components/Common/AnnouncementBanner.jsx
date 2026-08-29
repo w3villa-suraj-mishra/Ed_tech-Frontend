@@ -116,27 +116,30 @@ export default function AnnouncementBanner() {
 
   return (
     <div className="w-full bg-[#1e1938]/95 backdrop-blur-md border-b border-[#3b3266] text-white shadow-lg relative z-40 font-sans transition-all duration-300">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-center sm:justify-between gap-3 text-xs sm:text-sm">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-2.5 grid grid-cols-1 md:grid-cols-3 items-center justify-between gap-3 text-xs sm:text-sm">
         
-        {/* Left / Center Message Section */}
-        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-center sm:text-left">
+        {/* Left Section: Highlight Discount Code */}
+        <div className="flex items-center justify-center md:justify-start">
           {announcement.highlightText && (
             <div className="text-purple-200 font-medium text-xs tracking-normal">
               Use discount code <span className="font-extrabold text-[#ffd700] tracking-wide">' {announcement.highlightText} '</span>
             </div>
           )}
+        </div>
 
-          <div className="text-purple-100 font-medium flex flex-wrap items-center gap-1.5 justify-center">
-            <span>{announcement.message || announcement.title}</span>
+        {/* Center Section: Main Description / Message */}
+        <div className="flex items-center justify-center text-center">
+          <div className="text-purple-100 font-medium tracking-wide">
+            {announcement.message || announcement.title}
           </div>
         </div>
 
         {/* Right Section: Countdown Timer, CTA Button & Close Icon */}
-        <div className="flex items-center justify-center gap-4 shrink-0">
+        <div className="flex items-center justify-center md:justify-end gap-4 shrink-0">
           
           {/* Detailed Countdown display: X hours Y minutes Z seconds */}
           {announcement.countdownEnabled && timeLeft && (
-            <div className="flex items-center gap-2 text-xs font-normal text-purple-200">
+            <div className="flex items-center gap-1.5 text-xs font-normal text-purple-200">
               <span><strong className="font-bold text-white text-sm">{timeLeft.hours}</strong> hours</span>
               <span><strong className="font-bold text-white text-sm">{String(timeLeft.minutes).padStart(2, '0')}</strong> minutes</span>
               <span><strong className="font-bold text-white text-sm">{String(timeLeft.seconds).padStart(2, '0')}</strong> seconds</span>
