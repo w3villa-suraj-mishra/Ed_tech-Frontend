@@ -35,12 +35,13 @@ import CourseDetails from "./pages/CourseDetails.jsx";
 import ViewCourse from "./pages/ViewCourse.jsx";
 import VideoDetails from "./components/core/ViewCourse/videoDetails.jsx";
 
-// Student Practice Pages
 import PracticeCenter from "./pages/PracticeCenter";
 import DailyQuiz from "./pages/DailyQuiz";
 import TopicPractice from "./pages/TopicPractice";
 import PreviousAttempts from "./pages/PreviousAttempts";
 import InstructorPracticeBuilder from "./pages/InstructorPracticeBuilder";
+import StudentCoursePracticePage from "./pages/StudentCoursePracticePage.jsx";
+import StudentCourseTestRunner from "./pages/StudentCourseTestRunner.jsx";
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -181,6 +182,8 @@ function App() {
           <Route path="/auth/google_oauth2/callback" element={<OAuthCallbackForwarder />} />
           <Route path="/t/u/activeCourses"    element={<ActiveCoursesPage />} />
           <Route path="/s/courses/:courseId/take" element={<CourseTakePlayer />} />
+          <Route path="/s/courses/:courseId/take/pratice-test" element={<StudentCoursePracticePage />} />
+          <Route path="/s/courses/:courseId/take/pratice-test/:testId" element={<StudentCourseTestRunner />} />
           <Route path="/s/courses/:courseId/certificate" element={<CourseCertificatePage />} />
           <Route path="/certificate/verify/:certificateId" element={<CourseCertificatePage />} />
           <Route path="/courses/:courseId"    element={<CourseDetails />} />

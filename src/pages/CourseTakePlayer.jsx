@@ -331,7 +331,7 @@ const CourseTakePlayer = () => {
 
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate('/practice')}
+            onClick={() => navigate(`/s/courses/${courseId}/take/pratice-test`)}
             className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white transition shadow-sm"
           >
             <span>🎯 Practice / Tests</span>
