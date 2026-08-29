@@ -96,14 +96,17 @@ export default function InstructorPracticeBuilder() {
     }
   };
 
-  const fetchInstructorTests = async () => {
+  const fetchInstructorTests = async (overrideCourseId = null) => {
     try {
-      const url = selectedCourseId
-        ? `${practiceEndpoints.INSTRUCTOR_GET_TESTS}?courseId=${selectedCourseId}`
+      const activeId = overrideCourseId || selectedCourseId;
+      console.log('[COURSE TEST LIST FETCH] activeId=', activeId);
+      const url = activeId
+        ? `${practiceEndpoints.INSTRUCTOR_GET_TESTS}?courseId=${activeId}`
         : practiceEndpoints.INSTRUCTOR_GET_TESTS;
       const res = await apiConnector('GET', url, null, {
         Authorization: `Bearer ${token}`
       });
+      console.log('[COURSE TEST LIST RESPONSE]', res.data);
       if (res.data?.success) {
         setTests(res.data.data || []);
       }
@@ -336,19 +339,30 @@ export default function InstructorPracticeBuilder() {
         status: statusType
       };
 
+      console.log('[COURSE TEST CREATE REQUEST]', payload);
+
       const res = await apiConnector('POST', practiceEndpoints.INSTRUCTOR_CREATE_COURSE_TEST, payload, {
         Authorization: `Bearer ${token}`
       });
 
+      console.log('[COURSE TEST CREATE RESPONSE]', res.data);
+
       if (res.data?.success) {
         toast.success(statusType === 'published' ? 'Test published successfully! 🚀' : 'Test saved as draft! 📝');
         
+        // Ensure active selected course matches targetCourseId
+        setSelectedCourseId(targetCourseId);
+        setQTypeFilter(''); // Reset category filter so "All" tab shows the test
+
         // Immediate state update and refetch
         const newTest = res.data.data;
         if (newTest) {
-          setTests((prev) => [newTest, ...prev]);
+          setTests((prev) => {
+            const exists = prev.some(t => Number(t.id) === Number(newTest.id));
+            return exists ? prev : [newTest, ...prev];
+          });
         }
-        fetchInstructorTests();
+        await fetchInstructorTests(targetCourseId);
 
         setTestForm({
           title: '',
@@ -366,6 +380,7 @@ export default function InstructorPracticeBuilder() {
         setActiveTab('my-practice');
       }
     } catch (err) {
+      console.error('[COURSE TEST CREATE ERROR]', err);
       toast.error(err?.response?.data?.message || 'Failed to create test');
     } finally {
       setIsSubmittingTest(false);
