@@ -68,6 +68,7 @@ import AdminContacts     from "./pages/admin/AdminContacts";
 import AdminArticles     from "./pages/admin/AdminArticles";
 import AdminAnnouncements from "./pages/admin/AdminAnnouncements";
 import AdminOffers from "./pages/admin/AdminOffers";
+import AdminInstructors from "./pages/admin/AdminInstructors";
 import AnnouncementBanner from "./components/Common/AnnouncementBanner";
 import { BASE_URL } from "./services/apis";
 
@@ -120,6 +121,7 @@ function App() {
           <Route path="/admin/articles"     element={<AdminArticles />} />
           <Route path="/admin/announcements" element={<AdminAnnouncements />} />
           <Route path="/admin/offers"        element={<AdminOffers />} />
+          <Route path="/admin/instructors"   element={<AdminInstructors />} />
           <Route path="/admin/live-sessions" element={<AdminLiveSessions />} />
           <Route path="/admin/contacts"     element={<AdminContacts />} />
         </Routes>
@@ -130,7 +132,7 @@ function App() {
   const isPlayerRoute = location.pathname.startsWith("/s/courses") && !location.pathname.includes("/take/pratice-test");
 
   return (
-    <div className={`min-h-screen bg-richblack-900 ${isPlayerRoute ? "h-screen overflow-hidden flex flex-col" : ""}`}>
+    <div className={`min-h-screen bg-[#F8FAFC] text-[#111827] ${isPlayerRoute ? "h-screen overflow-hidden flex flex-col" : ""}`}>
       <ScrollToTop />
       <Toaster position="top-right" toastOptions={{ max: 1 }} />
       {!location.pathname.startsWith("/t/u/activeCourses") &&
@@ -140,7 +142,7 @@ function App() {
           <Navbar />
         </>
       )}
-      <div className="main-content bg-richblack-900" style={{ flex: 1, minHeight: 0 }}>
+      <div className="main-content bg-[#F8FAFC]" style={{ flex: 1, minHeight: 0 }}>
         <Routes>
           <Route path="/"                     element={<Home />} />
           <Route path="/courses"              element={<Catalog />} />

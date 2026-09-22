@@ -2,6 +2,7 @@ export const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:5000
 
 // AUTH ENDPOINTS
 export const endpoints = {
+  SITE_CONFIG_API: BASE_URL + "/config",
   SENDOTP_API: BASE_URL + "/send_otp",
   VERIFYOTP_API: BASE_URL + "/verify_otp",
   SIGNUP_API: BASE_URL + "/signup",

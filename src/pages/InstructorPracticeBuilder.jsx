@@ -380,34 +380,37 @@ export default function InstructorPracticeBuilder() {
   });
 
   return (
-    <div className="min-h-screen bg-[#090D16] text-white p-4 sm:p-8 font-sans space-y-8">
+    <div className="min-h-screen bg-slate-50 text-slate-800 p-4 sm:p-8 font-sans space-y-8">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[#2C333F] pb-6">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-3">
+      <div className="bg-gradient-to-r from-[#0F172A] to-[#1E3A8A] rounded-2xl p-6 sm:p-8 flex flex-col md:flex-row justify-between items-center relative overflow-hidden shadow-lg text-white">
+        {/* Background decor */}
+        <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-white/5 pointer-events-none rounded-l-full blur-3xl"></div>
+        
+        <div className="relative z-10 max-w-2xl text-left w-full">
+          <h1 className="text-2xl sm:text-3xl font-black flex items-center gap-3">
             Practice Management 🎯
           </h1>
-          <p className="text-xs text-[#AFB2BF] mt-1">
+          <p className="text-xs sm:text-[13px] text-blue-200 mt-2 font-medium">
             Manage course-specific tests, question banks, quizzes, and monitor student performance.
           </p>
         </div>
 
         {/* Dynamic Instructor Course Selector */}
-        <div className="flex items-center gap-3 bg-[#161D29] border border-[#2C333F] p-2 px-4 rounded-2xl">
-          <span className="text-xs font-bold text-[#AFB2BF] uppercase tracking-wider">Active Course:</span>
+        <div className="relative z-10 flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/20 p-2.5 px-5 rounded-xl mt-4 md:mt-0 shadow-sm whitespace-nowrap">
+          <span className="text-[11px] font-bold text-blue-100 uppercase tracking-wider">Active Course:</span>
           <select
             value={selectedCourseId}
             onChange={(e) => {
               setSelectedCourseId(e.target.value);
               setQForm((prev) => ({ ...prev, courseId: e.target.value }));
             }}
-            className="bg-[#090D16] border border-[#2C333F] rounded-xl px-3 py-1.5 text-xs font-bold text-[#FFD60A] focus:outline-none"
+            className="bg-transparent text-[13px] font-bold text-[#FFD60A] focus:outline-none cursor-pointer appearance-none pr-4"
           >
             {courses.length === 0 ? (
-              <option value="">No Courses Created Yet</option>
+              <option value="" className="text-black">No Courses Created Yet</option>
             ) : (
               courses.map((c) => (
-                <option key={c._id || c.id} value={c._id || c.id}>
+                <option key={c._id || c.id} value={c._id || c.id} className="text-black bg-white">
                   {c.courseName}
                 </option>
               ))
@@ -417,7 +420,7 @@ export default function InstructorPracticeBuilder() {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex flex-wrap gap-2 border-b border-[#2C333F] pb-2">
+      <div className="flex flex-wrap gap-3 pb-2">
         {[
           { id: 'my-practice', label: 'My Practice', icon: <FaListUl /> },
           { id: 'question-bank', label: 'Question Bank', icon: <FaQuestionCircle /> },
@@ -427,10 +430,10 @@ export default function InstructorPracticeBuilder() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-[13px] font-bold transition-all shadow-sm border ${
               activeTab === tab.id
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
-                : 'bg-[#161D29] text-[#AFB2BF] hover:bg-[#2C333F] hover:text-white'
+                ? 'bg-blue-600 text-white border-blue-600'
+                : 'bg-white text-slate-600 border-slate-200 hover:border-blue-200 hover:text-blue-600'
             }`}
           >
             {tab.icon} {tab.label}
@@ -440,26 +443,47 @@ export default function InstructorPracticeBuilder() {
 
       {/* TAB 1: MY PRACTICE MANAGEMENT LIST */}
       {activeTab === 'my-practice' && (
-        <div className="space-y-6">
-          <div className="flex flex-wrap gap-2 border-b border-[#2C333F] pb-3">
-            {['All', 'MCQ', 'Coding', 'Topic Practice', 'Mock Test', 'Interview Test', 'Daily Quiz'].map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setQTypeFilter(cat === 'All' ? '' : cat)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                  (qTypeFilter === cat || (cat === 'All' && !qTypeFilter))
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'bg-[#161D29] text-[#AFB2BF] border border-[#2C333F] hover:text-white'
-                }`}
-              >
-                {cat}
+        <div className="space-y-8">
+          
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+            <div className="flex flex-wrap gap-2">
+              {['All', 'MCQ', 'Coding', 'Topic Practice', 'Mock Test', 'Interview Test', 'Daily Quiz'].map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setQTypeFilter(cat === 'All' ? '' : cat)}
+                  className={`px-4 py-1.5 rounded-full text-[12px] font-bold transition-all border ${
+                    (qTypeFilter === cat || (cat === 'All' && !qTypeFilter))
+                      ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                      : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+            
+            <div className="flex items-center gap-2 w-full lg:w-auto">
+              <div className="relative flex-1 lg:w-64">
+                <FaSearch className="absolute left-3 top-2.5 text-slate-400 text-[13px]" />
+                <input 
+                  type="text" 
+                  placeholder="Search tests, quizzes..." 
+                  className="w-full bg-white border border-slate-200 rounded-full pl-9 pr-4 py-2 text-[13px] text-slate-700 focus:outline-none focus:border-blue-500 shadow-sm"
+                />
+              </div>
+              <button className="p-2.5 bg-white border border-slate-200 rounded-full text-slate-500 hover:text-blue-600 shadow-sm transition cursor-pointer">
+                <FaFilter size={14} />
               </button>
-            ))}
+            </div>
           </div>
 
-          <div className="flex flex-wrap justify-between items-center gap-3">
+          <div className="flex flex-wrap justify-between items-center gap-4">
+            <div className="flex flex-col">
+              <h2 className="text-xl font-extrabold text-slate-900">Course Practice Tests & Quizzes</h2>
+              <p className="text-xs text-slate-500 mt-1 font-medium">Create and manage practice tests or quizzes to help your enrolled students practice.</p>
+            </div>
+
             <div className="flex items-center gap-3">
-              <h2 className="text-lg font-bold text-white">Course Practice Tests & Quizzes</h2>
               {tests.length > 0 && (
                 <button
                   onClick={() => {
@@ -472,25 +496,22 @@ export default function InstructorPracticeBuilder() {
                       setSelectedTestIds(prev => Array.from(new Set([...prev, ...visibleIds])));
                     }
                   }}
-                  className="px-3 py-1.5 bg-[#161D29] border border-[#2C333F] text-xs font-bold text-[#AFB2BF] hover:text-white rounded-xl transition"
+                  className="px-4 py-2 bg-white border border-slate-200 text-xs font-bold text-slate-600 hover:text-blue-600 hover:border-blue-200 rounded-xl transition shadow-sm"
                 >
                   {tests.filter(t => !qTypeFilter || t.testType === qTypeFilter).every(t => selectedTestIds.includes(t.id)) ? 'Deselect All' : 'Select All'}
                 </button>
               )}
-            </div>
-
-            <div className="flex items-center gap-2">
               {selectedTestIds.length > 0 && (
                 <button
                   onClick={handleBulkDeleteTests}
-                  className="px-4 py-2 bg-red-600/20 border border-red-500/40 text-red-400 text-xs font-bold rounded-xl hover:bg-red-600/30 flex items-center gap-2 transition"
+                  className="px-4 py-2 bg-red-50 text-red-600 border border-red-200 text-xs font-bold rounded-xl hover:bg-red-100 flex items-center gap-2 transition shadow-sm"
                 >
-                  <FaTrash /> Delete Selected ({selectedTestIds.length})
+                  <FaTrash /> Delete ({selectedTestIds.length})
                 </button>
               )}
               <button
                 onClick={() => setIsWizardOpen(true)}
-                className="px-4 py-2 bg-[#FFD60A] text-black text-xs font-bold rounded-xl hover:bg-yellow-400 flex items-center gap-2 shadow-md"
+                className="px-5 py-2.5 bg-blue-600 text-white text-[13px] font-bold rounded-xl hover:bg-blue-700 flex items-center gap-2 shadow-sm transition"
               >
                 <FaPlus /> Create New Test
               </button>
@@ -501,14 +522,32 @@ export default function InstructorPracticeBuilder() {
             const filteredTests = tests.filter(t => !qTypeFilter || t.testType === qTypeFilter);
             if (filteredTests.length === 0) {
               return (
-                <div className="p-12 text-center bg-[#161D29] border border-[#2C333F] rounded-3xl space-y-3">
-                  <div className="text-4xl">📝</div>
-                  <h3 className="text-base font-bold text-white">No Practice Tests Found</h3>
-                  <p className="text-xs text-[#AFB2BF]">
+                <div className="py-16 px-6 text-center bg-white/50 border border-slate-100 shadow-sm rounded-3xl space-y-4 max-w-4xl mx-auto w-full relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-b from-blue-50/50 to-transparent pointer-events-none"></div>
+                  <div className="relative z-10 flex justify-center mb-6">
+                    <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center text-blue-500 shadow-inner">
+                      <FaBook size={40} className="ml-1" />
+                    </div>
+                  </div>
+                  <h3 className="relative z-10 text-xl font-bold text-slate-900">No Practice Tests Found</h3>
+                  <p className="relative z-10 text-[13px] text-slate-500 font-medium max-w-sm mx-auto">
                     {qTypeFilter
                       ? `No practice tests created for category "${qTypeFilter}".`
                       : 'Create course tests or quizzes to help your enrolled students practice.'}
                   </p>
+                  <div className="relative z-10 flex justify-center gap-4 mt-6">
+                    <button
+                      onClick={() => setIsWizardOpen(true)}
+                      className="px-6 py-2.5 bg-blue-600 text-white text-[13px] font-bold rounded-xl hover:bg-blue-700 shadow-sm transition flex items-center gap-2"
+                    >
+                      <FaPlus /> Create New Test
+                    </button>
+                    <button
+                      className="px-6 py-2.5 bg-white text-slate-700 border border-slate-300 text-[13px] font-bold rounded-xl hover:bg-slate-50 shadow-sm transition flex items-center gap-2"
+                    >
+                      <FaBook /> Browse Examples
+                    </button>
+                  </div>
                 </div>
               );
             }
@@ -516,12 +555,12 @@ export default function InstructorPracticeBuilder() {
             return (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredTests.map((test) => (
-                <div key={test.id} className={`bg-[#161D29] border rounded-3xl p-6 flex flex-col justify-between space-y-4 transition-all relative ${
-                  selectedTestIds.includes(test.id) ? 'border-blue-500 bg-blue-500/5' : 'border-[#2C333F] hover:border-blue-500/50'
+                <div key={test.id} className={`bg-white border rounded-3xl p-6 flex flex-col justify-between space-y-4 transition-all relative shadow-sm hover:shadow-md ${
+                  selectedTestIds.includes(test.id) ? 'border-blue-500 bg-blue-50/50' : 'border-slate-200 hover:border-blue-300'
                 }`}>
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <div className="flex justify-between items-center">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-3">
                         <input
                           type="checkbox"
                           checked={selectedTestIds.includes(test.id)}
@@ -532,15 +571,15 @@ export default function InstructorPracticeBuilder() {
                               setSelectedTestIds((prev) => prev.filter((id) => id !== test.id));
                             }
                           }}
-                          className="w-4 h-4 rounded border-gray-600 bg-[#090D16] text-blue-600 focus:ring-blue-500 cursor-pointer"
+                          className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
                         />
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                        <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-50 text-blue-600 border border-blue-100">
                           {test.testType}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                          test.status === 'published' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'
+                      <div className="flex items-center gap-1.5">
+                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${
+                          test.status === 'published' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-amber-50 text-amber-600 border-amber-200'
                         }`}>
                           {test.status?.toUpperCase()}
                         </span>
@@ -549,54 +588,54 @@ export default function InstructorPracticeBuilder() {
                             setEditingTest(test);
                             setIsWizardOpen(true);
                           }}
-                          className="p-1.5 text-gray-400 hover:text-yellow-400 hover:bg-yellow-500/10 rounded-lg transition"
+                          className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
                           title="Edit Test"
                         >
-                          <FaEdit className="text-xs" />
+                          <FaEdit className="text-[13px]" />
                         </button>
                         <button
                           onClick={() => handleSingleDeleteTest(test.id)}
-                          className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition"
+                          className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
                           title="Delete Test"
                         >
-                          <FaTrash className="text-xs" />
+                          <FaTrash className="text-[13px]" />
                         </button>
                       </div>
                     </div>
 
-                    <h3 className="text-base font-bold text-white line-clamp-1">{test.title}</h3>
-                    <p className="text-xs text-[#AFB2BF] line-clamp-2">{test.description || 'No description provided.'}</p>
+                    <h3 className="text-base font-extrabold text-slate-900 line-clamp-1">{test.title}</h3>
+                    <p className="text-[13px] text-slate-500 font-medium line-clamp-2">{test.description || 'No description provided.'}</p>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-2 py-3 border-y border-[#2C333F] text-[11px] text-[#AFB2BF]">
+                  <div className="grid grid-cols-3 gap-2 py-3 border-y border-slate-100 text-[11px] text-slate-500">
                     <div>
-                      <span className="block text-[10px] text-gray-500">Duration</span>
-                      <span className="font-bold text-white">{test.duration} Mins</span>
+                      <span className="block text-[10px] font-semibold">Duration</span>
+                      <span className="font-bold text-slate-900">{test.duration} Mins</span>
                     </div>
                     <div>
-                      <span className="block text-[10px] text-gray-500">Marks</span>
-                      <span className="font-bold text-white">{test.totalMarks}</span>
+                      <span className="block text-[10px] font-semibold">Marks</span>
+                      <span className="font-bold text-slate-900">{test.totalMarks}</span>
                     </div>
                     <div>
-                      <span className="block text-[10px] text-gray-500">Questions</span>
-                      <span className="font-bold text-white">{test.questions?.length || 0}</span>
+                      <span className="block text-[10px] font-semibold">Questions</span>
+                      <span className="font-bold text-slate-900">{test.questions?.length || 0}</span>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between gap-2 pt-2">
+                  <div className="flex items-center justify-between gap-3 pt-1">
                     <button
                       onClick={() => handleToggleStatus(test.id, test.status)}
-                      className={`flex-1 py-2 text-xs font-bold rounded-xl border transition ${
+                      className={`flex-1 py-2 text-[12px] font-bold rounded-xl border transition shadow-sm ${
                         test.status === 'published'
-                          ? 'border-amber-500/40 text-amber-400 hover:bg-amber-500/10'
-                          : 'border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10'
+                          ? 'border-amber-200 text-amber-600 bg-amber-50 hover:bg-amber-100'
+                          : 'border-emerald-200 text-emerald-600 bg-emerald-50 hover:bg-emerald-100'
                       }`}
                     >
                       {test.status === 'published' ? 'Unpublish' : 'Publish'}
                     </button>
                     <button
                       onClick={() => handleViewAttempts(test)}
-                      className="flex-1 py-2 bg-blue-600/20 border border-blue-500/30 text-blue-300 hover:bg-blue-600/30 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5"
+                      className="flex-1 py-2 bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 hover:border-blue-300 text-[12px] font-bold rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition"
                     >
                       <FaUserGraduate /> Attempts
                     </button>
@@ -1096,6 +1135,46 @@ export default function InstructorPracticeBuilder() {
           setActiveTab('my-practice');
         }}
       />
+
+      {/* FEATURE CARDS BOTTOM */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-10 border-t border-slate-200 mt-10">
+        <div className="flex items-start gap-4 bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+          <div className="w-10 h-10 shrink-0 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600">
+            <FaCheckCircle className="text-lg" />
+          </div>
+          <div>
+            <h4 className="text-[13px] font-bold text-slate-900">Build Better Learners</h4>
+            <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">Create custom tests and quizzes for effective practice.</p>
+          </div>
+        </div>
+        <div className="flex items-start gap-4 bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+          <div className="w-10 h-10 shrink-0 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 20V10M12 20V4M6 20v-4"/></svg>
+          </div>
+          <div>
+            <h4 className="text-[13px] font-bold text-slate-900">Track Progress</h4>
+            <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">Monitor student performance and analyze results.</p>
+          </div>
+        </div>
+        <div className="flex items-start gap-4 bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+          <div className="w-10 h-10 shrink-0 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          </div>
+          <div>
+            <h4 className="text-[13px] font-bold text-slate-900">Variety of Question Types</h4>
+            <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">MCQs, coding questions, subjective and more.</p>
+          </div>
+        </div>
+        <div className="flex items-start gap-4 bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+          <div className="w-10 h-10 shrink-0 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          </div>
+          <div>
+            <h4 className="text-[13px] font-bold text-slate-900">Engage & Improve</h4>
+            <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">Help students prepare for real-world challenges.</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

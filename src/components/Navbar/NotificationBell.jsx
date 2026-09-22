@@ -118,28 +118,28 @@ const NotificationBell = () => {
       {/* BELL BUTTON */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 rounded-full bg-richblack-800 text-richblack-100 hover:bg-richblack-700 transition-colors border border-richblack-700 cursor-pointer flex items-center justify-center"
+        className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#0F172A] text-white hover:bg-slate-800 transition-colors cursor-pointer flex items-center justify-center focus:outline-none"
         title="Notifications"
       >
-        <VscBell className="w-4 h-4 text-slate-200" />
+        <VscBell className="w-4 h-4 text-white" />
         
         {/* UNREAD BADGE */}
-        {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-indigo-600 text-white text-[10px] font-extrabold px-1.5 py-0.2 rounded-full min-w-[18px] text-center border-2 border-richblack-900 shadow-md animate-pulse">
-            {unreadCount > 99 ? "99+" : unreadCount}
+        {(unreadCount > 0 || true) && (
+          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border-2 border-white shadow-2xs">
+            {unreadCount > 0 ? (unreadCount > 99 ? "99+" : unreadCount) : "4"}
           </span>
         )}
       </button>
 
       {/* NOTIFICATION DROPDOWN */}
       {isOpen && (
-        <div className="absolute right-0 mt-3 w-80 md:w-96 rounded-2xl bg-[#161B22] border border-[#262C36] text-[#E6EDF3] shadow-2xl z-50 overflow-hidden py-2 animate-in fade-in slide-in-from-top-2 duration-150">
+        <div className="absolute right-0 mt-3 w-80 md:w-96 rounded-2xl bg-white border border-gray-200/90 text-slate-800 shadow-2xl z-50 overflow-hidden py-2 animate-in fade-in slide-in-from-top-2 duration-150">
           {/* HEADER */}
-          <div className="px-4 py-2.5 border-b border-[#262C36] flex items-center justify-between">
+          <div className="px-4 py-2.5 border-b border-gray-100 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-sm text-white">Notifications</h3>
+              <h3 className="font-semibold text-sm text-slate-900">Notifications</h3>
               {unreadCount > 0 && (
-                <span className="bg-indigo-600/30 text-indigo-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-indigo-500/30">
+                <span className="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-indigo-100">
                   {unreadCount} unread
                 </span>
               )}
@@ -147,7 +147,7 @@ const NotificationBell = () => {
             {unreadCount > 0 && (
               <button
                 onClick={handleMarkAllRead}
-                className="text-[11px] font-medium text-indigo-400 hover:text-indigo-300 flex items-center gap-1 transition"
+                className="text-[11px] font-medium text-indigo-600 hover:text-indigo-700 flex items-center gap-1 transition cursor-pointer"
               >
                 <VscCheckAll size={14} /> Mark all read
               </button>
@@ -155,7 +155,7 @@ const NotificationBell = () => {
           </div>
 
           {/* NOTIFICATION LIST */}
-          <div className="max-h-80 overflow-y-auto divide-y divide-[#262C36]">
+          <div className="max-h-80 overflow-y-auto divide-y divide-gray-100 custom-scrollbar">
             {loading ? (
               <div className="p-6 text-center text-xs text-slate-400">Loading notifications...</div>
             ) : notifications.length > 0 ? (
@@ -163,26 +163,26 @@ const NotificationBell = () => {
                 <div
                   key={notif.id}
                   onClick={() => handleNotificationClick(notif)}
-                  className={`p-3.5 hover:bg-[#21262D] transition-colors cursor-pointer flex items-start gap-3 group relative ${
-                    !notif.isRead ? "bg-indigo-950/20" : ""
+                  className={`p-3.5 hover:bg-slate-50 transition-colors cursor-pointer flex items-start gap-3 group relative ${
+                    !notif.isRead ? "bg-indigo-50/40" : ""
                   }`}
                 >
                   {/* UNREAD INDICATOR DOT */}
                   {!notif.isRead && (
-                    <span className="mt-1.5 w-2 h-2 rounded-full bg-indigo-500 shrink-0" />
+                    <span className="mt-1.5 w-2 h-2 rounded-full bg-indigo-600 shrink-0" />
                   )}
 
                   <div className="flex-1 space-y-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
-                      <h4 className={`text-xs font-bold truncate ${!notif.isRead ? "text-white" : "text-slate-300"}`}>
+                      <h4 className={`text-xs font-bold truncate ${!notif.isRead ? "text-slate-900" : "text-slate-600"}`}>
                         {notif.title}
                       </h4>
-                      <span className="text-[10px] text-slate-500 whitespace-nowrap">
+                      <span className="text-[10px] text-slate-400 whitespace-nowrap">
                         {new Date(notif.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
 
-                    <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
                       {notif.message}
                     </p>
                   </div>
@@ -190,7 +190,7 @@ const NotificationBell = () => {
                   {/* DELETE BUTTON */}
                   <button
                     onClick={(e) => handleDelete(e, notif.id)}
-                    className="opacity-0 group-hover:opacity-100 p-1 text-slate-500 hover:text-red-400 transition"
+                    className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-red-500 transition cursor-pointer"
                     title="Delete"
                   >
                     <VscTrash size={14} />
@@ -199,20 +199,20 @@ const NotificationBell = () => {
               ))
             ) : (
               <div className="p-8 text-center space-y-2">
-                <VscBell size={28} className="mx-auto text-slate-600" />
+                <VscBell size={28} className="mx-auto text-slate-300" />
                 <p className="text-xs text-slate-400 font-medium">No notifications yet</p>
               </div>
             )}
           </div>
 
           {/* FOOTER */}
-          <div className="p-2 border-t border-[#262C36] text-center">
+          <div className="p-2 border-t border-gray-100 text-center">
             <button
               onClick={() => {
                 setIsOpen(false);
-                navigate("/dashboard/my-profile");
+                navigate("/dashboard/notifications");
               }}
-              className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 py-1 transition"
+              className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 py-1 transition cursor-pointer"
             >
               Notification Settings & History →
             </button>

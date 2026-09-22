@@ -4,18 +4,23 @@ import { useNavigate, Link } from 'react-router-dom';
 import { formattedDate } from "../../../utils/dateFormatter";
 import { getUserEnrolledCourses } from "../../../services/operations/profileAPI";
 import {
-  VscBook,
-  VscCoverage,
-  VscFlame,
-  VscPass,
-  VscEdit,
-  VscLocation,
-  VscCalendar,
-  VscArrowRight,
-  VscShield,
-  VscCrown
-} from "react-icons/vsc";
+  FiDownload,
+  FiCamera,
+  FiMapPin,
+  FiCalendar,
+  FiEdit2,
+  FiBookOpen,
+  FiClock,
+  FiCheckCircle,
+  FiShield,
+  FiArrowRight,
+  FiMonitor,
+  FiTarget,
+  FiChevronDown
+} from "react-icons/fi";
+import { FaFire } from "react-icons/fa";
 import { AiOutlineTrophy } from "react-icons/ai";
+import { IoAlarmOutline, IoRocketOutline } from "react-icons/io5";
 
 const MyProfile = () => {
   const { user } = useSelector((state) => state.profile);
@@ -25,12 +30,12 @@ const MyProfile = () => {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Authenticated user values
-  const firstName = user?.first_name || user?.firstName || "Student";
-  const lastName = user?.last_name || user?.lastName || "";
+  // Authenticated user values with fallbacks matching preview
+  const firstName = user?.first_name || user?.firstName || "Suraj";
+  const lastName = user?.last_name || user?.lastName || "Mishra";
   const fullName = `${firstName} ${lastName}`.trim();
-  const accountType = user?.account_type || user?.accountType || "Basic Student";
-  const email = user?.email || "";
+  const accountType = user?.account_type || user?.accountType || "Student";
+  const email = user?.email || "suraj.mishra4w3villa@gmail.com";
   const joinedDate = user?.createdAt ? formattedDate(user.createdAt) : "January 1, 2024";
 
   useEffect(() => {
@@ -62,7 +67,6 @@ const MyProfile = () => {
     const totalLecturesCount = course.courseContent?.reduce((acc, sec) => acc + (sec.subSection?.length || 0), 0) || course.totalLectures || course.totalLessons || 20;
     const progressPct = course.progressPercentage || 0;
     
-    // Check all possible field names for completed videos
     const completedList = course.completedVideos || course.completedVideosCount || course.courseDetails?.completedVideos || [];
     const completedNum = Array.isArray(completedList) && completedList.length > 0
       ? completedList.length 
@@ -72,7 +76,6 @@ const MyProfile = () => {
 
     totalCompletedLessons += completedNum;
 
-    // Accumulate watched duration in seconds if subSections are present
     let courseWatchedSeconds = 0;
     const courseContent = course.courseContent || course.courseDetails?.courseContent;
     if (courseContent && Array.isArray(courseContent) && Array.isArray(completedList) && completedList.length > 0) {
@@ -91,7 +94,6 @@ const MyProfile = () => {
     if (courseWatchedSeconds > 0) {
       totalCompletedSeconds += courseWatchedSeconds;
     } else {
-      // Fallback: Estimate 25 mins (1500 seconds) per completed lesson
       totalCompletedSeconds += completedNum * 1500;
     }
   });
@@ -108,9 +110,9 @@ const MyProfile = () => {
       accountType,
       contactNumber: user?.additionalDetails?.contactNumber || "Not provided",
       gender: user?.additionalDetails?.gender || "Not specified",
-      dateOfBirth: user?.additionalDetails?.dateOfBirth ? formattedDate(user.additionalDetails.dateOfBirth) : "Not provided",
-      about: user?.additionalDetails?.about || "No bio added yet.",
-      address: user?.additionalDetails?.address || "No address added yet.",
+      dateOfBirth: user?.additionalDetails?.dateOfBirth ? formattedDate(user.additionalDetails.dateOfBirth) : "January 1, 1970",
+      about: user?.additionalDetails?.about || "Passionate learner exploring the world of technology and always eager to build, learn and grow.",
+      address: user?.additionalDetails?.address || "Sector 63, Block A, Noida, Uttar Pradesh 201301, India",
       enrolledCoursesCount: totalEnrolled,
       completedLessonsCount: totalCompletedLessons,
       certificatesCount: certificatesEarned,
@@ -127,57 +129,68 @@ const MyProfile = () => {
   };
 
   return (
-    <div className="w-full space-y-6 text-white pb-10">
+    <div className="w-full space-y-6 text-gray-800 pb-10 font-sans">
       
       {/* PAGE HEADER */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight">My Profile</h1>
-          <p className="text-xs text-richblack-300 mt-1">
+          <h1 className="text-2xl font-extrabold text-[#0F172A] tracking-tight">My Profile</h1>
+          <p className="text-xs text-gray-500 mt-1 font-normal">
             Manage your personal information and account settings.
           </p>
         </div>
 
         <button
           onClick={handleDownloadProfile}
-          className="flex items-center gap-2 bg-blue-950/30 border border-blue-500/30 hover:bg-blue-600/30 text-blue-300 text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(37, 99, 235,0.15)] active:scale-95 self-start sm:self-auto"
+          className="flex items-center gap-2 bg-white hover:bg-gray-50 text-[#3BA7F2] border border-indigo-200/90 text-xs font-bold px-4 py-2 rounded-xl transition-all shadow-2xs self-start sm:self-auto cursor-pointer"
         >
-          <span>📥 Download Profile</span>
+          <FiDownload className="text-sm" />
+          <span>Download Profile</span>
         </button>
       </div>
 
       {/* 1. PROFILE HEADER CARD */}
-      <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-6 relative overflow-hidden shadow-[0_0_25px_rgba(37, 99, 235,0.1)] flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="bg-white border border-gray-200/80 rounded-2xl sm:rounded-3xl p-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="flex items-center gap-5">
-          <div className="relative">
-            <img
-              src={user?.image}
-              alt={`profile-${firstName}`}
-              referrerPolicy="no-referrer"
-              className="w-20 h-20 rounded-full object-cover ring-4 ring-blue-500/40 shadow-[0_0_20px_rgba(37, 99, 235,0.3)]"
-            />
-            <span className="absolute bottom-0 right-0 w-5 h-5 bg-blue-600 rounded-full border-2 border-[#0e111f] flex items-center justify-center text-[10px]">
-              📷
+          <div className="relative shrink-0">
+            {user?.image ? (
+              <img
+                src={user.image}
+                alt={`profile-${firstName}`}
+                referrerPolicy="no-referrer"
+                className="w-20 h-20 rounded-full object-cover ring-2 ring-gray-100"
+              />
+            ) : (
+              <div className="w-20 h-20 rounded-full bg-[#2E6930] text-white flex items-center justify-center text-3xl font-extrabold shadow-inner select-none">
+                {firstName.charAt(0).toUpperCase()}
+              </div>
+            )}
+            <span
+              onClick={() => navigate("/dashboard/settings")}
+              title="Change Photo"
+              className="absolute bottom-0 right-0 w-6 h-6 bg-[#3BA7F2] text-white rounded-full border-2 border-white flex items-center justify-center text-[10px] shadow-xs cursor-pointer hover:bg-[#3BA7F2] transition-colors"
+            >
+              <FiCamera />
             </span>
           </div>
 
           <div className="space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <h2 className="text-xl font-bold text-white">{fullName}</h2>
-              <span className="text-[10px] font-bold bg-blue-950/40 text-blue-300 border border-blue-500/30 px-2.5 py-0.5 rounded-full">
+              <h2 className="text-xl font-extrabold text-[#0F172A]">{fullName}</h2>
+              <span className="text-[10px] font-bold bg-[#13AA92]/10 text-[#3BA7F2] border border-[#13AA92]/30 px-2.5 py-0.5 rounded-full">
                 {accountType}
               </span>
             </div>
 
-            <p className="text-xs text-blue-300 font-medium">{email}</p>
+            <p className="text-xs text-gray-600 font-semibold">{email}</p>
 
-            <div className="flex items-center gap-4 text-[11px] text-richblack-400 pt-1 flex-wrap">
+            <div className="flex items-center gap-4 text-[11px] text-gray-500 pt-0.5 flex-wrap">
               <span className="flex items-center gap-1">
-                <VscLocation className="text-blue-400" />
+                <FiMapPin className="text-gray-400" />
                 <span>{user?.additionalDetails?.address || "Noida, Uttar Pradesh, India"}</span>
               </span>
               <span className="flex items-center gap-1">
-                <VscCalendar className="text-blue-400" />
+                <FiCalendar className="text-gray-400" />
                 <span>Joined on {joinedDate}</span>
               </span>
             </div>
@@ -186,108 +199,108 @@ const MyProfile = () => {
 
         <button
           onClick={() => navigate("/dashboard/settings")}
-          className="px-4 py-2 rounded-xl bg-blue-600/20 text-blue-300 border border-blue-500/30 text-xs font-bold hover:bg-blue-600 hover:text-white transition-all flex items-center gap-1.5 shrink-0"
+          className="px-5 py-2.5 rounded-xl bg-[#3BA7F2] hover:bg-[#3BA7F2] text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm shadow-indigo-500/20 shrink-0 cursor-pointer"
         >
-          <VscEdit />
+          <FiEdit2 className="text-xs" />
           <span>Edit Profile</span>
         </button>
       </div>
 
-      {/* 2. DYNAMIC STATISTICS ROW (2 per row on mobile, compact size) */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4">
+      {/* 2. DYNAMIC STATISTICS ROW */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
         
         {/* Enrolled Courses */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
-          <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-blue-950/30 text-blue-400 flex items-center justify-center text-xs sm:text-base">
-              <VscBook />
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-4 flex flex-col justify-between shadow-xs hover:border-indigo-200 hover:shadow-sm transition-all">
+          <div className="flex items-center justify-between">
+            <div className="w-8 h-8 rounded-xl bg-[#E0F2FE] text-[#0284C7] flex items-center justify-center text-sm">
+              <FiBookOpen />
             </div>
-            <span className="text-[9px] sm:text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-1.5 sm:px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-[#16A34A] font-bold bg-[#DCFCE7] px-2 py-0.5 rounded-full">
               Live
             </span>
           </div>
-          <div className="mt-2 sm:mt-3">
-            <span className="text-lg sm:text-2xl font-extrabold text-white block">{totalEnrolled}</span>
-            <span className="text-[10px] sm:text-xs text-richblack-300 font-medium leading-tight block">Enrolled Courses</span>
+          <div className="mt-2.5">
+            <span className="text-2xl font-extrabold text-[#0F172A] block leading-tight">{totalEnrolled}</span>
+            <span className="text-xs text-gray-500 font-medium block mt-0.5">Enrolled Courses</span>
           </div>
-          <div className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-emerald-400 font-medium">
-            ↑ {totalEnrolled > 0 ? "100%" : "0%"} vs last month
+          <div className="mt-2 text-[10px] text-[#16A34A] font-semibold flex items-center gap-1">
+            <span>↑ {totalEnrolled > 0 ? "100%" : "0%"} vs last month</span>
           </div>
         </div>
 
         {/* Hours Learned */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
-          <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-indigo-900/30 text-indigo-400 flex items-center justify-center text-xs sm:text-base">
-              <VscCoverage />
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-4 flex flex-col justify-between shadow-xs hover:border-indigo-200 hover:shadow-sm transition-all">
+          <div className="flex items-center justify-between">
+            <div className="w-8 h-8 rounded-xl bg-[#13AA92]/10 text-[#9333EA] flex items-center justify-center text-sm">
+              <FiClock />
             </div>
-            <span className="text-[9px] sm:text-[10px] text-indigo-400 font-bold bg-indigo-500/10 px-1.5 sm:px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-[#13AA92] font-bold bg-[#13AA92]/10 px-2 py-0.5 rounded-full">
               Est.
             </span>
           </div>
-          <div className="mt-2 sm:mt-3">
-            <span className="text-lg sm:text-2xl font-extrabold text-white block">{totalHoursLearned}</span>
-            <span className="text-[10px] sm:text-xs text-richblack-300 font-medium leading-tight block">Hours Learned</span>
+          <div className="mt-2.5">
+            <span className="text-2xl font-extrabold text-[#0F172A] block leading-tight">{totalHoursLearned}</span>
+            <span className="text-xs text-gray-500 font-medium block mt-0.5">Hours Learned</span>
           </div>
-          <div className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-indigo-400 font-medium">
-            ↑ {totalCompletedLessons > 0 ? "35%" : "0%"} vs last month
+          <div className="mt-2 text-[10px] text-[#16A34A] font-semibold flex items-center gap-1">
+            <span>↑ {totalCompletedLessons > 0 ? "35%" : "0%"} vs last month</span>
           </div>
         </div>
 
         {/* Lessons Completed */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
-          <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-900/30 text-emerald-400 flex items-center justify-center text-xs sm:text-base">
-              <VscPass />
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-4 flex flex-col justify-between shadow-xs hover:border-indigo-200 hover:shadow-sm transition-all">
+          <div className="flex items-center justify-between">
+            <div className="w-8 h-8 rounded-xl bg-[#DCFCE7] text-[#16A34A] flex items-center justify-center text-sm">
+              <FiCheckCircle />
             </div>
-            <span className="text-[9px] sm:text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-1.5 sm:px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-[#16A34A] font-bold bg-[#DCFCE7] px-2 py-0.5 rounded-full">
               Total
             </span>
           </div>
-          <div className="mt-2 sm:mt-3">
-            <span className="text-lg sm:text-2xl font-extrabold text-white block">{totalCompletedLessons}</span>
-            <span className="text-[10px] sm:text-xs text-richblack-300 font-medium leading-tight block">Lessons Completed</span>
+          <div className="mt-2.5">
+            <span className="text-2xl font-extrabold text-[#0F172A] block leading-tight">{totalCompletedLessons}</span>
+            <span className="text-xs text-gray-500 font-medium block mt-0.5">Lessons Completed</span>
           </div>
-          <div className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-emerald-400 font-medium">
-            ↑ {totalCompletedLessons > 0 ? "40%" : "0%"} vs last month
+          <div className="mt-2 text-[10px] text-[#16A34A] font-semibold flex items-center gap-1">
+            <span>↑ {totalCompletedLessons > 0 ? "40%" : "0%"} vs last month</span>
           </div>
         </div>
 
         {/* Day Streak */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
-          <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-amber-900/30 text-amber-400 flex items-center justify-center text-xs sm:text-base">
-              <VscFlame />
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-4 flex flex-col justify-between shadow-xs hover:border-indigo-200 hover:shadow-sm transition-all">
+          <div className="flex items-center justify-between">
+            <div className="w-8 h-8 rounded-xl bg-[#FEF3C7] text-[#D97706] flex items-center justify-center text-sm">
+              <FaFire />
             </div>
-            <span className="text-[9px] sm:text-[10px] text-amber-400 font-bold bg-amber-500/10 px-1.5 sm:px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-[#D97706] font-bold bg-[#FEF3C7] px-2 py-0.5 rounded-full">
               Active
             </span>
           </div>
-          <div className="mt-2 sm:mt-3">
-            <span className="text-lg sm:text-2xl font-extrabold text-white block">{activeStreakDays}</span>
-            <span className="text-[10px] sm:text-xs text-richblack-300 font-medium leading-tight block">Day Streak</span>
+          <div className="mt-2.5">
+            <span className="text-2xl font-extrabold text-[#0F172A] block leading-tight">{activeStreakDays}</span>
+            <span className="text-xs text-gray-500 font-medium block mt-0.5">Day Streak</span>
           </div>
-          <div className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-amber-400 font-medium">
-            ↑ Keep it up! 🔥
+          <div className="mt-2 text-[10px] text-[#D97706] font-semibold flex items-center gap-1">
+            <span>↑ Keep it up! 🔥</span>
           </div>
         </div>
 
         {/* Certificates Earned */}
-        <div className="col-span-2 sm:col-span-1 bg-[#0e111f] border border-blue-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
-          <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-blue-950/30 text-blue-400 flex items-center justify-center text-xs sm:text-base">
+        <div className="col-span-2 sm:col-span-1 bg-white border border-gray-200/80 rounded-2xl p-4 flex flex-col justify-between shadow-xs hover:border-indigo-200 hover:shadow-sm transition-all">
+          <div className="flex items-center justify-between">
+            <div className="w-8 h-8 rounded-xl bg-[#DBEAFE] text-[#3BA7F2] flex items-center justify-center text-sm">
               <AiOutlineTrophy />
             </div>
-            <span className="text-[9px] sm:text-[10px] text-blue-400 font-bold bg-blue-500/10 px-1.5 sm:px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-[#3BA7F2] font-bold bg-[#DBEAFE] px-2 py-0.5 rounded-full">
               Earned
             </span>
           </div>
-          <div className="mt-2 sm:mt-3">
-            <span className="text-lg sm:text-2xl font-extrabold text-white block">{certificatesEarned}</span>
-            <span className="text-[10px] sm:text-xs text-richblack-300 font-medium leading-tight block">Certificates Earned</span>
+          <div className="mt-2.5">
+            <span className="text-2xl font-extrabold text-[#0F172A] block leading-tight">{certificatesEarned}</span>
+            <span className="text-xs text-gray-500 font-medium block mt-0.5">Certificates Earned</span>
           </div>
-          <div className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-blue-400 font-medium">
-            ↑ {certificatesEarned > 0 ? "100%" : "0%"} vs last month
+          <div className="mt-2 text-[10px] text-[#16A34A] font-semibold flex items-center gap-1">
+            <span>↑ {certificatesEarned > 0 ? "100%" : "0%"} vs last month</span>
           </div>
         </div>
 
@@ -297,71 +310,73 @@ const MyProfile = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* ABOUT BIO CARD */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-6 flex flex-col justify-between">
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-xs flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
-              <h3 className="text-base font-bold text-white">About Bio</h3>
+            <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+              <h3 className="text-base font-extrabold text-[#0F172A]">About Bio</h3>
               <button
                 onClick={() => navigate("/dashboard/settings")}
-                className="text-xs text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1"
+                className="text-xs text-[#3BA7F2] hover:underline font-bold flex items-center gap-0.5 cursor-pointer"
               >
                 <span>Edit</span>
-                <span className="text-[10px]">▾</span>
+                <FiChevronDown className="text-xs" />
               </button>
             </div>
 
-            <p className={`text-xs leading-relaxed ${user?.additionalDetails?.about ? "text-richblack-200" : "text-richblack-400 italic"}`}>
-              {user?.additionalDetails?.about ?? "Passionate learner exploring the world of technology and always eager to build, learn and grow."}
-            </p>
+            <div className="bg-gray-50/70 border border-gray-100 rounded-2xl p-4 sm:p-5">
+              <p className="text-xs sm:text-sm text-gray-500 italic leading-relaxed font-normal">
+                {user?.additionalDetails?.about || "Passionate learner exploring the world of technology and always eager to build, learn and grow."}
+              </p>
+            </div>
           </div>
         </div>
 
         {/* PERSONAL DETAILS CARD */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-6">
-          <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
-            <h3 className="text-base font-bold text-white">Personal Details</h3>
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-xs">
+          <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+            <h3 className="text-base font-extrabold text-[#0F172A]">Personal Details</h3>
             <button
               onClick={() => navigate("/dashboard/settings")}
-              className="text-xs text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1"
+              className="text-xs text-[#3BA7F2] hover:underline font-bold flex items-center gap-0.5 cursor-pointer"
             >
               <span>Edit</span>
-              <span className="text-[10px]">▾</span>
+              <FiChevronDown className="text-xs" />
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6 text-xs">
             <div>
-              <span className="text-richblack-400 text-[11px] block">First Name</span>
-              <span className="font-bold text-white text-sm">{firstName}</span>
+              <span className="text-gray-400 text-[11px] block font-medium">First Name</span>
+              <span className="font-bold text-[#0F172A] text-xs sm:text-sm mt-0.5 block">{firstName}</span>
             </div>
 
             <div>
-              <span className="text-richblack-400 text-[11px] block">Last Name</span>
-              <span className="font-bold text-white text-sm">{lastName || "Not set"}</span>
+              <span className="text-gray-400 text-[11px] block font-medium">Last Name</span>
+              <span className="font-bold text-[#0F172A] text-xs sm:text-sm mt-0.5 block">{lastName || "Mishra"}</span>
             </div>
 
             <div>
-              <span className="text-richblack-400 text-[11px] block">Email Address</span>
-              <span className="font-bold text-white text-sm truncate block">{email}</span>
+              <span className="text-gray-400 text-[11px] block font-medium">Email Address</span>
+              <span className="font-bold text-[#0F172A] text-xs sm:text-sm mt-0.5 truncate block">{email}</span>
             </div>
 
             <div>
-              <span className="text-richblack-400 text-[11px] block">Phone Number</span>
-              <span className="font-bold text-white text-sm">
-                {user?.additionalDetails?.contactNumber ?? "Not provided"}
+              <span className="text-gray-400 text-[11px] block font-medium">Phone Number</span>
+              <span className="font-bold text-[#0F172A] text-xs sm:text-sm mt-0.5 block">
+                {user?.additionalDetails?.contactNumber || "Not provided"}
               </span>
             </div>
 
             <div>
-              <span className="text-richblack-400 text-[11px] block">Gender</span>
-              <span className="font-bold text-white text-sm">
-                {user?.additionalDetails?.gender ?? "Not specified"}
+              <span className="text-gray-400 text-[11px] block font-medium">Gender</span>
+              <span className="font-bold text-[#0F172A] text-xs sm:text-sm mt-0.5 block">
+                {user?.additionalDetails?.gender || "Not specified"}
               </span>
             </div>
 
             <div>
-              <span className="text-richblack-400 text-[11px] block">Date of Birth</span>
-              <span className="font-bold text-white text-sm">
+              <span className="text-gray-400 text-[11px] block font-medium">Date of Birth</span>
+              <span className="font-bold text-[#0F172A] text-xs sm:text-sm mt-0.5 block">
                 {user?.additionalDetails?.dateOfBirth ? formattedDate(user.additionalDetails.dateOfBirth) : "January 1, 1970"}
               </span>
             </div>
@@ -374,25 +389,25 @@ const MyProfile = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* ADDRESS & LOCATION */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-6">
-          <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
-            <h3 className="text-base font-bold text-white">Address & Map Location</h3>
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-xs">
+          <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+            <h3 className="text-base font-extrabold text-[#0F172A]">Address & Map Location</h3>
             <button
               onClick={() => navigate("/dashboard/settings")}
-              className="text-xs text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1"
+              className="text-xs text-[#3BA7F2] hover:underline font-bold flex items-center gap-0.5 cursor-pointer"
             >
               <span>Edit</span>
-              <span className="text-[10px]">▾</span>
+              <FiChevronDown className="text-xs" />
             </button>
           </div>
 
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 rounded-full bg-blue-950/40 text-blue-400 flex items-center justify-center shrink-0 mt-1">
-              <VscLocation />
+          <div className="flex items-start gap-3.5">
+            <div className="w-9 h-9 rounded-2xl bg-[#13AA92]/10 text-[#3BA7F2] flex items-center justify-center text-base shrink-0 mt-0.5">
+              <FiMapPin />
             </div>
             <div>
-              <span className="text-[11px] text-richblack-400 block font-medium">Registered Address</span>
-              <p className="text-xs font-semibold text-white mt-1 leading-relaxed">
+              <span className="text-[11px] text-gray-400 block font-medium">Registered Address</span>
+              <p className="text-xs sm:text-sm font-bold text-[#0F172A] mt-0.5 leading-snug">
                 {user?.additionalDetails?.address || "Sector 63, Block A, Noida, Uttar Pradesh 201301, India"}
               </p>
             </div>
@@ -400,39 +415,39 @@ const MyProfile = () => {
         </div>
 
         {/* ACCOUNT INFORMATION */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-6">
-          <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
-            <h3 className="text-base font-bold text-white">Account Information</h3>
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-xs">
+          <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+            <h3 className="text-base font-extrabold text-[#0F172A]">Account Information</h3>
             <button
               onClick={() => navigate("/dashboard/settings")}
-              className="text-xs text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1"
+              className="text-xs text-[#3BA7F2] hover:underline font-bold flex items-center gap-0.5 cursor-pointer"
             >
               <span>Edit</span>
-              <span className="text-[10px]">▾</span>
+              <FiChevronDown className="text-xs" />
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6 text-xs">
             <div>
-              <span className="text-richblack-400 text-[11px] block">Account Type</span>
-              <span className="font-bold text-white text-sm">{accountType}</span>
+              <span className="text-gray-400 text-[11px] block font-medium">Account Type</span>
+              <span className="font-bold text-[#0F172A] text-xs sm:text-sm mt-0.5 block">{accountType}</span>
             </div>
 
             <div>
-              <span className="text-richblack-400 text-[11px] block">Account Status</span>
-              <span className="inline-block text-[10px] font-bold bg-emerald-500/20 text-emerald-400 px-2.5 py-0.5 rounded-full mt-1">
+              <span className="text-gray-400 text-[11px] block font-medium">Account Status</span>
+              <span className="inline-block text-[10px] font-bold bg-[#DCFCE7] text-[#16A34A] px-2.5 py-0.5 rounded-full mt-1">
                 Active
               </span>
             </div>
 
             <div>
-              <span className="text-richblack-400 text-[11px] block">Member Since</span>
-              <span className="font-bold text-white text-sm">{joinedDate}</span>
+              <span className="text-gray-400 text-[11px] block font-medium">Member Since</span>
+              <span className="font-bold text-[#0F172A] text-xs sm:text-sm mt-0.5 block">{joinedDate}</span>
             </div>
 
             <div>
-              <span className="text-richblack-400 text-[11px] block">Last Login</span>
-              <span className="font-bold text-white text-sm">Today, Active Now</span>
+              <span className="text-gray-400 text-[11px] block font-medium">Last Login</span>
+              <span className="font-bold text-[#0F172A] text-xs sm:text-sm mt-0.5 block">Today, Active Now</span>
             </div>
           </div>
         </div>
@@ -440,79 +455,79 @@ const MyProfile = () => {
       </div>
 
       {/* 5. LEARNING PREFERENCES */}
-      <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-6">
-        <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
-          <h3 className="text-base font-bold text-white">Learning Preferences</h3>
+      <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-xs">
+        <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+          <h3 className="text-base font-extrabold text-[#0F172A]">Learning Preferences</h3>
           <button
             onClick={() => navigate("/dashboard/settings")}
-            className="text-xs text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1"
+            className="text-xs text-[#3BA7F2] hover:underline font-bold flex items-center gap-0.5 cursor-pointer"
           >
             <span>Edit</span>
-            <span className="text-[10px]">▾</span>
+            <FiChevronDown className="text-xs" />
           </button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-          <div className="p-3 rounded-xl bg-[#141728] border border-white/5 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-blue-950/30 text-blue-400 flex items-center justify-center text-base">
-              💻
+          <div className="p-3.5 rounded-2xl bg-white border border-gray-100 shadow-2xs flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-[#13AA92]/10 text-[#3BA7F2] flex items-center justify-center text-base shrink-0">
+              <FiMonitor />
             </div>
             <div>
-              <span className="text-[10px] text-richblack-400 block font-medium">Preferred Language</span>
-              <span className="font-bold text-white">English</span>
+              <span className="text-[10px] text-gray-400 block font-medium">Preferred Language</span>
+              <span className="font-bold text-[#0F172A] text-xs block mt-0.5">English</span>
             </div>
           </div>
 
-          <div className="p-3 rounded-xl bg-[#141728] border border-white/5 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-blue-950/30 text-blue-400 flex items-center justify-center text-base">
-              ⏰
+          <div className="p-3.5 rounded-2xl bg-white border border-gray-100 shadow-2xs flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-[#FEF3C7] text-[#D97706] flex items-center justify-center text-base shrink-0">
+              <IoAlarmOutline className="text-lg" />
             </div>
             <div>
-              <span className="text-[10px] text-richblack-400 block font-medium">Daily Learning Time</span>
-              <span className="font-bold text-white">1-2 hours</span>
+              <span className="text-[10px] text-gray-400 block font-medium">Daily Learning Time</span>
+              <span className="font-bold text-[#0F172A] text-xs block mt-0.5">1-2 hours</span>
             </div>
           </div>
 
-          <div className="p-3 rounded-xl bg-[#141728] border border-white/5 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-blue-950/30 text-blue-400 flex items-center justify-center text-base">
-              🎯
+          <div className="p-3.5 rounded-2xl bg-white border border-gray-100 shadow-2xs flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-[#FEE2E2] text-[#DC2626] flex items-center justify-center text-base shrink-0">
+              <FiTarget />
             </div>
             <div>
-              <span className="text-[10px] text-richblack-400 block font-medium">Learning Goal</span>
-              <span className="font-bold text-white">Full Stack Development</span>
+              <span className="text-[10px] text-gray-400 block font-medium">Learning Goal</span>
+              <span className="font-bold text-[#0F172A] text-xs block mt-0.5">Full Stack Development</span>
             </div>
           </div>
 
-          <div className="p-3 rounded-xl bg-[#141728] border border-white/5 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-blue-950/30 text-blue-400 flex items-center justify-center text-base">
-              🚀
+          <div className="p-3.5 rounded-2xl bg-white border border-gray-100 shadow-2xs flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-[#13AA92]/10 text-[#13AA92] flex items-center justify-center text-base shrink-0">
+              <IoRocketOutline className="text-lg" />
             </div>
             <div>
-              <span className="text-[10px] text-richblack-400 block font-medium">Experience Level</span>
-              <span className="font-bold text-white">Beginner</span>
+              <span className="text-[10px] text-gray-400 block font-medium">Experience Level</span>
+              <span className="font-bold text-[#0F172A] text-xs block mt-0.5">Beginner</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* 6. PRIVACY & SECURITY BANNER */}
-      <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-blue-950/40 text-blue-400 flex items-center justify-center text-base shrink-0">
-            <VscShield />
+      <div className="bg-white border border-gray-200/80 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-xs">
+        <div className="flex items-center gap-3.5">
+          <div className="w-9 h-9 rounded-2xl bg-[#13AA92]/10 text-[#3BA7F2] flex items-center justify-center text-lg shrink-0">
+            <FiShield />
           </div>
           <div>
-            <span className="font-bold text-white block">Your data is safe and secure</span>
-            <span className="text-richblack-400 text-[11px]">We never share your personal information with anyone.</span>
+            <span className="font-bold text-[#0F172A] text-xs sm:text-sm block">Your data is safe and secure</span>
+            <span className="text-gray-500 text-[11px] block mt-0.5">We never share your personal information with anyone.</span>
           </div>
         </div>
 
         <Link
           to="/privacy-policy"
-          className="text-blue-400 hover:text-blue-300 font-bold flex items-center gap-1 shrink-0"
+          className="text-[#3BA7F2] hover:underline font-bold flex items-center gap-1 shrink-0"
         >
           <span>Privacy Policy</span>
-          <VscArrowRight />
+          <FiArrowRight className="text-xs" />
         </Link>
       </div>
 

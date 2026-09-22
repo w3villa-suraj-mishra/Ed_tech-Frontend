@@ -4,14 +4,19 @@ import { Link, useNavigate } from "react-router-dom";
 import { getUserEnrolledCourses } from "../../../services/operations/profileAPI";
 import { getAllCourses } from "../../../services/operations/courseDetailsAPI";
 import {
-  VscBook,
-  VscCoverage,
-  VscFlame,
-  VscArrowRight,
-  VscPlay,
-  VscPass
-} from "react-icons/vsc";
+  FiArrowRight,
+  FiBookOpen,
+  FiClock,
+  FiCheckCircle,
+  FiChevronDown,
+  FiFileText,
+  FiAward,
+  FiPlay
+} from "react-icons/fi";
+import { FaFire } from "react-icons/fa";
 import { AiOutlineTrophy } from "react-icons/ai";
+import dashWelcomeIllustration from "../../../assests/Images/dash_welcome_illustration.png";
+import dashRocket from "../../../assests/Images/dash_rocket.png";
 
 const GlobalDashboard = () => {
   const { user } = useSelector((state) => state.profile);
@@ -23,8 +28,7 @@ const GlobalDashboard = () => {
   const [loading, setLoading] = useState(true);
 
   // Authenticated User Info
-  const userName = user?.first_name || user?.firstName || user?.name || "Learner";
-  const userPlan = user?.plan || user?.accountType || "Free Access";
+  const userName = user?.first_name || user?.firstName || user?.name || "Suraj";
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -92,7 +96,6 @@ const GlobalDashboard = () => {
     if (courseWatchedSeconds > 0) {
       totalCompletedSeconds += courseWatchedSeconds;
     } else {
-      // Fallback: Estimate 25 mins (1500 seconds) per completed lesson
       totalCompletedSeconds += completedNum * 1500;
     }
   });
@@ -106,123 +109,133 @@ const GlobalDashboard = () => {
   const continueLearningCourses = enrolledCourses.slice(0, 3);
 
   return (
-    <div className="space-y-6 text-white pb-10">
+    <div className="space-y-6 text-gray-800 pb-10 font-sans">
       
-      {/* 1. WELCOME BANNER SECTION */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#0e111f] border border-blue-500/20 rounded-2xl p-6 shadow-[0_0_20px_rgba(37, 99, 235,0.1)]">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2">
-            Welcome back, {userName} <span className="animate-bounce inline-block">👋</span>
+      {/* 1. WELCOME BANNER SECTION (Emoji removed as requested) */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#F0F3FE]/80 border border-[#13AA92]/30 rounded-2xl sm:rounded-3xl p-6 sm:p-7 relative overflow-hidden shadow-xs">
+        <div className="z-10 relative">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] tracking-tight">
+            Welcome back, {userName}
           </h1>
-          <p className="text-xs sm:text-sm text-richblack-300 mt-1">
+          <p className="text-xs sm:text-sm text-gray-500 mt-1 font-normal">
             Keep learning and grow your skills every day.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+
+        {/* Center/Right 3D Books & Plant Illustration */}
+        <div className="absolute left-1/2 -translate-x-1/4 bottom-0 hidden lg:block pointer-events-none">
+          <img
+            src={dashWelcomeIllustration}
+            alt=""
+            className="h-20 sm:h-22 object-contain object-bottom"
+          />
+        </div>
+
+        <div className="z-10 relative shrink-0">
           <Link
             to="/courses"
-            className="px-4 py-2.5 rounded-xl bg-blue-600/20 text-blue-300 border border-blue-500/30 text-xs font-bold hover:bg-blue-600/30 transition-all flex items-center gap-2"
+            className="px-5 py-2.5 rounded-xl bg-[#3BA7F2] hover:bg-[#3BA7F2] text-white text-xs sm:text-sm font-bold flex items-center gap-2 shadow-sm shadow-indigo-500/20 transition-all"
           >
             <span>Explore Courses</span>
-            <VscArrowRight />
+            <FiArrowRight className="text-xs" />
           </Link>
         </div>
       </div>
 
-      {/* 2. STATISTICS CARDS GRID (2 per row on mobile, compact size) */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4">
+      {/* 2. 5 STATISTICS CARDS GRID */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
         
         {/* Card 1: Enrolled Courses */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
-          <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-blue-950/30 text-blue-400 flex items-center justify-center text-xs sm:text-base">
-              <VscBook />
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-4 flex flex-col justify-between shadow-xs hover:border-indigo-200 hover:shadow-sm transition-all">
+          <div className="flex items-center justify-between">
+            <div className="w-8 h-8 rounded-xl bg-[#E0F2FE] text-[#0284C7] flex items-center justify-center text-sm">
+              <FiBookOpen />
             </div>
-            <span className="text-[9px] sm:text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-1.5 sm:px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-[#16A34A] font-bold bg-[#DCFCE7] px-2 py-0.5 rounded-full">
               Live
             </span>
           </div>
-          <div className="mt-2 sm:mt-3">
-            <span className="text-lg sm:text-2xl font-extrabold text-white block">{totalEnrolled}</span>
-            <span className="text-[10px] sm:text-xs text-richblack-300 font-medium leading-tight block">Enrolled Courses</span>
+          <div className="mt-2.5">
+            <span className="text-2xl font-extrabold text-[#0F172A] block leading-tight">{totalEnrolled}</span>
+            <span className="text-xs text-gray-500 font-medium block mt-0.5">Enrolled Courses</span>
           </div>
-          <div className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-emerald-400 font-medium flex items-center gap-1">
+          <div className="mt-2 text-[10px] text-[#16A34A] font-semibold flex items-center gap-1">
             <span>↑ {totalEnrolled > 0 ? "100%" : "0%"} vs last month</span>
           </div>
         </div>
 
         {/* Card 2: Hours Learned */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
-          <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-indigo-900/30 text-indigo-400 flex items-center justify-center text-xs sm:text-base">
-              <VscCoverage />
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-4 flex flex-col justify-between shadow-xs hover:border-indigo-200 hover:shadow-sm transition-all">
+          <div className="flex items-center justify-between">
+            <div className="w-8 h-8 rounded-xl bg-[#13AA92]/10 text-[#9333EA] flex items-center justify-center text-sm">
+              <FiClock />
             </div>
-            <span className="text-[9px] sm:text-[10px] text-indigo-400 font-bold bg-indigo-500/10 px-1.5 sm:px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-[#13AA92] font-bold bg-[#13AA92]/10 px-2 py-0.5 rounded-full">
               Est.
             </span>
           </div>
-          <div className="mt-2 sm:mt-3">
-            <span className="text-lg sm:text-2xl font-extrabold text-white block">{totalHoursLearned}</span>
-            <span className="text-[10px] sm:text-xs text-richblack-300 font-medium leading-tight block">Hours Learned</span>
+          <div className="mt-2.5">
+            <span className="text-2xl font-extrabold text-[#0F172A] block leading-tight">{totalHoursLearned}</span>
+            <span className="text-xs text-gray-500 font-medium block mt-0.5">Hours Learned</span>
           </div>
-          <div className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-indigo-400 font-medium flex items-center gap-1">
+          <div className="mt-2 text-[10px] text-[#16A34A] font-semibold flex items-center gap-1">
             <span>↑ {totalCompletedLessons > 0 ? "35%" : "0%"} vs last month</span>
           </div>
         </div>
 
         {/* Card 3: Lessons Completed */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
-          <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-900/30 text-emerald-400 flex items-center justify-center text-xs sm:text-base">
-              <VscPass />
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-4 flex flex-col justify-between shadow-xs hover:border-indigo-200 hover:shadow-sm transition-all">
+          <div className="flex items-center justify-between">
+            <div className="w-8 h-8 rounded-xl bg-[#DCFCE7] text-[#16A34A] flex items-center justify-center text-sm">
+              <FiCheckCircle />
             </div>
-            <span className="text-[9px] sm:text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-1.5 sm:px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-[#16A34A] font-bold bg-[#DCFCE7] px-2 py-0.5 rounded-full">
               Total
             </span>
           </div>
-          <div className="mt-2 sm:mt-3">
-            <span className="text-lg sm:text-2xl font-extrabold text-white block">{totalCompletedLessons}</span>
-            <span className="text-[10px] sm:text-xs text-richblack-300 font-medium leading-tight block">Lessons Completed</span>
+          <div className="mt-2.5">
+            <span className="text-2xl font-extrabold text-[#0F172A] block leading-tight">{totalCompletedLessons}</span>
+            <span className="text-xs text-gray-500 font-medium block mt-0.5">Lessons Completed</span>
           </div>
-          <div className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-emerald-400 font-medium flex items-center gap-1">
+          <div className="mt-2 text-[10px] text-[#16A34A] font-semibold flex items-center gap-1">
             <span>↑ {totalCompletedLessons > 0 ? "40%" : "0%"} vs last month</span>
           </div>
         </div>
 
         {/* Card 4: Day Streak */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
-          <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-amber-900/30 text-amber-400 flex items-center justify-center text-xs sm:text-base">
-              <VscFlame />
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-4 flex flex-col justify-between shadow-xs hover:border-indigo-200 hover:shadow-sm transition-all">
+          <div className="flex items-center justify-between">
+            <div className="w-8 h-8 rounded-xl bg-[#FEF3C7] text-[#D97706] flex items-center justify-center text-sm">
+              <FaFire />
             </div>
-            <span className="text-[9px] sm:text-[10px] text-amber-400 font-bold bg-amber-500/10 px-1.5 sm:px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-[#D97706] font-bold bg-[#FEF3C7] px-2 py-0.5 rounded-full">
               Active
             </span>
           </div>
-          <div className="mt-2 sm:mt-3">
-            <span className="text-lg sm:text-2xl font-extrabold text-white block">{activeStreakDays}</span>
-            <span className="text-[10px] sm:text-xs text-richblack-300 font-medium leading-tight block">Day Streak</span>
+          <div className="mt-2.5">
+            <span className="text-2xl font-extrabold text-[#0F172A] block leading-tight">{activeStreakDays}</span>
+            <span className="text-xs text-gray-500 font-medium block mt-0.5">Day Streak</span>
           </div>
-          <div className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-amber-400 font-medium flex items-center gap-1">
+          <div className="mt-2 text-[10px] text-[#D97706] font-semibold flex items-center gap-1">
             <span>↑ Keep it up! 🔥</span>
           </div>
         </div>
 
         {/* Card 5: Certificates Earned */}
-        <div className="col-span-2 sm:col-span-1 bg-[#0e111f] border border-blue-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
-          <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-blue-950/30 text-blue-400 flex items-center justify-center text-xs sm:text-base">
+        <div className="col-span-2 sm:col-span-1 bg-white border border-gray-200/80 rounded-2xl p-4 flex flex-col justify-between shadow-xs hover:border-indigo-200 hover:shadow-sm transition-all">
+          <div className="flex items-center justify-between">
+            <div className="w-8 h-8 rounded-xl bg-[#DBEAFE] text-[#3BA7F2] flex items-center justify-center text-sm">
               <AiOutlineTrophy />
             </div>
-            <span className="text-[9px] sm:text-[10px] text-blue-400 font-bold bg-blue-500/10 px-1.5 sm:px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-[#3BA7F2] font-bold bg-[#DBEAFE] px-2 py-0.5 rounded-full">
               Earned
             </span>
           </div>
-          <div className="mt-2 sm:mt-3">
-            <span className="text-lg sm:text-2xl font-extrabold text-white block">{certificatesEarned}</span>
-            <span className="text-[10px] sm:text-xs text-richblack-300 font-medium leading-tight block">Certificates Earned</span>
+          <div className="mt-2.5">
+            <span className="text-2xl font-extrabold text-[#0F172A] block leading-tight">{certificatesEarned}</span>
+            <span className="text-xs text-gray-500 font-medium block mt-0.5">Certificates Earned</span>
           </div>
-          <div className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-blue-400 font-medium flex items-center gap-1">
+          <div className="mt-2 text-[10px] text-[#16A34A] font-semibold flex items-center gap-1">
             <span>↑ {certificatesEarned > 0 ? "100%" : "0%"} vs last month</span>
           </div>
         </div>
@@ -233,23 +246,23 @@ const GlobalDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* CONTINUE LEARNING SECTION */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-5 flex flex-col justify-between">
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
-              <h2 className="text-base font-bold text-white flex items-center gap-2">
-                <span>Continue Learning</span>
+            <div className="flex items-center justify-between mb-4 border-b border-gray-100 pb-3">
+              <h2 className="text-base font-extrabold text-[#0F172A]">
+                Continue Learning
               </h2>
               <Link
                 to="/dashboard/enrolled-courses"
-                className="text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1"
+                className="text-xs font-bold text-[#3BA7F2] hover:underline flex items-center gap-1 transition-colors"
               >
                 <span>View All Courses</span>
-                <VscArrowRight />
+                <FiArrowRight className="text-xs" />
               </Link>
             </div>
 
             {loading ? (
-              <div className="py-12 text-center text-xs text-richblack-400">Loading active courses...</div>
+              <div className="py-12 text-center text-xs text-gray-400">Loading active courses...</div>
             ) : continueLearningCourses.length > 0 ? (
               <div className="space-y-3">
                 {continueLearningCourses.map((course) => {
@@ -257,27 +270,27 @@ const GlobalDashboard = () => {
                   return (
                     <div
                       key={course._id}
-                      className="p-3.5 rounded-xl bg-[#141728] border border-white/5 hover:border-blue-500/30 transition-all flex items-center justify-between gap-3 group"
+                      className="p-3.5 rounded-xl bg-gray-50/70 border border-gray-100 hover:border-indigo-200 transition-all flex items-center justify-between gap-3 group"
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <img
                           src={course.thumbnail}
                           alt={course.courseName}
-                          className="w-12 h-12 rounded-xl object-cover border border-white/10 shrink-0 group-hover:scale-105 transition-transform"
+                          className="w-12 h-12 rounded-xl object-cover border border-gray-200 shrink-0 group-hover:scale-105 transition-transform"
                         />
                         <div className="flex flex-col min-w-0">
-                          <span className="text-xs font-bold text-white truncate max-w-[200px] sm:max-w-[260px]">
+                          <span className="text-xs font-bold text-gray-900 truncate max-w-[180px] sm:max-w-[240px]">
                             {course.courseName}
                           </span>
                           
                           {/* Progress Bar Container */}
-                          <div className="w-full bg-[#070913] h-1.5 rounded-full overflow-hidden mt-2 max-w-[180px]">
+                          <div className="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden mt-2 max-w-[180px]">
                             <div
-                              className="bg-gradient-to-r from-blue-500 to-indigo-500 h-full rounded-full transition-all duration-300"
+                              className="bg-gradient-to-r from-blue-500 to-[#3BA7F2] h-full rounded-full transition-all duration-300"
                               style={{ width: `${progressPct}%` }}
                             />
                           </div>
-                          <span className="text-[10px] text-richblack-400 mt-1 font-semibold">
+                          <span className="text-[10px] text-gray-500 mt-1 font-semibold">
                             {progressPct}% Complete
                           </span>
                         </div>
@@ -285,117 +298,106 @@ const GlobalDashboard = () => {
 
                       <button
                         onClick={() => navigate(`/view-course/${course._id}`)}
-                        className="px-3 py-1.5 rounded-lg bg-blue-600/20 text-blue-300 border border-blue-500/30 text-xs font-bold hover:bg-blue-600 hover:text-white transition-all shrink-0 flex items-center gap-1"
+                        className="px-3 py-1.5 rounded-lg bg-[#13AA92]/10 text-[#3BA7F2] hover:bg-[#3BA7F2] hover:text-white border border-[#13AA92]/30 text-xs font-bold transition-all shrink-0 flex items-center gap-1"
                       >
                         <span>Continue</span>
-                        <VscPlay className="text-[10px]" />
+                        <FiPlay className="text-[10px]" />
                       </button>
                     </div>
                   );
                 })}
               </div>
             ) : (
-              <div className="py-10 text-center text-richblack-400 space-y-3">
-                <VscBook className="text-3xl mx-auto text-blue-400/50" />
-                <p className="text-xs">You haven't enrolled in any courses yet.</p>
-                <Link
-                  to="/courses"
-                  className="inline-block px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-800 transition-all shadow-[0_0_12px_rgba(37, 99, 235,0.4)]"
-                >
-                  Explore Courses
-                </Link>
+              <div className="py-8 sm:py-10 text-center space-y-3">
+                <div className="w-14 h-14 rounded-full bg-[#13AA92]/10 flex items-center justify-center text-[#3BA7F2] text-2xl mx-auto">
+                  <FiBookOpen />
+                </div>
+                <p className="text-xs text-gray-500 font-medium">You haven't enrolled in any courses yet.</p>
+                <div>
+                  <Link
+                    to="/courses"
+                    className="inline-flex items-center px-5 py-2.5 rounded-xl bg-[#3BA7F2] hover:bg-[#3BA7F2] text-white text-xs font-bold shadow-sm shadow-indigo-500/20 transition-all"
+                  >
+                    Explore Courses
+                  </Link>
+                </div>
               </div>
             )}
           </div>
         </div>
 
         {/* LEARNING OVERVIEW SECTION */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-5 flex flex-col justify-between">
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
-              <h2 className="text-base font-bold text-white">Learning Overview</h2>
-              <span className="text-xs bg-blue-950/30 text-blue-300 border border-blue-500/30 px-2.5 py-1 rounded-full font-semibold">
-                This Week
-              </span>
+            <div className="flex items-center justify-between mb-4 border-b border-gray-100 pb-3">
+              <h2 className="text-base font-extrabold text-[#0F172A]">Learning Overview</h2>
+              <div className="text-xs bg-white text-[#3BA7F2] border border-gray-200 px-3 py-1 rounded-full font-semibold flex items-center gap-1 shadow-2xs">
+                <span>This Week</span>
+                <FiChevronDown className="text-xs" />
+              </div>
             </div>
 
-            {/* Visual Progress Graph Curve */}
-            <div className="bg-[#141728] p-4 rounded-xl border border-white/5 space-y-4">
-              <div className="h-32 flex items-end justify-between px-2 pt-4 relative">
-                {/* Dynamic SVG Smooth Area & Line Curve */}
-                <svg className="absolute inset-0 w-full h-full p-2 pointer-events-none" preserveAspectRatio="none" viewBox="0 0 100 50">
-                  <defs>
-                    <linearGradient id="purpleGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.4" />
-                      <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
-                    </linearGradient>
-                  </defs>
-                  {/* Dynamic path based on user completed lessons activity */}
-                  {totalCompletedLessons > 0 ? (
-                    <>
-                      <path
-                        d="M 0,45 Q 16,35 32,25 T 64,15 T 100,28 L 100,50 L 0,50 Z"
-                        fill="url(#blueGrad)"
-                      />
-                      <path
-                        d="M 0,45 Q 16,35 32,25 T 64,15 T 100,28"
-                        fill="none"
-                        stroke="#3b82f6"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <path
-                        d="M 0,45 Q 25,43 50,42 T 100,40 L 100,50 L 0,50 Z"
-                        fill="url(#purpleGrad)"
-                      />
-                      <path
-                        d="M 0,45 Q 25,43 50,42 T 100,40"
-                        fill="none"
-                        stroke="#3b82f6"
-                        strokeWidth="2.5"
-                        strokeDasharray="4 4"
-                      />
-                    </>
-                  )}
-                </svg>
+            {/* Visual Progress Graph Grid */}
+            <div className="bg-white p-2 sm:p-3 rounded-xl border border-gray-100 space-y-3">
+              <div className="py-2 relative">
+                {/* Horizontal Dashed Grid Lines with Y-Axis Values */}
+                <div className="flex flex-col gap-3.5 text-[10px] text-gray-400 font-mono">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 text-right">4</span>
+                    <div className="w-full border-b border-dashed border-gray-200/70"></div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 text-right">3</span>
+                    <div className="w-full border-b border-dashed border-gray-200/70"></div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 text-right">2</span>
+                    <div className="w-full border-b border-dashed border-gray-200/70"></div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 text-right">1</span>
+                    <div className="w-full border-b border-dashed border-gray-200/70"></div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 text-right">0</span>
+                    <div className="w-full border-b border-dashed border-gray-200/70"></div>
+                  </div>
+                </div>
 
-                {/* Day Labels with Dynamic Highlight */}
-                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, idx) => {
-                  const todayIndex = (new Date().getDay() + 6) % 7; // Convert Sun-Sat (0-6) to Mon-Sun (0-6)
-                  const isToday = idx === todayIndex;
-                  return (
-                    <div key={day} className="flex flex-col items-center gap-1.5 z-10">
-                      <div
-                        className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                          isToday
-                            ? 'bg-blue-400 ring-4 ring-blue-500/40 shadow-[0_0_12px_#3b82f6] scale-125'
-                            : totalCompletedLessons > 0 && idx <= todayIndex
-                            ? 'bg-blue-500/80'
-                            : 'bg-blue-950/40'
-                        }`}
-                      />
-                      <span className={`text-[10px] font-semibold ${isToday ? 'text-blue-300 font-bold' : 'text-richblack-400'}`}>
-                        {day}
-                      </span>
-                    </div>
-                  );
-                })}
+                {/* Day Labels with Dot Indicators at Baseline */}
+                <div className="grid grid-cols-7 text-center pt-2 pl-5">
+                  {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, idx) => {
+                    const todayIndex = (new Date().getDay() + 6) % 7;
+                    const isToday = idx === todayIndex;
+                    return (
+                      <div key={day} className="flex flex-col items-center gap-1.5">
+                        <div
+                          className={`w-2 h-2 rounded-full transition-all ${
+                            isToday
+                              ? 'bg-[#3BA7F2] ring-4 ring-indigo-100 scale-125'
+                              : 'bg-[#C7D2FE]'
+                          }`}
+                        />
+                        <span className={`text-[10px] font-medium ${isToday ? 'text-[#3BA7F2] font-bold' : 'text-gray-400'}`}>
+                          {day}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
 
-              {/* Bottom Summary Stats */}
-              <div className="grid grid-cols-2 gap-3 pt-2 border-t border-white/10">
-                <div className="bg-[#0e111f] p-3 rounded-xl border border-white/5">
-                  <span className="text-[10px] text-richblack-400 block font-medium">Total Time</span>
-                  <span className="text-sm font-black text-white">{totalHoursLearned} Hours</span>
-                  <span className="text-[9px] text-emerald-400 block font-medium mt-0.5">↑ Active learning</span>
+              {/* Bottom Summary Stats Cards */}
+              <div className="grid grid-cols-2 gap-3 pt-3 border-t border-gray-100">
+                <div className="bg-gray-50/70 p-3 rounded-xl border border-gray-100">
+                  <span className="text-[10px] text-gray-500 block font-medium">Total Time</span>
+                  <span className="text-sm font-extrabold text-[#0F172A] block mt-0.5">{totalHoursLearned} Hours</span>
+                  <span className="text-[9px] text-[#16A34A] block font-semibold mt-0.5">↑ Active learning</span>
                 </div>
-                <div className="bg-[#0e111f] p-3 rounded-xl border border-white/5">
-                  <span className="text-[10px] text-richblack-400 block font-medium">Lessons Completed</span>
-                  <span className="text-sm font-black text-white">{totalCompletedLessons} Lessons</span>
-                  <span className="text-[9px] text-blue-400 block font-medium mt-0.5">↑ Completed</span>
+                <div className="bg-gray-50/70 p-3 rounded-xl border border-gray-100">
+                  <span className="text-[10px] text-gray-500 block font-medium">Lessons Completed</span>
+                  <span className="text-sm font-extrabold text-[#0F172A] block mt-0.5">{totalCompletedLessons} Lessons</span>
+                  <span className="text-[9px] text-[#3BA7F2] block font-semibold mt-0.5">→ Completed</span>
                 </div>
               </div>
 
@@ -409,90 +411,105 @@ const GlobalDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* RECENT ACTIVITY */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-5">
-          <div className="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
-            <h2 className="text-base font-bold text-white">Recent Activity</h2>
-            <span className="text-xs text-blue-400 font-semibold">Live Logs</span>
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-5 sm:p-6 shadow-xs">
+          <div className="flex items-center justify-between mb-4 border-b border-gray-100 pb-3">
+            <h2 className="text-base font-extrabold text-[#0F172A]">Recent Activity</h2>
+            <span className="text-xs text-[#3BA7F2] font-bold">Live Logs</span>
           </div>
 
-          <div className="space-y-3">
+          <div>
             {enrolledCourses.length > 0 ? (
-              enrolledCourses.slice(0, 3).map((course, idx) => (
-                <div key={course._id || idx} className="flex items-center gap-3 p-3 rounded-xl bg-[#141728] border border-white/5">
-                  <div className="w-8 h-8 rounded-xl bg-blue-950/40 text-blue-400 flex items-center justify-center shrink-0">
-                    <VscBook />
+              <div className="space-y-3">
+                {enrolledCourses.slice(0, 3).map((course, idx) => (
+                  <div key={course._id || idx} className="flex items-center gap-3 p-3 rounded-xl bg-gray-50/70 border border-gray-100">
+                    <div className="w-8 h-8 rounded-xl bg-[#13AA92]/10 text-[#3BA7F2] flex items-center justify-center shrink-0 text-sm">
+                      <FiBookOpen />
+                    </div>
+                    <div className="flex flex-col min-w-0 flex-1">
+                      <span className="text-xs font-bold text-gray-900 truncate">
+                        Enrolled in {course.courseName}
+                      </span>
+                      <span className="text-[10px] text-gray-500">
+                        Progress: {course.progressPercentage || 0}%
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-gray-400 shrink-0">Recent</span>
                   </div>
-                  <div className="flex flex-col min-w-0 flex-1">
-                    <span className="text-xs font-bold text-white truncate">
-                      Enrolled in {course.courseName}
-                    </span>
-                    <span className="text-[10px] text-richblack-400">
-                      Progress: {course.progressPercentage || 0}%
-                    </span>
-                  </div>
-                  <span className="text-[10px] text-richblack-400 shrink-0">Recent</span>
-                </div>
-              ))
+                ))}
+              </div>
             ) : (
-              <div className="py-6 text-center text-xs text-richblack-400">
-                No recent activity recorded yet.
+              <div className="py-7 text-center space-y-2">
+                <div className="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 text-lg mx-auto">
+                  <FiFileText />
+                </div>
+                <p className="text-xs text-gray-500 font-medium">No recent activity recorded yet.</p>
               </div>
             )}
           </div>
         </div>
 
         {/* CERTIFICATES & ACHIEVEMENTS */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-5">
-          <div className="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
-            <h2 className="text-base font-bold text-white">Certificates & Achievements</h2>
-            <span className="text-xs text-blue-400 font-semibold">
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-5 sm:p-6 shadow-xs">
+          <div className="flex items-center justify-between mb-4 border-b border-gray-100 pb-3">
+            <h2 className="text-base font-extrabold text-[#0F172A]">Certificates & Achievements</h2>
+            <span className="text-xs text-[#3BA7F2] font-bold">
               {certificatesEarned} Earned
             </span>
           </div>
 
-          {completedCoursesList.length > 0 ? (
-            <div className="space-y-3">
-              {completedCoursesList.map((course) => (
-                <div key={course._id} className="flex items-center justify-between p-3 rounded-xl bg-[#141728] border border-white/5">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-8 h-8 rounded-xl bg-emerald-900/40 text-emerald-400 flex items-center justify-center shrink-0">
-                      <AiOutlineTrophy />
+          <div>
+            {completedCoursesList.length > 0 ? (
+              <div className="space-y-3">
+                {completedCoursesList.map((course) => (
+                  <div key={course._id} className="flex items-center justify-between p-3 rounded-xl bg-gray-50/70 border border-gray-100">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-8 h-8 rounded-xl bg-[#DCFCE7] text-[#16A34A] flex items-center justify-center shrink-0 text-sm">
+                        <AiOutlineTrophy />
+                      </div>
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-xs font-bold text-gray-900 truncate">
+                          {course.courseName}
+                        </span>
+                        <span className="text-[10px] text-[#16A34A] font-medium">Verified Certificate</span>
+                      </div>
                     </div>
-                    <div className="flex flex-col min-w-0">
-                      <span className="text-xs font-bold text-white truncate">
-                        {course.courseName}
-                      </span>
-                      <span className="text-[10px] text-emerald-400 font-medium">Verified Certificate</span>
-                    </div>
+                    <button
+                      onClick={() => navigate(`/s/courses/${course._id}/certificate`)}
+                      className="px-3 py-1 rounded-lg bg-[#DCFCE7] text-[#16A34A] border border-green-200 text-xs font-semibold hover:bg-[#16A34A] hover:text-white transition-all shrink-0"
+                    >
+                      View
+                    </button>
                   </div>
-                  <button
-                    onClick={() => navigate(`/s/courses/${course._id}/certificate`)}
-                    className="px-3 py-1 rounded-lg bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold hover:bg-emerald-600 hover:text-white transition-all shrink-0"
-                  >
-                    View
-                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="py-7 text-center space-y-1">
+                <div className="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 text-lg mx-auto mb-2">
+                  <FiAward />
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="py-6 text-center text-xs text-richblack-400 space-y-1">
-              <p>No certificates earned yet.</p>
-              <p className="text-[10px] text-richblack-400">Complete 100% of any course to earn your verified certificate!</p>
-            </div>
-          )}
+                <p className="text-xs font-semibold text-gray-700">No certificates earned yet.</p>
+                <p className="text-[11px] text-gray-400">Complete 100% of any course to earn your verified certificate!</p>
+              </div>
+            )}
+          </div>
         </div>
 
       </div>
 
       {/* 5. BOTTOM MOTIVATIONAL CTA BANNER */}
-      <div className="bg-gradient-to-r from-blue-950/50 via-[#141728] to-indigo-900/50 border border-blue-500/30 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-[0_0_30px_rgba(37, 99, 235,0.2)]">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-blue-600/30 text-blue-300 border border-blue-500/40 flex items-center justify-center text-2xl shrink-0 shadow-[0_0_15px_rgba(37, 99, 235,0.3)]">
-            🚀
+      <div className="bg-white border border-gray-200/80 rounded-2xl sm:rounded-3xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs relative overflow-hidden">
+        {/* Soft Decorative Ambient Background Curve */}
+        <div className="absolute right-0 bottom-0 w-80 h-40 bg-[#13AA92]/10/60 rounded-tl-full pointer-events-none -z-0"></div>
+
+        <div className="flex items-center gap-4 z-10 relative">
+          <div className="w-12 h-12 rounded-2xl bg-[#13AA92]/10 flex items-center justify-center text-xl shrink-0">
+            <img src={dashRocket} alt="" className="w-7 h-7 object-contain" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-white">Keep going, {userName}!</h3>
-            <p className="text-xs text-richblack-300 mt-0.5">
+            <h3 className="text-base sm:text-lg font-extrabold text-[#0F172A]">
+              Keep going, {userName}!
+            </h3>
+            <p className="text-xs text-gray-500 mt-0.5 font-normal">
               You're making great progress. Stay consistent and achieve your goals.
             </p>
           </div>
@@ -500,10 +517,10 @@ const GlobalDashboard = () => {
 
         <Link
           to="/courses"
-          className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-extrabold hover:opacity-95 transition-all shadow-[0_0_20px_rgba(37, 99, 235,0.4)] text-center shrink-0 flex items-center justify-center gap-2"
+          className="px-5 py-2.5 rounded-xl bg-[#3BA7F2] hover:bg-[#3BA7F2] text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-sm shadow-indigo-500/20 shrink-0 z-10 transition-all text-center"
         >
           <span>Explore New Courses</span>
-          <VscArrowRight />
+          <FiArrowRight className="text-xs" />
         </Link>
       </div>
 
@@ -512,3 +529,4 @@ const GlobalDashboard = () => {
 };
 
 export default GlobalDashboard;
+

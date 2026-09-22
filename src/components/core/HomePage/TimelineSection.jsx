@@ -1,87 +1,98 @@
-import React from 'react'
+import React from 'react';
+import timelineImage from "../../../assests/Images/TimelineImage.png";
+import { FiAward, FiUsers, FiTrendingUp, FiCheckCircle } from 'react-icons/fi';
 
-import Logo1 from "../../../assests/TimeLineLogo/Logo1.svg"
-import Logo2 from "../../../assests/TimeLineLogo/Logo2.svg"
-import Logo3 from "../../../assests/TimeLineLogo/Logo3.svg"
-import Logo4 from "../../../assests/TimeLineLogo/Logo4.svg"
-import timelineImage from "../../../assests/Images/TimelineImage.png"
-
-const timeline = [
-    {
-        Logo: Logo1,
-        heading: "Leadership",
-        Description: "Fully committed to the success company",
-    },
-    {
-        Logo: Logo2,
-        heading: "Responsibility",
-        Description: "Students will always be our top priority",
-    },
-    {
-        Logo: Logo3,
-        heading: "Flexibility",
-        Description: "The ability to switch is an important skills",
-    },
-    {
-        Logo: Logo4,
-        heading: "Solve the problem",
-        Description: "Code your way to a solution",
-    },
+const timelineData = [
+  {
+    icon: FiAward,
+    heading: "Industry-Standard Curriculum",
+    description: "Curated in partnership with engineering leaders from tier-1 tech companies, updated monthly to reflect modern production stacks.",
+  },
+  {
+    icon: FiCheckCircle,
+    heading: "Hands-On Capstone Projects",
+    description: "Build, test, and deploy real production applications that demonstrate deep architectural reasoning in your portfolio.",
+  },
+  {
+    icon: FiUsers,
+    heading: "Direct 1-on-1 Mentor Guidance",
+    description: "Receive personalized code reviews, architectural feedback, and actionable suggestions to level up your engineering skills.",
+  },
+  {
+    icon: FiTrendingUp,
+    heading: "Career Placement & Coaching",
+    description: "Comprehensive interview prep, algorithm deep dives, resume reviews, and direct introductions to hiring partners.",
+  },
 ];
 
 const TimelineSection = () => {
   return (
-    <div>
-        <div className='flex flex-col lg:flex-row gap-15 items-center'>
-            <div className='w-[100%] lg:w-[45%] flex flex-col gap-5'>
-                {
-                    timeline.map( (element, index) => {
-                        return (
-                            <div className='flex flex-col gap-3' key={index}>
-                                <div className='flex flex-row gap-6' key={index}>
-                                    <div className='w-[50px] h-[50px] bg-white flex items-center justify-center rounded-full shadow-[#00000012] shadow-[0_0_62px_0]'>
-                                        <img src={element.Logo} alt="" />
-                                    </div>
+    <div className="w-full py-12 lg:py-16">
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
+        
+        {/* Left Side: Timeline Pillars */}
+        <div className="w-full lg:w-[48%] flex flex-col gap-6">
+          {timelineData.map((item, index) => {
+            const IconComponent = item.icon;
+            const isLast = index === timelineData.length - 1;
+            return (
+              <div key={index} className="flex gap-4 sm:gap-5 group">
+                {/* Icon & Connector */}
+                <div className="flex flex-col items-center shrink-0">
+                  <div className="w-12 h-12 rounded-2xl bg-gray-50 border border-gray-200 flex items-center justify-center text-gray-400 text-xl shadow-2xs group-hover:scale-105 group-hover:bg-[#3BA7F2] group-hover:border-[#3BA7F2] group-hover:text-white transition-all duration-200">
+                    <IconComponent />
+                  </div>
+                  {!isLast && (
+                    <div className="w-0.5 h-12 sm:h-14 bg-gray-200 my-2"></div>
+                  )}
+                </div>
 
-                                    <div>
-                                        <h2 className='font-semibold text-[18px] text-richblack-900'>{element.heading}</h2>
-                                        <p className='text-base text-richblack-700'>{element.Description}</p>
-                                    </div>
-                                </div>
-                                <div className={`${timeline.length - 1 === index ? "hidden" : "lg:block"}  h-14 border-dotted border-r border-richblack-100 bg-richblack-400/0 w-[26px]`}></div>
-                            </div>
-                        )
-                    } )
-                }
-            </div>
-
-            <div className='relative shadow-blue-200'>
-                <img src={timelineImage}
-                alt="timelineImage"
-                className='shadow-white object-cover h-fit'
-                />
-
-              <div className='absolute 
-    bg-black/60 backdrop-blur-md
-    flex flex-row text-white uppercase py-7
-    left-[50%] translate-x-[-50%] translate-y-[-50%]
-    rounded-xl shadow-2xl border border-white/20'>
-
-    <div className='flex flex-row gap-5 items-center border-r border-white/30 px-7'>
-        <p className='text-3xl font-bold'>10</p>
-        <p className='text-gray-200 text-sm'>Years of Experience</p>
-    </div>
-
-    <div className='flex gap-5 items-center px-7'>
-        <p className='text-3xl font-bold'>250</p>
-        <p className='text-gray-200 text-sm'>Type of Courses</p>
-    </div>
-
-</div>
-            </div>
+                {/* Text Details */}
+                <div className="pt-1">
+                  <h3 className="font-bold text-base sm:text-lg text-gray-900 leading-snug group-hover:text-blue-600 transition-colors">
+                    {item.heading}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-600 mt-1.5 leading-relaxed font-normal">
+                    {item.description}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
         </div>
-    </div>
-  )
-}
 
-export default TimelineSection
+        {/* Right Side: Photo with Floating Credibility Badges */}
+        <div className="w-full lg:w-[48%] relative flex justify-center">
+          <div className="relative rounded-3xl overflow-hidden shadow-xl border border-gray-200/80 bg-white max-w-lg w-full">
+            <img
+              src={timelineImage}
+              alt="Students collaborating and coding"
+              className="w-full h-auto object-cover transform hover:scale-102 transition-transform duration-500"
+            />
+
+            {/* Overlaid Floating Metrics Card */}
+            <div className="absolute bottom-4 left-4 right-4 sm:left-6 sm:right-6 bg-white/95 backdrop-blur-md rounded-2xl p-4 sm:p-5 shadow-xl border border-gray-100 flex items-center justify-between divide-x divide-gray-100">
+              <div className="px-2 sm:px-4 flex flex-col">
+                <span className="text-2xl sm:text-3xl font-extrabold text-blue-600 tracking-tight">10+</span>
+                <span className="text-[11px] sm:text-xs font-medium text-gray-500 mt-0.5">Years of Excellence</span>
+              </div>
+
+              <div className="px-2 sm:px-4 flex flex-col">
+                <span className="text-2xl sm:text-3xl font-extrabold text-indigo-600 tracking-tight">250+</span>
+                <span className="text-[11px] sm:text-xs font-medium text-gray-500 mt-0.5">Specialized Courses</span>
+              </div>
+
+              <div className="px-2 sm:px-4 flex flex-col">
+                <span className="text-2xl sm:text-3xl font-extrabold text-emerald-600 tracking-tight">89%</span>
+                <span className="text-[11px] sm:text-xs font-medium text-gray-500 mt-0.5">Placement Success</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+};
+
+export default TimelineSection;

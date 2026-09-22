@@ -121,30 +121,33 @@ export default function AnnouncementBanner() {
   }
 
   return (
-    <div className="w-full bg-[#1e1938]/95 backdrop-blur-md border-b border-[#3b3266] text-white shadow-lg relative z-40 font-sans transition-all duration-300 overflow-x-auto no-scrollbar">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-4 text-xs sm:text-sm whitespace-nowrap">
+    <div className="w-full bg-slate-900/95 backdrop-blur-md border-b border-slate-800 text-white shadow-xs relative z-40 font-sans transition-all duration-300 overflow-x-auto no-scrollbar">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-2 flex items-center justify-between gap-4 text-xs sm:text-sm whitespace-nowrap">
         
         {/* Left Section: Highlight Discount Code */}
         {announcement.highlightText && (
-          <div className="text-purple-200 font-medium text-xs tracking-normal shrink-0 whitespace-nowrap">
-            Use discount code <span className="font-extrabold text-[#ffd700] tracking-wide">' {announcement.highlightText} '</span>
+          <div className="flex items-center gap-1.5 text-slate-300 font-medium text-xs tracking-normal shrink-0 whitespace-nowrap">
+            <FiTag className="text-blue-400" />
+            <span>Promo:</span>
+            <span className="font-mono font-bold text-amber-300 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">{announcement.highlightText}</span>
           </div>
         )}
 
         {/* Center Section: Main Description / Message */}
-        <div className="text-purple-100 font-medium tracking-wide text-center truncate whitespace-nowrap mx-auto px-2">
+        <div className="text-slate-200 font-medium tracking-wide text-center truncate whitespace-nowrap mx-auto px-2">
           {announcement.message || announcement.title}
         </div>
 
         {/* Right Section: Countdown Timer, CTA Button & Close Icon */}
-        <div className="flex items-center justify-end gap-3.5 shrink-0 whitespace-nowrap">
+        <div className="flex items-center justify-end gap-3 shrink-0 whitespace-nowrap">
           
           {/* Detailed Countdown display: X hours Y minutes Z seconds */}
           {announcement.countdownEnabled && timeLeft && (
-            <div className="flex items-center gap-1.5 text-xs font-normal text-purple-200 whitespace-nowrap">
-              <span><strong className="font-bold text-white text-sm">{timeLeft.hours}</strong> hours</span>
-              <span><strong className="font-bold text-white text-sm">{String(timeLeft.minutes).padStart(2, '0')}</strong> minutes</span>
-              <span><strong className="font-bold text-white text-sm">{String(timeLeft.seconds).padStart(2, '0')}</strong> seconds</span>
+            <div className="flex items-center gap-1.5 text-xs text-slate-300 whitespace-nowrap">
+              <FiClock className="text-blue-400 text-xs" />
+              <span className="bg-slate-800 px-2 py-0.5 rounded text-white font-mono font-semibold text-xs border border-slate-700">
+                {String(timeLeft.hours).padStart(2, '0')}h : {String(timeLeft.minutes).padStart(2, '0')}m : {String(timeLeft.seconds).padStart(2, '0')}s
+              </span>
             </div>
           )}
 
@@ -152,9 +155,10 @@ export default function AnnouncementBanner() {
           {announcement.ctaEnabled && announcement.ctaText && (
             <button
               onClick={handleCtaClick}
-              className="px-4 py-1.5 rounded-lg bg-[#2e2654] hover:bg-[#3d336e] border border-[#52448a] text-white font-medium text-xs transition-all active:scale-95 cursor-pointer shadow-sm shrink-0 whitespace-nowrap"
+              className="px-3.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all active:scale-95 cursor-pointer shadow-sm shrink-0 whitespace-nowrap flex items-center gap-1.5"
             >
-              {announcement.ctaText}
+              <span>{announcement.ctaText}</span>
+              <FiArrowRight className="text-xs" />
             </button>
           )}
 
@@ -162,11 +166,11 @@ export default function AnnouncementBanner() {
           {announcement.dismissible && (
             <button
               onClick={handleDismiss}
-              className="text-purple-300 hover:text-white transition-colors cursor-pointer p-0.5 shrink-0"
+              className="text-slate-400 hover:text-white transition-colors cursor-pointer p-1 rounded-md hover:bg-slate-800 shrink-0"
               title="Dismiss announcement"
               aria-label="Close Announcement"
             >
-              <FiX className="text-base" />
+              <FiX className="text-sm" />
             </button>
           )}
         </div>

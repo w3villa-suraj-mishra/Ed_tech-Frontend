@@ -3,7 +3,11 @@ import { Link } from "react-router-dom";
 import ContactDetails from "../components/ContactPage/ContactDetails";
 import ContactForm from "../components/ContactPage/ContactForm";
 import { getHomePageStats } from "../services/operations/courseDetailsAPI";
-import { FaBookOpen, FaUserCog, FaTools, FaQuestionCircle, FaArrowRight, FaUsers, FaEnvelope, FaCommentAlt, FaTimes } from "react-icons/fa";
+import { FaBookOpen, FaUsers, FaTools, FaQuestionCircle, FaTimes } from "react-icons/fa";
+import { FiArrowRight, FiMessageSquare, FiHelpCircle } from "react-icons/fi";
+import contactLeftDoodle from "../assests/Images/contact_left_doodle.png";
+import contactRightDoodle from "../assests/Images/contact_right_doodle.png";
+import contactCommunityIllustration from "../assests/Images/contact_community_illustration.png";
 
 const faqCategories = [
   {
@@ -28,7 +32,7 @@ const faqCategories = [
   },
   {
     id: "account",
-    icon: <FaUserCog />,
+    icon: <FaUsers />,
     title: "Account & Settings",
     desc: "Need help with your account or subscription?",
     questions: [
@@ -89,7 +93,7 @@ const faqCategories = [
 ];
 
 const Contact = () => {
-  const [learnersCount, setLearnersCount] = useState("50K+");
+  const [learnersCount, setLearnersCount] = useState("1+");
   const [activeModalCategory, setActiveModalCategory] = useState(null);
 
   useEffect(() => {
@@ -108,36 +112,57 @@ const Contact = () => {
   }, []);
 
   return (
-    <div className="w-full bg-[#070913] text-richblack-100 font-sans min-h-screen">
+    <div className="w-full bg-[#F9FAFE] text-gray-800 font-sans min-h-screen">
       
-      {/* 1. HERO HEADER */}
-      <section className="relative py-16 px-4 text-center max-w-[1260px] mx-auto">
-        {/* Floating Icons Background Graphics */}
-        <div className="absolute top-10 left-10 lg:left-20 w-12 h-12 rounded-2xl bg-blue-950/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-xl hidden sm:flex shadow-[0_0_20px_rgba(37, 99, 235,0.3)] animate-pulse">
-          <FaCommentAlt />
-        </div>
-        <div className="absolute top-10 right-10 lg:right-20 w-12 h-12 rounded-2xl bg-blue-950/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-xl hidden sm:flex shadow-[0_0_20px_rgba(37, 99, 235,0.3)] animate-pulse">
-          <FaEnvelope />
+      {/* 1. HERO HEADER WITH DOODLES */}
+      <section className="relative pt-12 pb-10 px-4 text-center max-w-[1240px] mx-auto overflow-hidden sm:overflow-visible">
+        {/* Left Doodle: Dots + "Let's Talk" */}
+        <div className="absolute top-2 left-2 lg:left-8 w-28 sm:w-36 md:w-44 pointer-events-none select-none hidden sm:block">
+          <img src={contactLeftDoodle} alt="" className="w-full object-contain" />
         </div>
 
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-950/40 border border-blue-500/30 text-blue-300 text-xs font-bold mb-4">
-          <span className="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span>
+        {/* Right Doodle: Origami Airplane + "We're Here for You" */}
+        <div className="absolute top-4 right-2 lg:right-6 w-36 sm:w-44 md:w-56 pointer-events-none select-none hidden sm:block">
+          <img src={contactRightDoodle} alt="" className="w-full object-contain" />
+        </div>
+
+        {/* Badge: Get in Touch */}
+        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#13AA92]/10 border border-[#13AA92]/30 text-[#3BA7F2] text-xs font-semibold mb-3.5 shadow-xs">
+          <FiMessageSquare className="text-xs" />
           <span>Get in Touch</span>
         </div>
 
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
-          We're Here to Help You <br className="hidden sm:inline" />
-          on Your <span className="text-[#3b82f6]">Learning Journey</span>
+        {/* Heading */}
+        <h1 className="text-2xl sm:text-3xl lg:text-[40px] font-extrabold text-[#0F172A] tracking-tight leading-tight sm:leading-[1.25]">
+          <span className="relative inline-block">
+            <svg
+              className="absolute -top-3.5 -left-7 w-6 h-6 text-[#3BA7F2] select-none"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+            >
+              <line x1="2" y1="16" x2="8" y2="15" />
+              <line x1="5" y1="10" x2="11" y2="7" />
+              <line x1="10" y1="5" x2="14" y2="2" />
+            </svg>
+            We're Here to Help You
+          </span>
+          <br />
+          on Your <span className="text-[#3BA7F2]">Learning Journey</span>
         </h1>
 
-        <p className="text-xs sm:text-sm text-richblack-300 max-w-xl mx-auto mt-3 font-normal leading-relaxed">
-          Have a question, suggestion, or need support? Our team is always ready to assist you. Reach out to us anytime!
+        {/* Subtitle */}
+        <p className="text-xs sm:text-sm text-gray-500 max-w-lg mx-auto mt-2.5 font-normal leading-relaxed">
+          Have a question, suggestion, or need support? Our team is always ready to assist you.
+          <br className="hidden sm:inline" /> Reach out to us anytime!
         </p>
       </section>
 
       {/* 2. CONTACT CONTENT SECTION */}
-      <section className="max-w-[1260px] mx-auto px-4 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <section className="max-w-[1240px] mx-auto px-4 pb-14">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           
           {/* Left Column: Other Ways to Reach Us */}
           <div className="lg:col-span-4">
@@ -153,9 +178,15 @@ const Contact = () => {
       </section>
 
       {/* 3. FREQUENTLY ASKED QUESTIONS SECTION */}
-      <section className="max-w-[1260px] mx-auto px-4 py-12 text-center">
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-8">
-          Frequently Asked <span className="text-[#3b82f6]">Questions</span>
+      <section className="max-w-[1240px] mx-auto px-4 py-8 text-center">
+        {/* FAQ Badge */}
+        <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#13AA92]/10 border border-[#13AA92]/30 text-[#3BA7F2] text-xs font-semibold mb-2.5 shadow-xs">
+          <FiHelpCircle className="text-xs" />
+          <span>FAQ</span>
+        </div>
+
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] tracking-tight mb-8">
+          Frequently Asked <span className="text-[#3BA7F2]">Questions</span>
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 text-left">
@@ -163,23 +194,23 @@ const Contact = () => {
             <div
               key={faq.id}
               onClick={() => setActiveModalCategory(faq)}
-              className="bg-[#0e111f]/90 border border-white/10 hover:border-blue-500/40 rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-lg cursor-pointer group"
+              className="bg-white border border-gray-200/90 hover:border-indigo-300 rounded-2xl p-5 sm:p-6 flex flex-col justify-between transition-all duration-200 hover:-translate-y-0.5 shadow-xs hover:shadow-sm cursor-pointer group"
             >
-              <div className="space-y-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-950/30 border border-blue-500/30 flex items-center justify-center text-blue-400 text-lg group-hover:scale-105 transition-transform">
+              <div className="space-y-2.5">
+                <div className="w-11 h-11 rounded-2xl bg-[#13AA92]/10 flex items-center justify-center text-[#3BA7F2] text-lg group-hover:scale-105 transition-transform">
                   {faq.icon}
                 </div>
-                <h3 className="text-sm font-bold text-white leading-snug">
+                <h3 className="text-sm font-bold text-gray-900 leading-snug">
                   {faq.title}
                 </h3>
-                <p className="text-xs text-richblack-400 leading-relaxed">
+                <p className="text-xs text-gray-500 leading-relaxed font-normal">
                   {faq.desc}
                 </p>
               </div>
 
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-blue-400 mt-4 group-hover:text-blue-300 transition-colors">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[#3BA7F2] mt-5 group-hover:gap-2 transition-all">
                 <span>View FAQ</span>
-                <FaArrowRight className="text-[10px] group-hover:translate-x-1 transition-transform" />
+                <FiArrowRight className="text-xs" />
               </div>
             </div>
           ))}
@@ -187,83 +218,81 @@ const Contact = () => {
       </section>
 
       {/* 4. JOIN COMMUNITY BANNER */}
-      <section className="max-w-[1260px] mx-auto px-4 py-10">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0e111f] via-[#16142e] to-[#0e111f] border border-blue-500/30 p-8 sm:p-10 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-2xl text-left">
-          {/* Ambient Glow */}
-          <div className="absolute -left-20 top-0 w-60 h-60 bg-blue-600 opacity-20 blur-3xl pointer-events-none"></div>
-
-          <div className="flex items-start sm:items-center gap-5 relative z-10">
-            <div className="w-14 h-14 rounded-2xl bg-blue-600/30 border border-blue-500/40 flex items-center justify-center text-blue-300 text-2xl shrink-0 shadow-lg">
+      <section className="max-w-[1240px] mx-auto px-4 py-8">
+        <div className="bg-white border border-gray-200/90 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-9 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xs text-left overflow-hidden">
+          
+          <div className="flex items-start sm:items-center gap-4 sm:gap-5">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#13AA92]/10 flex items-center justify-center text-[#3BA7F2] text-2xl shrink-0">
               <FaUsers />
             </div>
             <div>
-              <h3 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-                Join a Community of <span className="text-[#3b82f6]">{learnersCount} Learners</span>
+              <h3 className="text-lg sm:text-xl font-extrabold text-[#0F172A] tracking-tight">
+                Join a Community of <span className="text-[#3BA7F2]">{learnersCount} Learners</span>
               </h3>
-              <p className="text-xs sm:text-sm text-richblack-300 mt-1 font-normal">
+              <p className="text-xs sm:text-sm text-gray-500 mt-0.5 font-normal">
                 Learn, build, and grow together with CodeLearn.
               </p>
 
-              <div className="mt-5">
+              <div className="mt-4">
                 <Link to="/courses">
-                  <button className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold px-6 py-3 rounded-xl transition-all shadow-md shadow-blue-950/40">
+                  <button className="flex items-center gap-2 bg-[#3BA7F2] hover:bg-[#3BA7F2] text-white text-xs sm:text-sm font-bold px-5 py-2.5 rounded-xl transition-all shadow-sm shadow-indigo-500/20">
                     <span>Explore Courses</span>
-                    <FaArrowRight className="text-xs" />
+                    <FiArrowRight className="text-xs" />
                   </button>
                 </Link>
               </div>
             </div>
           </div>
 
-          {/* Graphic Avatar illustration placeholder */}
-          <div className="hidden lg:flex items-center gap-4 relative z-10 opacity-90">
-            <div className="w-24 h-24 rounded-2xl bg-blue-950/40 border border-blue-500/30 p-2 flex items-center justify-center">
-              <span className="text-4xl">👨‍💻</span>
-            </div>
-            <div className="w-24 h-24 rounded-2xl bg-blue-950/40 border border-blue-500/30 p-2 flex items-center justify-center">
-              <span className="text-4xl">👩‍💻</span>
-            </div>
+          {/* Clean 3D Workspace Illustration */}
+          <div className="shrink-0 flex items-center justify-center md:justify-end">
+            <img
+              src={contactCommunityIllustration}
+              alt="Better Learning Together"
+              className="w-56 sm:w-64 md:w-72 object-contain"
+            />
           </div>
+
         </div>
       </section>
 
-      {/* FAQ POPUP MODAL */}
+      {/* FAQ POPUP MODAL (LIGHT THEMED) */}
       {activeModalCategory && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="bg-[#0e111f] border border-blue-500/40 rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-[0_0_50px_rgba(37, 99, 235,0.3)] text-left animate-in fade-in zoom-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
+          <div className="bg-white border border-gray-200 rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl text-left animate-in fade-in zoom-in duration-200">
             
             {/* Close Button */}
             <button
               onClick={() => setActiveModalCategory(null)}
-              className="absolute top-5 right-5 w-8 h-8 rounded-full bg-richblack-800 hover:bg-blue-950/50 border border-white/10 flex items-center justify-center text-richblack-300 hover:text-white transition-colors"
+              className="absolute top-5 right-5 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 border border-gray-200 flex items-center justify-center text-gray-600 transition-colors"
             >
-              <FaTimes className="text-sm" />
+              <FaTimes className="text-xs" />
             </button>
 
             {/* Modal Header */}
             <div className="flex items-center gap-3.5 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-blue-600/30 border border-blue-500/40 flex items-center justify-center text-blue-400 text-lg">
+              <div className="w-11 h-11 rounded-2xl bg-[#13AA92]/10 flex items-center justify-center text-[#3BA7F2] text-lg">
                 {activeModalCategory.icon}
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white leading-tight">
+                <h3 className="text-base sm:text-lg font-bold text-gray-900 leading-tight">
                   {activeModalCategory.title}
                 </h3>
-                <p className="text-xs text-richblack-400 font-normal">
+                <p className="text-xs text-gray-500 font-normal mt-0.5">
                   Frequently Asked Questions & Answers
                 </p>
               </div>
             </div>
 
             {/* Questions & Answers List */}
-            <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+            <div className="space-y-3.5 max-h-[55vh] overflow-y-auto pr-2 custom-scrollbar">
               {activeModalCategory.questions.map((item, idx) => (
-                <div key={idx} className="bg-[#141728] border border-white/10 rounded-2xl p-4 space-y-2">
-                  <h4 className="text-xs sm:text-sm font-bold text-blue-300 flex items-start gap-2">
-                    <span className="text-blue-400 font-black">Q.</span>
+                <div key={idx} className="bg-gray-50 border border-gray-100 rounded-2xl p-4 space-y-1.5">
+                  <h4 className="text-xs sm:text-sm font-bold text-[#3BA7F2] flex items-start gap-1.5">
+                    <span className="font-extrabold">Q.</span>
                     <span>{item.q}</span>
                   </h4>
-                  <p className="text-xs text-richblack-300 leading-relaxed font-normal pl-4 border-l-2 border-blue-500/40">
+                  <p className="text-xs text-gray-600 leading-relaxed font-normal pl-3 border-l-2 border-[#3BA7F2]">
                     {item.a}
                   </p>
                 </div>
@@ -271,10 +300,10 @@ const Contact = () => {
             </div>
 
             {/* Close CTA */}
-            <div className="mt-6 pt-4 border-t border-white/10 flex justify-end">
+            <div className="mt-6 pt-4 border-t border-gray-100 flex justify-end">
               <button
                 onClick={() => setActiveModalCategory(null)}
-                className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition-all shadow-md"
+                className="bg-[#3BA7F2] hover:bg-[#3BA7F2] text-white text-xs font-bold px-5 py-2.5 rounded-xl transition-all shadow-sm shadow-indigo-500/20"
               >
                 Close FAQ
               </button>
@@ -289,3 +318,4 @@ const Contact = () => {
 };
 
 export default Contact;
+

@@ -439,7 +439,7 @@ export default function AdminOffers() {
                         {offer.scope === 'ALL_COURSES' ? (
                           <span className="text-xs bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded font-medium">All Courses</span>
                         ) : (
-                          <span className="text-xs bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded font-medium">
+                          <span className="text-xs bg-purple-500/10 text-[#3BA7F2] px-2 py-0.5 rounded font-medium">
                             {offer.courses ? `${offer.courses.length} Courses` : 'Selected Courses'}
                           </span>
                         )}
@@ -472,7 +472,7 @@ export default function AdminOffers() {
                           </button>
                           <button
                             onClick={() => handleDuplicate(offer.id)}
-                            className="p-2 rounded-lg bg-[#2C333F] text-purple-400 hover:bg-purple-500/20"
+                            className="p-2 rounded-lg bg-[#2C333F] text-[#3BA7F2] hover:bg-purple-500/20"
                             title="Duplicate Offer"
                           >
                             <FiCopy />

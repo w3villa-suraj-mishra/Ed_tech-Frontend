@@ -65,23 +65,23 @@ export default function Upload({
 
   return (
     <div className="flex flex-col space-y-2">
-      <label className="text-sm text-richblack-5" htmlFor={name}>
-        {label} {!viewData && <sup className="text-blue-200">*</sup>}
+      <label className="text-[13px] font-semibold text-slate-700" htmlFor={name}>
+        {label} {!viewData && <sup className="text-red-500">*</sup>}
       </label>
       <div
         {...getRootProps()}
         className={`${
-          isDragActive ? "bg-richblack-600" : "bg-richblack-700"
-        } flex min-h-[250px] cursor-pointer items-center justify-center rounded-md border-2 border-dotted border-richblack-500`}
+          isDragActive ? "bg-slate-100 border-blue-400" : "bg-slate-50 border-slate-300"
+        } flex min-h-[200px] cursor-pointer items-center justify-center rounded-xl border-2 border-dashed transition-all hover:bg-slate-100`}
       >
         <input {...getInputProps()} /> 
         {previewSource ? (
-          <div className="flex w-full flex-col p-6">
+          <div className="flex w-full flex-col p-6 items-center">
             {!video ? (
               <img
                 src={previewSource}
                 alt="Preview"
-                className="h-full w-full rounded-md object-cover"
+                className="max-h-[300px] w-auto rounded-md object-contain"
               />
             ) : (
               <Player aspectRatio="16:9" playsInline src={previewSource} />
@@ -95,31 +95,33 @@ export default function Upload({
                   setSelectedFile(null)
                   setValue(name, null)
                 }}
-                className="mt-3 text-richblack-400 underline"
+                className="mt-4 text-sm text-blue-600 font-semibold hover:underline"
               >
                 Cancel / Change
               </button>
             )}
           </div>
         ) : (
-          <div className="flex w-full flex-col items-center p-6">
-            <div className="grid aspect-square w-14 place-items-center rounded-full bg-pure-greys-800">
-              <FiUploadCloud className="text-2xl text-yellow-50" />
+          <div className="flex w-full flex-col items-center p-6 text-center">
+            <div className="grid aspect-square w-14 place-items-center rounded-full bg-blue-50 text-blue-500 mb-4">
+              <FiUploadCloud className="text-2xl" />
             </div>
-            <p className="mt-2 max-w-[200px] text-center text-sm text-richblack-200">
-              Drag and drop a {!video ? "image" : "video"}, or click to{" "}
-              <span className="font-semibold text-yellow-50">Browse</span> a
-              file
+            <p className="max-w-[220px] text-sm text-slate-600 mb-4">
+              Drag and drop an {!video ? "image" : "video"}, or click to{" "}
+              <span className="font-semibold text-blue-600 hover:underline">browse</span>
             </p>
-            <ul className="mt-10 flex list-disc justify-between space-x-12 text-center text-xs text-richblack-200">
+            <ul className="flex items-center gap-2 text-[10px] sm:text-[11px] font-medium text-slate-400 uppercase tracking-wide flex-wrap justify-center">
+              <li>{!video ? "JPG, PNG or WEBP" : "MP4, WEBM"}</li>
+              <li className="hidden sm:block">•</li>
               <li>Aspect ratio 16:9</li>
+              <li className="hidden sm:block">•</li>
               <li>Recommended size 1024x576</li>
             </ul>
           </div>
         )}
       </div>
       {errors[name] && (
-        <span className="ml-2 text-xs tracking-wide text-blue-200">
+        <span className="text-[11px] font-semibold text-red-500">
           {label} is required
         </span>
       )}

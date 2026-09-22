@@ -29,38 +29,36 @@ const MyCourses = () => {
   }, [token])
 
   return (
-    <div className="mx-auto w-11/12 max-w-[1200px] py-10 font-['Inter',sans-serif]">
+    <div className="w-full font-['Inter',sans-serif] space-y-6 pb-12">
       {/* HEADER SECTION */}
-      <div className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-blue-950/30 pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight flex items-center gap-3">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
             My Courses
-            <span className="text-xs px-3 py-1 rounded-full bg-blue-950/40 text-blue-300 border border-blue-500/30 font-bold">
-              {courses.length} {courses.length === 1 ? 'Course' : 'Courses'}
-            </span>
           </h1>
-          <p className="text-xs text-blue-300/70 mt-1">
-            Manage your created courses, edit content, and track performance.
+          <p className="text-xs sm:text-sm text-slate-500 font-medium mt-1">
+            Manage your enrolled courses, track your progress, and continue your learning journey.
           </p>
         </div>
 
         <button
           onClick={() => navigate('/dashboard/add-course')}
-          className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-800 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-950/50 transition-all hover:scale-[1.02]"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-semibold text-xs sm:text-sm rounded-xl shadow-xs transition-all cursor-pointer self-start sm:self-auto"
         >
-          <FaPlus size={14} /> Add Course
+          <FaPlus size={13} />
+          <span>Add Course</span>
         </button>
       </div>
 
       {loading ? (
         <div className="flex h-64 items-center justify-center">
-          <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
         </div>
       ) : (
         <CoursesTable courses={courses} setCourses={setCourses} />
       )}
     </div>
-  )
-}
+  );
+};
 
-export default MyCourses
+export default MyCourses;

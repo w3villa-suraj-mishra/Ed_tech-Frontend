@@ -25,9 +25,10 @@ const NAV = [
       { label: 'Offers & Coupons', path: '/admin/offers',     icon: '🏷️' },
     ]
   },
-  { label: 'Reviews',       path: '/admin/reviews',        icon: '⭐' },
-  { label: 'Articles',      path: '/admin/articles',       icon: '📰' },
-  { label: 'Contact Us',    path: '/admin/contacts',       icon: '✉️' },
+  { label: 'Reviews',              path: '/admin/reviews',        icon: '⭐' },
+  { label: 'Articles',             path: '/admin/articles',       icon: '📰' },
+  { label: 'Instructor Spotlight', path: '/admin/instructors',    icon: '👨‍🏫' },
+  { label: 'Contact Us',           path: '/admin/contacts',       icon: '✉️' },
 ];
 
 export default function AdminLayout({ children }) {

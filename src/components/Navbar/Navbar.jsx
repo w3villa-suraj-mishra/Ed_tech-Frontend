@@ -2,7 +2,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import { VscSignOut, VscDashboard, VscBook, VscAccount, VscBell, VscGear, VscCode, VscInfo, VscCallIncoming, VscTag } from "react-icons/vsc";
+import { 
+  VscSignOut, 
+  VscDashboard, 
+  VscBook, 
+  VscAccount, 
+  VscBell, 
+  VscGear, 
+  VscCode, 
+  VscChevronDown,
+  VscSearch,
+  VscClose
+} from "react-icons/vsc";
 import { logout } from "../../services/operations/authAPI";
 import { fetchCourseCategories, getAllCourses } from "../../services/operations/courseDetailsAPI";
 import NotificationBell from './NotificationBell';
@@ -24,15 +35,18 @@ const Navbar = () => {
   const [isCoursesOpen, setIsCoursesOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const profileRef = useRef(null);
+  const searchContainerRef = useRef(null);
 
   const userRole = user?.accountType || user?.account_type;
 
   useEffect(() => {
+    let isMounted = true;
     const getCategories = async () => {
       try {
         const res = await fetchCourseCategories();
-        if (res && Array.isArray(res)) {
+        if (isMounted && res && Array.isArray(res)) {
           setCategories(res);
         }
       } catch (error) {
@@ -42,7 +56,7 @@ const Navbar = () => {
     const getCoursesList = async () => {
       try {
         const res = await getAllCourses();
-        if (res && Array.isArray(res)) {
+        if (isMounted && res && Array.isArray(res)) {
           setCourses(res);
         }
       } catch (error) {
@@ -51,6 +65,9 @@ const Navbar = () => {
     };
     getCategories();
     getCoursesList();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -63,6 +80,8 @@ const Navbar = () => {
       if (e.key === 'Escape') {
         setIsMobileMenuOpen(false);
         setProfileOpen(false);
+        setIsCoursesOpen(false);
+        setIsCatalogOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -89,452 +108,554 @@ const Navbar = () => {
     return location.pathname === route;
   };
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/courses?search=${encodeURIComponent(searchQuery.trim())}`);
+      setIsMobileMenuOpen(false);
+    }
+  };
+
+  const filteredCourses = searchQuery 
+    ? courses.filter(c => c.courseName?.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 5)
+    : [];
+
   return (
-    <nav className="w-full bg-[#070913] border-b border-blue-950/30 sticky top-0 z-50 py-3">
-      <div className="max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8">
-        <div className="bg-[#0b0e1b]/90 border border-blue-500/30 rounded-2xl sm:rounded-3xl px-3 sm:px-6 py-2 flex items-center justify-between shadow-[0_0_25px_rgba(37,99,235,0.15)] backdrop-blur-xl">
-        
-        {/* BRAND LOGO & MOBILE HAMBURGER BUTTON */}
-        <div className="flex items-center gap-2.5">
-          {/* Mobile Hamburger Drawer Trigger Button (Only visible outside home page) */}
-          {location.pathname !== '/' && (
+    <header className="w-full bg-white/95 backdrop-blur-md border-b border-gray-200/80 sticky top-0 z-50 transition-all">
+      <div className="w-11/12 max-w-maxContent mx-auto">
+        <div className="h-16 flex items-center justify-between gap-4">
+          
+          {/* BRAND LOGO & MOBILE HAMBURGER BUTTON */}
+          <div className="flex items-center gap-3">
+            {/* Mobile Hamburger Drawer Trigger (Always visible on mobile) */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-xl bg-blue-950/40 border border-blue-500/30 text-blue-300 hover:text-white transition-all text-base focus:outline-none shrink-0"
+              className="lg:hidden p-2 rounded-xl text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               aria-label="Toggle Mobile Menu"
             >
-              {isMobileMenuOpen ? '✕' : '☰'}
+              <span className="text-xl leading-none">☰</span>
             </button>
-          )}
 
-          {/* CodeLearn Logo */}
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 border border-blue-400/40 flex items-center justify-center text-white text-base group-hover:scale-105 transition-transform shadow-[0_0_15px_rgba(37,99,235,0.4)] shrink-0">
-              <VscCode />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-white font-extrabold text-sm sm:text-base tracking-tight leading-none">
-                CodeLearn
-              </span>
-              <span className="text-[8px] sm:text-[9px] text-blue-300 font-semibold tracking-widest uppercase mt-0.5">
-                LEARN. BUILD. GROW.
-              </span>
-            </div>
-          </Link>
-        </div>
+            {/* CodeLearn Logo */}
+            <Link to="/" className="flex items-center gap-2.5 group">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white text-lg shadow-sm group-hover:scale-105 transition-transform shrink-0">
+                <VscCode />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-gray-900 font-bold text-base tracking-tight leading-none group-hover:text-blue-600 transition-colors">
+                  CodeLearn
+                </span>
+                <span className="text-[9px] text-gray-500 font-semibold tracking-wider uppercase mt-1">
+                  Learn • Build • Grow
+                </span>
+              </div>
+            </Link>
+          </div>
 
-        {/* DESKTOP NAVIGATION LINKS */}
-        <ul className="hidden md:flex items-center gap-x-6 lg:gap-x-8 text-richblack-200 text-xs sm:text-sm font-medium">
-          
-          {/* Courses Dropdown */}
-          <li
-            className="relative flex items-center cursor-pointer group py-1"
-            onMouseEnter={() => setIsCoursesOpen(true)}
-            onMouseLeave={() => setIsCoursesOpen(false)}
-          >
-            <span className={`flex items-center gap-1 transition-colors duration-200 ${matchRoute('/courses') ? 'text-blue-400 font-bold' : 'hover:text-white'}`}>
-              <span>Courses</span>
-              <span className="text-[10px] transform group-hover:rotate-180 transition-transform duration-200">▾</span>
-            </span>
+          {/* DESKTOP SEARCH BAR */}
+          <div ref={searchContainerRef} className="hidden md:flex flex-col flex-1 max-w-xs lg:max-w-sm mx-2 relative z-50 group">
+            <form onSubmit={handleSearchSubmit} className="relative w-full">
+              <VscSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none" />
+              <input
+                type="text"
+                placeholder="Search courses, skills, instructors..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-14 py-1.5 bg-gray-50 hover:bg-gray-100 focus:bg-white border border-gray-200 focus:border-blue-500 rounded-xl text-xs text-gray-800 placeholder-gray-400 outline-none transition-all focus:ring-2 focus:ring-blue-500/15"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1"
+                >
+                  <VscClose className="text-sm" />
+                </button>
+              )}
+            </form>
 
-            {matchRoute('/courses') && (
-              <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]" />
-            )}
-
-            {isCoursesOpen && (
-              <div className="absolute top-full left-0 pt-3 w-[280px] z-50">
-                <div className="bg-[#0e111f] rounded-2xl p-4 shadow-[0_10px_30px_rgba(0,0,0,0.9),0_0_20px_rgba(37,99,235,0.25)] border border-blue-500/30 text-white animate-in fade-in slide-in-from-top-2 duration-200">
-                  <div className="absolute -top-1.5 left-6 w-3 h-3 bg-[#0e111f] rotate-45 border-t border-l border-blue-500/30" />
-                  
-                  <div className="px-2 pb-2 mb-2 border-b border-white/10 flex items-center justify-between">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-blue-400">
-                      Popular Courses
-                    </span>
-                    <span className="text-[10px] bg-blue-950/40 text-blue-300 border border-blue-500/30 px-2 py-0.5 rounded-full font-bold">
-                      {courses.length} Available
-                    </span>
-                  </div>
-
-                  <div className="max-h-[260px] overflow-y-auto space-y-1 pr-2 custom-scrollbar">
-                    {courses.length > 0 ? (
-                      courses.slice(0, 10).map((course, i) => (
+            {/* SEARCH SUGGESTIONS DROPDOWN */}
+            {searchQuery.length > 0 && (
+              <div className="absolute top-full left-0 w-full mt-1.5 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-[100] opacity-0 invisible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200">
+                {filteredCourses.length > 0 ? (
+                  <ul className="py-2">
+                    {filteredCourses.map((course) => (
+                      <li key={course._id}>
                         <Link
-                          key={course._id || i}
                           to={`/courses/${course._id}`}
-                          className="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-richblack-100 hover:bg-blue-950/30 hover:text-blue-300 transition-all group/item"
+                          onClick={() => {
+                            setSearchQuery("");
+                          }}
+                          className="block px-4 py-2 hover:bg-gray-50 text-sm text-gray-700 transition-colors"
                         >
-                          <div className="flex flex-col max-w-[180px]">
-                            <span className="truncate capitalize">{course.courseName}</span>
-                            {course.instructor && (
-                              <span className="text-[10px] text-richblack-400 font-normal">
-                                By {course.instructor.firstName || 'Instructor'}
-                              </span>
-                            )}
-                          </div>
-                          <span className="text-blue-400 font-bold text-xs">
-                            ₹{course.price || 0}
-                          </span>
+                          <div className="font-medium truncate">{course.courseName}</div>
+                          {course.instructor && course.instructor.firstName && (
+                            <div className="text-xs text-gray-400 mt-0.5 truncate">
+                              By {course.instructor.firstName} {course.instructor.lastName}
+                            </div>
+                          )}
                         </Link>
-                      ))
-                    ) : (
-                      <p className="text-center text-xs text-richblack-400 py-3">
-                        No Courses Available
-                      </p>
-                    )}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="px-4 py-3 text-sm text-gray-500 text-center">
+                    No matching courses found.
                   </div>
-
-                  <div className="mt-2 pt-2 border-t border-white/10 text-center">
-                    <Link to="/courses" className="text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center gap-1">
-                      <span>View All Courses</span>
-                      <span>→</span>
-                    </Link>
-                  </div>
-                </div>
+                )}
               </div>
             )}
-          </li>
+          </div>
 
-          {/* Category Dropdown */}
-          <li
-            className="relative flex items-center cursor-pointer group py-1"
-            onMouseEnter={() => setIsCatalogOpen(true)}
-            onMouseLeave={() => setIsCatalogOpen(false)}
-          >
-            <span className={`flex items-center gap-1 transition-colors duration-200 ${matchRoute('/catalog') ? 'text-blue-400 font-bold' : 'hover:text-white'}`}>
-              <span>Category</span>
-              <span className="text-[10px] transform group-hover:rotate-180 transition-transform duration-200">▾</span>
-            </span>
-
-            {matchRoute('/catalog') && (
-              <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]" />
-            )}
-
-            {isCatalogOpen && (
-              <div className="absolute top-full left-1/2 -translate-x-1/2 pt-3 w-[260px] z-50">
-                <div className="bg-[#0e111f] rounded-2xl p-4 shadow-[0_10px_30px_rgba(0,0,0,0.9),0_0_20px_rgba(37,99,235,0.25)] border border-blue-500/30 text-white animate-in fade-in slide-in-from-top-2 duration-200">
-                  <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#0e111f] rotate-45 border-t border-l border-blue-500/30" />
-                  
-                  <div className="px-2 pb-2 mb-2 border-b border-white/10 flex items-center justify-between">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-blue-400">
-                      Explore Categories
-                    </span>
-                    <span className="text-[10px] bg-blue-950/40 text-blue-300 border border-blue-500/30 px-2 py-0.5 rounded-full font-bold">
-                      {categories.length} Total
-                    </span>
-                  </div>
-
-                  <div className="max-h-[260px] overflow-y-auto space-y-1 pr-2 custom-scrollbar">
-                    {categories.length > 0 ? (
-                      categories.map((subLink, i) => (
-                        <Link
-                          key={subLink._id || i}
-                          to={`/courses?category=${subLink._id || subLink.name.split(" ").join("-").toLowerCase()}`}
-                          className="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-richblack-100 hover:bg-blue-950/30 hover:text-blue-300 transition-all group/item"
-                        >
-                          <span className="capitalize">{subLink.name}</span>
-                          <span className="text-richblack-400 group-hover/item:translate-x-0.5 transition-transform text-[10px]">
-                            →
-                          </span>
-                        </Link>
-                      ))
-                    ) : (
-                      <p className="text-center text-xs text-richblack-400 py-3">
-                        No Categories Found
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-          </li>
-
-          {/* Practice Center Link */}
-          <li className="relative py-1">
-            <Link to="/practice" className={`transition-colors duration-200 ${matchRoute('/practice') ? 'text-blue-400 font-bold' : 'hover:text-white'}`}>
-              Practice
-            </Link>
-            {matchRoute('/practice') && (
-              <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]" />
-            )}
-          </li>
-
-          {/* About */}
-          <li className="relative py-1">
-            <Link to="/about" className={`transition-colors duration-200 ${matchRoute('/about') ? 'text-blue-400 font-bold' : 'hover:text-white'}`}>
-              About
-            </Link>
-            {matchRoute('/about') && (
-              <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]" />
-            )}
-          </li>
-
-          {/* Contact */}
-          <li className="relative py-1">
-            <Link to="/contact" className={`transition-colors duration-200 ${matchRoute('/contact') ? 'text-blue-400 font-bold' : 'hover:text-white'}`}>
-              Contact
-            </Link>
-            {matchRoute('/contact') && (
-              <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]" />
-            )}
-          </li>
-        </ul>
-
-        {/* ACTION CONTROLS (Notification Bell + Profile Dropdown / Auth Buttons) */}
-        <div className="flex items-center gap-2.5">
-
-          {/* Real-time Notification Bell */}
-          <NotificationBell />
-
-          {/* Unauthenticated Login / Sign Up */}
-          {token === null && (
-            <div className="flex items-center gap-2.5">
-              <Link to="/login">
-                <button className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl border border-blue-500/40 bg-[#121124] text-xs font-semibold text-white hover:bg-blue-950/30 transition-all">
-                  Log In
-                </button>
-              </Link>
-              <Link to="/signup">
-                <button className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-[#3b82f6] to-[#2563eb] text-xs font-bold text-white shadow-[0_0_15px_rgba(37,99,235,0.5)] hover:opacity-95 transition-all">
-                  Sign Up
-                </button>
-              </Link>
-            </div>
-          )}
-
-          {/* Authenticated User Profile Avatar */}
-          {token !== null && (
-            <div className="relative" ref={profileRef}>
-              <button
-                onClick={() => setProfileOpen(!profileOpen)}
-                className="flex items-center gap-2 cursor-pointer focus:outline-none"
+          {/* DESKTOP NAVIGATION LINKS */}
+          <nav className="hidden lg:flex items-center gap-x-6 text-sm font-medium text-gray-600">
+            
+            {/* Courses Dropdown */}
+            <div
+              className="relative py-2 group cursor-pointer"
+              onMouseEnter={() => setIsCoursesOpen(true)}
+              onMouseLeave={() => setIsCoursesOpen(false)}
+            >
+              <button 
+                className={`flex items-center gap-1.5 transition-colors ${matchRoute('/courses') ? 'text-blue-600 font-semibold' : 'hover:text-gray-900'}`}
+                aria-expanded={isCoursesOpen}
               >
-                <img
-                  src={user?.image}
-                  alt={user?.first_name}
-                  referrerPolicy="no-referrer"
-                  className="aspect-square w-[34px] sm:w-[36px] rounded-full object-cover ring-2 ring-blue-500/80 hover:ring-blue-400 transition-all shadow-[0_0_12px_rgba(37,99,235,0.4)]"
-                />
+                <span>Courses</span>
+                <VscChevronDown className={`text-xs transition-transform duration-200 ${isCoursesOpen ? 'rotate-180 text-blue-600' : 'text-gray-400'}`} />
               </button>
 
-              {/* Account Dropdown */}
-              {profileOpen && (
-                <div className="absolute right-0 mt-3 w-60 max-h-[80vh] overflow-y-auto custom-scrollbar rounded-2xl bg-[#0e111f] border border-blue-500/30 text-richblack-100 shadow-[0_10px_30px_rgba(0,0,0,0.9),0_0_20px_rgba(37,99,235,0.25)] z-50 py-2 animate-in fade-in slide-in-from-top-2 duration-150">
-                  
-                  <div className="px-4 py-2 border-b border-white/10 mb-1">
-                    <h3 className="font-semibold text-xs text-white">My Account</h3>
-                    <p className="text-[10px] text-richblack-400 truncate">{user?.email}</p>
-                  </div>
+              {isCoursesOpen && (
+                <div className="absolute top-full left-0 pt-2 w-[320px] z-50">
+                  <div className="bg-white rounded-2xl p-4 shadow-xl border border-gray-200/90 text-gray-800 animate-in fade-in slide-in-from-top-2 duration-150">
+                    <div className="px-2 pb-2 mb-2 border-b border-gray-100 flex items-center justify-between">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500">
+                        Top Curated Courses
+                      </span>
+                      <span className="text-[10px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-bold border border-blue-100">
+                        {courses.length} Available
+                      </span>
+                    </div>
 
-                  {/* Dynamic User Account Links */}
-                  <div className="space-y-0.5">
+                    <div className="max-h-[260px] overflow-y-auto space-y-1 pr-1 custom-scrollbar">
+                      {courses.length > 0 ? (
+                        courses.slice(0, 8).map((course, i) => (
+                          <Link
+                            key={course._id || i}
+                            to={`/courses/${course._id}`}
+                            onClick={() => setIsCoursesOpen(false)}
+                            className="flex items-center justify-between p-2 rounded-xl text-xs text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors group/item"
+                          >
+                            <div className="flex flex-col max-w-[200px]">
+                              <span className="font-medium truncate capitalize">{course.courseName}</span>
+                              {course.instructor && (
+                                <span className="text-[10px] text-gray-400">
+                                  By {course.instructor.firstName || 'Instructor'}
+                                </span>
+                              )}
+                            </div>
+                            <span className="text-blue-600 font-semibold text-xs shrink-0">
+                              ₹{course.price || 0}
+                            </span>
+                          </Link>
+                        ))
+                      ) : (
+                        <p className="text-center text-xs text-gray-400 py-3">
+                          No Courses Available
+                        </p>
+                      )}
+                    </div>
 
-                     <Link
-                      to="/dashboard/global"
-                      onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
-                    >
-                      <VscDashboard className="text-sm text-blue-400" />
-                      <span>Dashboard</span>
-                    </Link>
-                    
-                    <Link
-                      to="/practice"
-                      onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
-                    >
-                      <VscCode className="text-sm text-blue-400" />
-                      <span>Practice</span>
-                    </Link>
-
-
-                    <Link
-                      to="/dashboard/enrolled-courses"
-                      onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
-                    >
-                      <VscBook className="text-sm text-blue-400" />
-                      <span>Courses</span>
-                    </Link>
-
-                    {user && user?.account_type === "Student" && (
-                      <Link
-                        to="/dashboard/cart"
-                        onClick={() => setProfileOpen(false)}
-                        className="flex items-center justify-between px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
+                    <div className="mt-2 pt-2 border-t border-gray-100 text-center">
+                      <Link 
+                        to="/courses" 
+                        onClick={() => setIsCoursesOpen(false)}
+                        className="text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors inline-flex items-center gap-1"
                       >
-                        <div className="flex items-center gap-3">
-                          <AiOutlineShoppingCart className="text-sm text-blue-400" />
-                          <span>Cart</span>
-                        </div>
-                        {totalItems > 0 && (
-                          <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                            {totalItems}
-                          </span>
-                        )}
+                        <span>View All Courses</span>
+                        <span>→</span>
                       </Link>
-                    )}
-
-                    <Link
-                      to="/dashboard/my-profile"
-                      onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
-                    >
-                      <VscAccount className="text-sm text-blue-400" />
-                      <span>Profile</span>
-                    </Link>
-
-                    <Link
-                      to="/dashboard/settings"
-                      onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
-                    >
-                      <VscGear className="text-sm text-blue-400" />
-                      <span>Account</span>
-                    </Link>
-
-                    <Link
-                      to="/dashboard/notifications"
-                      onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
-                    >
-                      <VscBell className="text-sm text-blue-400" />
-                      <span>Notifications</span>
-                    </Link>
-
-
-                    <Link
-                      to="/about"
-                      onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
-                    >
-                      <VscInfo className="text-sm text-blue-400" />
-                      <span>About Us</span>
-                    </Link>
-
-                    <Link
-                      to="/contact"
-                      onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-blue-950/30 hover:text-white transition-colors"
-                    >
-                      <VscCallIncoming className="text-sm text-blue-400" />
-                      <span>Contact Us</span>
-                    </Link>
-
-                   
+                    </div>
                   </div>
-
-                  <div className="border-t border-white/10 mt-1.5 pt-1">
-                    <button
-                      onClick={() => {
-                        setProfileOpen(false);
-                        dispatch(logout(navigate));
-                      }}
-                      className="w-full flex items-center gap-3 px-4 py-2 text-xs text-richblack-200 hover:bg-red-500/10 hover:text-red-400 transition-colors text-left"
-                    >
-                      <VscSignOut className="text-sm text-red-400" />
-                      <span>Logout</span>
-                    </button>
-                  </div>
-
                 </div>
               )}
             </div>
-          )}
 
-        </div>
+            {/* Category Dropdown */}
+            <div
+              className="relative py-2 group cursor-pointer"
+              onMouseEnter={() => setIsCatalogOpen(true)}
+              onMouseLeave={() => setIsCatalogOpen(false)}
+            >
+              <button 
+                className={`flex items-center gap-1.5 transition-colors ${matchRoute('/catalog') ? 'text-blue-600 font-semibold' : 'hover:text-gray-900'}`}
+                aria-expanded={isCatalogOpen}
+              >
+                <span>Categories</span>
+                <VscChevronDown className={`text-xs transition-transform duration-200 ${isCatalogOpen ? 'rotate-180 text-blue-600' : 'text-gray-400'}`} />
+              </button>
+
+              {isCatalogOpen && (
+                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[280px] z-50">
+                  <div className="bg-white rounded-2xl p-4 shadow-xl border border-gray-200/90 text-gray-800 animate-in fade-in slide-in-from-top-2 duration-150">
+                    <div className="px-2 pb-2 mb-2 border-b border-gray-100 flex items-center justify-between">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500">
+                        Explore Disciplines
+                      </span>
+                      <span className="text-[10px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-bold border border-blue-100">
+                        {categories.length} Total
+                      </span>
+                    </div>
+
+                    <div className="max-h-[260px] overflow-y-auto space-y-1 pr-1 custom-scrollbar">
+                      {categories.length > 0 ? (
+                        categories.map((subLink, i) => (
+                          <Link
+                            key={subLink._id || i}
+                            to={`/courses?category=${subLink._id || subLink.name.split(" ").join("-").toLowerCase()}`}
+                            onClick={() => setIsCatalogOpen(false)}
+                            className="flex items-center justify-between p-2 rounded-xl text-xs font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors group/item"
+                          >
+                            <span className="capitalize">{subLink.name}</span>
+                            <span className="text-gray-400 group-hover/item:translate-x-0.5 transition-transform text-[10px]">
+                              →
+                            </span>
+                          </Link>
+                        ))
+                      ) : (
+                        <p className="text-center text-xs text-gray-400 py-3">
+                          No Categories Found
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Practice Center */}
+            <Link 
+              to="/practice" 
+              className={`transition-colors py-1 ${matchRoute('/practice') ? 'text-blue-600 font-semibold' : 'hover:text-gray-900'}`}
+            >
+              Practice
+            </Link>
+
+            {/* About */}
+            <Link 
+              to="/about" 
+              className={`transition-colors py-1 ${matchRoute('/about') ? 'text-blue-600 font-semibold' : 'hover:text-gray-900'}`}
+            >
+              About
+            </Link>
+
+            {/* Contact */}
+            <Link 
+              to="/contact" 
+              className={`transition-colors py-1 ${matchRoute('/contact') ? 'text-blue-600 font-semibold' : 'hover:text-gray-900'}`}
+            >
+              Contact
+            </Link>
+          </nav>
+
+          {/* ACTION CONTROLS (Notification Bell + Profile Dropdown / Auth Buttons) */}
+          <div className="flex items-center gap-3">
+
+            {/* Real-time Notification Bell */}
+            <NotificationBell />
+
+            {/* Cart Icon for Students */}
+            {token && user && user?.account_type === "Student" && (
+              <Link 
+                to="/dashboard/cart" 
+                className="relative p-2 rounded-xl text-gray-600 hover:text-blue-600 hover:bg-gray-100 transition-colors"
+                title="Cart"
+              >
+                <AiOutlineShoppingCart className="text-xl" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 bg-blue-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                    {totalItems}
+                  </span>
+                )}
+              </Link>
+            )}
+
+            {/* Unauthenticated Login / Sign Up */}
+            {token === null && (
+              <div className="flex items-center gap-2">
+                <Link to="/login">
+                  <button className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors">
+                    Sign In
+                  </button>
+                </Link>
+                <Link to="/signup">
+                  <button className="px-4 py-2 rounded-xl bg-[#3BA7F2] hover:bg-[#3BA7F2] text-xs sm:text-sm font-bold text-white shadow-md shadow-indigo-500/20 transition-all active:scale-95">
+                    Join For Free
+                  </button>
+                </Link>
+              </div>
+            )}
+
+            {/* Authenticated User Profile Avatar */}
+            {token !== null && (
+              <div className="relative" ref={profileRef}>
+                <button
+                  onClick={() => setProfileOpen(!profileOpen)}
+                  className="flex items-center gap-2 p-1 rounded-xl hover:bg-gray-100 transition-all focus:outline-none cursor-pointer"
+                  aria-label="User Account Menu"
+                >
+                  <div className="w-8 h-8 rounded-full bg-[#15803D] text-white font-bold flex items-center justify-center text-sm shrink-0 shadow-2xs">
+                    {(user?.first_name ? user.first_name[0].toUpperCase() : "S")}
+                  </div>
+                  <span className="hidden sm:inline text-xs font-semibold text-slate-800">
+                    {user?.first_name || "Suraj"}
+                  </span>
+                  <VscChevronDown className="text-xs text-slate-500" />
+                </button>
+
+                {/* Account Dropdown */}
+                {profileOpen && (
+                  <div className="absolute right-0 mt-2.5 w-60 max-h-[80vh] overflow-y-auto custom-scrollbar rounded-2xl bg-white border border-gray-200 text-gray-700 shadow-xl z-50 py-2 animate-in fade-in slide-in-from-top-2 duration-150">
+                    
+                    <div className="px-4 py-2 border-b border-gray-100 mb-1">
+                      <h3 className="font-semibold text-xs text-gray-900">{user?.first_name} {user?.last_name}</h3>
+                      <p className="text-[11px] text-gray-500 truncate">{user?.email}</p>
+                    </div>
+
+                    {/* Dynamic User Account Links */}
+                    <div className="space-y-0.5">
+                      <Link
+                        to="/dashboard/global"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+                      >
+                        <VscDashboard className="text-sm text-blue-600" />
+                        <span>Dashboard</span>
+                      </Link>
+                      
+                      <Link
+                        to="/practice"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+                      >
+                        <VscCode className="text-sm text-blue-600" />
+                        <span>Practice</span>
+                      </Link>
+
+                      <Link
+                        to="/dashboard/enrolled-courses"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+                      >
+                        <VscBook className="text-sm text-blue-600" />
+                        <span>Enrolled Courses</span>
+                      </Link>
+
+                      <Link
+                        to="/dashboard/my-profile"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+                      >
+                        <VscAccount className="text-sm text-blue-600" />
+                        <span>Profile</span>
+                      </Link>
+
+                      <Link
+                        to="/dashboard/settings"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+                      >
+                        <VscGear className="text-sm text-blue-600" />
+                        <span>Settings</span>
+                      </Link>
+
+                      <Link
+                        to="/dashboard/notifications"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+                      >
+                        <VscBell className="text-sm text-blue-600" />
+                        <span>Notifications</span>
+                      </Link>
+                    </div>
+
+                    <div className="border-t border-gray-100 mt-1.5 pt-1">
+                      <button
+                        onClick={() => {
+                          setProfileOpen(false);
+                          dispatch(logout(navigate));
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-2 text-xs font-medium text-red-600 hover:bg-red-50 transition-colors text-left"
+                      >
+                        <VscSignOut className="text-sm text-red-500" />
+                        <span>Logout</span>
+                      </button>
+                    </div>
+
+                  </div>
+                )}
+              </div>
+            )}
+
+          </div>
 
         </div>
       </div>
 
       {/* MOBILE SLIDE-IN OVERLAY SIDEBAR DRAWER */}
       {isMobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-[99999] flex">
-          {/* Dark Translucent Backdrop */}
+        <div className="lg:hidden fixed inset-0 z-[99999] flex">
+          {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
+            className="fixed inset-0 bg-gray-900/40 backdrop-blur-xs transition-opacity"
             onClick={() => setIsMobileMenuOpen(false)}
             aria-hidden="true"
           />
 
-          {/* Left Slide-in Drawer */}
-          <aside className="fixed top-0 bottom-0 left-0 w-[280px] max-w-[85vw] bg-[#080b16] border-r border-blue-500/30 z-[100000] flex flex-col justify-between overflow-y-auto custom-scrollbar shadow-[15px_0_40px_rgba(0,0,0,0.9)] animate-in slide-in-from-left duration-300 p-4">
+          {/* Slide-in Drawer */}
+          <aside className="fixed top-0 bottom-0 left-0 w-[300px] max-w-[85vw] bg-white border-r border-gray-200 z-[100000] flex flex-col justify-between overflow-y-auto custom-scrollbar shadow-2xl p-5 animate-in slide-in-from-left duration-300">
             
-            {/* Drawer Header */}
             <div>
-              <div className="flex items-center justify-between border-b border-blue-950/60 pb-4 mb-4">
+              {/* Drawer Header */}
+              <div className="flex items-center justify-between border-b border-gray-100 pb-4 mb-4">
                 <Link
                   to="/"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="flex items-center gap-2.5"
                 >
-                  <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 border border-blue-400/40 flex items-center justify-center text-white text-base shadow-[0_0_12px_rgba(37,99,235,0.4)]">
+                  <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white text-base shadow-sm">
                     <VscCode />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-white font-extrabold text-sm tracking-tight leading-none">CodeLearn</span>
-                    <span className="text-[8px] text-blue-300 font-semibold tracking-widest uppercase mt-0.5">LEARN. BUILD. GROW.</span>
+                    <span className="text-gray-900 font-bold text-sm tracking-tight leading-none">CodeLearn</span>
+                    <span className="text-[8px] text-gray-500 font-semibold tracking-wider uppercase mt-0.5">LEARN • BUILD • GROW</span>
                   </div>
                 </Link>
 
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-1.5 rounded-xl bg-blue-950/40 border border-blue-500/30 text-richblack-300 hover:text-white transition-all text-base"
+                  className="p-1.5 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors"
                   aria-label="Close Drawer"
                 >
                   ✕
                 </button>
               </div>
 
-              {/* Navigation Items (Role-Based) */}
-              <div className="flex flex-col gap-1">
-                <SidebarLink
-                  link={{ name: 'My Profile', path: '/dashboard/my-profile' }}
-                  iconName="VscAccount"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                />
+              {/* Mobile Search */}
+              <form onSubmit={handleSearchSubmit} className="mb-4">
+                <div className="relative">
+                  <VscSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
+                  <input
+                    type="text"
+                    placeholder="Search courses..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-9 pr-8 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-800 placeholder-gray-400 outline-none focus:border-blue-500"
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery("")}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1"
+                    >
+                      <VscClose className="text-sm" />
+                    </button>
+                  )}
+                </div>
+              </form>
 
-                {sidebarLinks.map((link) => {
-                  if (link.type && userRole !== link.type) return null;
-                  return (
-                    <SidebarLink
-                      key={link.id}
-                      link={link}
-                      iconName={link.icon}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    />
-                  );
-                })}
+              {/* Main Navigation Links */}
+              <div className="flex flex-col gap-1 pb-4 border-b border-gray-100">
+                <Link
+                  to="/courses"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                >
+                  <span>All Courses</span>
+                  <span className="text-gray-400">→</span>
+                </Link>
+                <Link
+                  to="/catalog"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                >
+                  <span>Categories</span>
+                  <span className="text-gray-400">→</span>
+                </Link>
+                <Link
+                  to="/practice"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                >
+                  <span>Practice Center</span>
+                  <span className="text-gray-400">→</span>
+                </Link>
+                <Link
+                  to="/about"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                >
+                  <span>About Us</span>
+                  <span className="text-gray-400">→</span>
+                </Link>
+                <Link
+                  to="/contact"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                >
+                  <span>Contact Us</span>
+                  <span className="text-gray-400">→</span>
+                </Link>
               </div>
+
+              {/* Role-Based Dashboard Links if Logged In */}
+              {token && (
+                <div className="flex flex-col gap-1 pt-3">
+                  <span className="px-3 text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1">
+                    My Account
+                  </span>
+                  <SidebarLink
+                    link={{ name: 'My Profile', path: '/dashboard/my-profile' }}
+                    iconName="VscAccount"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  />
+
+                  {sidebarLinks.map((link) => {
+                    if (link.type && userRole !== link.type) return null;
+                    return (
+                      <SidebarLink
+                        key={link.id}
+                        link={link}
+                        iconName={link.icon}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      />
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
-            {/* Bottom Footer Actions */}
-            <div className="pt-4 border-t border-blue-950/60 mt-6 flex flex-col gap-1">
-              <SidebarLink
-                link={{ name: 'Settings', path: '/dashboard/settings' }}
-                iconName="VscSettingsGear"
-                onClick={() => setIsMobileMenuOpen(false)}
-              />
-
+            {/* Bottom Actions */}
+            <div className="pt-4 border-t border-gray-100 mt-6 flex flex-col gap-2">
               {token ? (
                 <button
                   onClick={() => {
                     setIsMobileMenuOpen(false);
                     dispatch(logout(navigate));
                   }}
-                  className="px-4 py-2.5 mx-2 my-0.5 text-xs font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition-all duration-200 text-left cursor-pointer flex items-center gap-x-3"
+                  className="w-full px-4 py-2.5 text-xs font-semibold text-red-600 hover:bg-red-50 rounded-xl transition-colors text-left flex items-center gap-2"
                 >
-                  <VscSignOut className="text-base text-red-400" />
+                  <VscSignOut className="text-base" />
                   <span>Logout</span>
                 </button>
               ) : (
-                <div className="flex flex-col gap-2 pt-2 px-2">
+                <div className="flex flex-col gap-2">
                   <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                    <button className="w-full py-2.5 rounded-xl border border-blue-500/40 bg-[#121124] text-xs font-semibold text-white">
+                    <button className="w-full py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-700 hover:bg-gray-50">
                       Log In
                     </button>
                   </Link>
                   <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)}>
-                    <button className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#3b82f6] to-[#2563eb] text-xs font-bold text-white shadow-md">
+                    <button className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-xs font-semibold text-white shadow-xs">
                       Sign Up
                     </button>
                   </Link>
@@ -545,9 +666,8 @@ const Navbar = () => {
           </aside>
         </div>
       )}
-    </nav>
+    </header>
   );
 };
 
 export default Navbar;
-

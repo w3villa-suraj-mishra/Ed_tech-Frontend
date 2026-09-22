@@ -116,40 +116,64 @@ function Signup() {
   }, [])
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-[#070913] text-white font-inter py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center relative overflow-hidden">
+    <div className="min-h-[calc(100vh-4.5rem)] flex flex-col justify-center items-center bg-[#F9FAFE] relative overflow-hidden py-6 lg:py-8 px-4 sm:px-6 lg:px-8">
       
-      {/* Background Ambient Glows */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-600/10 blur-[150px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[500px] h-[500px] bg-blue-600/10 blur-[150px] rounded-full pointer-events-none" />
+      {/* Left Dot Matrix Decoration */}
+      <div className="absolute left-6 lg:left-10 top-[40%] -translate-y-1/2 hidden md:grid grid-cols-3 gap-2 opacity-35 pointer-events-none">
+        {[...Array(12)].map((_, i) => (
+          <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#A78BFA]" />
+        ))}
+      </div>
 
-      <div className="max-w-[1280px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center relative z-10">
+      <div className="max-w-[1060px] w-full mx-auto flex flex-col lg:flex-row items-start justify-between gap-8 lg:gap-12 relative z-10">
 
         {/* LEFT COLUMN: Signup Form */}
-        <div className="lg:col-span-7 flex flex-col justify-center max-w-xl mx-auto lg:mx-0 w-full">
+        <div className="w-full lg:w-[50%] max-w-[450px] flex flex-col items-start text-left">
           
           {/* Header */}
-          <div className="mb-6">
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight flex items-center gap-2">
+          <div>
+            <h1 className="text-2xl sm:text-[28px] font-extrabold text-[#0F172A] tracking-tight leading-tight flex items-center gap-2">
               <span>Create your account</span>
-              <span className="text-blue-400 text-2xl">✨</span>
+              <span className="text-xl">✨</span>
             </h1>
-            <p className="text-slate-400 text-sm sm:text-base mt-2">
-              Join millions of learners and start your <span className="text-blue-400 font-semibold">coding</span> journey today.
+            <p className="text-gray-500 text-xs sm:text-[13px] mt-1 leading-relaxed">
+              Join millions of learners and start your <span className="text-[#3BA7F2] font-semibold">coding</span> journey today.
             </p>
           </div>
 
           {/* Student / Instructor Role Selection Toggle Pill */}
-          <div className="mb-6">
-            <Tab tabData={tabData} field={accountType} setField={setAccountType} />
+          <div className="flex bg-[#F1F5F9] p-1 gap-x-1 my-3.5 rounded-full border border-gray-200/80 shadow-2xs max-w-max">
+            <button
+              type="button"
+              onClick={() => setAccountType(ACCOUNT_TYPE.STUDENT)}
+              className={`${
+                accountType === ACCOUNT_TYPE.STUDENT
+                  ? "bg-[#1E293B] text-white shadow-xs"
+                  : "bg-transparent text-gray-500 hover:text-gray-900"
+              } py-1 px-5 rounded-full text-xs sm:text-[13px] font-semibold transition-all duration-200 cursor-pointer`}
+            >
+              Student
+            </button>
+            <button
+              type="button"
+              onClick={() => setAccountType(ACCOUNT_TYPE.INSTRUCTOR)}
+              className={`${
+                accountType === ACCOUNT_TYPE.INSTRUCTOR
+                  ? "bg-[#1E293B] text-white shadow-xs"
+                  : "bg-transparent text-gray-500 hover:text-gray-900"
+              } py-1 px-5 rounded-full text-xs sm:text-[13px] font-semibold transition-all duration-200 cursor-pointer`}
+            >
+              Instructor
+            </button>
           </div>
 
-          <form onSubmit={handleOnSubmit} className="space-y-5 w-full">
+          <form onSubmit={handleOnSubmit} className="space-y-3 w-full">
             
             {/* First & Last Name */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-200 mb-1.5">
-                  First Name <span className="text-blue-400">*</span>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  First Name <span className="text-[#13AA92]">*</span>
                 </label>
                 <input
                   required
@@ -158,13 +182,13 @@ function Signup() {
                   value={firstName}
                   onChange={handleOnChange}
                   placeholder="Enter first name"
-                  className="w-full rounded-xl bg-[#0b0e1b] border border-blue-500/20 px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-3.5 py-2 text-xs sm:text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#3BA7F2] focus:ring-2 focus:ring-indigo-100 transition-all shadow-2xs"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-200 mb-1.5">
-                  Last Name <span className="text-blue-400">*</span>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  Last Name <span className="text-[#13AA92]">*</span>
                 </label>
                 <input
                   required
@@ -173,15 +197,15 @@ function Signup() {
                   value={lastName}
                   onChange={handleOnChange}
                   placeholder="Enter last name"
-                  className="w-full rounded-xl bg-[#0b0e1b] border border-blue-500/20 px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-3.5 py-2 text-xs sm:text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#3BA7F2] focus:ring-2 focus:ring-indigo-100 transition-all shadow-2xs"
                 />
               </div>
             </div>
 
             {/* Email Address */}
             <div>
-              <label className="block text-xs font-semibold text-slate-200 mb-1.5">
-                Email Address <span className="text-blue-400">*</span>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">
+                Email Address <span className="text-[#13AA92]">*</span>
               </label>
               <input
                 required
@@ -190,14 +214,14 @@ function Signup() {
                 value={email}
                 onChange={handleOnChange}
                 placeholder="Enter email address"
-                className="w-full rounded-xl bg-[#0b0e1b] border border-blue-500/20 px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                className="w-full rounded-xl border border-gray-200 bg-white px-3.5 py-2 text-xs sm:text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#3BA7F2] focus:ring-2 focus:ring-indigo-100 transition-all shadow-2xs"
               />
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-xs font-semibold text-slate-200 mb-1.5">
-                Create Password <span className="text-blue-400">*</span>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">
+                Create Password <span className="text-[#13AA92]">*</span>
               </label>
               <div className="relative">
                 <input
@@ -207,22 +231,22 @@ function Signup() {
                   value={password}
                   onChange={handleOnChange}
                   placeholder="Enter password"
-                  className="w-full rounded-xl bg-[#0b0e1b] border border-blue-500/20 px-4 py-3 pr-10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                  className="w-full rounded-xl border border-gray-200 bg-white pl-3.5 pr-9 py-2 text-xs sm:text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#3BA7F2] focus:ring-2 focus:ring-indigo-100 transition-all shadow-2xs"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
                 >
-                  {showPassword ? <AiOutlineEyeInvisible size={18} /> : <AiOutlineEye size={18} />}
+                  {showPassword ? <AiOutlineEyeInvisible size={16} /> : <AiOutlineEye size={16} />}
                 </button>
               </div>
             </div>
 
             {/* Confirm Password */}
             <div>
-              <label className="block text-xs font-semibold text-slate-200 mb-1.5">
-                Confirm Password <span className="text-blue-400">*</span>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">
+                Confirm Password <span className="text-[#13AA92]">*</span>
               </label>
               <div className="relative">
                 <input
@@ -232,34 +256,34 @@ function Signup() {
                   value={confirmPassword}
                   onChange={handleOnChange}
                   placeholder="Confirm password"
-                  className="w-full rounded-xl bg-[#0b0e1b] border border-blue-500/20 px-4 py-3 pr-10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                  className="w-full rounded-xl border border-gray-200 bg-white pl-3.5 pr-9 py-2 text-xs sm:text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#3BA7F2] focus:ring-2 focus:ring-indigo-100 transition-all shadow-2xs"
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword((prev) => !prev)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
                 >
-                  {showConfirmPassword ? <AiOutlineEyeInvisible size={18} /> : <AiOutlineEye size={18} />}
+                  {showConfirmPassword ? <AiOutlineEyeInvisible size={16} /> : <AiOutlineEye size={16} />}
                 </button>
               </div>
             </div>
 
             {/* Terms Checkbox */}
-            <div className="flex items-center gap-2 pt-1">
+            <div className="flex items-center gap-2 pt-0.5">
               <input
                 type="checkbox"
                 id="terms"
                 checked={agreedTerms}
                 onChange={(e) => setAgreedTerms(e.target.checked)}
-                className="w-4 h-4 rounded bg-[#0b0e1b] border-blue-500/40 text-blue-600 focus:ring-blue-500 accent-blue-600 cursor-pointer"
+                className="w-3.5 h-3.5 rounded border-gray-300 text-[#3BA7F2] accent-[#3BA7F2] focus:ring-indigo-200 cursor-pointer"
               />
-              <label htmlFor="terms" className="text-xs text-slate-400 cursor-pointer select-none">
+              <label htmlFor="terms" className="text-xs text-gray-500 cursor-pointer select-none">
                 I agree to the{" "}
-                <Link to="/terms" className="text-blue-400 underline hover:text-blue-300">
+                <Link to="/terms" className="text-[#3BA7F2] hover:underline font-medium">
                   Terms of Service
                 </Link>{" "}
                 and{" "}
-                <Link to="/privacy-policy" className="text-blue-400 underline hover:text-blue-300">
+                <Link to="/privacy-policy" className="text-[#3BA7F2] hover:underline font-medium">
                   Privacy Policy
                 </Link>
                 .
@@ -270,31 +294,31 @@ function Signup() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold py-3 text-sm transition-all shadow-[0_0_20px_rgba(37, 99, 235,0.3)] active:scale-[0.99] disabled:opacity-50"
+              className="mt-1 w-full rounded-xl bg-[#3BA7F2] hover:bg-[#3BA7F2] py-2.5 px-4 font-bold text-xs sm:text-sm text-white shadow-[0_2px_10px_rgba(59,167,242,0.3)] transition-all duration-200 hover:scale-[1.005] active:scale-[0.995] disabled:opacity-70 cursor-pointer"
             >
               {loading ? "Creating Account..." : "Create Account"}
             </button>
 
             {/* Divider */}
-            <div className="relative flex items-center justify-center my-6">
-              <div className="border-t border-white/10 w-full" />
-              <span className="bg-[#070913] px-3 text-xs text-slate-400 uppercase font-semibold">
+            <div className="relative flex items-center justify-center my-2">
+              <div className="border-t border-gray-200 w-full" />
+              <span className="bg-[#F9FAFE] px-3 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
                 OR
               </span>
-              <div className="border-t border-white/10 w-full" />
+              <div className="border-t border-gray-200 w-full" />
             </div>
 
             {/* Social Buttons */}
-            <div className="space-y-3">
+            <div className="space-y-2">
               <button
                 type="button"
                 onClick={() => {
-                  const backendHost = process.env.REACT_APP_BASE_URL || 'https://ed-tech-backend-2kha.vercel.app';
+                  const backendHost = process.env.REACT_APP_BASE_URL || BASE_URL || 'https://ed-tech-backend-2kha.vercel.app';
                   window.location.href = `${backendHost}/auth/google_oauth2?mode=signup&role=${accountType}`;
                 }}
-                className="w-full flex items-center justify-center gap-3 bg-white text-slate-900 font-semibold py-3 px-4 rounded-xl hover:bg-slate-100 transition-colors text-sm shadow-md"
+                className="w-full flex items-center justify-center gap-x-2.5 rounded-xl border border-gray-200/90 bg-white py-2 px-4 text-xs sm:text-sm font-semibold text-gray-700 shadow-2xs hover:bg-gray-50 transition-all duration-200 hover:scale-[1.005] active:scale-[0.995] cursor-pointer"
               >
-                <FcGoogle className="text-xl" />
+                <FcGoogle className="text-lg" />
                 <span>Sign up with Google</span>
               </button>
 
@@ -304,17 +328,17 @@ function Signup() {
                   const backendHost = process.env.REACT_APP_BASE_URL || BASE_URL || 'https://ed-tech-backend-2kha.vercel.app';
                   window.location.href = `${backendHost}/auth/github?mode=signup&role=${accountType}`;
                 }}
-                className="w-full flex items-center justify-center gap-3 bg-[#161b22] border border-white/10 text-white font-semibold py-3 px-4 rounded-xl hover:bg-[#21262d] transition-colors text-sm shadow-md"
+                className="w-full flex items-center justify-center gap-x-2.5 rounded-xl border border-gray-200/90 bg-white py-2 px-4 text-xs sm:text-sm font-semibold text-gray-700 shadow-2xs hover:bg-gray-50 transition-all duration-200 hover:scale-[1.005] active:scale-[0.995] cursor-pointer"
               >
-                <FaGithub className="text-xl" />
+                <FaGithub className="text-lg text-gray-900" />
                 <span>Sign up with GitHub</span>
               </button>
             </div>
 
             {/* Login Redirect Footer */}
-            <p className="text-center text-xs text-slate-400 pt-4">
+            <p className="text-center text-xs text-gray-500 pt-2">
               Already have an account?{" "}
-              <Link to="/login" className="text-blue-400 font-semibold hover:underline">
+              <Link to="/login" className="text-[#3BA7F2] font-bold hover:underline ml-1">
                 Log in
               </Link>
             </p>
@@ -324,61 +348,61 @@ function Signup() {
         </div>
 
         {/* RIGHT COLUMN: Feature Preview Card */}
-        <div className="lg:col-span-5 w-full max-w-lg mx-auto lg:mx-0">
-          <div className="bg-[#0e111f] border border-blue-500/20 rounded-3xl p-6 sm:p-8 shadow-[0_0_30px_rgba(37, 99, 235,0.1)] flex flex-col gap-6 relative overflow-hidden">
+        <div className="w-full lg:w-[48%] max-w-[460px] flex items-center justify-center relative shrink-0">
+          <div className="w-full bg-white border border-gray-200/80 rounded-3xl p-6 sm:p-7 shadow-xs flex flex-col gap-5 relative overflow-hidden">
             
             {/* Top Image Banner */}
-            <div className="relative rounded-2xl overflow-hidden h-52 bg-blue-950/40">
+            <div className="relative rounded-2xl overflow-hidden h-44 bg-slate-100 border border-gray-100">
               <img
                 src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&auto=format&fit=crop&q=80"
                 alt="Students collaboration"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0e111f] via-transparent to-transparent" />
-              <div className="absolute bottom-4 left-4 w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white text-xl shadow-lg">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+              <div className="absolute bottom-3.5 left-3.5 w-9 h-9 rounded-xl bg-[#3BA7F2] flex items-center justify-center text-white text-lg shadow-md">
                 <VscCode />
               </div>
             </div>
 
             {/* Main Feature Content */}
-            <div className="space-y-4">
-              <h2 className="text-xl sm:text-2xl font-bold text-white leading-tight">
-                Start learning. Start <span className="text-blue-400">building.</span>
+            <div className="space-y-1.5 text-left">
+              <h2 className="text-lg sm:text-xl font-bold text-[#0F172A] leading-tight">
+                Start learning. Start <span className="text-[#3BA7F2]">building.</span>
               </h2>
-              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              <p className="text-xs sm:text-[13px] text-gray-500 leading-relaxed">
                 Unlock your potential with world-class courses and hands-on projects.
               </p>
             </div>
 
             {/* Feature List */}
-            <div className="space-y-4 pt-2">
-              <div className="flex items-start gap-3.5">
-                <div className="w-9 h-9 rounded-xl bg-blue-950/30 border border-blue-500/30 flex items-center justify-center text-blue-400 text-lg shrink-0 mt-0.5">
+            <div className="space-y-3.5 pt-1 text-left">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-xl bg-indigo-50 border border-indigo-100/80 flex items-center justify-center text-[#3BA7F2] text-base shrink-0 mt-0.5">
                   <VscBook />
                 </div>
                 <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-white">Learn from the best</h4>
-                  <p className="text-xs text-slate-400 mt-0.5">Access high-quality courses created by industry experts.</p>
+                  <h4 className="text-xs sm:text-[13px] font-bold text-[#0F172A]">Learn from the best</h4>
+                  <p className="text-[11px] sm:text-xs text-gray-500 mt-0.5">Access high-quality courses created by industry experts.</p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3.5">
-                <div className="w-9 h-9 rounded-xl bg-blue-950/30 border border-blue-500/30 flex items-center justify-center text-blue-400 text-lg shrink-0 mt-0.5">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-xl bg-indigo-50 border border-indigo-100/80 flex items-center justify-center text-[#3BA7F2] text-base shrink-0 mt-0.5">
                   <VscCode />
                 </div>
                 <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-white">Practice by building</h4>
-                  <p className="text-xs text-slate-400 mt-0.5">Build real-world projects and strengthen your coding skills.</p>
+                  <h4 className="text-xs sm:text-[13px] font-bold text-[#0F172A]">Practice by building</h4>
+                  <p className="text-[11px] sm:text-xs text-gray-500 mt-0.5">Build real-world projects and strengthen your coding skills.</p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3.5">
-                <div className="w-9 h-9 rounded-xl bg-blue-950/30 border border-blue-500/30 flex items-center justify-center text-blue-400 text-lg shrink-0 mt-0.5">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-xl bg-indigo-50 border border-indigo-100/80 flex items-center justify-center text-[#3BA7F2] text-base shrink-0 mt-0.5">
                   <AiOutlineTrophy />
                 </div>
                 <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-white">Achieve your goals</h4>
-                  <p className="text-xs text-slate-400 mt-0.5">Earn certificates and advance your career in tech.</p>
+                  <h4 className="text-xs sm:text-[13px] font-bold text-[#0F172A]">Achieve your goals</h4>
+                  <p className="text-[11px] sm:text-xs text-gray-500 mt-0.5">Earn certificates and advance your career in tech.</p>
                 </div>
               </div>
             </div>

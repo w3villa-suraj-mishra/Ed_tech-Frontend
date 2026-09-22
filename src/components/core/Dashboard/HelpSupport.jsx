@@ -2,20 +2,19 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
-  VscAdd,
-  VscSearch,
-  VscChevronDown,
-  VscMail,
-  VscCommentDiscussion,
-  VscCallIncoming,
-  VscOrganization,
-  VscFileCode,
-  VscArrowRight,
-  VscQuestion
-} from "react-icons/vsc";
-import { FiClock } from "react-icons/fi";
-import { AiOutlineCheckCircle, AiOutlineTrophy } from "react-icons/ai";
-
+  FiSearch,
+  FiChevronDown,
+  FiMail,
+  FiPhone,
+  FiUsers,
+  FiMessageSquare,
+  FiArrowRight,
+  FiFileText,
+  FiClock,
+  FiZap,
+  FiCheckCircle,
+  FiHelpCircle
+} from "react-icons/fi";
 import { apiConnector } from "../../../services/apiConnector";
 import { contactusEndpoint } from "../../../services/apis";
 import toast from "react-hot-toast";
@@ -28,6 +27,7 @@ const HelpSupport = () => {
   const [activeTab, setActiveTab] = useState("faqs");
   const [openFaq, setOpenFaq] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState("All");
   const [showTicketModal, setShowTicketModal] = useState(false);
   const [tickets, setTickets] = useState([]);
   const [ticketSubject, setTicketSubject] = useState("");
@@ -35,36 +35,44 @@ const HelpSupport = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submittedSuccess, setSubmittedSuccess] = useState(false);
 
-  // Dynamic FAQ list
+  // Categories for filter pills
+  const filterCategories = ["All", "Account", "Payments", "Courses", "Certificates"];
+
+  // Dynamic FAQ list matching the screenshot exactly
   const defaultFaqs = [
     {
       id: 1,
+      category: "Courses",
       q: "I purchased a course but it's not showing on my dashboard / in my 'Course not found'. What do I do?",
-      a: "Please refresh your browser or log out and log back in. If your order status is confirmed, your course should immediately appear under your Enrolled Courses section."
+      a: "Please refresh your browser or log out and log back in. If your order status is confirmed, your course will immediately appear under your Enrolled Courses section on the dashboard."
     },
     {
       id: 2,
+      category: "Payments",
       q: "My payment was successful but the course isn't activated. Help!",
-      a: "If the payment went through but your status shows pending, our payment gateway webhook may take up to 5 minutes. If it persists, create a ticket below with your Transaction ID."
+      a: "Payment gateway webhooks may take 2-5 minutes to verify. If your course hasn't unlocked after 5 minutes, please click 'Create a New Ticket' with your Transaction ID so our team can immediately activate it."
     },
     {
       id: 3,
+      category: "Courses",
       q: "How does course validity / access work now?",
-      a: "All purchased courses on CodeLearn come with lifetime access including all future lecture updates and downloadable study resources."
+      a: "All enrolled courses come with lifetime access, including all future lecture additions, code snippets, project repositories, and discussion forums."
     },
     {
       id: 4,
+      category: "Account",
       q: "I'm not able to log in / OTP is not coming.",
-      a: "Check your spam/junk folder. Ensure you entered the correct email address associated with your registered CodeLearn account."
+      a: "Check your spam or junk folder for verification emails. If you signed in using Google OAuth, please use the 'Sign in with Google' button directly."
     },
     {
       id: 5,
+      category: "Account",
       q: "Can I change the email address linked to my account?",
-      a: "Yes, navigate to Settings in your profile dropdown menu to update your account email and personal information."
+      a: "Yes. Head over to Dashboard Settings to update your registered email address, contact number, and personal profile information."
     }
   ];
 
-  // Popular Help Articles
+  // Popular Help Articles matching screenshot
   const popularArticles = [
     { id: 1, title: "How to Enroll in a Course", desc: "Step-by-step guide to enroll" },
     { id: 2, title: "Understanding Course Access", desc: "Learn about validity & access" },
@@ -72,11 +80,14 @@ const HelpSupport = () => {
     { id: 4, title: "Certificates & Completion", desc: "How to earn and view certificates" }
   ];
 
-  const filteredFaqs = defaultFaqs.filter(
-    (faq) =>
+  const filteredFaqs = defaultFaqs.filter((faq) => {
+    const matchesSearch =
       faq.q.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      faq.a.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+      faq.a.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory =
+      selectedFilter === "All" || faq.category.toLowerCase() === selectedFilter.toLowerCase();
+    return matchesSearch && matchesCategory;
+  });
 
   const handleCreateTicket = async (e) => {
     e.preventDefault();
@@ -100,7 +111,7 @@ const HelpSupport = () => {
       );
 
       if (res?.data?.success) {
-        toast.success("Support ticket submitted to admin! 🎉");
+        toast.success("Support ticket submitted to support team! 🎉");
         const newTicket = {
           id: Date.now(),
           subject: ticketSubject,
@@ -129,181 +140,322 @@ const HelpSupport = () => {
   };
 
   return (
-    <div className="space-y-6 text-white max-w-6xl mx-auto pb-10">
+    <div className="space-y-6 text-[#1E293B] font-sans pb-12 max-w-[1240px] mx-auto">
       
-      {/* 1. HEADER SECTION */}
-      <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-6 relative overflow-hidden shadow-[0_0_25px_rgba(37, 99, 235,0.1)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-        <div className="space-y-1 max-w-xl">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Help & Support</h1>
-          <p className="text-xs sm:text-sm text-richblack-300">
-            We're here to help you succeed. Find answers to your questions or reach out to our support team.
+      {/* 1. HERO BANNER CARD */}
+      <div className="bg-gradient-to-r from-[#F0F5FF] via-[#EEF2FF] to-[#F5F3FF] border border-slate-200/80 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-xs relative overflow-hidden flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+        
+        {/* Banner Left: Category, Title & Subtitle */}
+        <div className="space-y-1.5 max-w-xl relative z-10">
+          <span className="text-[11px] font-extrabold text-[#3BA7F2] tracking-wider uppercase block">
+            HELP & SUPPORT
+          </span>
+          <h1 className="text-2xl sm:text-[32px] font-extrabold text-slate-900 tracking-tight leading-tight">
+            We're here to help you! 👋
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-500 font-normal">
+            Find answers to your questions or reach out to our support team.
           </p>
         </div>
 
-        {/* Headphones Graphic & Create Ticket Action */}
-        <div className="flex items-center gap-4 shrink-0">
-          <div className="hidden md:flex w-16 h-16 rounded-2xl bg-blue-950/40 text-blue-300 border border-blue-500/30 items-center justify-center text-3xl shadow-[0_0_15px_rgba(37, 99, 235,0.3)]">
-            🎧
+        {/* Banner Center: 3D Customer Support Specialist Illustration */}
+        <div className="hidden md:flex items-center justify-center relative z-10 select-none">
+          <svg width="170" height="110" viewBox="0 0 170 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="supportHeadGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#818CF8" />
+                <stop offset="100%" stopColor="#3BA7F2" />
+              </linearGradient>
+              <linearGradient id="bubbleGrad1" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#3BA7F2" />
+                <stop offset="100%" stopColor="#3BA7F2" />
+              </linearGradient>
+              <linearGradient id="bubbleGrad2" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#FFFFFF" />
+                <stop offset="100%" stopColor="#F1F5F9" />
+              </linearGradient>
+              <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#3BA7F2" floodOpacity="0.25" />
+              </filter>
+            </defs>
+
+            {/* Left speech bubble */}
+            <g filter="url(#softShadow)">
+              <rect x="10" y="24" width="46" height="24" rx="12" fill="url(#bubbleGrad1)" />
+              <circle cx="25" cy="36" r="2" fill="white" />
+              <circle cx="33" cy="36" r="2" fill="white" />
+              <circle cx="41" cy="36" r="2" fill="white" />
+            </g>
+
+            {/* Support Agent Avatar with Headset */}
+            <g filter="url(#softShadow)">
+              {/* Shoulders / Torso */}
+              <path d="M56 100C56 82 70 76 85 76C100 76 114 82 114 100H56Z" fill="#3BA7F2" />
+              
+              {/* Face / Head */}
+              <circle cx="85" cy="52" r="22" fill="#FED7AA" />
+
+              {/* Hair */}
+              <path d="M64 48C64 36 74 28 85 28C96 28 106 36 106 48C106 40 98 34 85 34C72 34 64 40 64 48Z" fill="#3BA7F2" />
+
+              {/* Headset Arc */}
+              <path d="M64 50C62 34 72 24 85 24C98 24 108 34 106 50" stroke="#1E40AF" strokeWidth="4" strokeLinecap="round" fill="none" />
+              
+              {/* Left Earpad */}
+              <rect x="61" y="44" width="6" height="14" rx="3" fill="#1D4ED8" />
+              
+              {/* Right Earpad */}
+              <rect x="103" y="44" width="6" height="14" rx="3" fill="#1D4ED8" />
+              
+              {/* Microphone Arm */}
+              <path d="M64 55C64 68 76 72 82 70" stroke="#1E3A8A" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+              <circle cx="83" cy="70" r="2.5" fill="#1E3A8A" />
+            </g>
+
+            {/* Right speech message card */}
+            <g filter="url(#softShadow)">
+              <rect x="114" y="38" width="46" height="24" rx="8" fill="url(#bubbleGrad2)" stroke="#E2E8F0" />
+              <line x1="122" y1="46" x2="148" y2="46" stroke="#94A3B8" strokeWidth="2.5" strokeLinecap="round" />
+              <line x1="122" y1="53" x2="140" y2="53" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
+            </g>
+          </svg>
+        </div>
+
+        {/* Banner Right: Quote & Create Ticket Button */}
+        <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row items-start sm:items-center gap-3 shrink-0 relative z-10">
+          
+          {/* Quote bubble */}
+          <div className="bg-white/85 backdrop-blur-xs border border-indigo-100 rounded-2xl px-4 py-2.5 text-center shadow-2xs">
+            <p className="text-xs italic font-serif text-slate-700">
+              “ Your learning<br />journey matters to us. ”
+            </p>
           </div>
+
+          {/* Create a New Ticket Button */}
           <button
             onClick={() => setShowTicketModal(true)}
-            className="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-800 text-white text-xs font-extrabold transition-all shadow-[0_0_20px_rgba(37, 99, 235,0.4)] flex items-center gap-2"
+            className="px-5 py-3 rounded-xl bg-[#3BA7F2] hover:bg-[#3BA7F2] text-white text-xs sm:text-sm font-semibold shadow-md shadow-indigo-500/20 transition-all flex items-center gap-1.5 shrink-0 cursor-pointer active:scale-95"
           >
-            <VscAdd className="text-base" />
-            <span>Create a New Ticket</span>
+            <span>+ Create a New Ticket</span>
+            <FiArrowRight className="text-sm" />
           </button>
         </div>
+
       </div>
 
-      {/* 2. SEARCH BAR */}
-      <div className="relative">
-        <VscSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-richblack-400 text-base" />
-        <input
-          type="text"
-          placeholder="Search help articles, topics or keywords..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full bg-[#0e111f] border border-blue-500/20 rounded-2xl pl-11 pr-4 py-3.5 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-blue-500 transition-colors shadow-inner"
-        />
+      {/* 2. SEARCH BAR CARD WITH CATEGORY FILTER PILLS */}
+      <div className="bg-white border border-slate-200/80 rounded-2xl p-3 sm:p-3.5 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+        
+        {/* Left: Search input */}
+        <div className="flex items-center flex-1 min-w-0 px-2">
+          <FiSearch className="text-slate-400 text-base shrink-0 mr-2.5" />
+          <input
+            type="text"
+            placeholder="Search help articles, topics or keywords..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-transparent text-xs sm:text-sm text-slate-800 placeholder-slate-400 outline-none"
+          />
+        </div>
+
+        {/* Right: Category filter pills */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 shrink-0 custom-scrollbar">
+          {filterCategories.map((cat) => {
+            const isSelected = selectedFilter === cat;
+            return (
+              <button
+                key={cat}
+                onClick={() => setSelectedFilter(cat)}
+                className={`px-3 py-1 rounded-full text-xs transition-all cursor-pointer select-none shrink-0 ${
+                  isSelected
+                    ? "bg-[#13AA92]/10 text-[#3BA7F2] border border-indigo-200 font-semibold"
+                    : "bg-white text-slate-600 border border-slate-200 hover:border-slate-300 font-medium"
+                }`}
+              >
+                {cat}
+              </button>
+            );
+          })}
+        </div>
+
       </div>
 
-      {/* 3. GET IN TOUCH (4 CARDS GRID) */}
-      <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-6 space-y-4">
+      {/* 3. GET IN TOUCH SECTION (4 CARDS GRID) */}
+      <div className="bg-white border border-slate-200/80 rounded-2xl sm:rounded-3xl p-6 sm:p-7 shadow-xs space-y-4">
         <div>
-          <h2 className="text-base font-bold text-white">Get in Touch</h2>
-          <p className="text-xs text-richblack-400">Choose the best way to reach us</p>
+          <h2 className="text-base sm:text-lg font-bold text-slate-900">Get in Touch</h2>
+          <p className="text-xs sm:text-sm text-slate-500 font-normal">
+            Choose the best way to reach us. We're always here to help.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-1">
           
-          {/* Email Support */}
-          <div className="p-4 rounded-xl bg-[#141728] border border-white/5 hover:border-blue-500/30 transition-all flex items-start gap-3 group cursor-pointer">
-            <div className="w-9 h-9 rounded-xl bg-blue-950/40 text-blue-400 flex items-center justify-center shrink-0">
-              <VscMail className="text-lg" />
-            </div>
-            <div className="flex flex-col min-w-0 flex-1">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-white">Email Support</span>
-                <VscArrowRight className="text-xs text-richblack-400 group-hover:text-blue-400 group-hover:translate-x-1 transition-all" />
+          {/* Card 1: Email Support */}
+          <div
+            onClick={() => window.open("mailto:support@codelearn.com")}
+            className="border border-slate-200/80 rounded-2xl p-4 bg-white hover:border-indigo-200 hover:shadow-xs transition-all flex flex-col justify-between gap-3 group cursor-pointer select-none"
+          >
+            <div className="flex items-start justify-between">
+              <div className="w-11 h-11 rounded-xl bg-[#EFF6FF] border border-[#DBEAFE] text-[#3BA7F2] flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">
+                <FiMail />
               </div>
-              <span className="text-[10px] text-richblack-400 mt-0.5">Get help via email</span>
-              <span className="text-[10px] text-blue-300 font-medium truncate mt-1">support@codelearn.com</span>
+              <FiArrowRight className="text-slate-400 group-hover:text-[#3BA7F2] group-hover:translate-x-0.5 transition-all text-sm mt-1" />
+            </div>
+
+            <div className="space-y-0.5">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900">Email Support</h3>
+              <p className="text-[11px] sm:text-xs text-slate-500">Get help via email</p>
+              <p className="text-xs font-semibold text-blue-600 truncate pt-1">support@codelearn.com</p>
             </div>
           </div>
 
-          {/* Live Chat */}
-          <div className="p-4 rounded-xl bg-[#141728] border border-white/5 hover:border-blue-500/30 transition-all flex items-start gap-3 group cursor-pointer">
-            <div className="w-9 h-9 rounded-xl bg-indigo-900/40 text-indigo-400 flex items-center justify-center shrink-0">
-              <VscCommentDiscussion className="text-lg" />
-            </div>
-            <div className="flex flex-col min-w-0 flex-1">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-white">Live Chat</span>
-                <VscArrowRight className="text-xs text-richblack-400 group-hover:text-indigo-400 group-hover:translate-x-1 transition-all" />
+          {/* Card 2: Live Chat */}
+          <div
+            onClick={() => setShowTicketModal(true)}
+            className="border border-slate-200/80 rounded-2xl p-4 bg-white hover:border-indigo-200 hover:shadow-xs transition-all flex flex-col justify-between gap-3 group cursor-pointer select-none"
+          >
+            <div className="flex items-start justify-between">
+              <div className="w-11 h-11 rounded-xl bg-[#13AA92]/10 border border-[#13AA92]/30 text-[#13AA92] flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">
+                <FiMessageSquare />
               </div>
-              <span className="text-[10px] text-richblack-400 mt-0.5">Chat with us live</span>
-              <span className="text-[10px] text-indigo-300 font-medium truncate mt-1">Available 9AM - 9PM</span>
+              <FiArrowRight className="text-slate-400 group-hover:text-[#3BA7F2] group-hover:translate-x-0.5 transition-all text-sm mt-1" />
+            </div>
+
+            <div className="space-y-0.5">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900">Live Chat</h3>
+              <p className="text-[11px] sm:text-xs text-slate-500">Chat with us live</p>
+              <p className="text-xs font-semibold text-[#3BA7F2] pt-1">Available 9AM – 9PM</p>
             </div>
           </div>
 
-          {/* Phone Support */}
-          <div className="p-4 rounded-xl bg-[#141728] border border-white/5 hover:border-blue-500/30 transition-all flex items-start gap-3 group cursor-pointer">
-            <div className="w-9 h-9 rounded-xl bg-emerald-900/40 text-emerald-400 flex items-center justify-center shrink-0">
-              <VscCallIncoming className="text-lg" />
-            </div>
-            <div className="flex flex-col min-w-0 flex-1">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-white">Phone Support</span>
-                <VscArrowRight className="text-xs text-richblack-400 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all" />
+          {/* Card 3: Phone Support */}
+          <div
+            onClick={() => window.open("tel:+911234567890")}
+            className="border border-slate-200/80 rounded-2xl p-4 bg-white hover:border-indigo-200 hover:shadow-xs transition-all flex flex-col justify-between gap-3 group cursor-pointer select-none"
+          >
+            <div className="flex items-start justify-between">
+              <div className="w-11 h-11 rounded-xl bg-[#ECFDF5] border border-[#D1FAE5] text-[#059669] flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">
+                <FiPhone />
               </div>
-              <span className="text-[10px] text-richblack-400 mt-0.5">Speak to our team</span>
-              <span className="text-[10px] text-emerald-300 font-medium truncate mt-1">+91 12345 67890</span>
+              <FiArrowRight className="text-slate-400 group-hover:text-[#3BA7F2] group-hover:translate-x-0.5 transition-all text-sm mt-1" />
+            </div>
+
+            <div className="space-y-0.5">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900">Phone Support</h3>
+              <p className="text-[11px] sm:text-xs text-slate-500">Speak to our team</p>
+              <p className="text-xs font-semibold text-emerald-600 pt-1">+91 12345 67890</p>
             </div>
           </div>
 
-          {/* Community */}
-          <div className="p-4 rounded-xl bg-[#141728] border border-white/5 hover:border-blue-500/30 transition-all flex items-start gap-3 group cursor-pointer">
-            <div className="w-9 h-9 rounded-xl bg-amber-900/40 text-amber-400 flex items-center justify-center shrink-0">
-              <VscOrganization className="text-lg" />
-            </div>
-            <div className="flex flex-col min-w-0 flex-1">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-white">Community</span>
-                <VscArrowRight className="text-xs text-richblack-400 group-hover:text-amber-400 group-hover:translate-x-1 transition-all" />
+          {/* Card 4: Community */}
+          <div
+            onClick={() => navigate("/dashboard/articles")}
+            className="border border-slate-200/80 rounded-2xl p-4 bg-white hover:border-indigo-200 hover:shadow-xs transition-all flex flex-col justify-between gap-3 group cursor-pointer select-none"
+          >
+            <div className="flex items-start justify-between">
+              <div className="w-11 h-11 rounded-xl bg-[#FFFBEB] border border-[#FEF3C7] text-[#D97706] flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">
+                <FiUsers />
               </div>
-              <span className="text-[10px] text-richblack-400 mt-0.5">Ask & get help</span>
-              <span className="text-[10px] text-amber-300 font-medium truncate mt-1">Join Community ↗</span>
+              <FiArrowRight className="text-slate-400 group-hover:text-[#3BA7F2] group-hover:translate-x-0.5 transition-all text-sm mt-1" />
+            </div>
+
+            <div className="space-y-0.5">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900">Community</h3>
+              <p className="text-[11px] sm:text-xs text-slate-500">Ask & get help</p>
+              <p className="text-xs font-semibold text-amber-600 hover:text-amber-700 pt-1 flex items-center gap-1">
+                <span>Join Community</span>
+                <span>↗</span>
+              </p>
             </div>
           </div>
 
         </div>
       </div>
 
-      {/* 4. MAIN HELP & SUPPORT GRID (FAQs/Tickets + Right-Side Articles/Hours) */}
+      {/* 4. MAIN HELP & SUPPORT GRID (LEFT: FAQs/Tickets, RIGHT: Articles/Hours) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* LEFT COLUMN: FAQs & TICKETS TABS */}
-        <div className="lg:col-span-2 bg-[#0e111f] border border-blue-500/20 rounded-2xl p-6 flex flex-col justify-between space-y-6">
-          <div>
-            <h2 className="text-base font-bold text-white mb-4">Frequently Asked Questions</h2>
+        {/* LEFT COLUMN: FAQs & TICKETS TABS + STILL NEED HELP */}
+        <div className="lg:col-span-2 bg-white border border-slate-200/80 rounded-2xl sm:rounded-3xl p-6 sm:p-7 shadow-xs flex flex-col justify-between space-y-6">
+          <div className="space-y-5">
+            
+            {/* Header row with "View All FAQs ->" */}
+            <div className="flex items-center justify-between">
+              <h2 className="text-base sm:text-lg font-bold text-slate-900">
+                Frequently Asked Questions
+              </h2>
+              <button
+                onClick={() => setSelectedFilter("All")}
+                className="text-xs font-semibold text-[#3BA7F2] hover:text-[#3BA7F2] transition-colors flex items-center gap-1 cursor-pointer"
+              >
+                <span>View All FAQs</span>
+                <span>→</span>
+              </button>
+            </div>
 
             {/* Sub-Tabs: FAQs vs My Tickets */}
-            <div className="flex items-center gap-6 border-b border-white/10 pb-2 mb-4">
+            <div className="flex items-center gap-6 border-b border-slate-100">
               <button
                 onClick={() => setActiveTab("faqs")}
-                className={`text-xs font-bold transition-all relative pb-2 ${
-                  activeTab === "faqs" ? "text-blue-400" : "text-richblack-400 hover:text-white"
+                className={`text-xs font-bold pb-2.5 transition-all relative cursor-pointer ${
+                  activeTab === "faqs"
+                    ? "text-[#3BA7F2]"
+                    : "text-slate-500 hover:text-slate-800"
                 }`}
               >
                 FAQs
                 {activeTab === "faqs" && (
-                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]" />
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#3BA7F2] rounded-full" />
                 )}
               </button>
 
               <button
                 onClick={() => setActiveTab("tickets")}
-                className={`text-xs font-bold transition-all relative pb-2 ${
-                  activeTab === "tickets" ? "text-blue-400" : "text-richblack-400 hover:text-white"
+                className={`text-xs font-bold pb-2.5 transition-all relative cursor-pointer ${
+                  activeTab === "tickets"
+                    ? "text-[#3BA7F2]"
+                    : "text-slate-500 hover:text-slate-800"
                 }`}
               >
                 My Tickets ({tickets.length})
                 {activeTab === "tickets" && (
-                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]" />
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#3BA7F2] rounded-full" />
                 )}
               </button>
             </div>
 
-            {/* TAB CONTENT: FAQs */}
+            {/* TAB CONTENT: FAQs ACCORDION */}
             {activeTab === "faqs" && (
               <div className="space-y-3">
                 {filteredFaqs.length > 0 ? (
                   filteredFaqs.map((faq) => (
                     <div
                       key={faq.id}
-                      className="bg-[#141728] border border-white/5 hover:border-blue-500/30 rounded-xl overflow-hidden transition-all"
+                      className="border border-slate-200/80 hover:border-indigo-200 rounded-xl overflow-hidden transition-all bg-white"
                     >
                       <button
                         onClick={() => setOpenFaq(openFaq === faq.id ? null : faq.id)}
-                        className="w-full text-left p-4 flex items-center justify-between gap-3 text-xs font-semibold text-richblack-200 hover:text-white"
+                        className="w-full text-left p-4 flex items-center justify-between gap-4 text-xs sm:text-sm font-medium text-slate-800 hover:text-slate-900 cursor-pointer"
                       >
                         <span>{faq.q}</span>
-                        <VscChevronDown
-                          className={`text-base transition-transform duration-200 text-blue-400 shrink-0 ${
-                            openFaq === faq.id ? "rotate-180" : ""
+                        <FiChevronDown
+                          className={`text-base text-slate-400 transition-transform duration-200 shrink-0 ${
+                            openFaq === faq.id ? "rotate-180 text-[#3BA7F2]" : ""
                           }`}
                         />
                       </button>
+
                       {openFaq === faq.id && (
-                        <div className="px-4 pb-4 text-xs text-richblack-300 border-t border-white/5 pt-3 bg-[#070913]/60 leading-relaxed">
+                        <div className="px-4 pb-4 pt-2 text-xs text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/50">
                           {faq.a}
                         </div>
                       )}
                     </div>
                   ))
                 ) : (
-                  <div className="py-8 text-center text-xs text-richblack-400">
-                    No FAQs found matching "{searchQuery}".
+                  <div className="py-10 text-center text-xs text-slate-400">
+                    No FAQs found matching your search.
                   </div>
                 )}
               </div>
@@ -316,122 +468,134 @@ const HelpSupport = () => {
                   tickets.map((ticket) => (
                     <div
                       key={ticket.id}
-                      className="bg-[#141728] border border-white/5 p-4 rounded-xl space-y-2"
+                      className="border border-slate-200/80 p-4 rounded-xl space-y-2 bg-slate-50/60"
                     >
                       <div className="flex items-center justify-between">
-                        <h3 className="font-bold text-sm text-white">{ticket.subject}</h3>
-                        <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-2.5 py-0.5 rounded-full">
+                        <h3 className="font-bold text-xs sm:text-sm text-slate-900">{ticket.subject}</h3>
+                        <span className="text-[10px] bg-emerald-50 text-emerald-600 border border-emerald-200 font-bold px-2.5 py-0.5 rounded-full">
                           {ticket.status}
                         </span>
                       </div>
-                      <p className="text-xs text-richblack-300">{ticket.message}</p>
-                      <span className="text-[10px] text-richblack-400 block">Submitted on {ticket.date}</span>
+                      <p className="text-xs text-slate-600">{ticket.message}</p>
+                      <span className="text-[10px] text-slate-400 block">Submitted on {ticket.date}</span>
                     </div>
                   ))
                 ) : (
-                  <div className="py-10 text-center text-richblack-400 space-y-2">
-                    <VscQuestion className="text-3xl mx-auto text-blue-400/50" />
-                    <p className="text-xs font-bold text-white">No Support Tickets Found</p>
-                    <p className="text-[11px] text-richblack-400">
-                      You haven't submitted any support tickets yet. Click above to create one.
+                  <div className="py-12 text-center text-slate-400 space-y-2">
+                    <FiHelpCircle className="text-3xl mx-auto text-indigo-400" />
+                    <p className="text-xs font-bold text-slate-800">No Support Tickets Found</p>
+                    <p className="text-[11px] text-slate-500">
+                      You haven't submitted any support tickets yet. Click below to create one.
                     </p>
                   </div>
                 )}
               </div>
             )}
+
           </div>
 
-          {/* STILL NEED HELP BANNER */}
-          <div className="p-4 rounded-xl bg-blue-950/20 border border-blue-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-4 mt-4">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-blue-600/30 text-blue-300 flex items-center justify-center text-sm shrink-0">
-                ❓
+          {/* STILL NEED HELP BANNER CARD */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-[#13AA92]/10/60 border border-indigo-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-6">
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-full bg-rose-100 text-rose-500 font-bold flex items-center justify-center text-lg shrink-0">
+                ?
               </div>
-              <div>
-                <span className="text-xs font-bold text-white block">Still need help?</span>
-                <span className="text-[10px] text-richblack-300">Can't find the answer you're looking for? Contact our support team.</span>
+              <div className="space-y-0.5">
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900">Still need help?</h3>
+                <p className="text-[11px] sm:text-xs text-slate-500">
+                  Can't find the answer you're looking for? Contact our support team.
+                </p>
               </div>
             </div>
+
             <button
               onClick={() => setShowTicketModal(true)}
-              className="px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-800 transition-all shrink-0 self-end sm:self-auto shadow-[0_0_12px_rgba(37, 99, 235,0.3)]"
+              className="px-5 py-2.5 rounded-xl bg-[#3BA7F2] hover:bg-[#3BA7F2] text-white font-semibold text-xs transition-all shadow-md shadow-indigo-500/20 flex items-center gap-1.5 shrink-0 self-end sm:self-auto cursor-pointer active:scale-95"
             >
-              Contact Support
+              <span>Contact Support</span>
+              <FiArrowRight className="text-xs" />
             </button>
           </div>
+
         </div>
 
         {/* RIGHT COLUMN: POPULAR ARTICLES & SUPPORT HOURS */}
         <div className="space-y-6">
           
-          {/* Popular Help Articles Card */}
-          <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-5 space-y-4">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h2 className="text-sm font-bold text-white">Popular Help Articles</h2>
+          {/* Card 1: Popular Help Articles */}
+          <div className="bg-white border border-slate-200/80 rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h2 className="text-sm sm:text-base font-bold text-slate-900">Popular Help Articles</h2>
               <button
                 onClick={() => navigate("/dashboard/articles")}
-                className="text-[11px] text-blue-400 font-semibold hover:text-blue-300 transition-colors cursor-pointer"
+                className="text-xs text-[#3BA7F2] font-semibold hover:text-[#3BA7F2] transition-colors flex items-center gap-1 cursor-pointer"
               >
-                View All ↗
+                <span>View All</span>
+                <span>→</span>
               </button>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               {popularArticles.map((article) => (
                 <div
                   key={article.id}
                   onClick={() => setSelectedArticle(article)}
-                  className="p-3 rounded-xl bg-[#141728] border border-white/5 hover:border-blue-500/40 hover:bg-blue-950/10 transition-all flex items-center gap-3 cursor-pointer group active:scale-[0.98]"
+                  className="p-3.5 rounded-xl border border-slate-200/70 hover:border-indigo-200 hover:bg-slate-50/50 transition-all flex items-center justify-between gap-3 cursor-pointer group"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-blue-950/30 text-blue-400 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                    <VscFileCode className="text-base" />
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-9 h-9 rounded-lg bg-[#EFF6FF] border border-[#DBEAFE] text-[#3BA7F2] flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition-transform">
+                      <FiFileText />
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-xs font-bold text-slate-900 group-hover:text-[#3BA7F2] transition-colors truncate">
+                        {article.title}
+                      </span>
+                      <span className="text-[11px] text-slate-500 truncate">
+                        {article.desc}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex flex-col min-w-0 flex-1">
-                    <span className="text-xs font-bold text-white group-hover:text-blue-300 transition-colors truncate">
-                      {article.title}
-                    </span>
-                    <span className="text-[10px] text-richblack-400 truncate">
-                      {article.desc}
-                    </span>
-                  </div>
-                  <VscArrowRight className="text-xs text-richblack-400 group-hover:text-blue-400 group-hover:translate-x-1 transition-all shrink-0" />
+
+                  <FiArrowRight className="text-slate-400 group-hover:text-[#3BA7F2] group-hover:translate-x-0.5 transition-all text-xs shrink-0" />
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Support Hours Card */}
-          <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-5 space-y-4">
-            <h2 className="text-sm font-bold text-white border-b border-white/10 pb-3">Support Hours</h2>
+          {/* Card 2: Support Hours */}
+          <div className="bg-white border border-slate-200/80 rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-xs space-y-4">
+            <h2 className="text-sm sm:text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
+              Support Hours
+            </h2>
 
-            <div className="space-y-4 text-xs">
+            <div className="space-y-3.5 text-xs">
               <div className="flex items-start gap-3">
-                <div className="w-7 h-7 rounded-lg bg-blue-950/30 text-blue-400 flex items-center justify-center shrink-0">
-                  <FiClock className="text-sm" />
+                <div className="w-8 h-8 rounded-full bg-[#EFF6FF] text-[#3BA7F2] flex items-center justify-center text-sm shrink-0">
+                  <FiClock />
                 </div>
-                <div>
-                  <span className="text-richblack-400 text-[10px] block">Monday - Sunday</span>
-                  <span className="font-bold text-white">9:00 AM - 9:00 PM IST</span>
+                <div className="space-y-0.5">
+                  <span className="text-slate-500 text-[11px] block">Monday – Sunday</span>
+                  <span className="font-bold text-slate-900 text-xs">9:00 AM – 9:00 PM IST</span>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-7 h-7 rounded-lg bg-indigo-900/30 text-indigo-400 flex items-center justify-center shrink-0">
-                  ⚡
+                <div className="w-8 h-8 rounded-full bg-[#FFFBEB] text-[#D97706] flex items-center justify-center text-sm shrink-0">
+                  <FiZap />
                 </div>
-                <div>
-                  <span className="text-richblack-400 text-[10px] block">Average Response Time</span>
-                  <span className="font-bold text-white">Under 2 hours</span>
+                <div className="space-y-0.5">
+                  <span className="text-slate-500 text-[11px] block">Average Response Time</span>
+                  <span className="font-bold text-slate-900 text-xs">Under 2 hours</span>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-7 h-7 rounded-lg bg-emerald-900/30 text-emerald-400 flex items-center justify-center shrink-0">
-                  <AiOutlineCheckCircle className="text-sm" />
+                <div className="w-8 h-8 rounded-full bg-[#ECFDF5] text-[#059669] flex items-center justify-center text-sm shrink-0">
+                  <FiCheckCircle />
                 </div>
-                <div>
-                  <span className="text-richblack-400 text-[10px] block">Resolution Rate</span>
-                  <span className="font-bold text-white">98% of tickets resolved</span>
+                <div className="space-y-0.5">
+                  <span className="text-slate-500 text-[11px] block">Resolution Rate</span>
+                  <span className="font-bold text-slate-900 text-xs">98% of tickets resolved</span>
                 </div>
               </div>
             </div>
@@ -441,15 +605,15 @@ const HelpSupport = () => {
 
       </div>
 
-      {/* CREATE TICKET MODAL */}
+      {/* 5. CREATE SUPPORT TICKET MODAL */}
       {showTicketModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#0e111f] border border-blue-500/30 max-w-md w-full rounded-2xl p-6 text-white space-y-4 shadow-[0_0_30px_rgba(37, 99, 235,0.3)]">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h2 className="font-bold text-base text-white">Create Support Ticket</h2>
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 max-w-md w-full rounded-2xl p-6 text-slate-900 space-y-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h2 className="font-bold text-base text-slate-900">Create Support Ticket</h2>
               <button
                 onClick={() => setShowTicketModal(false)}
-                className="text-richblack-400 hover:text-white text-lg font-bold"
+                className="text-slate-400 hover:text-slate-700 text-lg font-bold p-1 cursor-pointer"
               >
                 ✕
               </button>
@@ -457,33 +621,33 @@ const HelpSupport = () => {
 
             {submittedSuccess ? (
               <div className="py-8 text-center space-y-2">
-                <AiOutlineCheckCircle className="text-4xl text-emerald-400 mx-auto" />
-                <h3 className="text-sm font-bold text-white">Ticket Submitted Successfully!</h3>
-                <p className="text-xs text-richblack-300">Our support team will respond shortly.</p>
+                <FiCheckCircle className="text-4xl text-emerald-500 mx-auto" />
+                <h3 className="text-sm font-bold text-slate-900">Ticket Submitted Successfully!</h3>
+                <p className="text-xs text-slate-500">Our support team will respond shortly.</p>
               </div>
             ) : (
               <form onSubmit={handleCreateTicket} className="space-y-4 text-xs">
-                <div className="space-y-1">
-                  <label className="text-richblack-300 font-semibold">Subject / Issue Title</label>
+                <div className="space-y-1.5">
+                  <label className="text-slate-700 font-semibold">Subject / Issue Title *</label>
                   <input
                     type="text"
                     required
                     value={ticketSubject}
                     onChange={(e) => setTicketSubject(e.target.value)}
                     placeholder="e.g. Payment successful but course not assigned"
-                    className="w-full bg-[#141728] border border-blue-500/20 rounded-xl px-3.5 py-2.5 text-white placeholder-richblack-500 focus:outline-none focus:border-blue-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:bg-white transition-colors"
                   />
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-richblack-300 font-semibold">Description</label>
+                <div className="space-y-1.5">
+                  <label className="text-slate-700 font-semibold">Description *</label>
                   <textarea
                     rows={4}
                     required
                     value={ticketMsg}
                     onChange={(e) => setTicketMsg(e.target.value)}
                     placeholder="Provide details about your query or transaction ID..."
-                    className="w-full bg-[#141728] border border-blue-500/20 rounded-xl px-3.5 py-2.5 text-white placeholder-richblack-500 focus:outline-none focus:border-blue-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:bg-white transition-colors resize-none"
                   />
                 </div>
 
@@ -491,14 +655,14 @@ const HelpSupport = () => {
                   <button
                     type="button"
                     onClick={() => setShowTicketModal(false)}
-                    className="px-4 py-2 bg-[#141728] hover:bg-white/5 text-richblack-300 rounded-xl font-semibold transition-colors"
+                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-semibold transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="px-5 py-2 bg-blue-600 hover:bg-blue-800 disabled:opacity-50 text-white rounded-xl font-bold transition-colors shadow-[0_0_12px_rgba(37, 99, 235,0.3)]"
+                    className="px-5 py-2 bg-[#3BA7F2] hover:bg-[#3BA7F2] disabled:opacity-50 text-white rounded-xl font-bold transition-colors shadow-md shadow-indigo-500/20 cursor-pointer"
                   >
                     {submitting ? "Submitting..." : "Submit Ticket"}
                   </button>
@@ -509,28 +673,28 @@ const HelpSupport = () => {
         </div>
       )}
 
-      {/* ARTICLE DETAILS MODAL */}
+      {/* 6. ARTICLE DETAILS MODAL */}
       {selectedArticle && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#0e111f] border border-blue-500/30 max-w-lg w-full rounded-2xl p-6 text-white space-y-4 shadow-[0_0_30px_rgba(37, 99, 235,0.3)]">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h2 className="font-bold text-base text-white">{selectedArticle.title}</h2>
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 max-w-lg w-full rounded-2xl p-6 text-slate-900 space-y-4 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h2 className="font-bold text-base text-slate-900">{selectedArticle.title}</h2>
               <button
                 onClick={() => setSelectedArticle(null)}
-                className="text-richblack-400 hover:text-white text-lg font-bold"
+                className="text-slate-400 hover:text-slate-700 text-lg font-bold p-1 cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <div className="space-y-3 text-xs leading-relaxed text-richblack-300">
-              <p className="font-semibold text-blue-300">{selectedArticle.desc}</p>
+            <div className="space-y-3 text-xs leading-relaxed text-slate-600">
+              <p className="font-semibold text-blue-600">{selectedArticle.desc}</p>
               <p>
                 Welcome to the official CodeLearn guide for <strong>{selectedArticle.title}</strong>. This article covers step-by-step instructions on accessing your account, tracking your course progress, and resolving common payment or enrollment questions.
               </p>
-              <div className="p-3 bg-[#141728] rounded-xl border border-white/5 space-y-1">
-                <span className="font-bold text-white block">Key Tips:</span>
-                <ul className="list-disc list-inside space-y-0.5 text-richblack-400">
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+                <span className="font-bold text-slate-800 block">Key Tips:</span>
+                <ul className="list-disc list-inside space-y-0.5 text-slate-500">
                   <li>Ensure you are logged into your registered email account.</li>
                   <li>Check your Enrolled Courses tab on your dashboard.</li>
                   <li>Contact support if you need further assistance.</li>
@@ -538,10 +702,10 @@ const HelpSupport = () => {
               </div>
             </div>
 
-            <div className="flex justify-end pt-2 border-t border-white/10">
+            <div className="flex justify-end pt-2 border-t border-slate-100">
               <button
                 onClick={() => setSelectedArticle(null)}
-                className="px-5 py-2 bg-blue-600 hover:bg-blue-800 text-white rounded-xl text-xs font-bold transition-all shadow-[0_0_12px_rgba(37, 99, 235,0.3)]"
+                className="px-5 py-2 bg-[#3BA7F2] hover:bg-[#3BA7F2] text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-indigo-500/20 cursor-pointer"
               >
                 Close Article
               </button>

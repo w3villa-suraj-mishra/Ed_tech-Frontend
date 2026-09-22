@@ -1,12 +1,11 @@
-import React from 'react'
+import React from 'react';
 
-const HighLightText = ({text}) => {
+const HighLightText = ({ text }) => {
   return (
-    <span className='font-bold text-transparent bg-clip-text bg-gradient-to-b from-[#1FA7FF] via-[#12D8FA] to-[#A6FFCB]'>
-        {" "}
-        {text}
+    <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700">
+      {" "}{text}
     </span>
-  )
-}
+  );
+};
 
-export default HighLightText
+export default HighLightText;

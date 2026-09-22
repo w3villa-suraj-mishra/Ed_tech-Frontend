@@ -6,16 +6,19 @@ import { buyCourse } from "../../../services/operations/studentFeaturesAPI";
 import { addToCart } from "../../../services/slices/cartSlice";
 import { useNavigate } from "react-router-dom";
 import {
-  VscBook,
-  VscCoverage,
-  VscFlame,
-  VscPass,
-  VscSearch,
-  VscEllipsis,
-  VscPlay,
-  VscArrowRight
-} from "react-icons/vsc";
-import { AiOutlineTrophy } from "react-icons/ai";
+  FiBookOpen,
+  FiClock,
+  FiCheckCircle,
+  FiSearch,
+  FiGrid,
+  FiList,
+  FiChevronDown,
+  FiArrowRight,
+  FiPlay,
+  FiMoreVertical,
+  FiAward
+} from "react-icons/fi";
+import { FaFire, FaGraduationCap } from "react-icons/fa";
 
 const CoursesPage = ({ defaultTab = "your-courses" }) => {
   const { token } = useSelector((state) => state.auth);
@@ -110,7 +113,6 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
     if (courseWatchedSeconds > 0) {
       totalCompletedSeconds += courseWatchedSeconds;
     } else {
-      // Fallback: Estimate based on completedNum * 25 minutes (1500 seconds)
       totalCompletedSeconds += completedNum * 1500;
     }
   });
@@ -142,19 +144,27 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
         c.courseDescription?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
+
+    // Apply Sorting
+    if (sortOption === "name-asc") {
+      return [...list].sort((a, b) => (a.courseName || "").localeCompare(b.courseName || ""));
+    } else if (sortOption === "progress-desc") {
+      return [...list].sort((a, b) => (b.progressPercentage || 0) - (a.progressPercentage || 0));
+    }
+
     return list;
   };
 
   const displayedCourses = getDisplayedCourses();
 
   return (
-    <div className="space-y-6 text-white max-w-6xl mx-auto pb-10">
+    <div className="w-full space-y-6 text-gray-800 pb-10 font-sans">
       
       {/* 1. HEADER SECTION */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight">Your Courses</h1>
-          <p className="text-xs text-richblack-300 mt-1">
+          <h1 className="text-2xl font-extrabold text-[#0F172A] tracking-tight">Your Courses</h1>
+          <p className="text-xs text-gray-500 mt-1 font-normal">
             Continue learning and achieve your goals
           </p>
         </div>
@@ -162,125 +172,132 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
         {/* Header Controls: View Toggle + Sort Dropdown */}
         <div className="flex items-center gap-3 self-start sm:self-auto">
           {/* Grid / List View Toggle */}
-          <div className="bg-[#0e111f] border border-blue-500/20 rounded-xl p-1 flex items-center gap-1">
+          <div className="bg-white border border-gray-200/80 rounded-xl p-1 flex items-center gap-1 shadow-2xs">
             <button
               onClick={() => setViewMode("grid")}
-              className={`p-1.5 rounded-lg text-xs transition-all ${
-                viewMode === "grid" ? "bg-blue-600 text-white shadow-[0_0_10px_rgba(37, 99, 235,0.3)]" : "text-richblack-400 hover:text-white"
+              className={`p-1.5 rounded-lg text-xs transition-all cursor-pointer ${
+                viewMode === "grid"
+                  ? "bg-[#3BA7F2] text-white shadow-xs"
+                  : "text-gray-400 hover:text-gray-600 hover:bg-gray-100/60"
               }`}
               title="Grid View"
             >
-              田
+              <FiGrid className="text-sm" />
             </button>
             <button
               onClick={() => setViewMode("list")}
-              className={`p-1.5 rounded-lg text-xs transition-all ${
-                viewMode === "list" ? "bg-blue-600 text-white shadow-[0_0_10px_rgba(37, 99, 235,0.3)]" : "text-richblack-400 hover:text-white"
+              className={`p-1.5 rounded-lg text-xs transition-all cursor-pointer ${
+                viewMode === "list"
+                  ? "bg-[#3BA7F2] text-white shadow-xs"
+                  : "text-gray-400 hover:text-gray-600 hover:bg-gray-100/60"
               }`}
               title="List View"
             >
-              ☰
+              <FiList className="text-sm" />
             </button>
           </div>
 
           {/* Sort Dropdown */}
-          <select
-            value={sortOption}
-            onChange={(e) => setSortOption(e.target.value)}
-            className="bg-[#0e111f] border border-blue-500/20 text-xs font-semibold text-richblack-200 rounded-xl px-3 py-2 outline-none focus:border-blue-500 transition-colors"
-          >
-            <option value="recently-accessed">Recently Accessed</option>
-            <option value="name-asc">Title: A to Z</option>
-            <option value="progress-desc">Highest Progress</option>
-          </select>
+          <div className="relative">
+            <select
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value)}
+              className="appearance-none bg-white border border-gray-200/80 text-xs font-semibold text-gray-700 rounded-xl pl-3.5 pr-8 py-2 outline-none hover:border-gray-300 focus:border-[#3BA7F2] transition-colors shadow-2xs cursor-pointer"
+            >
+              <option value="recently-accessed">Recently Accessed</option>
+              <option value="name-asc">Title: A to Z</option>
+              <option value="progress-desc">Highest Progress</option>
+            </select>
+            <FiChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none" />
+          </div>
         </div>
       </div>
 
-      {/* 2. DYNAMIC STATISTICS CARDS ROW (2 per row on mobile, compact size) */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+      {/* 2. DYNAMIC STATISTICS CARDS ROW (4 Stats Matching Reference) */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         
         {/* Enrolled Courses */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
-          <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-blue-950/30 text-blue-400 flex items-center justify-center text-xs sm:text-base">
-              <VscBook />
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-4 flex flex-col justify-between shadow-xs hover:border-indigo-200 hover:shadow-sm transition-all">
+          <div className="flex items-center justify-between">
+            <div className="w-8 h-8 rounded-xl bg-[#E0F2FE] text-[#0284C7] flex items-center justify-center text-sm">
+              <FiBookOpen />
             </div>
-            <span className="text-[9px] sm:text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-1.5 sm:px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-[#16A34A] font-bold bg-[#DCFCE7] px-2 py-0.5 rounded-full">
               Live
             </span>
           </div>
-          <div className="mt-2 sm:mt-3">
-            <span className="text-lg sm:text-2xl font-extrabold text-white block">{totalEnrolled}</span>
-            <span className="text-[10px] sm:text-xs text-richblack-300 font-medium leading-tight block">Enrolled Courses</span>
+          <div className="mt-2.5">
+            <span className="text-2xl font-extrabold text-[#0F172A] block leading-tight">{totalEnrolled}</span>
+            <span className="text-xs text-gray-500 font-medium block mt-0.5">Enrolled Courses</span>
           </div>
-          <div className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-emerald-400 font-medium">
-            ↑ {totalEnrolled > 0 ? "100%" : "0%"} vs last month
+          <div className="mt-2 text-[10px] text-[#16A34A] font-semibold flex items-center gap-1">
+            <span>↑ {totalEnrolled > 0 ? "100%" : "0%"} vs last month</span>
           </div>
         </div>
 
         {/* Hours Learned */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
-          <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-indigo-900/30 text-indigo-400 flex items-center justify-center text-xs sm:text-base">
-              <VscCoverage />
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-4 flex flex-col justify-between shadow-xs hover:border-indigo-200 hover:shadow-sm transition-all">
+          <div className="flex items-center justify-between">
+            <div className="w-8 h-8 rounded-xl bg-[#13AA92]/10 text-[#9333EA] flex items-center justify-center text-sm">
+              <FiClock />
             </div>
-            <span className="text-[9px] sm:text-[10px] text-indigo-400 font-bold bg-indigo-500/10 px-1.5 sm:px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-[#13AA92] font-bold bg-[#13AA92]/10 px-2 py-0.5 rounded-full">
               Est.
             </span>
           </div>
-          <div className="mt-2 sm:mt-3">
-            <span className="text-lg sm:text-2xl font-extrabold text-white block">{totalHoursLearned}</span>
-            <span className="text-[10px] sm:text-xs text-richblack-300 font-medium leading-tight block">Hours Learned</span>
+          <div className="mt-2.5">
+            <span className="text-2xl font-extrabold text-[#0F172A] block leading-tight">{totalHoursLearned}</span>
+            <span className="text-xs text-gray-500 font-medium block mt-0.5">Hours Learned</span>
           </div>
-          <div className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-indigo-400 font-medium">
-            ↑ {totalCompletedLessons > 0 ? "35%" : "0%"} vs last month
+          <div className="mt-2 text-[10px] text-[#16A34A] font-semibold flex items-center gap-1">
+            <span>↑ {totalCompletedLessons > 0 ? "35%" : "0%"} vs last month</span>
           </div>
         </div>
 
         {/* Lessons Completed */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
-          <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-900/30 text-emerald-400 flex items-center justify-center text-xs sm:text-base">
-              <VscPass />
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-4 flex flex-col justify-between shadow-xs hover:border-indigo-200 hover:shadow-sm transition-all">
+          <div className="flex items-center justify-between">
+            <div className="w-8 h-8 rounded-xl bg-[#DCFCE7] text-[#16A34A] flex items-center justify-center text-sm">
+              <FiCheckCircle />
             </div>
-            <span className="text-[9px] sm:text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-1.5 sm:px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-[#16A34A] font-bold bg-[#DCFCE7] px-2 py-0.5 rounded-full">
               Total
             </span>
           </div>
-          <div className="mt-2 sm:mt-3">
-            <span className="text-lg sm:text-2xl font-extrabold text-white block">{totalCompletedLessons}</span>
-            <span className="text-[10px] sm:text-xs text-richblack-300 font-medium leading-tight block">Lessons Completed</span>
+          <div className="mt-2.5">
+            <span className="text-2xl font-extrabold text-[#0F172A] block leading-tight">{totalCompletedLessons}</span>
+            <span className="text-xs text-gray-500 font-medium block mt-0.5">Lessons Completed</span>
           </div>
-          <div className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-emerald-400 font-medium">
-            ↑ {totalCompletedLessons > 0 ? "40%" : "0%"} vs last month
+          <div className="mt-2 text-[10px] text-[#16A34A] font-semibold flex items-center gap-1">
+            <span>↑ {totalCompletedLessons > 0 ? "40%" : "0%"} vs last month</span>
           </div>
         </div>
 
         {/* Day Streak */}
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:border-blue-500/40 transition-all">
-          <div className="flex items-center justify-between text-richblack-400">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-amber-900/30 text-amber-400 flex items-center justify-center text-xs sm:text-base">
-              <VscFlame />
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-4 flex flex-col justify-between shadow-xs hover:border-indigo-200 hover:shadow-sm transition-all">
+          <div className="flex items-center justify-between">
+            <div className="w-8 h-8 rounded-xl bg-[#FEF3C7] text-[#D97706] flex items-center justify-center text-sm">
+              <FaFire />
             </div>
-            <span className="text-[9px] sm:text-[10px] text-amber-400 font-bold bg-amber-500/10 px-1.5 sm:px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-[#D97706] font-bold bg-[#FEF3C7] px-2 py-0.5 rounded-full">
               Active
             </span>
           </div>
-          <div className="mt-2 sm:mt-3">
-            <span className="text-lg sm:text-2xl font-extrabold text-white block">{activeStreakDays}</span>
-            <span className="text-[10px] sm:text-xs text-richblack-300 font-medium leading-tight block">Day Streak</span>
+          <div className="mt-2.5">
+            <span className="text-2xl font-extrabold text-[#0F172A] block leading-tight">{activeStreakDays}</span>
+            <span className="text-xs text-gray-500 font-medium block mt-0.5">Day Streak</span>
           </div>
-          <div className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-amber-400 font-medium">
-            ↑ Keep it up! 🔥
+          <div className="mt-2 text-[10px] text-[#D97706] font-semibold flex items-center gap-1">
+            <span>Keep it up! 🔥</span>
           </div>
         </div>
 
       </div>
 
       {/* 3. TABS & SEARCH BAR ROW */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-2">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-1 border-b border-gray-200/80">
         {/* Navigation Tabs */}
-        <div className="flex items-center gap-6 border-b border-white/10 pb-2 overflow-x-auto">
+        <div className="flex items-center gap-6 overflow-x-auto scrollbar-none">
           {[
             { id: "all", label: "All Courses" },
             { id: "in-progress", label: `In Progress (${inProgressCoursesList.length})` },
@@ -290,36 +307,33 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
             <button
               key={tab.id}
               onClick={() => setActiveSubTab(tab.id)}
-              className={`text-xs font-bold transition-all relative pb-2 whitespace-nowrap ${
+              className={`text-xs sm:text-sm font-bold transition-all relative pb-3 whitespace-nowrap cursor-pointer ${
                 activeSubTab === tab.id
-                  ? "text-blue-400"
-                  : "text-richblack-400 hover:text-white"
+                  ? "text-[#3BA7F2] border-b-2 border-[#3BA7F2] -mb-[1px]"
+                  : "text-gray-500 hover:text-gray-800 -mb-[1px]"
               }`}
             >
               {tab.label}
-              {activeSubTab === tab.id && (
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 rounded-full shadow-[0_0_8px_#3b82f6]" />
-              )}
             </button>
           ))}
         </div>
 
         {/* Live Filter Search Input */}
-        <div className="relative shrink-0">
-          <VscSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-richblack-400 text-sm" />
+        <div className="relative shrink-0 pb-2 sm:pb-0 -mb-1">
+          <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
           <input
             type="text"
             placeholder="Search your courses..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full sm:w-64 bg-[#0e111f] border border-blue-500/20 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-richblack-500 focus:outline-none focus:border-blue-500 transition-colors"
+            className="w-full sm:w-64 bg-white border border-gray-200/90 rounded-xl pl-9 pr-4 py-2 text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#3BA7F2] focus:ring-1 focus:ring-[#3BA7F2] transition-all shadow-2xs"
           />
         </div>
       </div>
 
-      {/* 4. COURSE LISTING (HORIZONTAL SCREENSHOT CARDS OR GRID) */}
+      {/* 4. COURSE LISTING OR CLEAN EMPTY STATE */}
       {loading ? (
-        <div className="py-20 text-center text-xs text-richblack-400">Loading courses...</div>
+        <div className="py-20 text-center text-xs text-gray-400">Loading courses...</div>
       ) : displayedCourses.length > 0 ? (
         <div className={viewMode === "grid" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" : "space-y-4"}>
           {displayedCourses.map((course) => {
@@ -335,37 +349,31 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
             const isEnrolled = currentPlan === 'silver' || currentPlan === 'gold' || currentPlan === 'free';
             const formattedExpiryDate = enrollmentRecord?.expiresAt ? new Date(enrollmentRecord.expiresAt).toLocaleDateString('en-GB') : null;
 
-            const handlePlanBuy = (planType) => {
-              buyCourse(token, [courseId], user, navigate, dispatch, planType);
-            };
-
             return (
               <div
                 key={courseId}
-                className="bg-[#0e111f] border border-blue-500/20 hover:border-blue-500/50 rounded-2xl p-4 sm:p-5 transition-all duration-300 shadow-[0_0_20px_rgba(37, 99, 235,0.08)] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-5 relative group"
+                className="bg-white border border-gray-200/80 hover:border-indigo-200 rounded-2xl p-4 sm:p-5 transition-all duration-300 shadow-xs hover:shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-5 relative group"
               >
                 {/* Course Thumbnail & Details Left Column */}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 min-w-0 flex-1">
                   <div 
                     onClick={() => navigate(`/courses/${courseId}`)}
-                    className="relative aspect-video w-full sm:w-44 rounded-xl overflow-hidden bg-blue-950/30 border border-blue-500/20 shrink-0 cursor-pointer group-hover:border-blue-500/60"
+                    className="relative aspect-video w-full sm:w-44 rounded-xl overflow-hidden bg-gray-100 border border-gray-200 shrink-0 cursor-pointer"
                   >
                     <img
                       src={course.thumbnail}
                       alt={course.courseName}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <div className="absolute inset-0 bg-blue-950/20 group-hover:opacity-0 transition-opacity" />
                   </div>
 
-                  <div className="space-y-2 min-w-0 flex-1">
+                  <div className="space-y-1.5 min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      {/* DYNAMIC REAL USER ACCESS PLAN BADGE */}
-                      <span className={`inline-block text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-md border ${
-                        currentPlan === 'gold' ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-[0_0_8px_rgba(245,158,11,0.2)]' :
-                        currentPlan === 'silver' ? 'bg-blue-500/20 text-blue-300 border-blue-500/40 shadow-[0_0_8px_rgba(59,130,246,0.2)]' :
-                        currentPlan === 'expired' ? 'bg-red-500/20 text-red-400 border-red-500/40' :
-                        'bg-blue-950/40 text-blue-300 border-blue-500/30'
+                      <span className={`inline-block text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full border ${
+                        currentPlan === 'gold' ? 'bg-[#FEF3C7] text-[#D97706] border-[#FDE68A]' :
+                        currentPlan === 'silver' ? 'bg-[#13AA92]/10 text-[#3BA7F2] border-[#13AA92]/30' :
+                        currentPlan === 'expired' ? 'bg-[#FEE2E2] text-[#DC2626] border-[#FECACA]' :
+                        'bg-gray-100 text-gray-600 border-gray-200'
                       }`}>
                         {currentPlan === 'gold' ? 'GOLD • ACTIVE' :
                          currentPlan === 'silver' ? 'SILVER • ACTIVE' :
@@ -373,14 +381,13 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
                          'FREE'}
                       </span>
 
-                      {/* VALIDITY / EXPIRY DATE TEXT */}
                       {currentPlan === 'silver' && formattedExpiryDate && (
-                        <span className="text-[10px] text-blue-300 font-semibold bg-blue-950/60 px-2 py-0.5 rounded border border-blue-500/20">
+                        <span className="text-[10px] text-gray-500 font-semibold bg-gray-50 px-2 py-0.5 rounded border border-gray-200/60">
                           Valid Until: {formattedExpiryDate}
                         </span>
                       )}
                       {currentPlan === 'gold' && (
-                        <span className="text-[10px] text-amber-300 font-semibold bg-amber-950/60 px-2 py-0.5 rounded border border-amber-500/20">
+                        <span className="text-[10px] text-amber-600 font-semibold bg-amber-50 px-2 py-0.5 rounded border border-amber-200/60">
                           Lifetime Access
                         </span>
                       )}
@@ -388,207 +395,86 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
 
                     <h3 
                       onClick={() => navigate(`/courses/${courseId}`)}
-                      className="font-bold text-base text-white hover:text-blue-400 cursor-pointer transition-colors truncate max-w-full"
+                      className="font-bold text-sm sm:text-base text-[#0F172A] hover:text-[#3BA7F2] cursor-pointer transition-colors truncate max-w-full"
                     >
                       {course.courseName}
                     </h3>
 
-                    <p className="text-xs text-richblack-300 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed font-normal">
                       {course.courseDescription}
                     </p>
 
-                    <div className="flex items-center gap-4 text-[11px] text-richblack-400 flex-wrap pt-1">
+                    <div className="flex items-center gap-4 text-[11px] text-gray-400 flex-wrap pt-0.5 font-medium">
                       <span className="flex items-center gap-1">
-                        ⏰ <span>{course?.totalDuration || "8h 30m"}</span>
+                        <FiClock /> <span>{course?.totalDuration || "8h 30m"}</span>
                       </span>
                       <span className="flex items-center gap-1">
-                        📚 <span>{totalLecturesCount} Lessons</span>
+                        <FiBookOpen /> <span>{totalLecturesCount} Lessons</span>
                       </span>
                       <span className="flex items-center gap-1">
-                        📊 <span>{course.instructions?.[0] || "Beginner"}</span>
+                        <FiAward /> <span>{course.instructions?.[0] || "Beginner"}</span>
                       </span>
                     </div>
                   </div>
                 </div>
 
                 {/* Progress Bar & Continue CTA Right Column */}
-                <div className="flex flex-col sm:flex-row md:flex-col items-start sm:items-center md:items-end justify-between md:justify-center gap-3 shrink-0 border-t md:border-t-0 border-white/10 pt-3 md:pt-0">
+                <div className="flex flex-col sm:flex-row md:flex-col items-start sm:items-center md:items-end justify-between md:justify-center gap-3 shrink-0 border-t md:border-t-0 border-gray-100 pt-3 md:pt-0">
                   <div className="w-full sm:w-44 md:text-right space-y-1">
-                    <div className="flex items-center justify-between md:justify-end gap-2 text-xs font-bold text-blue-400">
+                    <div className="flex items-center justify-between md:justify-end gap-2 text-xs font-bold text-[#3BA7F2]">
                       <span>{progressPct}% Complete</span>
                     </div>
-                    <div className="w-full bg-[#070913] h-2 rounded-full overflow-hidden">
+                    <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
                       <div
-                        className="bg-gradient-to-r from-blue-500 to-indigo-500 h-full rounded-full transition-all duration-300"
+                        className="bg-[#3BA7F2] h-full rounded-full transition-all duration-300"
                         style={{ width: `${progressPct}%` }}
                       />
                     </div>
-                    <span className="text-[10px] text-richblack-400 font-medium block">
+                    <span className="text-[10px] text-gray-400 font-medium block">
                       {completedCount} / {totalLecturesCount} lessons
                     </span>
                   </div>
 
                   <div className="flex items-center gap-2 w-full sm:w-auto flex-wrap sm:flex-nowrap">
-                    {/* DYNAMIC ACTION BUTTONS PER REQUIREMENT */}
-                    {currentPlan === 'gold' ? (
-                      <button
-                        onClick={() => navigate(`/s/courses/${courseId}/take`)}
-                        className="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 to-yellow-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold hover:bg-amber-500 hover:text-black transition-all flex items-center justify-center gap-1.5"
-                      >
-                        <span>Continue Learning</span>
-                        <VscPlay className="text-[10px]" />
-                      </button>
-                    ) : currentPlan === 'silver' ? (
-                      <div className="flex items-center gap-2 flex-1 sm:flex-none">
-                        <button
-                          onClick={() => navigate(`/s/courses/${courseId}/take`)}
-                          className="px-3.5 py-2 rounded-xl bg-blue-600/20 text-blue-300 border border-blue-500/30 text-xs font-bold hover:bg-blue-600 hover:text-white transition-all flex items-center gap-1.5"
-                        >
-                          <span>Continue Learning</span>
-                          <VscPlay className="text-[10px]" />
-                        </button>
-                        <button
-                          onClick={() => navigate(`/courses/${courseId}`)}
-                          className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-black font-extrabold text-xs shadow-md transition"
-                        >
-                          Upgrade to Gold
-                        </button>
-                      </div>
-                    ) : currentPlan === 'expired' ? (
-                      <div className="flex items-center gap-2 flex-1 sm:flex-none">
-                        <button
-                          onClick={() => navigate(`/courses/${courseId}`)}
-                          className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white font-bold text-xs shadow-md transition"
-                        >
-                          Renew Silver
-                        </button>
-                        <button
-                          onClick={() => navigate(`/courses/${courseId}`)}
-                          className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-black font-extrabold text-xs shadow-md transition"
-                        >
-                          Upgrade to Gold
-                        </button>
-                      </div>
-                    ) : (
-                      /* FREE PLAN */
-                      <div className="flex items-center gap-2 flex-1 sm:flex-none flex-wrap">
-                        <button
-                          onClick={() => navigate(`/s/courses/${courseId}/take`)}
-                          className="px-3 py-2 rounded-xl bg-richblack-800 text-white border border-richblack-700 text-xs font-semibold hover:bg-richblack-700 transition-all"
-                        >
-                          Continue Free
-                        </button>
-                        <button
-                          onClick={() => navigate(`/courses/${courseId}`)}
-                          className="px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all"
-                        >
-                          Upgrade to Silver
-                        </button>
-                        <button
-                          onClick={() => navigate(`/courses/${courseId}`)}
-                          className="px-3 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 text-black font-extrabold text-xs hover:from-amber-300 hover:to-yellow-400 transition-all"
-                        >
-                          Upgrade to Gold
-                        </button>
-                      </div>
-                    )}
+                    <button
+                      onClick={() => navigate(`/s/courses/${courseId}/take`)}
+                      className="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-[#3BA7F2] hover:bg-[#3BA7F2] text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm shadow-indigo-500/20 cursor-pointer"
+                    >
+                      <span>Continue Learning</span>
+                      <FiPlay className="text-[10px]" />
+                    </button>
 
-                    {/* Three Dots Options Menu */}
+                    {/* Three Dots Menu */}
                     <div className="relative">
                       <button
                         onClick={() => setOpenMenuId(openMenuId === courseId ? null : courseId)}
-                        className="p-2.5 rounded-xl bg-[#070913] border border-blue-500/20 text-richblack-400 hover:text-white transition-colors"
+                        className="p-2.5 rounded-xl bg-gray-50 border border-gray-200 text-gray-500 hover:text-gray-800 transition-colors cursor-pointer"
                       >
-                        <VscEllipsis />
+                        <FiMoreVertical />
                       </button>
 
                       {openMenuId === courseId && (
-                        <div className="absolute right-0 bottom-full mb-2 w-52 bg-[#0e111f] border border-blue-500/30 rounded-xl p-2 shadow-2xl z-20 space-y-1 text-xs">
-                          {/* CURRENT PLAN DISPLAY HEADER IN MENU */}
-                          <div className="px-2 py-1 border-b border-white/10 text-[11px] font-bold text-richblack-300">
-                            Current Plan: <span className="text-blue-400 uppercase">{currentPlan === 'expired' ? 'SILVER EXPIRED' : currentPlan.toUpperCase()}</span>
-                            {currentPlan === 'silver' && formattedExpiryDate && (
-                              <div className="text-[10px] text-richblack-400 font-normal">Valid Until: {formattedExpiryDate}</div>
-                            )}
-                            {currentPlan === 'gold' && (
-                              <div className="text-[10px] text-amber-400 font-normal">Lifetime Access</div>
-                            )}
-                          </div>
-
-                          {/* PLAN SPECIFIC MENU OPTIONS */}
-                          {currentPlan === 'free' && (
-                            <>
-                              <button
-                                onClick={() => { setOpenMenuId(null); navigate(`/courses/${courseId}`); }}
-                                className="w-full text-left px-2.5 py-1.5 text-blue-300 hover:bg-blue-900/30 rounded-lg font-medium"
-                              >
-                                Upgrade to Silver
-                              </button>
-                              <button
-                                onClick={() => { setOpenMenuId(null); navigate(`/courses/${courseId}`); }}
-                                className="w-full text-left px-2.5 py-1.5 text-amber-300 hover:bg-amber-900/30 rounded-lg font-medium"
-                              >
-                                Upgrade to Gold
-                              </button>
-                            </>
-                          )}
-
-                          {currentPlan === 'silver' && (
-                            <>
-                              <button
-                                disabled
-                                className="w-full text-left px-2.5 py-1.5 text-blue-400/60 bg-blue-950/20 rounded-lg font-semibold cursor-default"
-                              >
-                                Silver ✓ Current Plan
-                              </button>
-                              <button
-                                onClick={() => { setOpenMenuId(null); navigate(`/courses/${courseId}`); }}
-                                className="w-full text-left px-2.5 py-1.5 text-amber-300 hover:bg-amber-900/30 rounded-lg font-medium"
-                              >
-                                Upgrade to Gold
-                              </button>
-                            </>
-                          )}
-
-                          {currentPlan === 'gold' && (
-                            <>
-                              <button
-                                disabled
-                                className="w-full text-left px-2.5 py-1.5 text-amber-400/60 bg-amber-950/20 rounded-lg font-semibold cursor-default"
-                              >
-                                Gold ✓ Current Plan
-                              </button>
-                              <button
-                                disabled
-                                className="w-full text-left px-2.5 py-1.5 text-richblack-600 rounded-lg text-[11px] cursor-not-allowed"
-                              >
-                                Silver (Already Included)
-                              </button>
-                            </>
-                          )}
-
-                          <div className="border-t border-white/10 pt-1">
+                        <div className="absolute right-0 bottom-full mb-2 w-48 bg-white border border-gray-200 rounded-xl p-2 shadow-xl z-20 space-y-1 text-xs">
+                          <button
+                            onClick={() => {
+                              setOpenMenuId(null);
+                              navigate(`/courses/${courseId}`);
+                            }}
+                            className="w-full text-left px-2.5 py-1.5 text-gray-700 hover:bg-gray-50 rounded-lg font-medium cursor-pointer"
+                          >
+                            View Details
+                          </button>
+                          {isEnrolled && (
                             <button
                               onClick={() => {
                                 setOpenMenuId(null);
-                                navigate(`/courses/${courseId}`);
+                                navigate(`/s/courses/${courseId}/certificate`);
                               }}
-                              className="w-full text-left px-2.5 py-1.5 text-richblack-200 hover:text-white hover:bg-blue-600/20 rounded-lg font-medium"
+                              className="w-full text-left px-2.5 py-1.5 text-[#3BA7F2] hover:bg-indigo-50 rounded-lg font-medium cursor-pointer"
                             >
-                              View Details
+                              View Certificate
                             </button>
-                            {isEnrolled && (
-                              <button
-                                onClick={() => {
-                                  setOpenMenuId(null);
-                                  navigate(`/s/courses/${courseId}/certificate`);
-                                }}
-                                className="w-full text-left px-2.5 py-1.5 text-blue-300 hover:bg-blue-600/20 rounded-lg font-medium"
-                              >
-                                View Certificate
-                              </button>
-                            )}
-                          </div>
+                          )}
                         </div>
                       )}
                     </div>
@@ -600,18 +486,58 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
           })}
         </div>
       ) : (
-        /* EMPTY STATE */
-        <div className="bg-[#0e111f] border border-blue-500/20 rounded-2xl p-12 text-center text-richblack-300 space-y-3 shadow-[0_0_20px_rgba(37, 99, 235,0.08)]">
-          <VscBook className="text-4xl mx-auto text-blue-400/50" />
-          <h3 className="text-base font-bold text-white">No courses found</h3>
-          <p className="text-xs text-richblack-400 max-w-sm mx-auto">
+        /* 4. CLEAN EMPTY STATE (EXACT MATCH TO REFERENCE SCREENSHOT) */
+        <div className="bg-white border border-gray-200/80 rounded-2xl sm:rounded-3xl p-10 sm:p-14 text-center shadow-xs space-y-4">
+          
+          {/* Vector Illustration: Stack of books with graduation cap and sparkle bursts */}
+          <div className="relative inline-flex items-center justify-center mb-1">
+            <svg width="150" height="120" viewBox="0 0 160 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+              {/* Soft circular halo */}
+              <ellipse cx="80" cy="76" rx="64" ry="46" fill="#F0F4FF" />
+              
+              {/* Sparkle burst rays top-right */}
+              <line x1="124" y1="28" x2="130" y2="24" stroke="#3BA7F2" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
+              <line x1="133" y1="38" x2="140" y2="38" stroke="#3BA7F2" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
+              <line x1="128" y1="47" x2="134" y2="52" stroke="#3BA7F2" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
+
+              {/* Book 3 (Bottom Blue) */}
+              <rect x="36" y="86" width="88" height="14" rx="4" fill="#3BA7F2" />
+              <path d="M40 88H120V98H40C37.7909 98 36 96.2091 36 94V90C36 87.7909 37.7909 88 40 88Z" fill="#3BA7F2" />
+              <rect x="42" y="88" width="78" height="10" rx="2" fill="#FFFFFF" />
+              <line x1="48" y1="93" x2="114" y2="93" stroke="#E2E8F0" strokeWidth="2" strokeLinecap="round" />
+
+              {/* Book 2 (Middle Light Blue) */}
+              <rect x="42" y="73" width="76" height="14" rx="3" fill="#60A5FA" />
+              <path d="M45 75H114V84H45C43.3431 84 42 82.6569 42 81V77C42 75.3431 43.3431 75 45 75Z" fill="#3BA7F2" />
+              <rect x="47" y="75" width="67" height="10" rx="2" fill="#FFFFFF" />
+              <line x1="52" y1="80" x2="108" y2="80" stroke="#E2E8F0" strokeWidth="2" strokeLinecap="round" />
+
+              {/* Book 1 (Top Blue) */}
+              <rect x="46" y="61" width="68" height="13" rx="3" fill="#93C5FD" />
+              <path d="M49 63H110V71H49C47.3431 71 46 69.6569 46 68V65C46 63.3431 47.3431 63 49 63Z" fill="#60A5FA" />
+              <rect x="50" y="63" width="60" height="9" rx="2" fill="#FFFFFF" />
+              <line x1="55" y1="67.5" x2="104" y2="67.5" stroke="#E2E8F0" strokeWidth="1.5" strokeLinecap="round" />
+
+              {/* Graduation Cap (Mortarboard) */}
+              <path d="M80 32L116 46L80 60L44 46L80 32Z" fill="#1D4ED8" />
+              <path d="M80 32L116 46L80 50L44 46L80 32Z" fill="#3BA7F2" opacity="0.6" />
+              <path d="M58 52V58C58 64 68 67 80 67C92 67 102 64 102 58V52L80 60L58 52Z" fill="#1E40AF" />
+              <ellipse cx="80" cy="46" rx="3.5" ry="2" fill="#93C5FD" />
+              <path d="M80 46C87 47 96 50 100 56V65" stroke="#93C5FD" strokeWidth="2.2" strokeLinecap="round" />
+              <rect x="98" y="64" width="4.5" height="7" rx="1.5" fill="#60A5FA" />
+            </svg>
+          </div>
+
+          <h3 className="text-base sm:text-lg font-bold text-[#0F172A]">No courses found</h3>
+          <p className="text-xs sm:text-sm text-gray-500 max-w-sm mx-auto font-normal">
             {activeSubTab === "completed"
               ? "You haven't completed any courses yet. Keep learning!"
               : "You haven't enrolled in any courses yet."}
           </p>
+
           <button
             onClick={() => setActiveSubTab("buy")}
-            className="px-5 py-2.5 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-800 transition-all shadow-[0_0_15px_rgba(37, 99, 235,0.4)] inline-block mt-2"
+            className="px-6 py-2.5 rounded-xl bg-[#3BA7F2] hover:bg-[#3BA7F2] text-white text-xs sm:text-sm font-bold transition-all shadow-sm shadow-indigo-500/20 inline-block mt-2 cursor-pointer"
           >
             Explore Courses
           </button>
@@ -619,14 +545,18 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
       )}
 
       {/* 5. BOTTOM RECOMMENDED CTA BANNER */}
-      <div className="bg-gradient-to-r from-blue-950/50 via-[#0e111f] to-indigo-900/50 border border-blue-500/30 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-[0_0_30px_rgba(37, 99, 235,0.2)]">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-blue-600/30 text-blue-300 border border-blue-500/40 flex items-center justify-center text-2xl shrink-0 shadow-[0_0_15px_rgba(37, 99, 235,0.3)]">
-            🎓
+      <div className="bg-white border border-gray-200/80 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs relative overflow-hidden">
+        {/* Subtle decorative curves in the background right */}
+        <div className="absolute right-0 top-0 bottom-0 w-1/3 pointer-events-none bg-gradient-to-l from-indigo-50/70 via-blue-50/30 to-transparent rounded-r-2xl" />
+        <div className="absolute -right-8 -bottom-8 w-44 h-44 rounded-full bg-indigo-100/40 blur-2xl pointer-events-none" />
+
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="w-12 h-12 rounded-2xl bg-[#13AA92]/10 text-[#3BA7F2] flex items-center justify-center text-xl shrink-0">
+            <FaGraduationCap />
           </div>
           <div>
-            <h3 className="text-base font-bold text-white">Want to learn something new?</h3>
-            <p className="text-xs text-richblack-300 mt-0.5">
+            <h3 className="text-sm sm:text-base font-bold text-[#0F172A]">Want to learn something new?</h3>
+            <p className="text-xs text-gray-500 mt-0.5 font-normal">
               Explore our recommended courses and keep growing your skills.
             </p>
           </div>
@@ -634,10 +564,10 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
 
         <button
           onClick={() => setActiveSubTab("buy")}
-          className="px-6 py-3 rounded-xl bg-blue-600 text-white text-xs font-extrabold hover:bg-blue-800 transition-all shadow-[0_0_20px_rgba(37, 99, 235,0.4)] text-center shrink-0 flex items-center justify-center gap-2"
+          className="px-5 py-2.5 rounded-xl bg-[#3BA7F2] hover:bg-[#3BA7F2] text-white text-xs sm:text-sm font-bold transition-all shadow-sm shadow-indigo-500/20 text-center shrink-0 flex items-center justify-center gap-2 relative z-10 cursor-pointer"
         >
           <span>Explore Courses</span>
-          <VscArrowRight />
+          <FiArrowRight className="text-sm" />
         </button>
       </div>
 
