@@ -19,6 +19,7 @@ import { fetchCourseCategories, getAllCourses } from "../../services/operations/
 import NotificationBell from './NotificationBell';
 import { sidebarLinks } from '../../data/dashboard-links';
 import SidebarLink from '../core/Dashboard/SidebarLink';
+import CustomLogo from '../../assests/Logo/images.png';
 
 const Navbar = () => {
   const { token } = useSelector((state) => state.auth);
@@ -138,12 +139,14 @@ const Navbar = () => {
 
             {/* CodeLearn Logo */}
             <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white text-lg shadow-sm group-hover:scale-105 transition-transform shrink-0">
-                <VscCode />
-              </div>
+              <img 
+                src={CustomLogo} 
+                alt="CodeLearn Logo" 
+                className="w-9 h-9 rounded-xl shadow-sm group-hover:scale-105 transition-transform shrink-0 object-cover" 
+              />
               <div className="flex flex-col">
                 <span className="text-gray-900 font-bold text-base tracking-tight leading-none group-hover:text-blue-600 transition-colors">
-                  CodeLearn
+                  Code Learn
                 </span>
                 <span className="text-[9px] text-gray-500 font-semibold tracking-wider uppercase mt-1">
                   Learn • Build • Grow
@@ -522,11 +525,13 @@ const Navbar = () => {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="flex items-center gap-2.5"
                 >
-                  <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white text-base shadow-sm">
-                    <VscCode />
-                  </div>
+                  <img 
+                    src={CustomLogo} 
+                    alt="CodeLearn Logo" 
+                    className="w-8 h-8 rounded-xl shadow-sm object-cover" 
+                  />
                   <div className="flex flex-col">
-                    <span className="text-gray-900 font-bold text-sm tracking-tight leading-none">CodeLearn</span>
+                    <span className="text-gray-900 font-bold text-sm tracking-tight leading-none">Code Learn</span>
                     <span className="text-[8px] text-gray-500 font-semibold tracking-wider uppercase mt-0.5">LEARN • BUILD • GROW</span>
                   </div>
                 </Link>
