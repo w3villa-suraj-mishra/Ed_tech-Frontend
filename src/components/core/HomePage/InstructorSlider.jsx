@@ -92,7 +92,7 @@ const InstructorSlider = ({ dynamicInstructors = [] }) => {
   };
 
   return (
-    <section className="w-full max-w-maxContent mx-auto px-4 py-12 lg:py-16 text-left">
+    <section className="w-full max-w-maxContent mx-auto px-4 text-left py-[15px]">
       
       {/* Section Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">

@@ -5,6 +5,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      boxShadow: {
+        'premium-light': '0 10px 30px rgba(30, 64, 175, 0.10)',
+      },
       colors: {
         richblack: {
           5: "#F1F2FF",

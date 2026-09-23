@@ -6,7 +6,7 @@ import { FaFire } from 'react-icons/fa';
 
 const LearningLanguageSection = () => {
   return (
-    <section className="w-full py-16 lg:py-24 text-center">
+    <section className="w-full text-center py-[15px]">
       
       {/* Section Header */}
       <div className="max-w-2xl mx-auto space-y-3">

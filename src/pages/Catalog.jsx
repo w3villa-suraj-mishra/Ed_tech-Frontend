@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams, useSearchParams, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllCourses, fetchCourseCategories } from "../services/operations/courseDetailsAPI";
@@ -12,7 +12,8 @@ import {
   VscBook,
   VscClock,
   VscStarFull,
-  VscArrowRight
+  VscArrowRight,
+  VscChevronDown
 } from "react-icons/vsc";
 
 const Catalog = () => {
@@ -32,6 +33,19 @@ const Catalog = () => {
   const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
   const [sortBy, setSortBy] = useState("recent");
   const [loading, setLoading] = useState(true);
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsCategoryDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const querySearch = searchParams.get("search");
@@ -148,7 +162,7 @@ const Catalog = () => {
             e.stopPropagation();
             navigate(`/view-course/${courseId}/section/${course.courseContent?.[0]?._id || "1"}/sub-section/${course.courseContent?.[0]?.subSection?.[0]?._id || "1"}`);
           }}
-          className="w-full py-3 bg-blue-50 border border-blue-200 text-blue-700 rounded-xl text-xs font-bold transition-all hover:bg-blue-600 hover:border-blue-600 hover:text-white flex items-center justify-center gap-1.5 shadow-sm"
+          className="w-full py-3 bg-[#EFF6FF] border border-blue-200 text-blue-700 rounded-xl text-xs font-bold transition-all hover:bg-blue-600 hover:border-blue-600 hover:text-white flex items-center justify-center gap-1.5 shadow-sm"
         >
           <span>Continue Learning</span>
           <VscArrowRight />
@@ -186,7 +200,7 @@ const Catalog = () => {
             navigate("/dashboard/cart");
           }
         }}
-        className="w-full py-3 bg-white text-blue-600 border border-blue-200 rounded-xl text-xs font-bold transition-all hover:bg-blue-600 hover:text-white hover:border-blue-600 shadow-sm flex items-center justify-center gap-1.5"
+        className="w-full py-3 bg-white text-[#4F8FF7] border border-blue-200 rounded-xl text-xs font-bold transition-all hover:bg-blue-600 hover:text-white hover:border-blue-600 shadow-sm flex items-center justify-center gap-1.5"
       >
         <span>Enroll Now</span>
         <VscArrowRight />
@@ -202,7 +216,7 @@ const Catalog = () => {
         {/* 1. PAGE HEADER */}
         <div className="text-center space-y-3 max-w-2xl mx-auto">
           <h1 className="text-3xl sm:text-5xl font-extrabold text-gray-900 tracking-tight">
-            Explore Our <span className="text-blue-600">Course Catalog</span>
+            Explore Our <span className="text-[#4F8FF7]">Course Catalog</span>
           </h1>
           <p className="text-xs sm:text-sm text-gray-500 font-medium leading-relaxed">
             Discover thousands of courses designed to help you advance your career in tech.
@@ -212,7 +226,7 @@ const Catalog = () => {
         {/* 2. SEARCH & CATEGORY SELECTOR DROPDOWN */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-2xl mx-auto">
           <div className="relative w-full sm:flex-1 group">
-            <VscSearch className="absolute left-4 top-3.5 text-gray-400 text-sm group-focus-within:text-blue-500 transition-colors" />
+            <VscSearch className="absolute left-4 top-3.5 text-gray-400 text-sm group-focus-within:text-[#3B82F6] transition-colors" />
             <input
               type="text"
               placeholder="Search for courses..."
@@ -225,56 +239,47 @@ const Catalog = () => {
             />
           </div>
 
-          <div className="relative w-full sm:w-56 group">
-            <select
-              value={selectedCategory}
-              onChange={(e) => handleCategorySelect(e.target.value)}
-              className="w-full appearance-none bg-white border border-gray-200 rounded-2xl px-5 py-3 pr-10 text-sm text-gray-800 outline-none cursor-pointer focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all shadow-sm font-medium"
+          <div className="relative w-full sm:w-56" ref={dropdownRef}>
+            <button
+              type="button"
+              onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
+              className="w-full flex items-center justify-between bg-white border border-gray-200 rounded-2xl px-5 py-3 text-sm text-gray-800 outline-none cursor-pointer focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all shadow-sm font-medium"
             >
-              <option value="all">All Categories</option>
-              {categories.map((cat) => {
-                const catId = cat._id || cat.id;
-                return (
-                  <option key={catId} value={catId}>
-                    {cat.name}
-                  </option>
-                );
-              })}
-            </select>
-            <VscListFilter className="absolute right-4 top-3.5 text-gray-400 pointer-events-none text-sm group-focus-within:text-blue-500 transition-colors" />
+              <span className="truncate pr-2">
+                {selectedCategory === "all" ? "All Categories" : categories.find(c => String(c._id || c.id) === String(selectedCategory))?.name || "All Categories"}
+              </span>
+              <VscChevronDown className={`text-gray-400 text-lg transition-transform duration-200 shrink-0 ${isCategoryDropdownOpen ? "rotate-180" : ""}`} />
+            </button>
+            
+            {isCategoryDropdownOpen && (
+              <div className="absolute top-full left-0 w-full mt-2 bg-white rounded-2xl shadow-premium-light border border-gray-200 text-gray-700 z-[100] animate-in fade-in slide-in-from-top-2 duration-150 overflow-hidden">
+                <div className="max-h-[300px] overflow-y-auto custom-scrollbar p-1.5">
+                  <div 
+                    onClick={() => { handleCategorySelect("all"); setIsCategoryDropdownOpen(false); }}
+                    className={`px-4 py-2.5 text-sm cursor-pointer rounded-xl transition-colors ${selectedCategory === "all" ? "bg-[#DBEAFE] text-[#3B82F6] font-bold" : "hover:bg-[#EFF6FF] hover:text-[#3B82F6] text-gray-600"}`}
+                  >
+                    All Categories
+                  </div>
+                  {categories.map((cat) => {
+                    const catId = cat._id || cat.id;
+                    const isSelected = String(selectedCategory) === String(catId);
+                    return (
+                      <div
+                        key={catId}
+                        onClick={() => { handleCategorySelect(catId); setIsCategoryDropdownOpen(false); }}
+                        className={`px-4 py-2.5 text-sm cursor-pointer rounded-xl transition-colors ${isSelected ? "bg-[#DBEAFE] text-[#3B82F6] font-bold" : "hover:bg-[#EFF6FF] hover:text-[#3B82F6] text-gray-600"}`}
+                      >
+                        {cat.name}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* 3. CATEGORY CHIPS ROW */}
-        <div className="flex items-center justify-center gap-2 flex-wrap max-w-4xl mx-auto">
-          <button
-            onClick={() => handleCategorySelect("all")}
-            className={`px-5 py-2 rounded-xl text-xs font-bold transition-all border ${
-              selectedCategory === "all"
-                ? "bg-blue-600 border-blue-600 text-white shadow-md shadow-blue-500/20"
-                : "bg-white border-gray-200 text-gray-600 hover:text-gray-900 hover:border-blue-300 hover:bg-blue-50"
-            }`}
-          >
-            All
-          </button>
-          {categories.map((cat) => {
-            const catId = String(cat._id || cat.id);
-            const isSelected = String(selectedCategory) === catId || String(selectedCategory).toLowerCase() === cat.name?.toLowerCase();
-            return (
-              <button
-                key={catId}
-                onClick={() => handleCategorySelect(catId)}
-                className={`px-5 py-2 rounded-xl text-xs font-bold transition-all border ${
-                  isSelected
-                    ? "bg-blue-600 border-blue-600 text-white shadow-md shadow-blue-500/20"
-                    : "bg-white border-gray-200 text-gray-600 hover:text-gray-900 hover:border-blue-300 hover:bg-blue-50"
-                }`}
-              >
-                {cat.name}
-              </button>
-            );
-          })}
-        </div>
+
 
         {/* 4. COURSE GRID */}
         {loading ? (
@@ -320,7 +325,7 @@ const Catalog = () => {
 
                     {/* Card Content */}
                     <div className="p-5 space-y-3">
-                      <h3 className="font-extrabold text-lg text-gray-900 line-clamp-1 group-hover:text-blue-600 transition-colors">
+                      <h3 className="font-extrabold text-lg text-gray-900 line-clamp-1 group-hover:text-[#3B82F6] transition-colors">
                         {course.courseName}
                       </h3>
 
@@ -331,7 +336,7 @@ const Catalog = () => {
                       {/* Course Metadata */}
                       <div className="flex items-center gap-4 text-[11px] font-medium text-gray-500 pt-1">
                         <span className="flex items-center gap-1.5 bg-gray-50 px-2 py-1 rounded-md">
-                          <VscBook className="text-blue-500" />
+                          <VscBook className="text-[#3B82F6]" />
                           <span>{totalSections} Sections</span>
                         </span>
                         <span className="flex items-center gap-1.5 bg-gray-50 px-2 py-1 rounded-md">
@@ -359,7 +364,7 @@ const Catalog = () => {
                           ₹{currentPrice.toLocaleString()}
                         </span>
                         {discountPct > 0 && (
-                          <span className="text-[10px] font-extrabold bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-md">
+                          <span className="text-[10px] font-extrabold bg-[#DBEAFE] text-blue-700 px-1.5 py-0.5 rounded-md">
                             {discountPct}% OFF
                           </span>
                         )}
@@ -400,7 +405,7 @@ const Catalog = () => {
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="w-10 h-10 rounded-xl bg-white border border-gray-200 hover:border-blue-300 hover:bg-blue-50 flex items-center justify-center text-gray-500 hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none transition-all shadow-sm"
+              className="w-10 h-10 rounded-xl bg-white border border-gray-200 hover:border-blue-300 hover:bg-[#EFF6FF] flex items-center justify-center text-gray-500 hover:text-[#3B82F6] disabled:opacity-50 disabled:pointer-events-none transition-all shadow-sm"
             >
               <VscChevronLeft className="text-lg" />
             </button>
@@ -415,7 +420,7 @@ const Catalog = () => {
                   className={`w-10 h-10 rounded-xl font-bold text-sm transition-all shadow-sm ${
                     isActive
                       ? "bg-blue-600 text-white shadow-blue-500/20"
-                      : "bg-white border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50"
+                      : "bg-white border border-gray-200 text-gray-600 hover:text-[#3B82F6] hover:border-blue-300 hover:bg-[#EFF6FF]"
                   }`}
                 >
                   {pageNum}
@@ -426,7 +431,7 @@ const Catalog = () => {
             <button
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
-              className="w-10 h-10 rounded-xl bg-white border border-gray-200 hover:border-blue-300 hover:bg-blue-50 flex items-center justify-center text-gray-500 hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none transition-all shadow-sm"
+              className="w-10 h-10 rounded-xl bg-white border border-gray-200 hover:border-blue-300 hover:bg-[#EFF6FF] flex items-center justify-center text-gray-500 hover:text-[#3B82F6] disabled:opacity-50 disabled:pointer-events-none transition-all shadow-sm"
             >
               <VscChevronRight className="text-lg" />
             </button>

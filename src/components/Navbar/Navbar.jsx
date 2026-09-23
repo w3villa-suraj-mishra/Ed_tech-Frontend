@@ -130,7 +130,7 @@ const Navbar = () => {
             {/* Mobile Hamburger Drawer Trigger (Always visible on mobile) */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="lg:hidden p-2 rounded-xl text-gray-700 hover:text-[#3B82F6] hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               aria-label="Toggle Mobile Menu"
             >
               <span className="text-xl leading-none">☰</span>
@@ -142,7 +142,7 @@ const Navbar = () => {
                 <VscCode />
               </div>
               <div className="flex flex-col">
-                <span className="text-gray-900 font-bold text-base tracking-tight leading-none group-hover:text-blue-600 transition-colors">
+                <span className="text-gray-900 font-bold text-base tracking-tight leading-none group-hover:text-[#3B82F6] transition-colors">
                   CodeLearn
                 </span>
                 <span className="text-[9px] text-gray-500 font-semibold tracking-wider uppercase mt-1">
@@ -176,7 +176,7 @@ const Navbar = () => {
 
             {/* SEARCH SUGGESTIONS DROPDOWN */}
             {searchQuery.length > 0 && (
-              <div className="absolute top-full left-0 w-full mt-1.5 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-[100] opacity-0 invisible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200">
+              <div className="absolute top-full left-0 w-full mt-1.5 bg-white border border-gray-200 rounded-xl shadow-premium-light overflow-hidden z-[100] opacity-0 invisible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200">
                 {filteredCourses.length > 0 ? (
                   <ul className="py-2">
                     {filteredCourses.map((course) => (
@@ -186,11 +186,11 @@ const Navbar = () => {
                           onClick={() => {
                             setSearchQuery("");
                           }}
-                          className="block px-4 py-2 hover:bg-gray-50 text-sm text-gray-700 transition-colors"
+                          className="block px-4 py-2 hover:bg-[#EFF6FF] text-sm text-gray-700 hover:text-[#3B82F6] transition-colors"
                         >
                           <div className="font-medium truncate">{course.courseName}</div>
                           {course.instructor && course.instructor.firstName && (
-                            <div className="text-xs text-gray-400 mt-0.5 truncate">
+                            <div className="text-xs text-gray-500 mt-0.5 truncate">
                               By {course.instructor.firstName} {course.instructor.lastName}
                             </div>
                           )}
@@ -217,21 +217,21 @@ const Navbar = () => {
               onMouseLeave={() => setIsCoursesOpen(false)}
             >
               <button 
-                className={`flex items-center gap-1.5 transition-colors ${matchRoute('/courses') ? 'text-blue-600 font-semibold' : 'hover:text-gray-900'}`}
+                className={`flex items-center gap-1.5 transition-colors ${matchRoute('/courses') ? 'text-[#4B5563] font-semibold' : 'hover:text-gray-900'}`}
                 aria-expanded={isCoursesOpen}
               >
                 <span>Courses</span>
-                <VscChevronDown className={`text-xs transition-transform duration-200 ${isCoursesOpen ? 'rotate-180 text-blue-600' : 'text-gray-400'}`} />
+                <VscChevronDown className={`text-xs transition-transform duration-200 ${isCoursesOpen ? 'rotate-180 text-[#4F8FF7]' : 'text-gray-400'}`} />
               </button>
 
               {isCoursesOpen && (
                 <div className="absolute top-full left-0 pt-2 w-[320px] z-50">
-                  <div className="bg-white rounded-2xl p-4 shadow-xl border border-gray-200/90 text-gray-800 animate-in fade-in slide-in-from-top-2 duration-150">
+                  <div className="bg-white rounded-2xl p-4 shadow-premium-light border border-gray-200 text-gray-700 animate-in fade-in slide-in-from-top-2 duration-150">
                     <div className="px-2 pb-2 mb-2 border-b border-gray-100 flex items-center justify-between">
                       <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500">
                         Top Curated Courses
                       </span>
-                      <span className="text-[10px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-bold border border-blue-100">
+                      <span className="text-[10px] bg-[#EFF6FF] text-[#3B82F6] px-2 py-0.5 rounded-full font-bold border border-[#DBEAFE]">
                         {courses.length} Available
                       </span>
                     </div>
@@ -243,7 +243,7 @@ const Navbar = () => {
                             key={course._id || i}
                             to={`/courses/${course._id}`}
                             onClick={() => setIsCoursesOpen(false)}
-                            className="flex items-center justify-between p-2 rounded-xl text-xs text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors group/item"
+                            className="flex items-center justify-between p-2 rounded-xl text-xs text-gray-700 hover:bg-[#EFF6FF] hover:text-[#3B82F6] transition-colors group/item"
                           >
                             <div className="flex flex-col max-w-[200px]">
                               <span className="font-medium truncate capitalize">{course.courseName}</span>
@@ -253,7 +253,7 @@ const Navbar = () => {
                                 </span>
                               )}
                             </div>
-                            <span className="text-blue-600 font-semibold text-xs shrink-0">
+                            <span className="text-[#3B82F6] font-semibold text-xs shrink-0">
                               ₹{course.price || 0}
                             </span>
                           </Link>
@@ -269,7 +269,7 @@ const Navbar = () => {
                       <Link 
                         to="/courses" 
                         onClick={() => setIsCoursesOpen(false)}
-                        className="text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors inline-flex items-center gap-1"
+                        className="text-xs font-semibold text-[#3B82F6] hover:text-[#3B82F6] transition-colors inline-flex items-center gap-1"
                       >
                         <span>View All Courses</span>
                         <span>→</span>
@@ -287,21 +287,21 @@ const Navbar = () => {
               onMouseLeave={() => setIsCatalogOpen(false)}
             >
               <button 
-                className={`flex items-center gap-1.5 transition-colors ${matchRoute('/catalog') ? 'text-blue-600 font-semibold' : 'hover:text-gray-900'}`}
+                className={`flex items-center gap-1.5 transition-colors ${matchRoute('/catalog') ? 'text-[#4F8FF7] font-semibold' : 'hover:text-gray-900'}`}
                 aria-expanded={isCatalogOpen}
               >
                 <span>Categories</span>
-                <VscChevronDown className={`text-xs transition-transform duration-200 ${isCatalogOpen ? 'rotate-180 text-blue-600' : 'text-gray-400'}`} />
+                <VscChevronDown className={`text-xs transition-transform duration-200 ${isCatalogOpen ? 'rotate-180 text-[#4F8FF7]' : 'text-gray-400'}`} />
               </button>
 
               {isCatalogOpen && (
                 <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[280px] z-50">
-                  <div className="bg-white rounded-2xl p-4 shadow-xl border border-gray-200/90 text-gray-800 animate-in fade-in slide-in-from-top-2 duration-150">
+                  <div className="bg-white rounded-2xl p-4 shadow-premium-light border border-gray-200 text-gray-700 animate-in fade-in slide-in-from-top-2 duration-150">
                     <div className="px-2 pb-2 mb-2 border-b border-gray-100 flex items-center justify-between">
                       <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500">
                         Explore Disciplines
                       </span>
-                      <span className="text-[10px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-bold border border-blue-100">
+                      <span className="text-[10px] bg-[#EFF6FF] text-[#3B82F6] px-2 py-0.5 rounded-full font-bold border border-[#DBEAFE]">
                         {categories.length} Total
                       </span>
                     </div>
@@ -313,7 +313,7 @@ const Navbar = () => {
                             key={subLink._id || i}
                             to={`/courses?category=${subLink._id || subLink.name.split(" ").join("-").toLowerCase()}`}
                             onClick={() => setIsCatalogOpen(false)}
-                            className="flex items-center justify-between p-2 rounded-xl text-xs font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors group/item"
+                            className="flex items-center justify-between p-2 rounded-xl text-xs font-medium text-gray-700 hover:bg-[#EFF6FF] hover:text-[#3B82F6] transition-colors group/item"
                           >
                             <span className="capitalize">{subLink.name}</span>
                             <span className="text-gray-400 group-hover/item:translate-x-0.5 transition-transform text-[10px]">
@@ -335,7 +335,7 @@ const Navbar = () => {
             {/* Practice Center */}
             <Link 
               to="/practice" 
-              className={`transition-colors py-1 ${matchRoute('/practice') ? 'text-blue-600 font-semibold' : 'hover:text-gray-900'}`}
+              className={`transition-colors py-1 ${matchRoute('/practice') ? 'text-[#4F8FF7] font-semibold' : 'hover:text-gray-900'}`}
             >
               Practice
             </Link>
@@ -343,7 +343,7 @@ const Navbar = () => {
             {/* About */}
             <Link 
               to="/about" 
-              className={`transition-colors py-1 ${matchRoute('/about') ? 'text-blue-600 font-semibold' : 'hover:text-gray-900'}`}
+              className={`transition-colors py-1 ${matchRoute('/about') ? 'text-[#4F8FF7] font-semibold' : 'hover:text-gray-900'}`}
             >
               About
             </Link>
@@ -351,7 +351,7 @@ const Navbar = () => {
             {/* Contact */}
             <Link 
               to="/contact" 
-              className={`transition-colors py-1 ${matchRoute('/contact') ? 'text-blue-600 font-semibold' : 'hover:text-gray-900'}`}
+              className={`transition-colors py-1 ${matchRoute('/contact') ? 'text-[#4F8FF7] font-semibold' : 'hover:text-gray-900'}`}
             >
               Contact
             </Link>
@@ -367,7 +367,7 @@ const Navbar = () => {
             {token && user && user?.account_type === "Student" && (
               <Link 
                 to="/dashboard/cart" 
-                className="relative p-2 rounded-xl text-gray-600 hover:text-blue-600 hover:bg-gray-100 transition-colors"
+                className="relative p-2 rounded-xl text-gray-600 hover:text-[#3B82F6] hover:bg-gray-100 transition-colors"
                 title="Cart"
               >
                 <AiOutlineShoppingCart className="text-xl" />
@@ -414,9 +414,9 @@ const Navbar = () => {
 
                 {/* Account Dropdown */}
                 {profileOpen && (
-                  <div className="absolute right-0 mt-2.5 w-60 max-h-[80vh] overflow-y-auto custom-scrollbar rounded-2xl bg-white border border-gray-200 text-gray-700 shadow-xl z-50 py-2 animate-in fade-in slide-in-from-top-2 duration-150">
+                  <div className="absolute right-0 mt-2.5 w-60 max-h-[80vh] overflow-y-auto custom-scrollbar rounded-2xl bg-white border border-gray-200 text-gray-700 shadow-premium-light z-50 py-2 animate-in fade-in slide-in-from-top-2 duration-150">
                     
-                    <div className="px-4 py-2 border-b border-gray-100 mb-1">
+                    <div className="px-4 py-2 border-b border-gray-200 mb-1">
                       <h3 className="font-semibold text-xs text-gray-900">{user?.first_name} {user?.last_name}</h3>
                       <p className="text-[11px] text-gray-500 truncate">{user?.email}</p>
                     </div>
@@ -426,65 +426,65 @@ const Navbar = () => {
                       <Link
                         to="/dashboard/global"
                         onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+                        className="flex items-center gap-3 px-4 py-2 text-xs font-medium text-gray-700 hover:bg-[#EFF6FF] hover:text-[#3B82F6] transition-colors"
                       >
-                        <VscDashboard className="text-sm text-blue-600" />
+                        <VscDashboard className="text-sm text-[#3B82F6]" />
                         <span>Dashboard</span>
                       </Link>
                       
                       <Link
                         to="/practice"
                         onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+                        className="flex items-center gap-3 px-4 py-2 text-xs font-medium text-gray-700 hover:bg-[#EFF6FF] hover:text-[#3B82F6] transition-colors"
                       >
-                        <VscCode className="text-sm text-blue-600" />
+                        <VscCode className="text-sm text-[#3B82F6]" />
                         <span>Practice</span>
                       </Link>
 
                       <Link
                         to="/dashboard/enrolled-courses"
                         onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+                        className="flex items-center gap-3 px-4 py-2 text-xs font-medium text-gray-700 hover:bg-[#EFF6FF] hover:text-[#3B82F6] transition-colors"
                       >
-                        <VscBook className="text-sm text-blue-600" />
+                        <VscBook className="text-sm text-[#3B82F6]" />
                         <span>Enrolled Courses</span>
                       </Link>
 
                       <Link
                         to="/dashboard/my-profile"
                         onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+                        className="flex items-center gap-3 px-4 py-2 text-xs font-medium text-gray-700 hover:bg-[#EFF6FF] hover:text-[#3B82F6] transition-colors"
                       >
-                        <VscAccount className="text-sm text-blue-600" />
+                        <VscAccount className="text-sm text-[#3B82F6]" />
                         <span>Profile</span>
                       </Link>
 
                       <Link
                         to="/dashboard/settings"
                         onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+                        className="flex items-center gap-3 px-4 py-2 text-xs font-medium text-gray-700 hover:bg-[#EFF6FF] hover:text-[#3B82F6] transition-colors"
                       >
-                        <VscGear className="text-sm text-blue-600" />
+                        <VscGear className="text-sm text-[#3B82F6]" />
                         <span>Settings</span>
                       </Link>
 
                       <Link
                         to="/dashboard/notifications"
                         onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+                        className="flex items-center gap-3 px-4 py-2 text-xs font-medium text-gray-700 hover:bg-[#EFF6FF] hover:text-[#3B82F6] transition-colors"
                       >
-                        <VscBell className="text-sm text-blue-600" />
+                        <VscBell className="text-sm text-[#3B82F6]" />
                         <span>Notifications</span>
                       </Link>
                     </div>
 
-                    <div className="border-t border-gray-100 mt-1.5 pt-1">
+                    <div className="border-t border-gray-200 mt-1.5 pt-1">
                       <button
                         onClick={() => {
                           setProfileOpen(false);
                           dispatch(logout(navigate));
                         }}
-                        className="w-full flex items-center gap-3 px-4 py-2 text-xs font-medium text-red-600 hover:bg-red-50 transition-colors text-left"
+                        className="w-full flex items-center gap-3 px-4 py-2 text-xs font-medium text-red-500 hover:bg-red-50 transition-colors text-left"
                       >
                         <VscSignOut className="text-sm text-red-500" />
                         <span>Logout</span>
@@ -568,7 +568,7 @@ const Navbar = () => {
                 <Link
                   to="/courses"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                  className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-gray-700 hover:bg-[#EFF6FF] hover:text-[#3B82F6]"
                 >
                   <span>All Courses</span>
                   <span className="text-gray-400">→</span>
@@ -576,7 +576,7 @@ const Navbar = () => {
                 <Link
                   to="/catalog"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                  className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-gray-700 hover:bg-[#EFF6FF] hover:text-[#3B82F6]"
                 >
                   <span>Categories</span>
                   <span className="text-gray-400">→</span>
@@ -584,7 +584,7 @@ const Navbar = () => {
                 <Link
                   to="/practice"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                  className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-gray-700 hover:bg-[#EFF6FF] hover:text-[#3B82F6]"
                 >
                   <span>Practice Center</span>
                   <span className="text-gray-400">→</span>
@@ -592,7 +592,7 @@ const Navbar = () => {
                 <Link
                   to="/about"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                  className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-gray-700 hover:bg-[#EFF6FF] hover:text-[#3B82F6]"
                 >
                   <span>About Us</span>
                   <span className="text-gray-400">→</span>
@@ -600,7 +600,7 @@ const Navbar = () => {
                 <Link
                   to="/contact"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                  className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-gray-700 hover:bg-[#EFF6FF] hover:text-[#3B82F6]"
                 >
                   <span>Contact Us</span>
                   <span className="text-gray-400">→</span>

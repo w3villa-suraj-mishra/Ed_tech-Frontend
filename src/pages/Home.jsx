@@ -354,12 +354,12 @@ const Home = () => {
   );
 
   return (
-    <div className="w-full bg-[#F8FAFC] text-[#111827] font-sans antialiased overflow-hidden">
+    <div className="w-full bg-[#F8FAFC] text-[#111827] font-sans antialiased overflow-hidden flex flex-col gap-[20px]">
       
       {/* ========================================================
           HERO / TOP SECTION (MATCHING REFERENCE DESIGN)
       ======================================================== */}
-      <section className="relative pt-8 pb-16 lg:pt-14 lg:pb-24 overflow-hidden bg-white border-b border-gray-100">
+      <section className="relative bg-white border-b border-gray-100 py-[15px]">
         {/* Subtle Background Watermark / Contour Lines Pattern */}
         <div className="absolute inset-0 pointer-events-none -z-10 opacity-35 overflow-hidden">
           <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
@@ -556,10 +556,10 @@ const Home = () => {
       {/* ========================================================
           POPULAR CATEGORIES SECTION (MATCHING REFERENCE DESIGN)
       ======================================================== */}
-      <section className="relative w-11/12 max-w-maxContent mx-auto py-14 lg:py-20 text-center overflow-hidden">
+      <section className="relative w-11/12 max-w-maxContent mx-auto text-center overflow-hidden py-[15px]">
         
         {/* Sketched Doodle Top-Left: Learn Without Limits */}
-        <div className="hidden lg:flex flex-col items-center absolute top-10 left-6 xl:left-14 pointer-events-none select-none -rotate-6">
+        <div className="hidden lg:flex flex-col items-center absolute top-0 left-6 xl:left-14 pointer-events-none select-none -rotate-6">
           <span className="font-serif italic font-bold text-xs sm:text-sm text-[#3BA7F2] tracking-wide text-center leading-tight">
             Learn<br />Without Limits
           </span>
@@ -570,7 +570,7 @@ const Home = () => {
         </div>
 
         {/* Sketched Doodle Top-Right: Build Your Future */}
-        <div className="hidden lg:flex flex-col items-center absolute top-10 right-6 xl:right-14 pointer-events-none select-none rotate-6">
+        <div className="hidden lg:flex flex-col items-center absolute top-0 right-6 xl:right-14 pointer-events-none select-none rotate-6">
           <span className="font-serif italic font-bold text-xs sm:text-sm text-[#3BA7F2] tracking-wide text-center leading-tight">
             Build<br />Your Future
           </span>
@@ -581,7 +581,7 @@ const Home = () => {
         </div>
 
         {/* Header Content */}
-        <div className="max-w-2xl mx-auto space-y-2.5 relative z-10">
+        <div className="max-w-2xl mx-auto space-y-2.5 relative z-10 pt-[60px]">
           <div className="inline-flex items-center gap-1.5 bg-[#13AA92]/10 text-[#13AA92] text-xs font-semibold px-3.5 py-1 rounded-full border border-[#13AA92]/30 mb-2 shadow-2xs">
             <FiGrid className="text-xs text-[#13AA92]" />
             <span>Domain Specializations</span>
@@ -755,8 +755,8 @@ const Home = () => {
       {/* ========================================================
           3 SIMPLE STEPS SECTION (MATCHING REFERENCE DESIGN)
       ======================================================== */}
-      <section className="w-full max-w-maxContent mx-auto px-4 py-12 lg:py-16">
-        <div className="rounded-3xl sm:rounded-[2.5rem] bg-white border border-gray-100 shadow-sm p-8 sm:p-12 lg:p-16 text-center max-w-5xl mx-auto">
+      <section className="w-11/12 max-w-maxContent mx-auto py-[15px]">
+        <div className="rounded-3xl sm:rounded-[2.5rem] bg-white border border-gray-100 shadow-sm p-[15px] text-center w-full mx-auto">
           
           {/* Section Header */}
           <div className="max-w-xl mx-auto mb-12 sm:mb-16">
@@ -769,13 +769,13 @@ const Home = () => {
           </div>
 
           {/* Steps Timeline Grid with Dotted Lines */}
-          <div className="relative flex flex-col md:flex-row items-center justify-between gap-10 md:gap-6 max-w-4xl mx-auto">
+          <div className="relative flex flex-col md:flex-row items-center justify-between gap-10 md:gap-6 w-full px-4 lg:px-20 mx-auto">
             
             {/* Desktop Dotted Connector Line */}
             <div className="hidden md:block absolute top-8 left-[18%] right-[18%] h-[2px] border-b-2 border-dotted border-indigo-200 z-0 pointer-events-none"></div>
 
             {/* Step 1: Create Your Account */}
-            <div className="relative z-10 flex flex-col items-center text-center max-w-[240px]">
+            <div className="relative z-10 flex flex-col items-center text-center w-full max-w-[320px]">
               <div className="w-16 h-16 rounded-full bg-[#13AA92]/10 border border-[#13AA92]/30 flex items-center justify-center text-[#3BA7F2] text-2xl shadow-2xs transition-transform duration-300 hover:scale-110 mb-5">
                 <FiUser />
               </div>
@@ -793,7 +793,7 @@ const Home = () => {
             </div>
 
             {/* Step 2: Explore Courses */}
-            <div className="relative z-10 flex flex-col items-center text-center max-w-[240px]">
+            <div className="relative z-10 flex flex-col items-center text-center w-full max-w-[320px]">
               <div className="w-16 h-16 rounded-full bg-[#13AA92]/10 border border-[#13AA92]/30 flex items-center justify-center text-[#3BA7F2] text-2xl shadow-2xs transition-transform duration-300 hover:scale-110 mb-5">
                 <FiBookOpen />
               </div>
@@ -811,7 +811,7 @@ const Home = () => {
             </div>
 
             {/* Step 3: Start & Grow */}
-            <div className="relative z-10 flex flex-col items-center text-center max-w-[240px]">
+            <div className="relative z-10 flex flex-col items-center text-center w-full max-w-[320px]">
               <div className="w-16 h-16 rounded-full bg-[#13AA92]/10 border border-[#13AA92]/30 flex items-center justify-center text-[#3BA7F2] text-2xl shadow-2xs transition-transform duration-300 hover:scale-110 mb-5">
                 <FaRocket className="text-xl" />
               </div>
@@ -836,7 +836,7 @@ const Home = () => {
       {/* ========================================================
           HANDS-ON CODE PLAYGROUND SECTIONS (CodeBlocks 1 & 2)
       ======================================================== */}
-      <section className="w-full max-w-maxContent mx-auto px-4 py-8 lg:py-12">
+      <section className="w-11/12 max-w-maxContent mx-auto py-[15px]">
         {/* Code Section 1 */}
         <CodeBlocks
           position={"lg:flex-row"}
@@ -924,7 +924,7 @@ export default function InteractiveCounter() {
       {/* ========================================================
           TIMELINE & METHODOLOGY SECTION
       ======================================================== */}
-      <section className="w-11/12 max-w-maxContent mx-auto py-8 lg:py-12 border-t border-gray-200/60">
+      <section className="w-11/12 max-w-maxContent mx-auto border-t border-gray-200/60 py-[15px]">
         <div className="flex flex-col lg:flex-row gap-6 mb-8">
           <div className="text-3xl sm:text-4xl font-bold text-gray-900 lg:w-1/2 tracking-tight leading-tight">
             Get the Skills You Need for a <br />
@@ -951,7 +951,7 @@ export default function InteractiveCounter() {
       {/* ========================================================
           FEATURED COURSES SECTION (MATCHING REFERENCE DESIGN)
       ======================================================== */}
-      <section className="w-full max-w-7xl mx-auto py-14 lg:py-20 px-4 sm:px-6 lg:px-8 text-center">
+      <section className="w-11/12 max-w-maxContent mx-auto text-center py-[15px]">
         
         {/* Header Content */}
         <div className="max-w-2xl mx-auto space-y-2.5 mb-12 text-center">
@@ -1067,7 +1067,7 @@ export default function InteractiveCounter() {
       {/* ========================================================
           FAQ ACCORDION SECTION
       ======================================================== */}
-      <section className="w-11/12 max-w-maxContent mx-auto py-12 lg:py-16 text-center border-t border-gray-200/60">
+      <section className="w-11/12 max-w-maxContent mx-auto text-center border-t border-gray-200/60 py-[15px]">
         <div className="max-w-2xl mx-auto space-y-3 mb-10">
           <div className="inline-flex items-center gap-1.5 bg-[#13AA92]/10 text-[#13AA92] text-xs font-semibold px-3.5 py-1 rounded-full border border-[#13AA92]/30 shadow-2xs">
             <FiHelpCircle className="text-xs text-[#13AA92]" />
@@ -1081,7 +1081,7 @@ export default function InteractiveCounter() {
           </p>
         </div>
 
-        <div className="max-w-3xl mx-auto space-y-3 text-left">
+        <div className="max-w-4xl mx-auto space-y-3 text-left">
           {faqData.map((faq, idx) => {
             const isOpen = activeFaq === idx;
             return (
@@ -1117,8 +1117,8 @@ export default function InteractiveCounter() {
       {/* ========================================================
           BOTTOM CONVERSION CTA BANNER (MATCHING REFERENCE DESIGN)
       ======================================================== */}
-      <section className="w-11/12 max-w-maxContent mx-auto py-6 lg:py-10">
-        <div className="rounded-3xl lg:rounded-[2.2rem] bg-gradient-to-r from-[#F0F8FF] via-[#F4FAFF] to-[#E6F4FF] border border-blue-100/90 py-6 px-6 sm:py-7 sm:px-9 lg:py-8 lg:px-12 relative overflow-hidden shadow-xs">
+      <section className="w-11/12 max-w-maxContent mx-auto py-[15px]">
+        <div className="rounded-3xl lg:rounded-[2.2rem] bg-gradient-to-r from-[#F0F8FF] via-[#F4FAFF] to-[#E6F4FF] border border-blue-100/90 p-[15px] relative overflow-hidden shadow-xs">
           
           {/* Ambient Glowing Background Blurs */}
           <div className="absolute -top-20 -right-20 w-96 h-96 bg-[#3BA7F2]/10 rounded-full blur-3xl pointer-events-none" />

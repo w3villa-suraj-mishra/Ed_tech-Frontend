@@ -165,7 +165,7 @@ const ExploreMore = () => {
   };
 
   return (
-    <section className="w-full max-w-maxContent mx-auto px-4 py-12 lg:py-16 text-center">
+    <section className="w-full max-w-maxContent mx-auto px-4 text-center py-[15px]">
       
       {/* Header */}
       <div className="max-w-2xl mx-auto space-y-3">

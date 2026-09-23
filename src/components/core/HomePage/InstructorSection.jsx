@@ -5,8 +5,8 @@ import { FiUsers, FiDollarSign, FiArrowRight } from "react-icons/fi";
 
 const InstructorSection = () => {
   return (
-    <section className="w-full max-w-maxContent mx-auto my-8 px-4">
-      <div className="rounded-3xl bg-gradient-to-br from-blue-50/60 via-white to-indigo-50/50 border border-gray-200/90 p-8 sm:p-12 lg:p-14 shadow-xs flex flex-col lg:flex-row items-center justify-between gap-12">
+    <section className="w-full max-w-maxContent mx-auto my-8 px-4 py-[15px]">
+      <div className="rounded-3xl bg-gradient-to-br from-blue-50/60 via-white to-indigo-50/50 border border-gray-200/90 p-[15px] shadow-xs flex flex-col lg:flex-row items-center justify-between gap-12">
         
         {/* Left Side: Instructor Image */}
         <div className="w-full lg:w-1/2 flex justify-center">
