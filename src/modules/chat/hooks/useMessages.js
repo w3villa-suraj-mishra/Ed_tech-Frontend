@@ -161,12 +161,18 @@ export function useMessages(conversationId, explicitToken = null) {
       };
 
       try {
-        // Send via socket first for instant delivery, or fallback to REST
-        if (chatSocket.isConnected) {
-          chatSocket.sendSocketMessage(payload, (ack) => {
+        // Send via live socket if connected, otherwise send via REST immediately
+        const isLiveSocket = Boolean(chatSocket.socket?.connected && !chatSocket.isRestFallback);
+
+        if (isLiveSocket) {
+          chatSocket.sendSocketMessage(payload, async (ack) => {
             if (!ack?.success) {
-              // fallback to REST if socket nack
-              apiSendMessage(conversationId, payload, token);
+              const res = await apiSendMessage(conversationId, payload, token);
+              if (res.message) {
+                setMessages((prev) =>
+                  prev.some((m) => m.id === res.message.id) ? prev : [...prev, res.message]
+                );
+              }
             }
           });
         } else {
@@ -191,9 +197,17 @@ export function useMessages(conversationId, explicitToken = null) {
     async (file, caption = '') => {
       if (!conversationId || !token) return;
 
-      const uploadRes = await uploadAttachment(file, token);
-      if (uploadRes.success && uploadRes.attachment) {
-        await handleSendMessage(caption, uploadRes.attachment.messageType, uploadRes.attachment);
+      try {
+        const uploadRes = await uploadAttachment(file, token);
+        if (uploadRes.success && uploadRes.attachment) {
+          await handleSendMessage(caption, uploadRes.attachment.messageType, uploadRes.attachment);
+        }
+      } catch (err) {
+        console.error('Attachment upload failed, attempting text delivery:', err);
+        if (caption && caption.trim()) {
+          await handleSendMessage(caption.trim(), 'TEXT', null);
+        }
+        throw err;
       }
     },
     [conversationId, token, handleSendMessage]

@@ -43,22 +43,25 @@ export default function MessageInput({
 
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
-    if ((!text.trim() && !selectedFile) || sending || disabled) return;
+    const content = text.trim();
+    if ((!content && !selectedFile) || sending || disabled) return;
 
     try {
       setSending(true);
       if (onStopTyping) onStopTyping();
 
-      if (selectedFile) {
-        await onSendAttachment(selectedFile, text.trim());
-        setSelectedFile(null);
-        if (fileInputRef.current) fileInputRef.current.value = '';
-      } else {
-        await onSendMessage(text.trim());
-      }
+      const fileToSend = selectedFile;
+      setSelectedFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
       setText('');
       if (textareaRef.current) {
         textareaRef.current.style.height = 'auto';
+      }
+
+      if (fileToSend) {
+        await onSendAttachment(fileToSend, content);
+      } else {
+        await onSendMessage(content);
       }
     } catch (err) {
       console.error('Error submitting message:', err);

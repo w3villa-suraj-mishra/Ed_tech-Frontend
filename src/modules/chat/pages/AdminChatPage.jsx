@@ -22,10 +22,9 @@ export default function AdminChatPage() {
   const reduxUser = useSelector((state) => state?.profile?.user);
 
   const token =
+    (typeof window !== 'undefined' ? localStorage.getItem('adminToken') : null) ||
     reduxToken ||
-    (typeof window !== 'undefined'
-      ? localStorage.getItem('adminToken') || localStorage.getItem('token')
-      : null);
+    (typeof window !== 'undefined' ? localStorage.getItem('token') : null);
 
   const adminStoredUser = React.useMemo(() => {
     try {
@@ -39,7 +38,7 @@ export default function AdminChatPage() {
     }
   }, []);
 
-  const user = reduxUser || adminStoredUser;
+  const user = adminStoredUser || reduxUser;
   const [searchParams] = useSearchParams();
 
   const isSuperAdmin = user?.accountType === 'Superadmin';
