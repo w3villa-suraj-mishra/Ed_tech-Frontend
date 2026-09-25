@@ -552,28 +552,8 @@ const Navbar = () => {
                 </button>
               </div>
 
-              {/* Mobile Search */}
-              <form onSubmit={handleSearchSubmit} className="mb-4">
-                <div className="relative">
-                  <VscSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
-                  <input
-                    type="text"
-                    placeholder="Search courses..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-9 pr-8 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-800 placeholder-gray-400 outline-none focus:border-blue-500"
-                  />
-                  {searchQuery && (
-                    <button
-                      type="button"
-                      onClick={() => setSearchQuery("")}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1"
-                    >
-                      <VscClose className="text-sm" />
-                    </button>
-                  )}
-                </div>
-              </form>
+
+
 
               {/* Main Navigation Links */}
               <div className="flex flex-col gap-1 pb-4 border-b border-gray-100">

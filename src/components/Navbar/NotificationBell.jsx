@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { VscBell, VscCheckAll, VscTrash, VscCircleFilled } from "react-icons/vsc";
+import { VscBell, VscCheckAll, VscTrash } from "react-icons/vsc";
 import { io } from "socket.io-client";
 import {
   fetchNotificationsAPI,
@@ -67,7 +67,7 @@ const NotificationBell = () => {
     };
   }, [token]);
 
-  // Close dropdown on outside click
+  // Close on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -111,134 +111,152 @@ const NotificationBell = () => {
     }
   };
 
-  // Render bell even if not logged in to show the icon, but ask them to log in when opened
-
   return (
-    <div className="relative" ref={dropdownRef}>
+    <>
       {/* BELL BUTTON */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-transparent hover:bg-gray-100 text-gray-600 hover:text-gray-900 border border-transparent hover:border-gray-200 transition-all duration-200 cursor-pointer flex items-center justify-center focus:outline-none"
-        title="Notifications"
-      >
-        <VscBell className="w-5 h-5" />
-        
+      <div className="relative" ref={dropdownRef}>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-transparent hover:bg-gray-100 text-gray-600 hover:text-gray-900 border border-transparent hover:border-gray-200 transition-all duration-200 cursor-pointer flex items-center justify-center focus:outline-none"
+          title="Notifications"
+        >
+          <VscBell className="w-5 h-5" />
 
-        {/* UNREAD BADGE */}
-        {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border-2 border-white shadow-2xs">
-            {unreadCount > 99 ? "99+" : unreadCount}
-          </span>
-        )}
-      </button>
+          {/* UNREAD BADGE */}
+          {unreadCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+              {unreadCount > 99 ? "99+" : unreadCount}
+            </span>
+          )}
+        </button>
+      </div>
 
-      {/* NOTIFICATION DROPDOWN */}
+      {/* NOTIFICATION MODAL PANEL — fixed, centered below navbar like reference */}
       {isOpen && (
-        <div className="absolute right-0 mt-3 w-80 md:w-96 rounded-2xl bg-white border border-gray-200 text-gray-700 shadow-premium-light z-50 overflow-hidden py-2 animate-in fade-in slide-in-from-top-2 duration-150">
-          {/* HEADER */}
-          <div className="px-4 py-2.5 border-b border-gray-200 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-sm text-gray-900">Notifications</h3>
-              {unreadCount > 0 && (
-                <span className="bg-[#DBEAFE] text-[#3B82F6] text-[10px] font-bold px-2 py-0.5 rounded-full border border-blue-200">
-                  {unreadCount} unread
-                </span>
-              )}
-            </div>
-            {unreadCount > 0 && (
-              <button
-                onClick={handleMarkAllRead}
-                className="text-[11px] font-medium text-[#3B82F6] hover:text-[#3B82F6] flex items-center gap-1 transition cursor-pointer"
-              >
-                <VscCheckAll size={14} /> Mark all read
-              </button>
-            )}
-          </div>
+        <>
+          {/* Transparent backdrop to close on outside click */}
+          <div
+            className="fixed inset-0 z-[998]"
+            onClick={() => setIsOpen(false)}
+          />
 
-          {/* NOTIFICATION LIST */}
-          <div className="max-h-80 overflow-y-auto divide-y divide-gray-100 custom-scrollbar">
-            {loading ? (
-              <div className="p-6 text-center text-xs text-gray-500">Loading notifications...</div>
-            ) : notifications.length > 0 ? (
-              notifications.map((notif) => (
-                <div
-                  key={notif.id}
-                  onClick={() => handleNotificationClick(notif)}
-                  className={`p-3.5 hover:bg-[#EFF6FF] transition-colors cursor-pointer flex items-start gap-3 group relative ${
-                    !notif.isRead ? "bg-[#EFF6FF]/50" : ""
-                  }`}
-                >
-                  {/* UNREAD INDICATOR DOT */}
-                  {!notif.isRead && (
-                    <span className="mt-1.5 w-2 h-2 rounded-full bg-[#EFF6FF]0 shrink-0 shadow-[0_0_8px_rgba(59,130,246,0.3)]" />
-                  )}
-
-                  <div className="flex-1 space-y-1 min-w-0">
-                    <div className="flex items-center justify-between gap-2">
-                      <h4 className={`text-xs font-bold truncate ${!notif.isRead ? "text-[#3B82F6]" : "text-gray-700"}`}>
-                        {notif.title}
-                      </h4>
-                      <span className="text-[10px] text-gray-400 whitespace-nowrap">
-                        {new Date(notif.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </span>
-                    </div>
-
-                    <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed group-hover:text-gray-700 transition-colors">
-                      {notif.message}
-                    </p>
-                  </div>
-
-                  {/* DELETE BUTTON */}
+          {/* Panel — centered horizontally, fixed below navbar */}
+          <div className="fixed top-[62px] left-1/2 -translate-x-1/2 z-[999] w-[90vw] max-w-[360px] rounded-2xl bg-white border border-gray-200 shadow-2xl overflow-hidden">
+            {/* HEADER */}
+            <div className="px-5 py-4 flex items-center justify-between border-b border-gray-100">
+              <div className="flex items-center gap-2.5">
+                <h3 className="font-bold text-base text-gray-900 tracking-tight">Notifications</h3>
+                {unreadCount > 0 && (
+                  <span className="bg-blue-100 text-blue-700 text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                    {unreadCount} New
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-3">
+                {unreadCount > 0 && (
                   <button
-                    onClick={(e) => handleDelete(e, notif.id)}
-                    className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-500 transition cursor-pointer"
-                    title="Delete"
+                    onClick={handleMarkAllRead}
+                    className="text-[11px] font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1 transition cursor-pointer"
                   >
-                    <VscTrash size={14} />
+                    <VscCheckAll size={14} /> Mark Read
                   </button>
+                )}
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-800 transition cursor-pointer text-sm font-bold"
+                  aria-label="Close"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {/* NOTIFICATION LIST */}
+            <div className="max-h-[350px] overflow-y-auto divide-y divide-gray-100 bg-white">
+              {loading ? (
+                <div className="p-10 flex flex-col items-center justify-center text-center">
+                  <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mb-3"></div>
+                  <p className="text-xs text-gray-500 font-medium">Loading notifications...</p>
                 </div>
-              ))
-            ) : (
-              <div className="p-8 text-center space-y-2">
-                <VscBell size={28} className="mx-auto text-gray-300" />
-                {token ? (
-                  <p className="text-xs text-gray-500 font-medium">No notifications yet</p>
-                ) : (
-                  <div className="flex flex-col items-center gap-2">
-                    <p className="text-xs text-gray-500 font-medium">Log in to view notifications</p>
-                    <button 
-                      onClick={() => navigate("/login")}
-                      className="px-4 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-semibold hover:bg-blue-100 transition-colors"
+              ) : notifications.length > 0 ? (
+                notifications.map((notif) => (
+                  <div
+                    key={notif.id}
+                    onClick={() => handleNotificationClick(notif)}
+                    className={`p-4 hover:bg-blue-50/50 transition-colors cursor-pointer flex items-start gap-3 group relative ${
+                      !notif.isRead ? "bg-blue-50/30" : ""
+                    }`}
+                  >
+                    {!notif.isRead && (
+                      <span className="mt-1.5 w-2 h-2 rounded-full bg-blue-600 shrink-0 shadow-[0_0_8px_rgba(37,99,235,0.4)]" />
+                    )}
+                    <div className="flex-1 space-y-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <h4 className={`text-xs font-bold truncate ${!notif.isRead ? "text-gray-900" : "text-gray-700"}`}>
+                          {notif.title}
+                        </h4>
+                        <span className="text-[10px] font-medium text-gray-400 whitespace-nowrap">
+                          {new Date(notif.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed group-hover:text-gray-700 transition-colors">
+                        {notif.message}
+                      </p>
+                    </div>
+                    <button
+                      onClick={(e) => handleDelete(e, notif.id)}
+                      className="opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600 rounded-md transition cursor-pointer"
+                      title="Delete"
                     >
-                      Log In
+                      <VscTrash size={15} />
                     </button>
                   </div>
-                )}
+                ))
+              ) : (
+                /* EMPTY STATE — matches reference */
+                <div className="px-8 py-10 flex flex-col items-center justify-center text-center">
+                  <VscBell size={44} className="text-gray-300 mb-4" />
+                  {token ? (
+                    <>
+                      <h4 className="text-base font-bold text-gray-900 mb-1">All Caught Up!</h4>
+                      <p className="text-sm text-gray-500 max-w-[230px] leading-relaxed">
+                        You have no new notifications right now.
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <h4 className="text-base font-bold text-gray-900 mb-2">Sign in for updates</h4>
+                      <p className="text-sm text-gray-500 max-w-[240px] leading-relaxed mb-6">
+                        Log in to track your course progress, notifications, and account status.
+                      </p>
+                      <button
+                        onClick={() => { setIsOpen(false); navigate("/login"); }}
+                        className="px-8 py-2.5 bg-gray-900 text-white rounded-xl text-sm font-bold hover:bg-gray-700 transition-all duration-200"
+                      >
+                        Log In
+                      </button>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* FOOTER — only for logged-in users */}
+            {token && (
+              <div className="p-3 bg-gray-50 border-t border-gray-100 text-center">
+                <button
+                  onClick={() => { setIsOpen(false); navigate("/dashboard/notifications"); }}
+                  className="text-xs font-bold text-gray-600 hover:text-blue-600 transition-colors cursor-pointer w-full text-center"
+                >
+                  View Notification History →
+                </button>
               </div>
             )}
           </div>
-
-          {/* FOOTER */}
-          {token && (
-            <div className="p-2 border-t border-gray-200 text-center">
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  navigate("/dashboard/notifications");
-                }}
-                className="text-xs font-semibold text-[#3B82F6] hover:text-[#3B82F6] py-1 transition cursor-pointer"
-              >
-                Notification Settings & History →
-              </button>
-            </div>
-          )}
-        </div>
+        </>
       )}
-    </div>
+    </>
   );
 };
 
 export default NotificationBell;
-
-
-

@@ -108,24 +108,6 @@ const InstructorSlider = ({ dynamicInstructors = [] }) => {
             Learn directly from seasoned engineers and tech leads from Microsoft, Amazon, Google, and hyper-growth startups.
           </p>
         </div>
-
-        {/* Slider Controls */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handlePrev}
-            className="w-10 h-10 rounded-full border border-gray-200 bg-white hover:bg-gray-50 flex items-center justify-center text-gray-700 hover:text-blue-600 shadow-2xs transition-colors"
-            aria-label="Previous Mentor"
-          >
-            <FiChevronLeft className="text-lg" />
-          </button>
-          <button
-            onClick={handleNext}
-            className="w-10 h-10 rounded-full border border-gray-200 bg-white hover:bg-gray-50 flex items-center justify-center text-gray-700 hover:text-blue-600 shadow-2xs transition-colors"
-            aria-label="Next Mentor"
-          >
-            <FiChevronRight className="text-lg" />
-          </button>
-        </div>
       </div>
 
       {/* Main Mentor Card */}
@@ -205,6 +187,24 @@ const InstructorSlider = ({ dynamicInstructors = [] }) => {
           </div>
 
         </div>
+      </div>
+
+      {/* Slider Controls */}
+      <div className="flex justify-end items-center gap-3 mt-6 pr-2">
+        <button
+          onClick={handlePrev}
+          className="w-12 h-12 rounded-full border border-gray-200 bg-white hover:bg-gray-50 flex items-center justify-center text-gray-700 hover:text-blue-600 shadow-sm transition-colors"
+          aria-label="Previous Mentor"
+        >
+          <FiChevronLeft className="text-xl" />
+        </button>
+        <button
+          onClick={handleNext}
+          className="w-12 h-12 rounded-full border border-gray-200 bg-white hover:bg-gray-50 flex items-center justify-center text-gray-700 hover:text-blue-600 shadow-sm transition-colors"
+          aria-label="Next Mentor"
+        >
+          <FiChevronRight className="text-xl" />
+        </button>
       </div>
 
     </section>

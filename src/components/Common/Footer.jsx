@@ -33,45 +33,7 @@ const Footer = () => {
               Empowering the next generation of engineers through structured curriculums, interactive coding playgrounds, and real-world project portfolios.
             </p>
 
-            {/* Social Icons */}
-            <div className="flex items-center gap-2.5 mt-2">
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Twitter"
-                className="w-8 h-8 rounded-lg bg-gray-100 hover:bg-blue-50 text-gray-500 hover:text-blue-600 border border-gray-200/60 flex items-center justify-center text-xs transition-colors"
-              >
-                <FaTwitter />
-              </a>
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="GitHub"
-                className="w-8 h-8 rounded-lg bg-gray-100 hover:bg-blue-50 text-gray-500 hover:text-blue-600 border border-gray-200/60 flex items-center justify-center text-xs transition-colors"
-              >
-                <FaGithub />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="LinkedIn"
-                className="w-8 h-8 rounded-lg bg-gray-100 hover:bg-blue-50 text-gray-500 hover:text-blue-600 border border-gray-200/60 flex items-center justify-center text-xs transition-colors"
-              >
-                <FaLinkedinIn />
-              </a>
-              <a
-                href="https://youtube.com"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="YouTube"
-                className="w-8 h-8 rounded-lg bg-gray-100 hover:bg-blue-50 text-gray-500 hover:text-blue-600 border border-gray-200/60 flex items-center justify-center text-xs transition-colors"
-              >
-                <FaYoutube />
-              </a>
-            </div>
+            {/* Social Icons moved to footer bottom */}
           </div>
 
           {/* Col 2: Platform */}
@@ -102,17 +64,30 @@ const Footer = () => {
 
         </div>
 
-        {/* Bottom Bar: Copyright & System Status */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
-          <p>© {currentYear} CodeLearn Inc. All rights reserved.</p>
+        {/* Social Pill */}
+        <div className="mt-6 flex justify-center">
+          <div className="flex items-center justify-center gap-4 bg-blue-50/70 px-8 py-3 rounded-full w-full max-w-sm md:max-w-[320px]">
+            <a href="https://twitter.com" target="_blank" rel="noreferrer" className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-blue-700 font-bold text-[13px] shadow-sm hover:scale-105 transition-transform">
+              <FaTwitter />
+            </a>
+            <a href="https://github.com" target="_blank" rel="noreferrer" className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-blue-700 font-bold text-[13px] shadow-sm hover:scale-105 transition-transform">
+              <FaGithub />
+            </a>
+            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-blue-700 font-bold text-[13px] shadow-sm hover:scale-105 transition-transform">
+              <FaLinkedinIn />
+            </a>
+            <a href="https://youtube.com" target="_blank" rel="noreferrer" className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-blue-700 font-bold text-[13px] shadow-sm hover:scale-105 transition-transform">
+              <FaYoutube />
+            </a>
+          </div>
+        </div>
+        {/* Bottom Bar: Copyright & Links */}
+        <div className="mt-4 flex flex-row items-center justify-between gap-4 text-xs text-gray-500">
+          <p className="whitespace-nowrap sm:whitespace-normal">© {currentYear} CodeLearn Inc.</p>
           
           <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1.5 text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full text-[11px] font-medium border border-emerald-200/60">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>All Systems Operational</span>
-            </span>
-            <Link to="/about" className="hover:text-gray-900 transition-colors">Privacy</Link>
-            <Link to="/about" className="hover:text-gray-900 transition-colors">Terms</Link>
+            <Link to="/about" className="text-blue-600 font-semibold hover:text-blue-700 hover:underline transition-all">Privacy</Link>
+            <Link to="/about" className="text-blue-600 font-semibold hover:text-blue-700 hover:underline transition-all">Terms</Link>
           </div>
         </div>
 
