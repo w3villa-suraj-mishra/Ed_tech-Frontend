@@ -111,7 +111,7 @@ const NotificationBell = () => {
     }
   };
 
-  if (!token) return null;
+  // Render bell even if not logged in to show the icon, but ask them to log in when opened
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -201,23 +201,37 @@ const NotificationBell = () => {
             ) : (
               <div className="p-8 text-center space-y-2">
                 <VscBell size={28} className="mx-auto text-gray-300" />
-                <p className="text-xs text-gray-500 font-medium">No notifications yet</p>
+                {token ? (
+                  <p className="text-xs text-gray-500 font-medium">No notifications yet</p>
+                ) : (
+                  <div className="flex flex-col items-center gap-2">
+                    <p className="text-xs text-gray-500 font-medium">Log in to view notifications</p>
+                    <button 
+                      onClick={() => navigate("/login")}
+                      className="px-4 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-semibold hover:bg-blue-100 transition-colors"
+                    >
+                      Log In
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
 
           {/* FOOTER */}
-          <div className="p-2 border-t border-gray-200 text-center">
-            <button
-              onClick={() => {
-                setIsOpen(false);
-                navigate("/dashboard/notifications");
-              }}
-              className="text-xs font-semibold text-[#3B82F6] hover:text-[#3B82F6] py-1 transition cursor-pointer"
-            >
-              Notification Settings & History →
-            </button>
-          </div>
+          {token && (
+            <div className="p-2 border-t border-gray-200 text-center">
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  navigate("/dashboard/notifications");
+                }}
+                className="text-xs font-semibold text-[#3B82F6] hover:text-[#3B82F6] py-1 transition cursor-pointer"
+              >
+                Notification Settings & History →
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

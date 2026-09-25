@@ -388,7 +388,7 @@ const Home = () => {
 
               {/* Main Headline */}
               <h1 className="text-4xl sm:text-5xl lg:text-[3.25rem] xl:text-[3.5rem] font-black text-gray-900 tracking-tight leading-[1.12]">
-                Empower Your Future <br />
+                Empower Your Future <br className="hidden sm:block" />
                 With <span className="text-[#3BA7F2]">Coding Skills</span>
               </h1>
 
@@ -398,16 +398,16 @@ const Home = () => {
               </p>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-4 mt-8">
-                <Link to={primaryLink}>
-                  <button className="flex items-center gap-2 bg-[#3BA7F2] hover:bg-[#3BA7F2] text-white font-bold text-sm sm:text-base px-7 py-3.5 rounded-2xl shadow-lg shadow-indigo-500/25 transition-all duration-200 hover:-translate-y-0.5 active:scale-95">
+              <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 mt-8 w-full sm:w-auto">
+                <Link to={primaryLink} className="w-full sm:w-auto">
+                  <button className="w-full sm:w-auto flex justify-center items-center gap-2 bg-[#3BA7F2] hover:bg-[#3BA7F2] text-white font-bold text-sm sm:text-base px-7 py-3.5 rounded-2xl shadow-lg shadow-indigo-500/25 transition-all duration-200 hover:-translate-y-0.5 active:scale-95">
                     <span>{primaryText}</span>
                     <span>→</span>
                   </button>
                 </Link>
 
-                <Link to="/courses">
-                  <button className="flex items-center gap-2 bg-white hover:bg-indigo-50/50 text-[#3BA7F2] font-bold text-sm sm:text-base px-7 py-3.5 rounded-2xl border-2 border-[#3BA7F2] shadow-xs transition-all duration-200 hover:-translate-y-0.5 active:scale-95">
+                <Link to="/courses" className="w-full sm:w-auto">
+                  <button className="w-full sm:w-auto flex justify-center items-center gap-2 bg-white hover:bg-indigo-50/50 text-[#3BA7F2] font-bold text-sm sm:text-base px-7 py-3.5 rounded-2xl border-2 border-[#3BA7F2] shadow-xs transition-all duration-200 hover:-translate-y-0.5 active:scale-95">
                     <span>Explore Courses</span>
                   </button>
                 </Link>
@@ -494,7 +494,7 @@ const Home = () => {
               </div>
 
               {/* Floating Badge 1 (Top Left Overlapping Main Photo): Keep Learning Progress */}
-              <div className="absolute -top-4 -left-2 sm:-top-6 sm:-left-6 bg-white/95 backdrop-blur-md rounded-2xl p-3 sm:p-3.5 shadow-xl border border-gray-100 flex items-center gap-3 z-20">
+              <div className="absolute -top-4 left-0 sm:-top-6 sm:-left-6 bg-white/95 backdrop-blur-md rounded-2xl p-3 sm:p-3.5 shadow-xl border border-gray-100 flex items-center gap-3 z-20">
                 <div className="relative w-11 h-11 shrink-0 flex items-center justify-center">
                   <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                     <path
@@ -524,7 +524,7 @@ const Home = () => {
               </div>
 
               {/* Floating Badge 2 (Bottom Left Overlapping Main Photo): Dark Mini Code Snippet */}
-              <div className="absolute -bottom-6 -left-2 sm:-left-6 bg-[#181B26] text-white rounded-2xl p-3.5 sm:p-4 shadow-2xl border border-gray-800 z-20 font-mono text-xs w-[210px] sm:w-[230px] text-left">
+              <div className="absolute -bottom-6 left-0 sm:-left-6 bg-[#181B26] text-white rounded-2xl p-3.5 sm:p-4 shadow-2xl border border-gray-800 z-20 font-mono text-xs w-[210px] sm:w-[230px] text-left">
                 <div className="flex items-center gap-1.5 pb-2 mb-2 border-b border-gray-800/80">
                   <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
                   <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
@@ -538,7 +538,7 @@ const Home = () => {
               </div>
 
               {/* Floating Badge 3 (Bottom Right Overlapping Main Photo): Build Create Grow */}
-              <div className="absolute bottom-4 -right-2 sm:-right-6 bg-white/95 backdrop-blur-md rounded-2xl p-3 sm:p-3.5 shadow-xl border border-gray-100 z-20 flex flex-col items-center justify-center text-center w-[85px] sm:w-[95px]">
+              <div className="absolute bottom-4 right-0 sm:-right-6 bg-white/95 backdrop-blur-md rounded-2xl p-3 sm:p-3.5 shadow-xl border border-gray-100 z-20 flex flex-col items-center justify-center text-center w-[85px] sm:w-[95px]">
                 <div className="w-6 h-6 rounded-full bg-indigo-50 text-[#3BA7F2] flex items-center justify-center text-xs mb-1.5 shadow-2xs">
                   📍
                 </div>
@@ -597,39 +597,41 @@ const Home = () => {
         </div>
 
         {/* 6 Category Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-4.5 lg:gap-4 xl:gap-5 mt-12 relative z-10">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-4 xl:gap-5 mt-8 sm:mt-12 relative z-10">
           {popularCategoriesList.map((cat, idx) => {
             return (
               <Link
                 key={cat._id || idx}
                 to={cat.link}
-                className="group bg-white rounded-3xl border border-gray-100 p-5 sm:p-5.5 flex flex-col justify-between text-left shadow-[0_4px_20px_-4px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_35px_-5px_rgba(0,0,0,0.08)] hover:-translate-y-1.5 transition-all duration-300 relative"
+                className="group bg-white rounded-2xl sm:rounded-3xl border border-gray-100 p-3 sm:p-5 flex flex-col justify-between text-left shadow-[0_4px_20px_-4px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_35px_-5px_rgba(0,0,0,0.08)] hover:-translate-y-1.5 transition-all duration-300 relative"
               >
                 <div>
                   {/* Top Squircle Icon */}
-                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${cat.gradient} ${cat.glowShadow} flex items-center justify-center relative overflow-hidden transition-transform duration-300 group-hover:scale-105 shadow-sm`}>
+                  <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-gradient-to-br ${cat.gradient} ${cat.glowShadow} flex items-center justify-center relative overflow-hidden transition-transform duration-300 group-hover:scale-105 shadow-sm`}>
                     <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/10 to-white/30 pointer-events-none" />
-                    {renderCategoryIcon(cat.type)}
+                    <div className="scale-75 sm:scale-100 flex items-center justify-center">
+                      {renderCategoryIcon(cat.type)}
+                    </div>
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-[15px] sm:text-base font-bold text-[#0F172A] mt-5 leading-snug group-hover:text-[#13AA92] transition-colors line-clamp-1">
+                  <h3 className="text-[12px] sm:text-[15px] font-bold text-[#0F172A] mt-3 sm:mt-5 leading-snug group-hover:text-[#13AA92] transition-colors line-clamp-2 sm:line-clamp-1">
                     {cat.name}
                   </h3>
 
                   {/* Subtitle / Description */}
-                  <p className="text-xs text-gray-500 mt-2 leading-relaxed line-clamp-2 min-h-[38px]">
+                  <p className="text-[10px] sm:text-xs text-gray-500 mt-1 sm:mt-2 leading-relaxed line-clamp-2 min-h-[30px] sm:min-h-[38px]">
                     {cat.description}
                   </p>
                 </div>
 
                 {/* Bottom Row */}
-                <div className="flex items-center justify-between mt-5 pt-1">
-                  <span className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${cat.pillBg}`}>
+                <div className="flex items-center justify-between mt-3 sm:mt-5 pt-1">
+                  <span className={`text-[9px] sm:text-[11px] font-semibold px-2 py-0.5 sm:px-2.5 sm:py-0.5 rounded-full border ${cat.pillBg} whitespace-nowrap`}>
                     {cat.courseCount}
                   </span>
-                  <div className="w-8 h-8 rounded-full bg-white border border-gray-200/90 flex items-center justify-center text-gray-600 shadow-2xs group-hover:border-gray-400 group-hover:text-gray-900 group-hover:translate-x-0.5 transition-all">
-                    <FiArrowRight className="text-xs" />
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 shrink-0 rounded-full bg-white border border-gray-200/90 flex items-center justify-center text-gray-600 shadow-2xs group-hover:border-gray-400 group-hover:text-gray-900 group-hover:translate-x-0.5 transition-all ml-1">
+                    <FiArrowRight className="text-[10px] sm:text-xs" />
                   </div>
                 </div>
               </Link>
@@ -927,7 +929,8 @@ export default function InteractiveCounter() {
       <section className="w-11/12 max-w-maxContent mx-auto border-t border-gray-200/60 py-[15px]">
         <div className="flex flex-col lg:flex-row gap-6 mb-8">
           <div className="text-3xl sm:text-4xl font-bold text-gray-900 lg:w-1/2 tracking-tight leading-tight">
-            Get the Skills You Need for a <br />
+            Get the Skills You Need for a{" "}
+            <br className="hidden sm:block" />
             <HighLightText text="Job That Is in Demand" />
           </div>
           <div className="lg:w-1/2 flex flex-col items-start gap-4">
@@ -1149,16 +1152,16 @@ export default function InteractiveCounter() {
               </p>
 
               {/* Dual Action Buttons */}
-              <div className="flex flex-wrap items-center gap-3 mt-5">
-                <Link to={token ? "/courses" : "/signup"}>
-                  <button className="flex items-center gap-2 bg-[#3BA7F2] hover:bg-[#13AA92] text-white font-bold text-xs sm:text-sm px-6 py-2.5 sm:py-3 rounded-full shadow-[0_8px_25px_rgba(59,167,242,0.45)] transition-all duration-200 hover:scale-105 active:scale-95">
+              <div className="flex flex-col sm:flex-row items-center gap-3 mt-5 w-full sm:w-auto">
+                <Link to={token ? "/courses" : "/signup"} className="w-full sm:w-auto">
+                  <button className="w-full sm:w-auto flex justify-center items-center gap-2 bg-[#3BA7F2] hover:bg-[#13AA92] text-white font-bold text-xs sm:text-sm px-6 py-2.5 sm:py-3 rounded-full shadow-[0_8px_25px_rgba(59,167,242,0.45)] transition-all duration-200 hover:scale-105 active:scale-95">
                     <span>Get Started Free</span>
                     <FiArrowRight className="text-sm" />
                   </button>
                 </Link>
 
-                <Link to="/courses">
-                  <button className="flex items-center gap-2 bg-white hover:bg-blue-50/50 text-[#3BA7F2] border-2 border-[#3BA7F2] font-bold text-xs sm:text-sm px-6 py-2.5 sm:py-3 rounded-full shadow-xs transition-all duration-200 hover:scale-105 active:scale-95">
+                <Link to="/courses" className="w-full sm:w-auto">
+                  <button className="w-full sm:w-auto flex justify-center items-center gap-2 bg-white hover:bg-blue-50/50 text-[#3BA7F2] border-2 border-[#3BA7F2] font-bold text-xs sm:text-sm px-6 py-2.5 sm:py-3 rounded-full shadow-xs transition-all duration-200 hover:scale-105 active:scale-95">
                     <span>Browse All Courses</span>
                     <FiArrowRight className="text-sm" />
                   </button>

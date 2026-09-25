@@ -6,18 +6,18 @@ import { FaFire } from 'react-icons/fa';
 
 const LearningLanguageSection = () => {
   return (
-    <section className="w-full text-center py-[15px]">
+    <section className="w-11/12 max-w-maxContent mx-auto text-center py-[15px]">
       
       {/* Section Header */}
-      <div className="max-w-2xl mx-auto space-y-3">
-        <div className="inline-flex items-center gap-1.5 bg-[#13AA92]/10 text-[#13AA92] text-xs font-semibold px-3.5 py-1 rounded-full border border-[#13AA92]/30 shadow-2xs">
+      <div className="max-w-2xl mx-auto space-y-2.5">
+        <div className="inline-flex items-center gap-1.5 bg-[#13AA92]/10 text-[#13AA92] text-xs font-semibold px-3.5 py-1 rounded-full border border-[#13AA92]/30 mb-2 shadow-2xs">
           <FiCpu className="text-xs text-[#13AA92]" />
           <span>Intelligent Learning Tools</span>
         </div>
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
+        <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-[#0F172A] tracking-tight leading-tight">
           Your Swiss Knife for <HighLightText text="Mastering Any Skill" />
         </h2>
-        <p className="text-base text-gray-600 font-normal leading-relaxed">
+        <p className="text-sm sm:text-base text-gray-500 max-w-xl mx-auto font-normal leading-relaxed">
           Integrated intelligence tools designed to accelerate comprehension, track milestones, and keep you accountable every single day.
         </p>
       </div>

@@ -71,20 +71,20 @@ const TimelineSection = () => {
             />
 
             {/* Overlaid Floating Metrics Card */}
-            <div className="absolute bottom-4 left-4 right-4 sm:left-6 sm:right-6 bg-white/95 backdrop-blur-md rounded-2xl p-4 sm:p-5 shadow-xl border border-gray-100 flex items-center justify-between divide-x divide-gray-100">
-              <div className="px-2 sm:px-4 flex flex-col">
-                <span className="text-2xl sm:text-3xl font-extrabold text-blue-600 tracking-tight">10+</span>
-                <span className="text-[11px] sm:text-xs font-medium text-gray-500 mt-0.5">Years of Excellence</span>
+            <div className="absolute bottom-4 left-4 right-4 sm:left-6 sm:right-6 bg-white/95 backdrop-blur-md rounded-2xl p-3 sm:p-5 shadow-xl border border-gray-100 flex items-center justify-between divide-x divide-gray-100">
+              <div className="px-1.5 sm:px-4 flex flex-col text-center">
+                <span className="text-xl sm:text-2xl md:text-3xl font-extrabold text-blue-600 tracking-tight">10+</span>
+                <span className="text-[9px] sm:text-[11px] md:text-xs font-medium text-gray-500 mt-0.5">Years of Excellence</span>
               </div>
 
-              <div className="px-2 sm:px-4 flex flex-col">
-                <span className="text-2xl sm:text-3xl font-extrabold text-indigo-600 tracking-tight">250+</span>
-                <span className="text-[11px] sm:text-xs font-medium text-gray-500 mt-0.5">Specialized Courses</span>
+              <div className="px-1.5 sm:px-4 flex flex-col text-center">
+                <span className="text-xl sm:text-2xl md:text-3xl font-extrabold text-indigo-600 tracking-tight">250+</span>
+                <span className="text-[9px] sm:text-[11px] md:text-xs font-medium text-gray-500 mt-0.5">Specialized Courses</span>
               </div>
 
-              <div className="px-2 sm:px-4 flex flex-col">
-                <span className="text-2xl sm:text-3xl font-extrabold text-emerald-600 tracking-tight">89%</span>
-                <span className="text-[11px] sm:text-xs font-medium text-gray-500 mt-0.5">Placement Success</span>
+              <div className="px-1.5 sm:px-4 flex flex-col text-center">
+                <span className="text-xl sm:text-2xl md:text-3xl font-extrabold text-emerald-600 tracking-tight">89%</span>
+                <span className="text-[9px] sm:text-[11px] md:text-xs font-medium text-gray-500 mt-0.5">Placement Success</span>
               </div>
             </div>
           </div>

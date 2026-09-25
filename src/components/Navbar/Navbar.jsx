@@ -35,6 +35,7 @@ const Navbar = () => {
   const [isCoursesOpen, setIsCoursesOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const profileRef = useRef(null);
   const searchContainerRef = useRef(null);
@@ -121,6 +122,7 @@ const Navbar = () => {
     : [];
 
   return (
+    <>
     <header className="w-full bg-white/95 backdrop-blur-md border-b border-gray-200/80 sticky top-0 z-50 transition-all">
       <div className="w-11/12 max-w-maxContent mx-auto">
         <div className="h-16 flex items-center justify-between gap-4">
@@ -145,7 +147,7 @@ const Navbar = () => {
                 <span className="text-gray-900 font-bold text-base tracking-tight leading-none group-hover:text-[#3B82F6] transition-colors">
                   CodeLearn
                 </span>
-                <span className="text-[9px] text-gray-500 font-semibold tracking-wider uppercase mt-1">
+                <span className="text-[9px] text-gray-500 font-semibold tracking-wider uppercase mt-1 hidden sm:block">
                   Learn • Build • Grow
                 </span>
               </div>
@@ -358,7 +360,16 @@ const Navbar = () => {
           </nav>
 
           {/* ACTION CONTROLS (Notification Bell + Profile Dropdown / Auth Buttons) */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            
+            {/* Mobile Search Trigger */}
+            <button
+              onClick={() => setIsMobileSearchOpen(true)}
+              className="md:hidden p-2 rounded-xl text-gray-700 hover:text-[#3B82F6] hover:bg-gray-100 transition-colors focus:outline-none"
+              aria-label="Open Mobile Search"
+            >
+              <VscSearch className="text-xl" />
+            </button>
 
             {/* Real-time Notification Bell */}
             <NotificationBell />
@@ -381,13 +392,13 @@ const Navbar = () => {
 
             {/* Unauthenticated Login / Sign Up */}
             {token === null && (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2">
                 <Link to="/login">
-                  <button className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors">
+                  <button className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors">
                     Sign In
                   </button>
                 </Link>
-                <Link to="/signup">
+                <Link to="/signup" className="hidden sm:block">
                   <button className="px-4 py-2 rounded-xl bg-[#3BA7F2] hover:bg-[#3BA7F2] text-xs sm:text-sm font-bold text-white shadow-md shadow-indigo-500/20 transition-all active:scale-95">
                     Join For Free
                   </button>
@@ -500,6 +511,7 @@ const Navbar = () => {
 
         </div>
       </div>
+    </header>
 
       {/* MOBILE SLIDE-IN OVERLAY SIDEBAR DRAWER */}
       {isMobileMenuOpen && (
@@ -666,7 +678,71 @@ const Navbar = () => {
           </aside>
         </div>
       )}
-    </header>
+
+      {/* MOBILE SEARCH OVERLAY */}
+      {isMobileSearchOpen && (
+        <div className="md:hidden fixed inset-0 z-[100000] flex flex-col">
+          {/* Invisible backdrop to close search when clicking outside, but leaves page visible */}
+          <div 
+            className="absolute inset-0 bg-gray-900/20 backdrop-blur-[2px] transition-opacity animate-in fade-in duration-200"
+            onClick={() => setIsMobileSearchOpen(false)}
+          />
+          
+          {/* Top Search Bar */}
+          <div className="relative bg-white shadow-md animate-in slide-in-from-top-2 duration-200">
+            <div className="flex items-center px-4 py-3 gap-3">
+              <form onSubmit={handleSearchSubmit} className="flex-1 relative">
+                <VscSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg pointer-events-none" />
+                <input
+                  type="text"
+                  placeholder="Search courses..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  autoFocus
+                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-full text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-[#3BA7F2] focus:bg-white transition-all shadow-sm"
+                />
+              </form>
+              <button
+                onClick={() => setIsMobileSearchOpen(false)}
+                className="w-10 h-10 rounded-full border border-gray-200 text-gray-500 hover:text-gray-800 hover:bg-gray-50 transition-colors flex items-center justify-center shrink-0 shadow-sm"
+                aria-label="Close Search"
+              >
+                <VscClose className="text-xl" />
+              </button>
+            </div>
+            
+            {/* Results Dropdown */}
+            {searchQuery && (
+              <div className="max-h-[60vh] overflow-y-auto bg-gray-50 p-4 border-t border-gray-100 shadow-inner">
+                {filteredCourses.length > 0 ? (
+                  <div className="flex flex-col gap-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1 px-1">Results</span>
+                    {filteredCourses.map(course => (
+                      <Link
+                        key={course._id}
+                        to={`/courses/${course._id}`}
+                        onClick={() => {
+                          setIsMobileSearchOpen(false);
+                          setSearchQuery("");
+                        }}
+                        className="p-3.5 bg-white rounded-xl border border-gray-100 shadow-2xs flex items-center justify-between group active:scale-[0.98] transition-all hover:border-blue-200"
+                      >
+                        <span className="text-sm font-medium text-gray-800 truncate pr-4">{course.courseName}</span>
+                        <span className="text-gray-300 group-hover:text-[#3BA7F2] transition-colors">→</span>
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-6 text-sm text-gray-500">
+                    No matching courses found.
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

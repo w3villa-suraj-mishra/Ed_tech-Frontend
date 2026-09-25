@@ -11,10 +11,10 @@ const Footer = () => {
   return (
     <footer className="w-full bg-white text-gray-600 font-sans border-t border-gray-200 transition-colors">
       <div className="w-11/12 max-w-[1280px] mx-auto py-8 px-4 sm:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-10 pb-8 border-b border-gray-200/80">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-10 pb-8 border-b border-gray-200/80">
           
           {/* Col 1: Brand & Mission */}
-          <div className="lg:col-span-2 flex flex-col gap-4">
+          <div className="col-span-2 lg:col-span-2 flex flex-col gap-4">
             <Link to="/" className="flex items-center gap-2.5 group w-fit">
               <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white text-lg shadow-sm group-hover:scale-105 transition-transform">
                 <VscCode />

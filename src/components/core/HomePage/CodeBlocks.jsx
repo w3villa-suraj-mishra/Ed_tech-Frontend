@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import CTAButton from "./Button";
 import { FiCopy, FiCheck, FiTerminal } from 'react-icons/fi';
 
@@ -38,37 +39,49 @@ const CodeBlocks = ({
         </p>
 
         {/* Feature Checkpoints for Richness */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-          <div className="flex items-center gap-2.5 text-xs font-medium text-gray-700">
-            <span className="w-5 h-5 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold">✓</span>
-            <span>Real-time Code Execution</span>
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 pt-1">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 text-[10px] sm:text-xs font-medium text-gray-700">
+            <span className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-[9px] sm:text-xs font-bold">✓</span>
+            <span className="leading-tight">Real-time Code Execution</span>
           </div>
-          <div className="flex items-center gap-2.5 text-xs font-medium text-gray-700">
-            <span className="w-5 h-5 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold">✓</span>
-            <span>Automated Test Feedback</span>
+          <div className="flex items-center gap-1.5 sm:gap-2.5 text-[10px] sm:text-xs font-medium text-gray-700">
+            <span className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-[9px] sm:text-xs font-bold">✓</span>
+            <span className="leading-tight">Automated Test Feedback</span>
           </div>
-          <div className="flex items-center gap-2.5 text-xs font-medium text-gray-700">
-            <span className="w-5 h-5 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold">✓</span>
-            <span>Industry Best Practices</span>
+          <div className="flex items-center gap-1.5 sm:gap-2.5 text-[10px] sm:text-xs font-medium text-gray-700">
+            <span className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-[9px] sm:text-xs font-bold">✓</span>
+            <span className="leading-tight">Industry Best Practices</span>
           </div>
-          <div className="flex items-center gap-2.5 text-xs font-medium text-gray-700">
-            <span className="w-5 h-5 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold">✓</span>
-            <span>Zero Local Setup Required</span>
+          <div className="flex items-center gap-1.5 sm:gap-2.5 text-[10px] sm:text-xs font-medium text-gray-700">
+            <span className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-[9px] sm:text-xs font-bold">✓</span>
+            <span className="leading-tight">Zero Local Setup</span>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-4 mt-4">
-          <CTAButton active={ctabtn1.active} linkto={ctabtn1.linkto}>
-            <span className="flex items-center gap-2">
-              {ctabtn1.btnText}
-              <FaArrowRight />
-            </span>
-          </CTAButton>
+        <div className="flex flex-row items-center gap-2 sm:gap-4 mt-4 w-full">
+          <Link to={ctabtn1.linkto} className="flex-1 sm:flex-none">
+            <div className={`text-center text-[11px] sm:text-sm px-2 py-2.5 sm:px-6 sm:py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 sm:gap-2 ${
+              ctabtn1.active
+                ? "bg-blue-600 hover:bg-blue-700 text-white shadow-sm hover:shadow-md hover:-translate-y-0.5"
+                : "bg-white hover:bg-gray-50 text-gray-800 border border-gray-200 hover:border-gray-300 shadow-2xs hover:shadow-xs hover:-translate-y-0.5"
+            }`}>
+              <span className="flex items-center gap-1 sm:gap-2 whitespace-nowrap">
+                {ctabtn1.btnText}
+                <FaArrowRight />
+              </span>
+            </div>
+          </Link>
 
           {ctabtn2 && (
-            <CTAButton active={ctabtn2.active} linkto={ctabtn2.linkto}>
-              {ctabtn2.btnText}
-            </CTAButton>
+            <Link to={ctabtn2.linkto} className="flex-1 sm:flex-none">
+              <div className={`text-center text-[11px] sm:text-sm px-2 py-2.5 sm:px-6 sm:py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 sm:gap-2 ${
+                ctabtn2.active
+                  ? "bg-blue-600 hover:bg-blue-700 text-white shadow-sm hover:shadow-md hover:-translate-y-0.5"
+                  : "bg-white hover:bg-gray-50 text-gray-800 border border-gray-200 hover:border-gray-300 shadow-2xs hover:shadow-xs hover:-translate-y-0.5"
+              }`}>
+                <span className="whitespace-nowrap">{ctabtn2.btnText}</span>
+              </div>
+            </Link>
           )}
         </div>
       </div>
