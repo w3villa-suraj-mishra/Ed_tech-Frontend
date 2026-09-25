@@ -28,10 +28,16 @@ export function useChatSocket(providedToken = null) {
     };
   }, [token]);
 
+  const isConnected =
+    connectionStatus === 'CONNECTED' ||
+    connectionStatus === 'RECONNECTED' ||
+    connectionStatus === 'REST_MODE';
+
   return {
     socket: chatSocket,
     connectionStatus,
-    isConnected: connectionStatus === 'CONNECTED' || connectionStatus === 'RECONNECTED'
+    isConnected,
+    isRestFallback: connectionStatus === 'REST_MODE' || Boolean(chatSocket.isRestFallback)
   };
 }
 

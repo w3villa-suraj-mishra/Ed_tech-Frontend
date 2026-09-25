@@ -92,6 +92,32 @@ export function useMessages(conversationId, explicitToken = null) {
     };
   }, [conversationId]);
 
+  // REST fallback auto-refresh for serverless deployments
+  useEffect(() => {
+    if (!conversationId || !token) return;
+
+    const interval = setInterval(async () => {
+      if (typeof document !== 'undefined' && document.hidden) return;
+      if (!chatSocket.socket?.connected || chatSocket.isRestFallback) {
+        try {
+          const data = await fetchMessages(conversationId, { limit: 50 }, token);
+          const fetched = data.messages || [];
+          setMessages((prev) => {
+            if (
+              fetched.length !== prev.length ||
+              (fetched.length > 0 && fetched[fetched.length - 1]?.id !== prev[prev.length - 1]?.id)
+            ) {
+              return fetched;
+            }
+            return prev;
+          });
+        } catch (e) {}
+      }
+    }, 3500);
+
+    return () => clearInterval(interval);
+  }, [conversationId, token]);
+
   // Load older messages (scrolling up)
   const loadOlderMessages = useCallback(async () => {
     if (!conversationId || !token || loadingMore || !hasMore || messages.length === 0) return;

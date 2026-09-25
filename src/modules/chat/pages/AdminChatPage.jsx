@@ -43,7 +43,7 @@ export default function AdminChatPage() {
   const [searchParams] = useSearchParams();
 
   const isSuperAdmin = user?.accountType === 'Superadmin';
-  const { connectionStatus, isConnected, socket } = useChatSocket(token);
+  const { connectionStatus, isConnected, socket, isRestFallback } = useChatSocket(token);
 
   // Filters & State
   const [conversations, setConversations] = useState([]);
@@ -181,6 +181,20 @@ export default function AdminChatPage() {
     };
   }, [socket, activeConversationId, selectedConversation, loadConversations]);
 
+  // Auto-refresh conversations in REST mode
+  useEffect(() => {
+    if (!token) return;
+
+    const interval = setInterval(() => {
+      if (typeof document !== 'undefined' && document.hidden) return;
+      if (!socket?.socket?.connected || socket?.isRestFallback) {
+        loadConversations();
+      }
+    }, 4500);
+
+    return () => clearInterval(interval);
+  }, [token, socket, loadConversations]);
+
   // Load admins list for assignment dropdown
   useEffect(() => {
     if (!token) return;
@@ -251,7 +265,11 @@ export default function AdminChatPage() {
               }`}
             />
             <span className="text-purple-200 text-[11px] font-medium">
-              {isConnected ? 'Real-time Connected' : connectionStatus}
+              {isConnected
+                ? isRestFallback
+                  ? 'Cloud Synced'
+                  : 'Real-time Connected'
+                : connectionStatus}
             </span>
           </div>
         </div>

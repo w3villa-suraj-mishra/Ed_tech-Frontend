@@ -23,47 +23,82 @@ class ChatSocketManager {
     }
 
     this.currentToken = token;
-    const backendUrl = process.env.REACT_APP_BASE_URL || BASE_URL || 'http://localhost:5000';
+    const socketServerUrl =
+      process.env.REACT_APP_SOCKET_URL ||
+      process.env.REACT_APP_BASE_URL ||
+      BASE_URL ||
+      'http://localhost:5000';
 
-    this.socket = io(backendUrl, {
-      auth: { token },
-      transports: ['polling', 'websocket'],
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1500
-    });
+    // Vercel serverless platforms do not maintain persistent WebSockets/Socket.IO connections.
+    // If hosted on vercel.app and no separate socket server is provided, seamlessly switch to REST cloud mode.
+    const isVercelServerless =
+      !process.env.REACT_APP_SOCKET_URL &&
+      (socketServerUrl.includes('vercel.app') ||
+        (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')));
 
-    this.socket.on('connect', () => {
+    if (isVercelServerless) {
+      this.isRestFallback = true;
       this.isConnected = true;
-      this._notifyStatus('CONNECTED');
-    });
+      this._notifyStatus('REST_MODE');
+      return null;
+    }
 
-    this.socket.on('disconnect', (reason) => {
-      this.isConnected = false;
-      this._notifyStatus('DISCONNECTED');
-    });
-
-    this.socket.on('connect_error', (err) => {
-      this.isConnected = false;
-      this._notifyStatus('ERROR');
-    });
-
-    this.socket.io.on('reconnect_attempt', () => {
-      this._notifyStatus('RECONNECTING');
-    });
-
-    this.socket.io.on('reconnect', () => {
-      this.isConnected = true;
-      this._notifyStatus('RECONNECTED');
-    });
-
-    // Reattach registered event listeners
-    this.listeners.forEach((callbacks, event) => {
-      callbacks.forEach((cb) => {
-        this.socket.on(event, cb);
+    try {
+      this.socket = io(socketServerUrl, {
+        auth: { token },
+        transports: ['websocket', 'polling'],
+        reconnectionAttempts: 2,
+        reconnectionDelay: 2000,
+        timeout: 5000
       });
-    });
 
-    return this.socket;
+      this.socket.on('connect', () => {
+        this.isConnected = true;
+        this.isRestFallback = false;
+        this._notifyStatus('CONNECTED');
+      });
+
+      this.socket.on('disconnect', (reason) => {
+        this.isConnected = false;
+        this._notifyStatus('DISCONNECTED');
+      });
+
+      let failedAttempts = 0;
+      this.socket.on('connect_error', (err) => {
+        failedAttempts++;
+        if (failedAttempts >= 2) {
+          // Gracefully fallback to REST mode and close socket to avoid 404 polling loop
+          this.socket.disconnect();
+          this.socket = null;
+          this.isRestFallback = true;
+          this.isConnected = true;
+          this._notifyStatus('REST_MODE');
+        } else {
+          this.isConnected = false;
+          this._notifyStatus('RECONNECTING');
+        }
+      });
+
+      this.socket.io.on('reconnect', () => {
+        this.isConnected = true;
+        this.isRestFallback = false;
+        this._notifyStatus('RECONNECTED');
+      });
+
+      // Reattach registered event listeners
+      this.listeners.forEach((callbacks, event) => {
+        callbacks.forEach((cb) => {
+          this.socket.on(event, cb);
+        });
+      });
+
+      return this.socket;
+    } catch (e) {
+      this.isRestFallback = true;
+      this.isConnected = true;
+      this._notifyStatus('REST_MODE');
+      return null;
+    }
   }
 
   disconnect() {

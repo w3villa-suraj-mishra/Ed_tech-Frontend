@@ -132,7 +132,7 @@ export default function MessageInput({
           value={text}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          placeholder="Type a message... (Press Enter to send)"
+          placeholder="Type a message..."
           disabled={disabled || sending}
           className="flex-1 max-h-28 bg-gray-50 hover:bg-gray-100/70 focus:bg-white border border-gray-300 rounded-xl px-3.5 py-2 text-xs text-gray-800 placeholder-gray-400 outline-none focus:border-purple-600 focus:ring-1 focus:ring-purple-600 resize-none transition"
         />
