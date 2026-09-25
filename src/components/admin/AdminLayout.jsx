@@ -16,11 +16,13 @@ import {
   RiStarLine,
   RiArticleLine,
   RiUserStarLine,
-  RiMailLine
+  RiMailLine,
+  RiChat3Line
 } from "react-icons/ri";
 
 const NAV = [
   { label: 'Dashboard', path: '/admin/dashboard', icon: <RiDashboardLine size={18} /> },
+  { label: 'Support Chats', path: '/admin/conversations', icon: <RiChat3Line size={18} /> },
   { label: 'Users', path: '/admin/users', icon: <RiGroupLine size={18} /> },
   { label: 'Courses', path: '/admin/courses', icon: <RiBookOpenLine size={18} /> },
   { label: 'Categories', path: '/admin/categories', icon: <RiPriceTag3Line size={18} /> },

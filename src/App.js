@@ -72,6 +72,9 @@ import AdminInstructors from "./pages/admin/AdminInstructors";
 import AnnouncementBanner from "./components/Common/AnnouncementBanner";
 import { BASE_URL } from "./services/apis";
 
+// Chat Module
+import { AdminChatPage, StudentChatWidget } from "./modules/chat";
+
 const OAuthCallbackForwarder = () => {
   useEffect(() => {
     const search = window.location.search;
@@ -109,6 +112,7 @@ function App() {
           <Route path="/admin/login"        element={<AdminLogin />} />
           <Route path="/admin/signup"       element={<AdminSetup />} />
           <Route path="/admin/dashboard"    element={<AdminDashboard />} />
+          <Route path="/admin/conversations" element={<AdminChatPage />} />
           <Route path="/admin/users"        element={<AdminUsers />} />
           <Route path="/admin/courses"      element={<AdminCourses />} />
           <Route path="/admin/categories"   element={<AdminCategories />} />
@@ -209,6 +213,7 @@ function App() {
           </Route>
         </Routes>
       </div>
+      <StudentChatWidget />
       {!location.pathname.startsWith("/t/u/activeCourses") &&
        !isPlayerRoute && <Footer />}
     </div>
