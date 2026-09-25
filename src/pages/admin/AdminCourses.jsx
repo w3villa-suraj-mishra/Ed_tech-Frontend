@@ -216,28 +216,33 @@ function CoursesInner() {
     <AdminLayout>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-xl font-bold text-[#F1F2FF]">Courses</h1>
-          <p className="text-sm text-[#AFB2BF] mt-0.5">{total} total courses</p>
+          <h1 className="text-xl font-bold text-gray-800">Courses</h1>
+          <p className="text-sm text-gray-500 mt-0.5">{total} total courses</p>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-3 mb-5">
+      <div className="bg-white border border-gray-200 rounded-sm shadow-sm p-4 mb-6 flex flex-wrap gap-4">
         <input value={searchInput} onChange={e => setSearchInput(e.target.value)} placeholder="Search courses…"
-          className="bg-[#161D29] border border-[#2C333F] rounded-lg px-4 py-2 text-sm text-[#F1F2FF] placeholder-[#585D69] focus:outline-none focus:border-[#FFD60A] w-64" />
+          className="flex-1 min-w-[200px] bg-white border border-gray-300 rounded px-4 py-2 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-purple-600" />
         <select value={statusFilter} onChange={e => { setStatusFilter(e.target.value); setPage(1); }}
-          className="bg-[#161D29] border border-[#2C333F] rounded-lg px-3 py-2 text-sm text-[#F1F2FF] focus:outline-none focus:border-[#FFD60A]">
+          className="w-40 bg-white border border-gray-300 rounded px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-purple-600">
           <option value="">All Status</option>
           <option value="Published">Published</option>
           <option value="Draft">Draft</option>
         </select>
       </div>
 
-      <div className="bg-[#161D29] border border-[#2C333F] rounded-2xl overflow-hidden">
+      {/* Table */}
+      <div className="bg-white border border-gray-200 rounded-sm shadow-sm overflow-hidden mb-8">
+        <div className="px-5 py-3 bg-purple-700 text-white border-b border-gray-200 flex items-center justify-between">
+          <h2 className="text-[15px] font-bold">Course Details</h2>
+          <span className="text-xs text-purple-200">{courses.length} courses</span>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[#2C333F] text-[#AFB2BF] text-xs uppercase tracking-wide">
+              <tr className="border-b border-gray-200 text-gray-600 text-xs font-bold uppercase tracking-wide bg-gray-50">
                 <th className="text-left px-5 py-3">Course</th>
                 <th className="text-left px-5 py-3">Instructor</th>
                 <th className="text-left px-5 py-3">Category</th>
@@ -246,28 +251,28 @@ function CoursesInner() {
                 <th className="text-right px-5 py-3">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-100">
               {loading ? (
                 <tr><td colSpan={6} className="px-5 py-4"><TableSkeleton rows={8} cols={6} /></td></tr>
               ) : courses.length === 0 ? (
                 <tr><td colSpan={6}><EmptyState message="No courses found." /></td></tr>
               ) : courses.map(c => (
-                <tr key={c.id} className="border-b border-[#2C333F] hover:bg-[#2C333F]/30 transition-colors">
+                <tr key={c.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
                       {c.thumbnail && <img src={c.thumbnail} alt="" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />}
-                      <span className="font-medium text-[#F1F2FF] max-w-[180px] truncate">{c.courseName}</span>
+                      <span className="font-medium text-gray-800 max-w-[180px] truncate">{c.courseName}</span>
                     </div>
                   </td>
-                  <td className="px-5 py-3.5 text-[#AFB2BF]">{c.instructor ? `${c.instructor.firstName} ${c.instructor.lastName}` : '—'}</td>
-                  <td className="px-5 py-3.5 text-[#AFB2BF]">{c.Category?.name || c.category?.name || '—'}</td>
-                  <td className="px-5 py-3.5 text-[#AFB2BF]">
+                  <td className="px-5 py-3.5 text-gray-500">{c.instructor ? `${c.instructor.firstName} ${c.instructor.lastName}` : '—'}</td>
+                  <td className="px-5 py-3.5 text-gray-500">{c.Category?.name || c.category?.name || '—'}</td>
+                  <td className="px-5 py-3.5 text-gray-500">
                     {c?.pricing?.isOfferActive || (c?.originalPrice && Number(c?.originalPrice) > Number(c?.price)) ? (
                       <div className="flex flex-col">
-                        <span className="text-xs text-[#585D69] line-through">₹{c?.pricing?.originalPrice || c?.originalPrice}</span>
-                        <span className="font-bold text-[#FFD60A]">₹{c?.pricing?.finalPrice || c?.price}</span>
+                        <span className="text-xs text-gray-500 line-through">₹{c?.pricing?.originalPrice || c?.originalPrice}</span>
+                        <span className="font-bold text-purple-600">₹{c?.pricing?.finalPrice || c?.price}</span>
                         {c?.pricing?.discountPercentage > 0 && (
-                          <span className="text-[10px] text-emerald-400 font-semibold">{c?.pricing?.discountPercentage}% OFF</span>
+                          <span className="text-[10px] text-emerald-700 font-bold">{c?.pricing?.discountPercentage}% OFF</span>
                         )}
                       </div>
                     ) : (
@@ -277,15 +282,15 @@ function CoursesInner() {
                   <td className="px-5 py-3.5"><StatusBadge status={c.status} /></td>
                   <td className="px-5 py-3.5 text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <button onClick={() => openSectionsModal(c)} className="px-3 py-1 rounded-lg bg-[#FFD60A]/10 hover:bg-[#FFD60A]/20 text-[#FFD60A] text-xs font-semibold transition-colors">
+                      <button onClick={() => openSectionsModal(c)} className="px-2.5 py-1 rounded text-xs font-semibold bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 transition-colors cursor-pointer">
                         Sections
                       </button>
                       <button onClick={() => toggleStatus(c)}
-                        className={`px-3 py-1 rounded-lg text-xs transition-colors ${c.status === 'Published' ? 'bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20' : 'bg-green-500/10 text-green-400 hover:bg-green-500/20'}`}>
+                        className={`px-2.5 py-1 rounded text-xs font-semibold border transition-colors cursor-pointer ${c.status === 'Published' ? 'bg-amber-50 text-amber-700 border-amber-300 hover:bg-amber-100' : 'bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100'}`}>
                         {c.status === 'Published' ? 'Unpublish' : 'Publish'}
                       </button>
-                      <button onClick={() => openEdit(c)} className="px-3 py-1 rounded-lg bg-[#2C333F] hover:bg-[#424854] text-[#AFB2BF] text-xs transition-colors">Edit</button>
-                      {isSA && <button onClick={() => setDelModal(c.id)} className="px-3 py-1 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs transition-colors">Delete</button>}
+                      <button onClick={() => openEdit(c)} className="px-2.5 py-1 rounded text-xs font-semibold bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 transition-colors cursor-pointer">Edit</button>
+                      {isSA && <button onClick={() => setDelModal(c.id)} className="px-2.5 py-1 rounded text-xs font-semibold bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition-colors cursor-pointer">Delete</button>}
                     </div>
                   </td>
                 </tr>
@@ -293,7 +298,7 @@ function CoursesInner() {
             </tbody>
           </table>
         </div>
-        <div className="px-5 py-4 border-t border-[#2C333F]">
+        <div className="px-5 py-4 border-t border-gray-200">
           <Pagination page={page} totalPages={totalPages} onChange={setPage} />
         </div>
       </div>
@@ -308,7 +313,7 @@ function CoursesInner() {
             <AdminInput label="Price (₹)" type="number" value={form.price ?? ''} onChange={setF('price')} />
             <AdminInput label="Tag" value={form.tag || ''} onChange={setF('tag')} />
           </div>
-          <div className="grid grid-cols-2 gap-3 p-3 bg-[#000814] rounded-xl border border-[#2C333F]">
+          <div className="grid grid-cols-2 gap-3 p-3 bg-white rounded-xl border border-gray-200">
             <div>
               <AdminSelect label="Discount Type" value={form.discountType || 'none'} onChange={setF('discountType')}>
                 <option value="none">No Discount</option>
@@ -323,7 +328,7 @@ function CoursesInner() {
             )}
           </div>
           {form.discountType !== 'none' && (
-            <div className="grid grid-cols-2 gap-3 p-3 bg-[#000814] rounded-xl border border-[#2C333F]">
+            <div className="grid grid-cols-2 gap-3 p-3 bg-white rounded-xl border border-gray-200">
               <AdminInput label="Offer Start Date" type="date" value={form.offerStartAt || ''} onChange={setF('offerStartAt')} onClick={(e) => e.target.showPicker && e.target.showPicker()} />
               <AdminInput label="Offer End Date" type="date" value={form.offerEndAt || ''} onChange={setF('offerEndAt')} onClick={(e) => e.target.showPicker && e.target.showPicker()} />
             </div>
@@ -339,14 +344,14 @@ function CoursesInner() {
             </AdminSelect>
           </div>
           <div>
-            <label className="block text-sm font-medium text-[#AFB2BF] mb-1">Thumbnail</label>
+            <label className="block text-sm font-medium text-gray-500 mb-1">Thumbnail</label>
             {editModal?.thumbnail && !thumbnail && <img src={editModal.thumbnail} alt="current" className="w-24 h-16 object-cover rounded-lg mb-2" />}
             <input type="file" accept="image/*" onChange={e => setThumbnail(e.target.files[0])}
-              className="text-sm text-[#AFB2BF] file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#2C333F] file:text-[#F1F2FF] file:text-xs hover:file:bg-[#424854]" />
+              className="text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-gray-100 file:text-gray-800 file:text-xs hover:file:bg-[#424854]" />
           </div>
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={() => setEditModal(null)} className="flex-1 py-2.5 rounded-lg border border-[#2C333F] text-[#AFB2BF] hover:bg-[#2C333F] text-sm">Cancel</button>
-            <button type="submit" disabled={saving} className="flex-1 py-2.5 rounded-lg bg-[#FFD60A] text-[#000814] font-bold text-sm hover:bg-[#FFEE32] disabled:opacity-60">{saving ? 'Saving…' : 'Save Changes'}</button>
+            <button type="button" onClick={() => setEditModal(null)} className="flex-1 py-2.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-100 text-sm">Cancel</button>
+            <button type="submit" disabled={saving} className="flex-1 py-2.5 rounded-lg bg-purple-600 text-white font-bold text-sm hover:bg-[#FFEE32] disabled:opacity-60">{saving ? 'Saving…' : 'Save Changes'}</button>
           </div>
         </form>
       </AdminModal>
@@ -355,17 +360,17 @@ function CoursesInner() {
       <AdminModal isOpen={!!sectionsModal} title={`Manage Sections — ${sectionsModal?.courseName}`} onClose={() => setSectionsModal(null)} size="xl">
         <div className="space-y-6">
           {/* Create / Edit Section Form */}
-          <form onSubmit={handleSaveSection} className="flex items-center gap-3 bg-[#000814] p-3 rounded-xl border border-[#2C333F]">
+          <form onSubmit={handleSaveSection} className="flex items-center gap-3 bg-white p-3 rounded-xl border border-gray-200">
             <input
               value={secForm.sectionName}
               onChange={e => setSecForm({ sectionName: e.target.value })}
               placeholder={editingSec ? "Update section name…" : "Add new section name…"}
-              className="flex-1 bg-transparent text-sm text-[#F1F2FF] focus:outline-none px-2"
+              className="flex-1 bg-transparent text-sm text-gray-800 focus:outline-none px-2"
             />
             {editingSec && (
-              <button type="button" onClick={() => { setEditingSec(null); setSecForm({ sectionName: '' }); }} className="text-xs text-[#AFB2BF] hover:text-white px-2">Cancel</button>
+              <button type="button" onClick={() => { setEditingSec(null); setSecForm({ sectionName: '' }); }} className="text-xs text-gray-500 hover:text-gray-800 px-2">Cancel</button>
             )}
-            <button type="submit" className="px-4 py-2 bg-[#FFD60A] text-[#000814] font-bold text-xs rounded-lg hover:bg-[#FFEE32]">
+            <button type="submit" className="px-4 py-2 bg-purple-600 text-white font-bold text-xs rounded-lg hover:bg-[#FFEE32]">
               {editingSec ? 'Update' : '+ Add Section'}
             </button>
           </form>
@@ -374,23 +379,23 @@ function CoursesInner() {
           {loadingDetails ? (
             <TableSkeleton rows={4} cols={2} />
           ) : !courseDetails?.sections?.length ? (
-            <p className="text-sm text-[#AFB2BF] text-center py-6">No sections yet. Create one above!</p>
+            <p className="text-sm text-gray-500 text-center py-6">No sections yet. Create one above!</p>
           ) : (
             <div className="space-y-4">
               {courseDetails.sections.map((sec, idx) => (
-                <div key={sec.id} className="bg-[#000814] border border-[#2C333F] rounded-xl p-4">
-                  <div className="flex items-center justify-between border-b border-[#2C333F] pb-3 mb-3">
-                    <span className="font-semibold text-sm text-[#F1F2FF]">
+                <div key={sec.id} className="bg-white border border-gray-200 rounded-xl p-4">
+                  <div className="flex items-center justify-between border-b border-gray-200 pb-3 mb-3">
+                    <span className="font-semibold text-sm text-gray-800">
                       Section {idx + 1}: {sec.sectionName}
                     </span>
                     <div className="flex items-center gap-2">
-                      <button onClick={() => openSubModal(sec.id)} className="px-2.5 py-1 rounded bg-[#FFD60A]/10 text-[#FFD60A] text-xs font-semibold hover:bg-[#FFD60A]/20">
+                      <button onClick={() => openSubModal(sec.id)} className="px-2.5 py-1 rounded bg-purple-50 text-purple-700 border border-purple-200 text-xs font-semibold hover:bg-purple-100 transition-colors">
                         + Add Lecture
                       </button>
-                      <button onClick={() => { setEditingSec(sec); setSecForm({ sectionName: sec.sectionName }); }} className="px-2 py-1 rounded bg-[#2C333F] text-[#AFB2BF] text-xs hover:text-white">
+                      <button onClick={() => { setEditingSec(sec); setSecForm({ sectionName: sec.sectionName }); }} className="px-2 py-1 rounded bg-gray-50 border border-gray-200 text-gray-700 text-xs hover:bg-gray-100 transition-colors">
                         Edit
                       </button>
-                      <button onClick={() => setDelSecId(sec.id)} className="px-2 py-1 rounded bg-red-500/10 text-red-400 text-xs hover:bg-red-500/20">
+                      <button onClick={() => setDelSecId(sec.id)} className="px-2 py-1 rounded bg-red-50 border border-red-200 text-red-600 text-xs hover:bg-red-100 transition-colors">
                         Delete
                       </button>
                     </div>
@@ -399,24 +404,24 @@ function CoursesInner() {
                   {/* Subsections List */}
                   <div className="pl-4 space-y-2">
                     {sec.subSections?.map((sub) => (
-                      <div key={sub.id} className="flex items-center justify-between bg-[#161D29] p-2.5 rounded-lg border border-[#2C333F]/50">
+                      <div key={sub.id} className="flex items-center justify-between bg-white shadow-sm border border-gray-200 p-2.5 rounded-lg">
                         <div>
-                          <p className="text-xs font-medium text-[#F1F2FF]">{sub.title}</p>
-                          {sub.timeDuration && <p className="text-[10px] text-[#585D69]">Duration: {sub.timeDuration}</p>}
+                          <p className="text-xs font-medium text-gray-800">{sub.title}</p>
+                          {sub.timeDuration && <p className="text-[10px] text-gray-500">Duration: {sub.timeDuration}</p>}
                         </div>
                         <div className="flex items-center gap-2">
                           {sub.videoUrl && (
-                            <a href={sub.videoUrl} target="_blank" rel="noreferrer" className="text-xs text-blue-400 hover:underline">
+                            <a href={sub.videoUrl} target="_blank" rel="noreferrer" className="text-xs text-purple-700 hover:text-purple-900 hover:underline font-semibold">
                               ▶ Video
                             </a>
                           )}
-                          <button onClick={() => openSubModal(sec.id, sub)} className="text-xs text-[#AFB2BF] hover:text-white px-1">Edit</button>
-                          <button onClick={() => setDelSubId(sub.id)} className="text-xs text-red-400 hover:text-red-300 px-1">Delete</button>
+                          <button onClick={() => openSubModal(sec.id, sub)} className="text-xs text-gray-600 hover:text-gray-900 px-1 font-semibold">Edit</button>
+                          <button onClick={() => setDelSubId(sub.id)} className="text-xs text-red-600 hover:text-red-700 px-1 font-semibold">Delete</button>
                         </div>
                       </div>
                     ))}
                     {!sec.subSections?.length && (
-                      <p className="text-xs text-[#585D69] italic">No lectures in this section.</p>
+                      <p className="text-xs text-gray-500 italic">No lectures in this section.</p>
                     )}
                   </div>
                 </div>
@@ -433,12 +438,12 @@ function CoursesInner() {
           <AdminTextarea label="Description" value={subForm.description} onChange={e => setSubForm(p => ({ ...p, description: e.target.value }))} rows={2} />
           <AdminInput label="Duration (e.g. 10m 30s)" value={subForm.timeDuration} onChange={e => setSubForm(p => ({ ...p, timeDuration: e.target.value }))} />
           <div>
-            <label className="block text-sm font-medium text-[#AFB2BF] mb-1">Video File</label>
-            <input type="file" accept="video/*" onChange={e => setSubVideo(e.target.files[0])} className="text-sm text-[#AFB2BF] file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#2C333F] file:text-[#F1F2FF] file:text-xs" />
+            <label className="block text-sm font-medium text-gray-500 mb-1">Video File</label>
+            <input type="file" accept="video/*" onChange={e => setSubVideo(e.target.files[0])} className="text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-gray-100 file:text-gray-800 file:text-xs" />
           </div>
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={() => setSubModal(null)} className="flex-1 py-2.5 rounded-lg border border-[#2C333F] text-[#AFB2BF] text-sm">Cancel</button>
-            <button type="submit" className="flex-1 py-2.5 rounded-lg bg-[#FFD60A] text-[#000814] font-bold text-sm hover:bg-[#FFEE32]">Save Lecture</button>
+            <button type="button" onClick={() => setSubModal(null)} className="flex-1 py-2.5 rounded-lg border border-gray-200 text-gray-500 text-sm">Cancel</button>
+            <button type="submit" className="flex-1 py-2.5 rounded-lg bg-purple-600 text-white font-bold text-sm hover:bg-[#FFEE32]">Save Lecture</button>
           </div>
         </form>
       </AdminModal>

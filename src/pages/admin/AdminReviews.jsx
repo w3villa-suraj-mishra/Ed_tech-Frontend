@@ -84,14 +84,18 @@ function ReviewsInner() {
   return (
     <AdminLayout>
       <div className="mb-6">
-        <h1 className="text-xl font-bold text-[#F1F2FF]">Reviews & Ratings</h1>
-        <p className="text-sm text-[#AFB2BF] mt-0.5">{total} total reviews</p>
+        <h1 className="text-xl font-bold text-gray-800">Reviews & Ratings</h1>
+        <p className="text-sm text-gray-500 mt-0.5">{total} total reviews</p>
       </div>
-      <div className="bg-[#161D29] border border-[#2C333F] rounded-2xl overflow-hidden">
+      <div className="bg-white border border-gray-200 rounded-sm shadow-sm overflow-hidden mb-8">
+        <div className="px-5 py-3 bg-purple-700 text-white border-b border-gray-200 flex items-center justify-between">
+          <h2 className="text-[15px] font-bold">Reviews List</h2>
+          <span className="text-xs text-purple-200">{total} reviews</span>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[#2C333F] text-[#AFB2BF] text-xs uppercase tracking-wide">
+              <tr className="border-b border-gray-200 text-gray-600 text-xs font-bold uppercase tracking-wide bg-gray-50">
                 <th className="text-left px-5 py-3">Student</th>
                 <th className="text-left px-5 py-3">Course</th>
                 <th className="text-left px-5 py-3">Rating</th>
@@ -100,7 +104,7 @@ function ReviewsInner() {
                 <th className="text-right px-5 py-3">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-100">
               {loading ? <tr><td colSpan={6} className="px-5 py-4"><TableSkeleton rows={8} cols={5} /></td></tr>
                : reviews.length === 0 ? <tr><td colSpan={6}><EmptyState message="No reviews found." /></td></tr>
                : reviews.map((r, idx) => {
@@ -113,19 +117,19 @@ function ReviewsInner() {
                   const dateStr = dateRaw ? new Date(dateRaw).toLocaleDateString() : new Date().toLocaleDateString();
 
                   return (
-                    <tr key={reviewId} className="border-b border-[#2C333F] hover:bg-[#2C333F]/30 transition-colors">
+                    <tr key={reviewId} className="hover:bg-gray-50 transition-colors">
                       <td className="px-5 py-3.5">
-                        <p className="font-medium text-[#F1F2FF]">{studentName}</p>
+                        <p className="font-medium text-gray-800">{studentName}</p>
                       </td>
-                      <td className="px-5 py-3.5 text-[#AFB2BF] max-w-[150px] truncate">{courseTitle}</td>
+                      <td className="px-5 py-3.5 text-gray-500 max-w-[150px] truncate">{courseTitle}</td>
                       <td className="px-5 py-3.5">
-                        <span className="text-[#FFD60A] text-xs">{stars(r.rating || 0)}</span>
-                        <span className="text-[#585D69] text-xs ml-1">({r.rating})</span>
+                        <span className="text-purple-600 text-xs">{stars(r.rating || 0)}</span>
+                        <span className="text-gray-500 text-xs ml-1">({r.rating})</span>
                       </td>
-                      <td className="px-5 py-3.5 text-[#AFB2BF] max-w-[200px] truncate">{r.review || '—'}</td>
-                      <td className="px-5 py-3.5 text-[#585D69]">{dateStr}</td>
+                      <td className="px-5 py-3.5 text-gray-500 max-w-[200px] truncate">{r.review || '—'}</td>
+                      <td className="px-5 py-3.5 text-gray-500">{dateStr}</td>
                       <td className="px-5 py-3.5 text-right">
-                        <button onClick={() => setDelModal(reviewId)} className="px-3 py-1 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs transition-colors">Delete</button>
+                        <button onClick={() => setDelModal(reviewId)} className="px-2.5 py-1 rounded text-xs font-semibold bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition-colors cursor-pointer">Delete</button>
                       </td>
                     </tr>
                   );
@@ -133,7 +137,7 @@ function ReviewsInner() {
             </tbody>
           </table>
         </div>
-        <div className="px-5 py-4 border-t border-[#2C333F]">
+        <div className="px-5 py-4 border-t border-gray-200">
           <Pagination page={page} totalPages={totalPages} onChange={setPage} />
         </div>
       </div>

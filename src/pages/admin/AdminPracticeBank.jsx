@@ -368,192 +368,201 @@ function AdminPracticeBankInner() {
 
   return (
     <AdminLayout>
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="p-2 bg-[#FFD60A]/10 text-[#FFD60A] rounded-xl text-xl">⚡</span>
-            <h1 className="text-2xl font-bold text-[#F1F2FF]">Practice Question Bank</h1>
+      <div className="space-y-6 pb-12">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-2">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="p-2 bg-purple-100 text-purple-700 rounded-lg text-lg">⚡</span>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Practice Question Bank</h1>
+            </div>
+            <p className="text-xs sm:text-sm text-gray-500 mt-1">Manage global & course-specific questions, test categories, and dynamic question types.</p>
           </div>
-          <p className="text-xs text-[#AFB2BF] mt-1">Manage global & course-specific questions, test categories, and dynamic question types.</p>
-        </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          {selectedQuestionIds.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2">
+            {selectedQuestionIds.length > 0 && (
+              <button
+                onClick={handleBulkDelete}
+                className="px-4 py-2 bg-red-600 text-white font-bold text-xs rounded-md flex items-center gap-2 shadow-sm hover:bg-red-700 transition"
+              >
+                <FaTrash /> Delete Selected ({selectedQuestionIds.length})
+              </button>
+            )}
             <button
-              onClick={handleBulkDelete}
-              className="px-4 py-2 bg-red-600/90 text-white font-bold text-xs rounded-xl flex items-center gap-2 shadow-lg hover:bg-red-700 transition"
+              onClick={() => setIsCategoryModalOpen(true)}
+              className="px-3.5 py-2 bg-white border border-gray-300 text-gray-700 hover:text-gray-900 font-semibold text-xs rounded-md shadow-sm transition-colors hover:bg-gray-50"
             >
-              <FaTrash /> Delete Selected ({selectedQuestionIds.length})
+              Manage Categories
             </button>
-          )}
-          <button
-            onClick={() => setIsCategoryModalOpen(true)}
-            className="px-3.5 py-2 bg-[#161D29] border border-[#2C333F] text-[#AFB2BF] hover:text-white font-semibold text-xs rounded-xl transition-colors"
-          >
-            Manage Categories
-          </button>
-          <button
-            onClick={() => handleOpenCreateModal()}
-            className="px-4 py-2 bg-[#FFD60A] text-black font-bold text-xs rounded-xl flex items-center gap-2 shadow-lg hover:bg-yellow-400 transition"
-          >
-            <FaPlus /> Add Question
-          </button>
-        </div>
-      </div>
-
-      <div className="bg-[#161D29] border border-[#2C333F] rounded-2xl p-4 mb-6 flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4">
-        <div className="relative flex-1">
-          <FaSearch className="absolute left-3.5 top-3.5 text-[#585D69]" />
-          <input
-            type="text"
-            placeholder="Search questions by title..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-[#585D69] focus:outline-none focus:border-[#FFD60A]"
-          />
+            <button
+              onClick={() => handleOpenCreateModal()}
+              className="px-4 py-2 bg-purple-700 text-white font-bold text-xs rounded-md flex items-center gap-2 shadow-sm hover:bg-purple-800 transition"
+            >
+              <FaPlus /> + Add Question
+            </button>
+          </div>
         </div>
 
-        <div className="flex flex-wrap gap-3">
-          <select
-            value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
-            className="bg-[#090D16] border border-[#2C333F] rounded-xl px-3 py-2 text-xs text-[#AFB2BF] focus:outline-none focus:border-[#FFD60A]"
-          >
-            <option value="">All Test Categories</option>
-            <option value="MCQ">MCQ</option>
-            <option value="Coding">Coding</option>
-            <option value="Topic Practice">Topic Practice</option>
-            <option value="Mock Test">Mock Test</option>
-            <option value="Interview Test">Interview Test</option>
-            <option value="Daily Quiz">Daily Quiz</option>
-          </select>
+        <div className="bg-white border border-gray-200 rounded-sm shadow-sm p-4 flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4">
+          <div className="relative flex-1">
+            <FaSearch className="absolute left-3.5 top-3 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search questions by title..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full bg-white border border-gray-300 rounded pl-9 pr-4 py-2 text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-purple-600"
+            />
+          </div>
 
-          <select
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value)}
-            className="bg-[#090D16] border border-[#2C333F] rounded-xl px-3 py-2 text-xs text-[#AFB2BF] focus:outline-none focus:border-[#FFD60A]"
-          >
-            <option value="">All Question Types</option>
-            <option value="MCQ">MCQ</option>
-            <option value="Multiple Select">Multiple Select</option>
-            <option value="True/False">True/False</option>
-            <option value="Short Answer">Short Answer</option>
-            <option value="Fill in the Blank">Fill in the Blank</option>
-            <option value="Coding">Coding</option>
-          </select>
+          <div className="flex flex-wrap gap-3">
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="bg-white border border-gray-300 rounded px-3 py-2 text-xs text-gray-700 focus:outline-none focus:border-purple-600"
+            >
+              <option value="">All Test Categories</option>
+              <option value="MCQ">MCQ</option>
+              <option value="Coding">Coding</option>
+              <option value="Topic Practice">Topic Practice</option>
+              <option value="Mock Test">Mock Test</option>
+              <option value="Interview Test">Interview Test</option>
+              <option value="Daily Quiz">Daily Quiz</option>
+            </select>
 
-          <select
-            value={difficultyFilter}
-            onChange={(e) => setDifficultyFilter(e.target.value)}
-            className="bg-[#090D16] border border-[#2C333F] rounded-xl px-3 py-2 text-xs text-[#AFB2BF] focus:outline-none focus:border-[#FFD60A]"
-          >
-            <option value="">All Difficulties</option>
-            <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option>
-            <option value="Hard">Hard</option>
-          </select>
+            <select
+              value={typeFilter}
+              onChange={(e) => setTypeFilter(e.target.value)}
+              className="bg-white border border-gray-300 rounded px-3 py-2 text-xs text-gray-700 focus:outline-none focus:border-purple-600"
+            >
+              <option value="">All Question Types</option>
+              <option value="MCQ">MCQ</option>
+              <option value="Multiple Select">Multiple Select</option>
+              <option value="True/False">True/False</option>
+              <option value="Short Answer">Short Answer</option>
+              <option value="Fill in the Blank">Fill in the Blank</option>
+              <option value="Coding">Coding</option>
+            </select>
+
+            <select
+              value={difficultyFilter}
+              onChange={(e) => setDifficultyFilter(e.target.value)}
+              className="bg-white border border-gray-300 rounded px-3 py-2 text-xs text-gray-700 focus:outline-none focus:border-purple-600"
+            >
+              <option value="">All Difficulties</option>
+              <option value="Easy">Easy</option>
+              <option value="Medium">Medium</option>
+              <option value="Hard">Hard</option>
+            </select>
+          </div>
         </div>
-      </div>
 
-      <div className="bg-[#161D29] border border-[#2C333F] rounded-2xl overflow-hidden shadow-xl">
-        {loading ? (
-          <TableSkeleton rows={5} cols={7} />
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-[#090D16] border-b border-[#2C333F] text-[#AFB2BF] font-semibold uppercase tracking-wider">
-                <tr>
-                  <th className="px-4 py-3.5 w-10 text-center">
-                    <input
-                      type="checkbox"
-                      checked={questions.length > 0 && selectedQuestionIds.length === questions.length}
-                      onChange={handleSelectAll}
-                      className="rounded border-[#2C333F] text-[#FFD60A] focus:ring-0 focus:ring-offset-0 bg-[#090D16] cursor-pointer"
-                    />
-                  </th>
-                  <th className="px-5 py-3.5">Question Title</th>
-                  <th className="px-5 py-3.5">Scope</th>
-                  <th className="px-5 py-3.5">Course</th>
-                  <th className="px-5 py-3.5">Test Category</th>
-                  <th className="px-5 py-3.5">Question Type</th>
-                  <th className="px-5 py-3.5">Difficulty</th>
-                  <th className="px-5 py-3.5 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#2C333F] text-[#F1F2FF]">
-                {questions.length === 0 ? (
+        <div className="bg-white border border-gray-200 rounded-sm shadow-sm overflow-hidden mb-8">
+          <div className="px-5 py-3 bg-purple-700 text-white border-b border-gray-200 flex items-center justify-between">
+            <h2 className="text-[15px] font-bold">Questions List</h2>
+            <span className="text-xs text-purple-200">{questions.length} questions</span>
+          </div>
+
+          {loading ? (
+            <TableSkeleton rows={5} cols={7} />
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-gray-50 border-b border-gray-200 text-gray-600 font-semibold uppercase tracking-wider">
                   <tr>
-                    <td colSpan={8} className="text-center py-10 text-[#585D69]">
-                      No questions found. Click "Add Question" to create one.
-                    </td>
+                    <th className="px-4 py-3.5 w-10 text-center">
+                      <input
+                        type="checkbox"
+                        checked={questions.length > 0 && selectedQuestionIds.length === questions.length}
+                        onChange={handleSelectAll}
+                        className="rounded border-gray-300 text-purple-600 focus:ring-0 cursor-pointer"
+                      />
+                    </th>
+                    <th className="px-5 py-3.5">Question Title</th>
+                    <th className="px-5 py-3.5">Scope</th>
+                    <th className="px-5 py-3.5">Course</th>
+                    <th className="px-5 py-3.5">Test Category</th>
+                    <th className="px-5 py-3.5">Question Type</th>
+                    <th className="px-5 py-3.5">Difficulty</th>
+                    <th className="px-5 py-3.5 text-right">Actions</th>
                   </tr>
-                ) : (
-                  questions.map((q) => (
-                    <tr key={q.id} className={`hover:bg-[#1f2736] transition-colors ${selectedQuestionIds.includes(q.id) ? 'bg-[#1f2736]/60' : ''}`}>
-                      <td className="px-4 py-4 text-center">
-                        <input
-                          type="checkbox"
-                          checked={selectedQuestionIds.includes(q.id)}
-                          onChange={() => handleSelectOne(q.id)}
-                          className="rounded border-[#2C333F] text-[#FFD60A] focus:ring-0 focus:ring-offset-0 bg-[#090D16] cursor-pointer"
-                        />
-                      </td>
-                      <td className="px-5 py-4 font-medium max-w-sm truncate">{q.title}</td>
-                      <td className="px-5 py-4">
-                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                          q.scope === 'COURSE' ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                        }`}>
-                          {q.scope === 'COURSE' ? 'Course' : 'Global'}
-                        </span>
-                      </td>
-                      <td className="px-5 py-4 text-[#AFB2BF]">
-                        {q.scope === 'COURSE' ? (q.course?.courseName || courses.find(c => String(c.id || c._id) === String(q.courseId))?.courseName || '—') : '—'}
-                      </td>
-                      <td className="px-5 py-4">
-                        <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#FFD60A]/10 text-[#FFD60A] border border-[#FFD60A]/20">
-                          {q.testCategory || 'MCQ'}
-                        </span>
-                      </td>
-                      <td className="px-5 py-4">
-                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                          q.type === 'MCQ' ? 'bg-blue-500/20 text-blue-400' :
-                          q.type === 'Coding' ? 'bg-blue-500/20 text-blue-400' : 'bg-amber-500/20 text-amber-400'
-                        }`}>
-                          {q.type}
-                        </span>
-                      </td>
-                      <td className="px-5 py-4">
-                        <span className={`font-semibold ${
-                          q.difficulty === 'Easy' ? 'text-emerald-400' :
-                          q.difficulty === 'Medium' ? 'text-amber-400' : 'text-red-400'
-                        }`}>
-                          {q.difficulty}
-                        </span>
-                      </td>
-                      <td className="px-5 py-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <button
-                            onClick={() => handleOpenCreateModal(q)}
-                            className="p-2 text-slate-400 hover:text-white hover:bg-[#2C333F] rounded-lg transition-colors"
-                          >
-                            <FaEdit />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteQuestion(q.id)}
-                            className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors"
-                          >
-                            <FaTrash />
-                          </button>
-                        </div>
+                </thead>
+                <tbody className="divide-y divide-gray-100 text-gray-800">
+                  {questions.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} className="text-center py-10 text-gray-500">
+                        No questions found. Click "Add Question" to create one.
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+                  ) : (
+                    questions.map((q) => (
+                      <tr key={q.id} className={`hover:bg-gray-50 transition-colors ${selectedQuestionIds.includes(q.id) ? 'bg-purple-50/60' : ''}`}>
+                        <td className="px-4 py-4 text-center">
+                          <input
+                            type="checkbox"
+                            checked={selectedQuestionIds.includes(q.id)}
+                            onChange={() => handleSelectOne(q.id)}
+                            className="rounded border-gray-300 text-purple-600 focus:ring-0 cursor-pointer"
+                          />
+                        </td>
+                        <td className="px-5 py-4 font-medium max-w-sm truncate text-gray-900">{q.title}</td>
+                        <td className="px-5 py-4">
+                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                            q.scope === 'COURSE' ? 'bg-sky-50 text-sky-800 border border-sky-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          }`}>
+                            {q.scope === 'COURSE' ? 'Course' : 'Global'}
+                          </span>
+                        </td>
+                        <td className="px-5 py-4 text-gray-600">
+                          {q.scope === 'COURSE' ? (q.course?.courseName || courses.find(c => String(c.id || c._id) === String(q.courseId))?.courseName || '—') : '—'}
+                        </td>
+                        <td className="px-5 py-4">
+                          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200">
+                            {q.testCategory || 'MCQ'}
+                          </span>
+                        </td>
+                        <td className="px-5 py-4">
+                          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
+                            q.type === 'MCQ' ? 'bg-sky-50 text-sky-800 border-sky-200' :
+                            q.type === 'Coding' ? 'bg-purple-50 text-purple-700 border-purple-200' : 'bg-amber-50 text-amber-800 border-amber-200'
+                          }`}>
+                            {q.type}
+                          </span>
+                        </td>
+                        <td className="px-5 py-4">
+                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                            q.difficulty === 'Easy' ? 'bg-emerald-50 text-emerald-700' :
+                            q.difficulty === 'Medium' ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'
+                          }`}>
+                            {q.difficulty}
+                          </span>
+                        </td>
+                        <td className="px-5 py-4 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            {/* Edit Question */}
+                            <button
+                              onClick={() => handleOpenCreateModal(q)}
+                              className="p-1.5 rounded-md text-gray-600 hover:text-purple-700 hover:bg-purple-50 transition border border-transparent hover:border-purple-200"
+                              title="Edit Question"
+                            >
+                              <FaEdit />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteQuestion(q.id)}
+                              className="p-1.5 rounded-md text-gray-600 hover:text-red-600 hover:bg-red-50 transition border border-transparent hover:border-red-200"
+                              title="Delete Question"
+                            >
+                              <FaTrash />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
 
       {/* CREATE / EDIT QUESTION MODAL */}
       {isQuestionModalOpen && (
@@ -566,15 +575,15 @@ function AdminPracticeBankInner() {
                 rows={3}
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-white focus:outline-none focus:border-[#FFD60A]"
+                className="w-full bg-[#f4f5f8] border border-gray-200 rounded-xl p-3 text-gray-800 focus:outline-none focus:border-purple-600"
                 placeholder="Enter title or question statement..."
               />
             </div>
 
-            <div className="bg-[#090D16] p-3.5 border border-[#2C333F] rounded-xl space-y-3">
+            <div className="bg-[#f4f5f8] p-3.5 border border-gray-200 rounded-xl space-y-3">
               <div>
-                <label className="block text-[#FFD60A] font-bold mb-2 uppercase tracking-wide text-[11px]">Question Scope *</label>
-                <div className="flex items-center gap-6 text-white font-medium">
+                <label className="block text-purple-600 font-bold mb-2 uppercase tracking-wide text-[11px]">Question Scope *</label>
+                <div className="flex items-center gap-6 text-gray-800 font-medium">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="radio"
@@ -601,13 +610,13 @@ function AdminPracticeBankInner() {
               </div>
 
               {formData.scope === 'COURSE' && (
-                <div className="pt-2 border-t border-[#2C333F]">
+                <div className="pt-2 border-t border-gray-200">
                   <label className="block text-slate-300 font-semibold mb-1">Select Course *</label>
                   <select
                     required
                     value={formData.courseId}
                     onChange={(e) => setFormData({ ...formData, courseId: e.target.value })}
-                    className="w-full bg-[#161D29] border border-[#2C333F] rounded-xl p-2.5 text-white focus:outline-none focus:border-[#FFD60A]"
+                    className="w-full bg-white shadow-sm border border-gray-200 border border-gray-200 rounded-xl p-2.5 text-gray-800 focus:outline-none focus:border-purple-600"
                   >
                     <option value="">-- Choose Course --</option>
                     {courses.map((c) => (
@@ -622,12 +631,12 @@ function AdminPracticeBankInner() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-[#FFD60A] font-bold mb-1">1. TEST CATEGORY *</label>
+                <label className="block text-purple-600 font-bold mb-1">1. TEST CATEGORY *</label>
                 <select
                   required
                   value={formData.testCategory}
                   onChange={(e) => setFormData({ ...formData, testCategory: e.target.value })}
-                  className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-white focus:outline-none focus:border-[#FFD60A]"
+                  className="w-full bg-[#f4f5f8] border border-gray-200 rounded-xl p-2.5 text-gray-800 focus:outline-none focus:border-purple-600"
                 >
                   <option value="MCQ">MCQ</option>
                   <option value="Coding">Coding</option>
@@ -639,12 +648,12 @@ function AdminPracticeBankInner() {
               </div>
 
               <div>
-                <label className="block text-[#FFD60A] font-bold mb-1">2. QUESTION TYPE *</label>
+                <label className="block text-purple-600 font-bold mb-1">2. QUESTION TYPE *</label>
                 <select
                   required
                   value={formData.type}
                   onChange={(e) => handleTypeChange(e.target.value)}
-                  className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-white focus:outline-none focus:border-[#FFD60A]"
+                  className="w-full bg-[#f4f5f8] border border-gray-200 rounded-xl p-2.5 text-gray-800 focus:outline-none focus:border-purple-600"
                 >
                   <option value="MCQ">MCQ (Single Answer)</option>
                   <option value="Multiple Select">Multiple Select</option>
@@ -662,7 +671,7 @@ function AdminPracticeBankInner() {
                 <select
                   value={formData.difficulty}
                   onChange={(e) => setFormData({ ...formData, difficulty: e.target.value })}
-                  className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-white focus:outline-none focus:border-[#FFD60A]"
+                  className="w-full bg-[#f4f5f8] border border-gray-200 rounded-xl p-2.5 text-gray-800 focus:outline-none focus:border-purple-600"
                 >
                   <option value="Easy">Easy</option>
                   <option value="Medium">Medium</option>
@@ -677,13 +686,13 @@ function AdminPracticeBankInner() {
                   min={1}
                   value={formData.marks}
                   onChange={(e) => setFormData({ ...formData, marks: Number(e.target.value) })}
-                  className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-white focus:outline-none focus:border-[#FFD60A]"
+                  className="w-full bg-[#f4f5f8] border border-gray-200 rounded-xl p-2.5 text-gray-800 focus:outline-none focus:border-purple-600"
                 />
               </div>
             </div>
 
             {formData.type === 'MCQ' && (
-              <div className="space-y-2 pt-2 border-t border-[#2C333F]">
+              <div className="space-y-2 pt-2 border-t border-gray-200">
                 <label className="block text-slate-300 font-semibold">Answer Options (Select Exactly 1 Correct Answer)</label>
                 {formData.options.map((opt, idx) => (
                   <div key={idx} className="flex items-center gap-2">
@@ -706,7 +715,7 @@ function AdminPracticeBankInner() {
                         newOpts[idx].text = e.target.value;
                         setFormData({ ...formData, options: newOpts });
                       }}
-                      className="flex-1 bg-[#090D16] border border-[#2C333F] rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#FFD60A]"
+                      className="flex-1 bg-[#f4f5f8] border border-gray-200 rounded-xl px-3 py-2 text-gray-800 focus:outline-none focus:border-purple-600"
                     />
                   </div>
                 ))}
@@ -714,7 +723,7 @@ function AdminPracticeBankInner() {
             )}
 
             {formData.type === 'Multiple Select' && (
-              <div className="space-y-2 pt-2 border-t border-[#2C333F]">
+              <div className="space-y-2 pt-2 border-t border-gray-200">
                 <label className="block text-slate-300 font-semibold">Answer Options (Check all Correct Answers)</label>
                 {formData.options.map((opt, idx) => (
                   <div key={idx} className="flex items-center gap-2">
@@ -737,7 +746,7 @@ function AdminPracticeBankInner() {
                         newOpts[idx].text = e.target.value;
                         setFormData({ ...formData, options: newOpts });
                       }}
-                      className="flex-1 bg-[#090D16] border border-[#2C333F] rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#FFD60A]"
+                      className="flex-1 bg-[#f4f5f8] border border-gray-200 rounded-xl px-3 py-2 text-gray-800 focus:outline-none focus:border-purple-600"
                     />
                   </div>
                 ))}
@@ -745,11 +754,11 @@ function AdminPracticeBankInner() {
             )}
 
             {formData.type === 'True/False' && (
-              <div className="space-y-2 pt-2 border-t border-[#2C333F]">
+              <div className="space-y-2 pt-2 border-t border-gray-200">
                 <label className="block text-slate-300 font-semibold">Select Correct Choice</label>
                 <div className="flex gap-6">
                   {formData.options.map((opt, idx) => (
-                    <label key={idx} className="flex items-center gap-2 text-white font-bold cursor-pointer">
+                    <label key={idx} className="flex items-center gap-2 text-gray-800 font-bold cursor-pointer">
                       <input
                         type="radio"
                         name="trueFalseChoice"
@@ -768,7 +777,7 @@ function AdminPracticeBankInner() {
             )}
 
             {(formData.type === 'Short Answer' || formData.type === 'Fill in the Blank') && (
-              <div className="space-y-2 pt-2 border-t border-[#2C333F]">
+              <div className="space-y-2 pt-2 border-t border-gray-200">
                 <label className="block text-slate-300 font-semibold">Accepted Correct Answer *</label>
                 <input
                   type="text"
@@ -779,20 +788,20 @@ function AdminPracticeBankInner() {
                     ...formData,
                     answerDetails: { ...formData.answerDetails, acceptedAnswer: e.target.value }
                   })}
-                  className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-white focus:outline-none focus:border-[#FFD60A]"
+                  className="w-full bg-[#f4f5f8] border border-gray-200 rounded-xl p-3 text-gray-800 focus:outline-none focus:border-purple-600"
                 />
               </div>
             )}
 
             {formData.type === 'Coding' && (
-              <div className="space-y-3 pt-2 border-t border-[#2C333F]">
+              <div className="space-y-3 pt-2 border-t border-gray-200">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-slate-300 font-semibold mb-1">Programming Language</label>
                     <select
                       value={formData.codingDetails.language}
                       onChange={(e) => setFormData({ ...formData, codingDetails: { ...formData.codingDetails, language: e.target.value } })}
-                      className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-white focus:outline-none focus:border-[#FFD60A]"
+                      className="w-full bg-[#f4f5f8] border border-gray-200 rounded-xl p-2.5 text-gray-800 focus:outline-none focus:border-purple-600"
                     >
                       <option value="javascript">JavaScript</option>
                       <option value="python">Python</option>
@@ -807,7 +816,7 @@ function AdminPracticeBankInner() {
                       placeholder="e.g. 1 <= N <= 10^5"
                       value={formData.codingDetails.constraints}
                       onChange={(e) => setFormData({ ...formData, codingDetails: { ...formData.codingDetails, constraints: e.target.value } })}
-                      className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-white focus:outline-none focus:border-[#FFD60A]"
+                      className="w-full bg-[#f4f5f8] border border-gray-200 rounded-xl p-2.5 text-gray-800 focus:outline-none focus:border-purple-600"
                     />
                   </div>
                 </div>
@@ -818,7 +827,7 @@ function AdminPracticeBankInner() {
                     rows={3}
                     value={formData.codingDetails.problemStatement}
                     onChange={(e) => setFormData({ ...formData, codingDetails: { ...formData.codingDetails, problemStatement: e.target.value } })}
-                    className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-white focus:outline-none focus:border-[#FFD60A]"
+                    className="w-full bg-[#f4f5f8] border border-gray-200 rounded-xl p-2.5 text-gray-800 focus:outline-none focus:border-purple-600"
                   />
                 </div>
 
@@ -828,7 +837,7 @@ function AdminPracticeBankInner() {
                     rows={3}
                     value={formData.codingDetails.starterCode}
                     onChange={(e) => setFormData({ ...formData, codingDetails: { ...formData.codingDetails, starterCode: e.target.value } })}
-                    className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-white font-mono text-xs focus:outline-none focus:border-[#FFD60A]"
+                    className="w-full bg-[#f4f5f8] border border-gray-200 rounded-xl p-2.5 text-gray-800 font-mono text-xs focus:outline-none focus:border-purple-600"
                   />
                 </div>
 
@@ -839,7 +848,7 @@ function AdminPracticeBankInner() {
                     placeholder="e.g. Input: [1,2], Output: 3"
                     value={formData.codingDetails.testCases}
                     onChange={(e) => setFormData({ ...formData, codingDetails: { ...formData.codingDetails, testCases: e.target.value } })}
-                    className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-white font-mono text-xs focus:outline-none focus:border-[#FFD60A]"
+                    className="w-full bg-[#f4f5f8] border border-gray-200 rounded-xl p-2.5 text-gray-800 font-mono text-xs focus:outline-none focus:border-purple-600"
                   />
                 </div>
               </div>
@@ -851,7 +860,7 @@ function AdminPracticeBankInner() {
                 rows={2}
                 value={formData.explanation}
                 onChange={(e) => setFormData({ ...formData, explanation: e.target.value })}
-                className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-2.5 text-white"
+                className="w-full bg-[#f4f5f8] border border-gray-200 rounded-xl p-2.5 text-gray-800"
                 placeholder="Explain the correct answer..."
               />
             </div>
@@ -860,13 +869,13 @@ function AdminPracticeBankInner() {
               <button
                 type="button"
                 onClick={() => setIsQuestionModalOpen(false)}
-                className="px-4 py-2 bg-[#2C333F] text-white rounded-xl font-semibold"
+                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md font-semibold text-xs transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-5 py-2 bg-[#FFD60A] text-black font-bold rounded-xl"
+                className="px-5 py-2 bg-purple-700 hover:bg-purple-800 text-white font-bold rounded-md text-xs shadow-sm transition-colors"
               >
                 Save Question
               </button>
@@ -880,27 +889,27 @@ function AdminPracticeBankInner() {
         <AdminModal isOpen={isCategoryModalOpen} title="Manage Categories & Topics" onClose={() => setIsCategoryModalOpen(false)}>
           <div className="space-y-6 text-xs">
             {/* Create Category */}
-            <form onSubmit={handleCreateCategory} className="space-y-2 border-b border-[#2C333F] pb-4">
-              <label className="block text-slate-300 font-semibold">Create New Category</label>
+            <form onSubmit={handleCreateCategory} className="space-y-2 border-b border-gray-200 pb-4">
+              <label className="block text-gray-700 font-semibold">Create New Category</label>
               <div className="flex gap-2">
                 <input
                   type="text"
                   placeholder="e.g. JavaScript, Python, Data Structures"
                   value={catName}
                   onChange={(e) => setCatName(e.target.value)}
-                  className="flex-1 bg-[#090D16] border border-[#2C333F] rounded-xl px-3 py-2 text-white"
+                  className="flex-1 bg-white border border-gray-300 rounded-md px-3 py-2 text-gray-800 focus:outline-none focus:border-purple-600"
                 />
-                <button type="submit" className="px-4 py-2 bg-[#FFD60A] text-black font-bold rounded-xl">Add</button>
+                <button type="submit" className="px-4 py-2 bg-purple-700 hover:bg-purple-800 text-white font-bold rounded-md text-xs shadow-sm">Add</button>
               </div>
             </form>
 
             {/* Create Topic */}
             <form onSubmit={handleCreateTopic} className="space-y-2">
-              <label className="block text-slate-300 font-semibold">Create New Topic under Category</label>
+              <label className="block text-gray-700 font-semibold">Create New Topic under Category</label>
               <select
                 value={selectedCatForTopic}
                 onChange={(e) => setSelectedCatForTopic(e.target.value)}
-                className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl px-3 py-2 text-white mb-2"
+                className="w-full bg-white border border-gray-300 rounded-md px-3 py-2 text-gray-800 mb-2 focus:outline-none focus:border-purple-600"
               >
                 <option value="">Select Category</option>
                 {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -911,9 +920,9 @@ function AdminPracticeBankInner() {
                   placeholder="e.g. Promises, Async/Await"
                   value={topicName}
                   onChange={(e) => setTopicName(e.target.value)}
-                  className="flex-1 bg-[#090D16] border border-[#2C333F] rounded-xl px-3 py-2 text-white"
+                  className="flex-1 bg-white border border-gray-300 rounded-md px-3 py-2 text-gray-800 focus:outline-none focus:border-purple-600"
                 />
-                <button type="submit" className="px-4 py-2 bg-[#FFD60A] text-black font-bold rounded-xl">Add Topic</button>
+                <button type="submit" className="px-4 py-2 bg-purple-700 hover:bg-purple-800 text-white font-bold rounded-md text-xs shadow-sm">Add Topic</button>
               </div>
             </form>
           </div>
@@ -924,18 +933,19 @@ function AdminPracticeBankInner() {
       {isBulkModalOpen && (
         <AdminModal isOpen={isBulkModalOpen} title="Bulk Upload Questions (CSV Format)" onClose={() => setIsBulkModalOpen(false)}>
           <form onSubmit={handleBulkUpload} className="space-y-4 text-xs">
-            <p className="text-slate-400">Paste CSV lines formatted as: <br/><code className="text-[#FFD60A]">Question Title,Type,Difficulty,Explanation,OptA,OptB,OptC,OptD</code></p>
+            <p className="text-gray-500">Paste CSV lines formatted as: <br/><code className="text-purple-600 font-semibold">Question Title,Type,Difficulty,Explanation,OptA,OptB,OptC,OptD</code></p>
             <textarea
               rows={8}
               value={csvText}
               onChange={(e) => setCsvText(e.target.value)}
               placeholder="What is closure in JS?,MCQ,Easy,Closure retains scope,A function with scope,An object,A loop,A string"
-              className="w-full bg-[#090D16] border border-[#2C333F] rounded-xl p-3 text-white font-mono"
+              className="w-full bg-white border border-gray-300 rounded-md p-3 text-gray-800 font-mono text-xs focus:outline-none focus:border-purple-600"
             />
-            <button type="submit" className="w-full py-2.5 bg-[#FFD60A] text-black font-bold rounded-xl">Upload Questions</button>
+            <button type="submit" className="w-full py-2.5 bg-purple-700 hover:bg-purple-800 text-white font-bold rounded-md text-xs shadow-sm">Upload Questions</button>
           </form>
         </AdminModal>
       )}
+      </div>
     </AdminLayout>
   );
 }

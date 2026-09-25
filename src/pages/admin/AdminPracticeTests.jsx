@@ -56,26 +56,30 @@ function AdminPracticeTestsInner() {
     <AdminLayout>
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-[#F1F2FF]">Practice Test Builder 📝</h1>
-          <p className="text-xs text-[#AFB2BF] mt-1">Create and manage Daily Quizzes, Mock Tests, and Topic Tests.</p>
+          <h1 className="text-2xl font-bold text-gray-800">Practice Test Builder 📝</h1>
+          <p className="text-xs text-gray-500 mt-1">Create and manage Daily Quizzes, Mock Tests, and Topic Tests.</p>
         </div>
         <button
           onClick={() => {
             setEditingTest(null);
             setIsWizardOpen(true);
           }}
-          className="px-4 py-2 bg-[#FFD60A] text-black font-bold text-xs rounded-xl flex items-center gap-1.5 shadow-md hover:bg-yellow-400 transition"
+          className="px-4 py-2 bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs rounded-md flex items-center gap-1.5 shadow-sm transition"
         >
-          <FaPlus /> Build New Test
+          <FaPlus /> + Build New Test
         </button>
       </div>
 
-      <div className="bg-[#161D29] border border-[#2C333F] rounded-2xl overflow-hidden shadow-xl">
+      <div className="bg-white border border-gray-200 rounded-sm shadow-sm overflow-hidden mb-8">
+        <div className="px-5 py-3 bg-purple-700 text-white border-b border-gray-200 flex items-center justify-between">
+          <h2 className="text-[15px] font-bold">Practice Tests List</h2>
+          <span className="text-xs text-purple-200">{tests.length} tests</span>
+        </div>
         {loading ? (
           <TableSkeleton rows={5} cols={5} />
         ) : (
           <table className="w-full text-left text-xs">
-            <thead className="bg-[#090D16] border-b border-[#2C333F] text-[#AFB2BF] font-semibold uppercase">
+            <thead className="bg-gray-50 border-b border-gray-200 text-gray-600 font-semibold uppercase">
               <tr>
                 <th className="px-5 py-3.5">Test Title</th>
                 <th className="px-5 py-3.5">Type</th>
@@ -84,36 +88,36 @@ function AdminPracticeTestsInner() {
                 <th className="px-5 py-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#2C333F] text-[#F1F2FF]">
+            <tbody className="divide-y divide-gray-100 text-gray-800">
               {tests.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="text-center py-10 text-[#585D69]">No tests created yet.</td>
+                  <td colSpan={5} className="text-center py-10 text-gray-500">No tests created yet.</td>
                 </tr>
               ) : (
                 tests.map((t) => (
-                  <tr key={t.id} className="hover:bg-[#1f2736]">
-                    <td className="px-5 py-4 font-bold">{t.title}</td>
+                  <tr key={t.id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-5 py-4 font-bold text-gray-900">{t.title}</td>
                     <td className="px-5 py-4">
-                      <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-blue-500/20 text-blue-400">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-sky-50 text-sky-800 border border-sky-200">
                         {t.testType}
                       </span>
                     </td>
-                    <td className="px-5 py-4 text-[#AFB2BF]">{t.questions?.length || t.numberOfQuestions || 0} Questions</td>
-                    <td className="px-5 py-4 text-[#AFB2BF]">{t.duration} Mins</td>
-                    <td className="px-5 py-4 text-right flex items-center justify-end gap-2">
+                    <td className="px-5 py-4 text-gray-600">{t.questions?.length || t.numberOfQuestions || 0} Questions</td>
+                    <td className="px-5 py-4 text-gray-600">{t.duration} Mins</td>
+                    <td className="px-5 py-4 text-right flex items-center justify-end gap-1.5">
                       <button
                         onClick={() => {
                           setEditingTest(t);
                           setIsWizardOpen(true);
                         }}
-                        className="p-2 text-yellow-400 hover:bg-yellow-500/10 rounded-lg transition"
+                        className="p-1.5 text-gray-600 hover:text-purple-700 hover:bg-purple-50 rounded-md transition border border-transparent hover:border-purple-200"
                         title="Edit Test"
                       >
                         <FaEdit />
                       </button>
                       <button
                         onClick={() => handleDeleteTest(t.id)}
-                        className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition"
+                        className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-md transition border border-transparent hover:border-red-200"
                         title="Delete Test"
                       >
                         <FaTrash />

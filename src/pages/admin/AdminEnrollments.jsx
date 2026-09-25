@@ -42,14 +42,18 @@ function EnrollmentsInner() {
   return (
     <AdminLayout>
       <div className="mb-6">
-        <h1 className="text-xl font-bold text-[#F1F2FF]">Enrollments</h1>
-        <p className="text-sm text-[#AFB2BF] mt-0.5">{total} total enrollments</p>
+        <h1 className="text-xl font-bold text-gray-800">Enrollments</h1>
+        <p className="text-sm text-gray-500 mt-0.5">{total} total enrollments</p>
       </div>
-      <div className="bg-[#161D29] border border-[#2C333F] rounded-2xl overflow-hidden">
+      <div className="bg-white border border-gray-200 rounded-sm shadow-sm overflow-hidden mb-8">
+        <div className="px-5 py-3 bg-purple-700 text-white border-b border-gray-200 flex items-center justify-between">
+          <h2 className="text-[15px] font-bold">Enrollment Details</h2>
+          <span className="text-xs text-purple-200">{total} enrollments</span>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[#2C333F] text-[#AFB2BF] text-xs uppercase tracking-wide">
+              <tr className="border-b border-gray-200 text-gray-600 text-xs font-bold uppercase tracking-wide bg-gray-50">
                 <th className="text-left px-5 py-3">Student</th>
                 <th className="text-left px-5 py-3">Course</th>
                 <th className="text-left px-5 py-3">Plan / Status</th>
@@ -58,7 +62,7 @@ function EnrollmentsInner() {
                 {isSA && <th className="text-right px-5 py-3">Actions</th>}
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-100">
               {loading ? <tr><td colSpan={6} className="px-5 py-4"><TableSkeleton rows={8} cols={5} /></td></tr>
                : enrollments.length === 0 ? <tr><td colSpan={6}><EmptyState message="No enrollments found." /></td></tr>
                : enrollments.map(e => {
@@ -68,43 +72,43 @@ function EnrollmentsInner() {
                 const statusLabel = isExpired ? 'EXPIRED' : (e.status || 'ACTIVE').toUpperCase();
 
                 return (
-                  <tr key={e.id} className="border-b border-[#2C333F] hover:bg-[#2C333F]/30 transition-colors">
+                  <tr key={e.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-5 py-3.5">
-                      <p className="font-medium text-[#F1F2FF]">
+                      <p className="font-medium text-gray-800">
                         {(e.user || e.User) ? `${(e.user || e.User).firstName || ''} ${(e.user || e.User).lastName || ''}` : '—'}
                       </p>
-                      <p className="text-xs text-[#585D69]">{(e.user || e.User)?.email}</p>
+                      <p className="text-xs text-gray-500">{(e.user || e.User)?.email}</p>
                     </td>
-                    <td className="px-5 py-3.5 text-[#AFB2BF]">
-                      <p className="font-medium text-white">{(e.course || e.Course)?.courseName || '—'}</p>
-                      <p className="text-xs text-[#585D69]">Instructor: {instructor ? `${instructor.firstName || ''} ${instructor.lastName || ''}` : '—'}</p>
+                    <td className="px-5 py-3.5 text-gray-500">
+                      <p className="font-medium text-gray-800">{(e.course || e.Course)?.courseName || '—'}</p>
+                      <p className="text-xs text-gray-500">Instructor: {instructor ? `${instructor.firstName || ''} ${instructor.lastName || ''}` : '—'}</p>
                     </td>
                     <td className="px-5 py-3.5">
                       <div className="flex flex-col gap-1 items-start">
-                        <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${
-                          e.plan === 'gold' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' :
-                          e.plan === 'silver' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' :
-                          'bg-slate-500/20 text-slate-300 border border-slate-500/30'
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                          e.plan === 'gold' ? 'bg-amber-50 text-amber-800 border border-amber-300' :
+                          e.plan === 'silver' ? 'bg-sky-50 text-sky-800 border border-sky-300' :
+                          'bg-gray-100 text-gray-700 border border-gray-300'
                         }`}>
                           {planName}
                         </span>
-                        <span className={`text-[10px] font-semibold ${isExpired ? 'text-red-400' : 'text-emerald-400'}`}>
+                        <span className={`text-[10px] font-bold ${isExpired ? 'text-rose-600' : 'text-emerald-700'}`}>
                           {statusLabel}
                         </span>
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 text-xs text-[#AFB2BF]">
-                      <p>Paid: <strong className="text-emerald-400">₹{e.purchasePrice || 0}</strong></p>
-                      <p className="text-[11px] text-[#585D69]">Course: ₹{e.coursePrice || (e.course || e.Course)?.price || 0}</p>
+                    <td className="px-5 py-3.5 text-xs text-gray-500">
+                      <p>Paid: <strong className="text-gray-900 font-bold">₹{e.purchasePrice || 0}</strong></p>
+                      <p className="text-[11px] text-gray-500">Course: ₹{e.coursePrice || (e.course || e.Course)?.price || 0}</p>
                     </td>
-                    <td className="px-5 py-3.5 text-xs text-[#585D69]">
+                    <td className="px-5 py-3.5 text-xs text-gray-500">
                       <p>Start: {new Date(e.activatedAt || e.createdAt).toLocaleDateString()}</p>
-                      <p className={isExpired ? 'text-red-400 font-semibold' : ''}>
+                      <p className={isExpired ? 'text-rose-600 font-semibold' : ''}>
                         Expires: {e.expiresAt ? new Date(e.expiresAt).toLocaleDateString() : 'Never'}
                       </p>
                     </td>
                     {isSA && <td className="px-5 py-3.5 text-right">
-                      <button onClick={() => setDelModal(e.id)} className="px-3 py-1 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs transition-colors">Unenroll</button>
+                      <button onClick={() => setDelModal(e.id)} className="px-2.5 py-1 rounded text-xs font-semibold bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition-colors cursor-pointer">Unenroll</button>
                     </td>}
                   </tr>
                 );
@@ -112,7 +116,7 @@ function EnrollmentsInner() {
             </tbody>
           </table>
         </div>
-        <div className="px-5 py-4 border-t border-[#2C333F]">
+        <div className="px-5 py-4 border-t border-gray-200">
           <Pagination page={page} totalPages={totalPages} onChange={setPage} />
         </div>
       </div>

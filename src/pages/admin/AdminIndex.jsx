@@ -16,7 +16,7 @@ export default function AdminIndex() {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen bg-[#000814] flex items-center justify-center">
+    <div className="min-h-screen bg-white flex items-center justify-center">
       <div className="spinner" />
     </div>
   );

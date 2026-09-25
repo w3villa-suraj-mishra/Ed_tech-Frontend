@@ -84,32 +84,32 @@ function AdminGlobalTestsInner() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-2 bg-blue-500/20 text-blue-400 rounded-xl text-xl">🌐</span>
-            <h1 className="text-2xl font-bold text-[#F1F2FF]">Global Practice Tests</h1>
+            <span className="p-2 bg-purple-100 text-purple-700 rounded-lg text-lg">🌐</span>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Global Practice Tests</h1>
           </div>
-          <p className="text-xs text-[#AFB2BF] mt-1">Available to all registered students without requiring course purchase.</p>
+          <p className="text-xs text-gray-500 mt-1">Available to all registered students without requiring course purchase.</p>
         </div>
         <button
           onClick={() => {
             setEditingTest(null);
             setIsWizardOpen(true);
           }}
-          className="px-4 py-2.5 bg-[#FFD60A] text-black font-bold text-xs rounded-xl flex items-center gap-2 shadow-lg hover:bg-yellow-400 transition"
+          className="px-4 py-2 bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs rounded-md flex items-center gap-2 shadow-sm transition"
         >
-          <FaPlus /> Build Global Test
+          <FaPlus /> + Build Global Test
         </button>
       </div>
 
       {/* Category Navigation Bar */}
-      <div className="flex flex-wrap gap-2 mb-6 border-b border-[#2C333F] pb-3">
+      <div className="flex flex-wrap gap-2 mb-6 border-b border-gray-200 pb-3">
         {TEST_CATEGORIES.map((cat) => (
           <button
             key={cat}
             onClick={() => setSelectedCategory(cat)}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${
               selectedCategory === cat
-                ? 'bg-[#FFD60A] text-black shadow-md font-extrabold'
-                : 'bg-[#161D29] text-[#AFB2BF] border border-[#2C333F] hover:text-white hover:border-[#585D69]'
+                ? 'bg-purple-700 text-white shadow-sm font-bold'
+                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
             }`}
           >
             {cat}
@@ -120,24 +120,29 @@ function AdminGlobalTestsInner() {
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="flex-1 relative">
-          <FaSearch className="absolute left-3.5 top-3.5 text-[#585D69]" />
+          <FaSearch className="absolute left-3.5 top-3 text-gray-400" />
           <input
             type="text"
             placeholder="Search global tests by title..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-[#161D29] border border-[#2C333F] rounded-xl pl-10 pr-4 py-2.5 text-xs text-white focus:outline-none focus:border-[#FFD60A]"
+            className="w-full bg-white border border-gray-300 rounded pl-10 pr-4 py-2 text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-purple-600"
           />
         </div>
       </div>
 
       {/* Tests Table */}
-      <div className="bg-[#161D29] border border-[#2C333F] rounded-2xl overflow-hidden shadow-xl">
+      <div className="bg-white border border-gray-200 rounded-sm shadow-sm overflow-hidden mb-8">
+        <div className="px-5 py-3 bg-purple-700 text-white border-b border-gray-200 flex items-center justify-between">
+          <h2 className="text-[15px] font-bold">Global Tests List</h2>
+          <span className="text-xs text-purple-200">{filteredTests.length} tests</span>
+        </div>
+
         {loading ? (
           <TableSkeleton rows={5} cols={6} />
         ) : (
           <table className="w-full text-left text-xs">
-            <thead className="bg-[#090D16] border-b border-[#2C333F] text-[#AFB2BF] font-semibold uppercase">
+            <thead className="bg-gray-50 border-b border-gray-200 text-gray-600 font-semibold uppercase">
               <tr>
                 <th className="px-5 py-3.5">Test Title</th>
                 <th className="px-5 py-3.5">Category / Type</th>
@@ -147,60 +152,62 @@ function AdminGlobalTestsInner() {
                 <th className="px-5 py-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#2C333F] text-[#F1F2FF]">
+            <tbody className="divide-y divide-gray-100 text-gray-800">
               {filteredTests.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="text-center py-12 text-[#585D69]">
+                  <td colSpan={6} className="text-center py-12 text-gray-500">
                     <FaGlobe className="mx-auto text-3xl mb-2 opacity-30" />
                     No global tests found for {selectedCategory === 'All' ? 'any category' : `the "${selectedCategory}" category`}.
                   </td>
                 </tr>
               ) : (
                 filteredTests.map((t) => (
-                  <tr key={t.id} className="hover:bg-[#1f2736] transition">
-                    <td className="px-5 py-4 font-bold">
+                  <tr key={t.id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-5 py-4 font-bold text-gray-900">
                       {t.title}
-                      {t.description && <p className="text-[11px] font-normal text-[#838894] truncate max-w-xs">{t.description}</p>}
+                      {t.description && <p className="text-[11px] font-normal text-gray-500 truncate max-w-xs">{t.description}</p>}
                     </td>
                     <td className="px-5 py-4">
-                      <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-sky-50 text-sky-800 border border-sky-200">
                         {t.testType}
                       </span>
                     </td>
-                    <td className="px-5 py-4 text-[#AFB2BF]">{t.questions?.length || t.numberOfQuestions || 0} Questions</td>
-                    <td className="px-5 py-4 text-[#AFB2BF]">{t.duration} Mins</td>
+                    <td className="px-5 py-4 text-gray-600">{t.questions?.length || t.numberOfQuestions || 0} Questions</td>
+                    <td className="px-5 py-4 text-gray-600">{t.duration} Mins</td>
                     <td className="px-5 py-4">
                       <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                        t.status === 'published' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-yellow-500/20 text-yellow-400'
+                        t.status === 'published' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200'
                       }`}>
                         {t.status}
                       </span>
                     </td>
-                    <td className="px-5 py-4 text-right flex items-center justify-end gap-2">
-                      <button
-                        onClick={() => setSelectedTestForStats(t)}
-                        className="p-2 text-blue-400 hover:bg-blue-500/10 rounded-lg transition"
-                        title="View Stats"
-                      >
-                        <FaEye />
-                      </button>
-                      <button
-                        onClick={() => {
-                          setEditingTest(t);
-                          setIsWizardOpen(true);
-                        }}
-                        className="p-2 text-yellow-400 hover:bg-yellow-500/10 rounded-lg transition"
-                        title="Edit Global Test"
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteTest(t.id)}
-                        className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition"
-                        title="Delete Test"
-                      >
-                        <FaTrash />
-                      </button>
+                    <td className="px-5 py-4 text-right">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <button
+                          onClick={() => setSelectedTestForStats(t)}
+                          className="p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition border border-transparent hover:border-gray-200"
+                          title="View Stats"
+                        >
+                          <FaEye size={14} />
+                        </button>
+                        <button
+                          onClick={() => {
+                            setEditingTest(t);
+                            setIsWizardOpen(true);
+                          }}
+                          className="p-1.5 text-gray-600 hover:text-purple-700 hover:bg-purple-50 rounded-md transition border border-transparent hover:border-purple-200"
+                          title="Edit Global Test"
+                        >
+                          <FaEdit size={14} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteTest(t.id)}
+                          className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-md transition border border-transparent hover:border-red-200"
+                          title="Delete Test"
+                        >
+                          <FaTrash size={14} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -216,28 +223,28 @@ function AdminGlobalTestsInner() {
       {selectedTestForStats && (
         <AdminModal isOpen={!!selectedTestForStats} title={`Test Details: ${selectedTestForStats.title}`} onClose={() => setSelectedTestForStats(null)}>
           <div className="space-[#4] space-y-4 text-xs text-slate-300">
-            <div className="grid grid-cols-2 gap-4 bg-[#090D16] p-4 rounded-xl border border-[#2C333F]">
+            <div className="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
               <div>
-                <p className="text-slate-500 uppercase text-[10px] font-bold">Scope</p>
-                <p className="font-bold text-blue-400">GLOBAL</p>
+                <p className="text-gray-500 uppercase text-[10px] font-bold">Scope</p>
+                <p className="font-bold text-purple-700">GLOBAL</p>
               </div>
               <div>
-                <p className="text-slate-500 uppercase text-[10px] font-bold">Total Questions</p>
-                <p className="font-bold text-white">{selectedTestForStats.questions?.length || selectedTestForStats.numberOfQuestions || 0}</p>
+                <p className="text-gray-500 uppercase text-[10px] font-bold">Total Questions</p>
+                <p className="font-bold text-gray-900">{selectedTestForStats.questions?.length || selectedTestForStats.numberOfQuestions || 0}</p>
               </div>
               <div>
-                <p className="text-slate-500 uppercase text-[10px] font-bold">Duration</p>
-                <p className="font-bold text-white">{selectedTestForStats.duration} Mins</p>
+                <p className="text-gray-500 uppercase text-[10px] font-bold">Duration</p>
+                <p className="font-bold text-gray-900">{selectedTestForStats.duration} Mins</p>
               </div>
               <div>
-                <p className="text-slate-500 uppercase text-[10px] font-bold">Passing Mark</p>
-                <p className="font-bold text-emerald-400">{selectedTestForStats.passingPercentage}%</p>
+                <p className="text-gray-500 uppercase text-[10px] font-bold">Passing Mark</p>
+                <p className="font-bold text-emerald-700">{selectedTestForStats.passingPercentage}%</p>
               </div>
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-end pt-2">
               <button
                 onClick={() => setSelectedTestForStats(null)}
-                className="px-4 py-2 bg-[#2C333F] text-white rounded-xl font-bold"
+                className="px-4 py-2 bg-purple-700 hover:bg-purple-800 text-white rounded-md font-bold text-xs shadow-sm"
               >
                 Close
               </button>

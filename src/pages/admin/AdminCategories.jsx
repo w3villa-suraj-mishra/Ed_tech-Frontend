@@ -79,59 +79,95 @@ function CategoriesInner() {
 
   return (
     <AdminLayout>
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-xl font-bold text-[#F1F2FF]">Categories</h1>
-          <p className="text-sm text-[#AFB2BF] mt-0.5">{cats.length} categories</p>
+      <div className="space-y-6 pb-12">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-800 tracking-tight flex items-center gap-2">
+              <span>🏷️ Course Categories</span>
+            </h1>
+            <p className="text-xs sm:text-sm text-gray-500 mt-1">
+              Manage category taxonomy ({cats.length} total categories)
+            </p>
+          </div>
+          <button
+            onClick={() => { setForm({ name: '', description: '' }); setCreateModal(true); }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs shadow-sm transition-all cursor-pointer shrink-0"
+          >
+            <span>+ Add Category</span>
+          </button>
         </div>
-        <button onClick={() => { setForm({ name: '', description: '' }); setCreateModal(true); }}
-          className="px-4 py-2 bg-[#FFD60A] text-[#000814] rounded-xl font-bold text-sm hover:bg-[#FFEE32] transition-colors">
-          + Add Category
-        </button>
+
+        <div className="bg-white border border-gray-200 rounded-sm shadow-sm p-4 flex items-center justify-between gap-4">
+          <input
+            value={searchInput}
+            onChange={e => setSI(e.target.value)}
+            placeholder="Search categories…"
+            className="w-full sm:w-80 bg-white border border-gray-300 rounded px-3.5 py-2 text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-purple-600"
+          />
+        </div>
+
+        {loading ? <TableSkeleton rows={6} cols={3} /> : cats.length === 0 ? (
+          <EmptyState message="No categories found." action={
+            <button onClick={() => setCreateModal(true)} className="px-4 py-2 bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs rounded-md shadow-sm">
+              Create First Category
+            </button>
+          } />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {cats.map(c => (
+              <div key={c.id} className="bg-white border border-gray-200 rounded-sm p-5 shadow-sm hover:border-purple-300 transition-all flex flex-col justify-between">
+                <div>
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-bold text-sm text-gray-900">{c.name}</h3>
+                    <span className="text-xs font-semibold text-purple-700 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-full">
+                      {c.courseCount || 0} courses
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-600 mb-4 line-clamp-2">{c.description || 'No description provided'}</p>
+                </div>
+                <div className="flex gap-2 pt-3 border-t border-gray-100">
+                  <button
+                    onClick={() => openEdit(c)}
+                    className="flex-1 py-1.5 rounded text-xs font-semibold bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 transition-colors"
+                  >
+                    Edit
+                  </button>
+                  {isSA && (
+                    <button
+                      onClick={() => setDelModal(c.id)}
+                      className="flex-1 py-1.5 rounded text-xs font-semibold bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition-colors"
+                    >
+                      Delete
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Create / Edit shared form */}
+        {[{ open: createModal, title: 'Create Category', onClose: () => setCreateModal(false), onSubmit: handleCreate },
+          { open: !!editModal, title: 'Edit Category', onClose: () => setEditModal(null), onSubmit: handleEdit }
+        ].map(({ open, title, onClose, onSubmit }) => (
+          <AdminModal key={title} isOpen={open} title={title} onClose={onClose}>
+            <form onSubmit={onSubmit} className="space-y-4">
+              <AdminInput label="Name" value={form.name} onChange={setF('name')} placeholder="e.g. Web Development" />
+              <AdminTextarea label="Description (optional)" value={form.description} onChange={setF('description')} placeholder="Brief description…" rows={3} />
+              <div className="flex gap-3 pt-2">
+                <button type="button" onClick={onClose} className="flex-1 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 text-xs font-semibold">
+                  Cancel
+                </button>
+                <button type="submit" disabled={saving} className="flex-1 py-2 rounded-md bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs disabled:opacity-60">
+                  {saving ? 'Saving…' : 'Save'}
+                </button>
+              </div>
+            </form>
+          </AdminModal>
+        ))}
+
+        <DeleteConfirm isOpen={!!delModal} title="Delete Category?" message="Courses in this category may also be affected." onClose={() => setDelModal(null)} onConfirm={handleDelete} loading={deleting} />
       </div>
-
-      <input value={searchInput} onChange={e => setSI(e.target.value)} placeholder="Search categories…"
-        className="bg-[#161D29] border border-[#2C333F] rounded-lg px-4 py-2 text-sm text-[#F1F2FF] placeholder-[#585D69] focus:outline-none focus:border-[#FFD60A] w-64 mb-5" />
-
-      {loading ? <TableSkeleton rows={6} cols={3} /> : cats.length === 0 ? (
-        <EmptyState message="No categories found." action={
-          <button onClick={() => setCreateModal(true)} className="px-4 py-2 bg-[#FFD60A] text-[#000814] rounded-xl font-bold text-sm">Create First Category</button>
-        } />
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {cats.map(c => (
-            <div key={c.id} className="bg-[#161D29] border border-[#2C333F] rounded-2xl p-5 hover:border-[#FFD60A]/30 transition-colors">
-              <div className="flex items-start justify-between mb-2">
-                <h3 className="font-semibold text-[#F1F2FF]">{c.name}</h3>
-                <span className="text-xs text-[#585D69] bg-[#2C333F] px-2 py-0.5 rounded-full">{c.courseCount || 0} courses</span>
-              </div>
-              <p className="text-sm text-[#AFB2BF] mb-4 line-clamp-2">{c.description || 'No description'}</p>
-              <div className="flex gap-2">
-                <button onClick={() => openEdit(c)} className="flex-1 py-1.5 rounded-lg bg-[#2C333F] hover:bg-[#424854] text-[#AFB2BF] text-xs transition-colors">Edit</button>
-                {isSA && <button onClick={() => setDelModal(c.id)} className="flex-1 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs transition-colors">Delete</button>}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Create / Edit shared form */}
-      {[{ open: createModal, title: 'Create Category', onClose: () => setCreateModal(false), onSubmit: handleCreate },
-        { open: !!editModal, title: 'Edit Category', onClose: () => setEditModal(null), onSubmit: handleEdit }
-      ].map(({ open, title, onClose, onSubmit }) => (
-        <AdminModal key={title} isOpen={open} title={title} onClose={onClose}>
-          <form onSubmit={onSubmit} className="space-y-4">
-            <AdminInput label="Name" value={form.name} onChange={setF('name')} placeholder="e.g. Web Development" />
-            <AdminTextarea label="Description (optional)" value={form.description} onChange={setF('description')} placeholder="Brief description…" rows={3} />
-            <div className="flex gap-3 pt-2">
-              <button type="button" onClick={onClose} className="flex-1 py-2.5 rounded-lg border border-[#2C333F] text-[#AFB2BF] hover:bg-[#2C333F] text-sm">Cancel</button>
-              <button type="submit" disabled={saving} className="flex-1 py-2.5 rounded-lg bg-[#FFD60A] text-[#000814] font-bold text-sm hover:bg-[#FFEE32] disabled:opacity-60">{saving ? 'Saving…' : 'Save'}</button>
-            </div>
-          </form>
-        </AdminModal>
-      ))}
-
-      <DeleteConfirm isOpen={!!delModal} title="Delete Category?" message="Courses in this category may also be affected." onClose={() => setDelModal(null)} onConfirm={handleDelete} loading={deleting} />
     </AdminLayout>
   );
 }

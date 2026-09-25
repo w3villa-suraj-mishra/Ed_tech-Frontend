@@ -140,28 +140,28 @@ function UsersInner() {
     <AdminLayout>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-xl font-bold text-[#F1F2FF]">Users</h1>
-          <p className="text-sm text-[#AFB2BF] mt-0.5">{total} total users</p>
+          <h1 className="text-xl font-bold text-gray-800">Users</h1>
+          <p className="text-sm text-gray-500 mt-0.5">{total} total users</p>
         </div>
         {isSuperAdmin() && (
           <button onClick={() => { setForm(EMPTY_FORM); setFormErr({}); setCreateModal(true); }}
-            className="px-4 py-2 bg-[#FFD60A] text-[#000814] rounded-xl font-bold text-sm hover:bg-[#FFEE32] transition-colors">
+            className="px-4 py-2 bg-purple-700 text-white rounded-md font-bold text-sm hover:bg-purple-800 transition-colors">
             + Add User
           </button>
         )}
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-3 mb-5">
+      <div className="bg-white border border-gray-200 rounded-sm shadow-sm p-4 mb-6 flex flex-wrap gap-4">
         <input value={searchInput} onChange={e => setSearchInput(e.target.value)} placeholder="Search name or email…"
-          className="bg-[#161D29] border border-[#2C333F] rounded-lg px-4 py-2 text-sm text-[#F1F2FF] placeholder-[#585D69] focus:outline-none focus:border-[#FFD60A] w-64" />
+          className="flex-1 min-w-[200px] bg-white border border-gray-300 rounded px-4 py-2 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-purple-600" />
         <select value={role} onChange={e => { setRole(e.target.value); setPage(1); }}
-          className="bg-[#161D29] border border-[#2C333F] rounded-lg px-3 py-2 text-sm text-[#F1F2FF] focus:outline-none focus:border-[#FFD60A]">
+          className="w-40 bg-white border border-gray-300 rounded px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-purple-600">
           <option value="">All Roles</option>
           {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
         </select>
         <select value={status} onChange={e => { setStatus(e.target.value); setPage(1); }}
-          className="bg-[#161D29] border border-[#2C333F] rounded-lg px-3 py-2 text-sm text-[#F1F2FF] focus:outline-none focus:border-[#FFD60A]">
+          className="w-40 bg-white border border-gray-300 rounded px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-purple-600">
           <option value="">All Status</option>
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
@@ -169,11 +169,14 @@ function UsersInner() {
       </div>
 
       {/* Table */}
-      <div className="bg-[#161D29] border border-[#2C333F] rounded-2xl overflow-hidden">
+      <div className="bg-white border border-gray-200 rounded-sm shadow-sm overflow-hidden mb-8">
+        <div className="px-4 py-3 bg-purple-700 text-white border-b border-gray-200">
+          <h2 className="text-[15px] font-bold">User Details</h2>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[#2C333F] text-[#AFB2BF] text-xs uppercase tracking-wide">
+              <tr className="border-b border-gray-200 text-gray-600 text-xs font-bold uppercase tracking-wide bg-gray-50">
                 <th className="text-left px-5 py-3">Name</th>
                 <th className="text-left px-5 py-3">Email</th>
                 <th className="text-left px-5 py-3">Role</th>
@@ -188,28 +191,28 @@ function UsersInner() {
               ) : users.length === 0 ? (
                 <tr><td colSpan={6}><EmptyState message="No users found." /></td></tr>
               ) : users.map(u => (
-                <tr key={u.id} className="border-b border-[#2C333F] hover:bg-[#2C333F]/30 transition-colors">
+                <tr key={u.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-[#FFD60A]/20 flex items-center justify-center text-[#FFD60A] text-xs font-bold flex-shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-700 text-xs font-bold flex-shrink-0">
                         {u.firstName?.[0]}{u.lastName?.[0]}
                       </div>
-                      <span className="font-medium text-[#F1F2FF]">{u.firstName} {u.lastName}</span>
+                      <span className="font-medium text-gray-800">{u.firstName} {u.lastName}</span>
                     </div>
                   </td>
-                  <td className="px-5 py-3.5 text-[#AFB2BF]">{u.email}</td>
+                  <td className="px-5 py-3.5 text-gray-600">{u.email}</td>
                   <td className="px-5 py-3.5"><StatusBadge status={u.accountType} /></td>
                   <td className="px-5 py-3.5"><StatusBadge status={u.active} /></td>
-                  <td className="px-5 py-3.5 text-[#585D69]">{new Date(u.createdAt).toLocaleDateString()}</td>
+                  <td className="px-5 py-3.5 text-gray-500">{new Date(u.createdAt).toLocaleDateString()}</td>
                   {isSuperAdmin() && (
                     <td className="px-5 py-3.5 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <button onClick={() => openEdit(u)}
-                          className="px-3 py-1 rounded-lg bg-[#2C333F] hover:bg-[#424854] text-[#AFB2BF] text-xs transition-colors">Edit</button>
+                          className="px-3 py-1 rounded border border-gray-300 hover:bg-gray-100 text-gray-700 text-xs transition-colors">Edit</button>
                         <button onClick={() => setResetModal(u)}
-                          className="px-3 py-1 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-xs transition-colors">Reset PW</button>
+                          className="px-3 py-1 rounded bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 text-xs font-semibold transition-colors">Reset PW</button>
                         <button onClick={() => setDelModal(u.id)}
-                          className="px-3 py-1 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs transition-colors">Delete</button>
+                          className="px-3 py-1 rounded bg-red-50 hover:bg-red-100 text-red-600 text-xs transition-colors">Delete</button>
                       </div>
                     </td>
                   )}
@@ -218,7 +221,7 @@ function UsersInner() {
             </tbody>
           </table>
         </div>
-        <div className="px-5 py-4 border-t border-[#2C333F]">
+        <div className="px-5 py-4 border-t border-gray-100 bg-white">
           <Pagination page={page} totalPages={totalPages} onChange={setPage} />
         </div>
       </div>
@@ -240,8 +243,8 @@ function UsersInner() {
             <option value="Superadmin">Superadmin</option>
           </AdminSelect>
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={() => setCreateModal(false)} className="flex-1 py-2.5 rounded-lg border border-[#2C333F] text-[#AFB2BF] hover:bg-[#2C333F] text-sm">Cancel</button>
-            <button type="submit" disabled={saving} className="flex-1 py-2.5 rounded-lg bg-[#FFD60A] text-[#000814] font-bold text-sm hover:bg-[#FFEE32] disabled:opacity-60">{saving ? 'Creating…' : 'Create'}</button>
+            <button type="button" onClick={() => setCreateModal(false)} className="flex-1 py-2.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 text-sm font-medium transition-colors">Cancel</button>
+            <button type="submit" disabled={saving} className="flex-1 py-2.5 rounded-lg bg-purple-700 text-white font-bold text-sm hover:bg-purple-800 disabled:opacity-60 transition-colors">{saving ? 'Creating…' : 'Create'}</button>
           </div>
         </form>
       </AdminModal>
@@ -264,8 +267,8 @@ function UsersInner() {
             <option value="false">Inactive</option>
           </AdminSelect>
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={() => setEditModal(null)} className="flex-1 py-2.5 rounded-lg border border-[#2C333F] text-[#AFB2BF] hover:bg-[#2C333F] text-sm">Cancel</button>
-            <button type="submit" disabled={saving} className="flex-1 py-2.5 rounded-lg bg-[#FFD60A] text-[#000814] font-bold text-sm hover:bg-[#FFEE32] disabled:opacity-60">{saving ? 'Saving…' : 'Save Changes'}</button>
+            <button type="button" onClick={() => setEditModal(null)} className="flex-1 py-2.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 text-sm font-medium transition-colors">Cancel</button>
+            <button type="submit" disabled={saving} className="flex-1 py-2.5 rounded-lg bg-purple-700 text-white font-bold text-sm hover:bg-purple-800 disabled:opacity-60 transition-colors">{saving ? 'Saving…' : 'Save Changes'}</button>
           </div>
         </form>
       </AdminModal>
@@ -275,8 +278,8 @@ function UsersInner() {
         <form onSubmit={handleReset} className="space-y-4">
           <AdminInput label="New Password" type="password" value={newPass} onChange={e => setNewPass(e.target.value)} placeholder="Min 6 characters" />
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={() => setResetModal(null)} className="flex-1 py-2.5 rounded-lg border border-[#2C333F] text-[#AFB2BF] hover:bg-[#2C333F] text-sm">Cancel</button>
-            <button type="submit" disabled={saving} className="flex-1 py-2.5 rounded-lg bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 disabled:opacity-60">{saving ? 'Resetting…' : 'Reset Password'}</button>
+            <button type="button" onClick={() => setResetModal(null)} className="flex-1 py-2.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 text-sm font-medium transition-colors">Cancel</button>
+            <button type="submit" disabled={saving} className="flex-1 py-2.5 rounded-lg bg-purple-700 text-white font-bold text-sm hover:bg-purple-800 disabled:opacity-60 transition-colors">{saving ? 'Resetting…' : 'Reset Password'}</button>
           </div>
         </form>
       </AdminModal>

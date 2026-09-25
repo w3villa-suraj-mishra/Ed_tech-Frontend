@@ -27,16 +27,16 @@ function DashboardInner() {
     <AdminLayout>
       {/* Welcome */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-[#F1F2FF]">
-          Welcome back, <span className="text-[#FFD60A]">{adminUser.firstName}</span> 👋
+        <h1 className="text-2xl font-bold text-gray-800">
+          Welcome back, <span className="text-purple-600">{adminUser.firstName}</span> 👋
         </h1>
-        <p className="text-sm text-[#AFB2BF] mt-1">Here's what's happening on your platform today.</p>
+        <p className="text-sm text-gray-500 mt-1">Here's what's happening on your platform today.</p>
       </div>
 
       {/* Stat Cards */}
       {loading ? (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          {[...Array(8)].map((_, i) => <div key={i} className="h-24 rounded-2xl bg-[#161D29] animate-pulse" />)}
+          {[...Array(8)].map((_, i) => <div key={i} className="h-24 rounded-2xl bg-white border border-gray-200 animate-pulse" />)}
         </div>
       ) : (
         <>
@@ -58,47 +58,47 @@ function DashboardInner() {
       {/* Recent rows */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Courses */}
-        <div className="bg-[#161D29] border border-[#2C333F] rounded-2xl p-5">
+        <div className="bg-white border border-gray-200 shadow-sm rounded-2xl p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-[#F1F2FF]">Recent Courses</h2>
-            <Link to="/admin/courses" className="text-xs text-[#FFD60A] hover:underline">View all →</Link>
+            <h2 className="font-semibold text-gray-800">Recent Courses</h2>
+            <Link to="/admin/courses" className="text-xs text-purple-600 hover:underline font-semibold">View all →</Link>
           </div>
           {loading ? <TableSkeleton rows={5} cols={3} /> : (
             <div className="space-y-3">
               {(stats?.recentCourses || []).map(c => (
-                <div key={c.id} className="flex items-center justify-between py-2 border-b border-[#2C333F] last:border-0">
+                <div key={c.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
                   <div className="min-w-0 mr-3">
-                    <p className="text-sm font-medium text-[#F1F2FF] truncate">{c.courseName}</p>
-                    <p className="text-xs text-[#585D69]">
+                    <p className="text-sm font-medium text-gray-700 truncate">{c.courseName}</p>
+                    <p className="text-xs text-gray-500">
                       {c.instructor ? `${c.instructor.firstName} ${c.instructor.lastName}` : '—'}
                     </p>
                   </div>
                   <StatusBadge status={c.status} />
                 </div>
               ))}
-              {!stats?.recentCourses?.length && <p className="text-sm text-[#585D69]">No courses yet.</p>}
+              {!stats?.recentCourses?.length && <p className="text-sm text-gray-500">No courses yet.</p>}
             </div>
           )}
         </div>
 
         {/* Recent Users */}
-        <div className="bg-[#161D29] border border-[#2C333F] rounded-2xl p-5">
+        <div className="bg-white border border-gray-200 shadow-sm rounded-2xl p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-[#F1F2FF]">Recent Users</h2>
-            <Link to="/admin/users" className="text-xs text-[#FFD60A] hover:underline">View all →</Link>
+            <h2 className="font-semibold text-gray-800">Recent Users</h2>
+            <Link to="/admin/users" className="text-xs text-purple-600 hover:underline font-semibold">View all →</Link>
           </div>
           {loading ? <TableSkeleton rows={5} cols={3} /> : (
             <div className="space-y-3">
               {(stats?.recentUsers || []).map(u => (
-                <div key={u.id} className="flex items-center justify-between py-2 border-b border-[#2C333F] last:border-0">
+                <div key={u.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
                   <div className="min-w-0 mr-3">
-                    <p className="text-sm font-medium text-[#F1F2FF] truncate">{u.firstName} {u.lastName}</p>
-                    <p className="text-xs text-[#585D69] truncate">{u.email}</p>
+                    <p className="text-sm font-medium text-gray-700 truncate">{u.firstName} {u.lastName}</p>
+                    <p className="text-xs text-gray-500 truncate">{u.email}</p>
                   </div>
                   <StatusBadge status={u.accountType} />
                 </div>
               ))}
-              {!stats?.recentUsers?.length && <p className="text-sm text-[#585D69]">No users yet.</p>}
+              {!stats?.recentUsers?.length && <p className="text-sm text-gray-500">No users yet.</p>}
             </div>
           )}
         </div>

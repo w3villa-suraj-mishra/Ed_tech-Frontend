@@ -72,23 +72,23 @@ function ContactsInner() {
     <AdminLayout>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-xl font-bold text-[#F1F2FF]">Contact Submissions</h1>
-          <p className="text-sm text-[#AFB2BF] mt-0.5">{total} total inquiries</p>
+          <h1 className="text-xl font-bold text-gray-800">Contact Submissions</h1>
+          <p className="text-sm text-gray-500 mt-0.5">{total} total inquiries</p>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-3 mb-5">
+      <div className="bg-white border border-gray-200 rounded-sm shadow-sm p-4 mb-6 flex flex-wrap gap-4">
         <input
           value={searchInput}
           onChange={e => setSI(e.target.value)}
           placeholder="Search name, email or message…"
-          className="bg-[#161D29] border border-[#2C333F] rounded-lg px-4 py-2 text-sm text-[#F1F2FF] placeholder-[#585D69] focus:outline-none focus:border-[#FFD60A] w-72"
+          className="flex-1 min-w-[200px] bg-white border border-gray-300 rounded px-4 py-2 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-purple-600"
         />
         <select
           value={statusFilter}
           onChange={e => { setSF(e.target.value); setPage(1); }}
-          className="bg-[#161D29] border border-[#2C333F] rounded-lg px-3 py-2 text-sm text-[#F1F2FF] focus:outline-none focus:border-[#FFD60A]"
+          className="w-40 bg-white border border-gray-300 rounded px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-purple-600"
         >
           <option value="">All Status</option>
           <option value="Pending">Pending</option>
@@ -97,11 +97,15 @@ function ContactsInner() {
         </select>
       </div>
 
-      <div className="bg-[#161D29] border border-[#2C333F] rounded-2xl overflow-hidden">
+      <div className="bg-white border border-gray-200 rounded-sm shadow-sm overflow-hidden mb-8">
+        <div className="px-5 py-3 bg-purple-700 text-white border-b border-gray-200 flex items-center justify-between">
+          <h2 className="text-[15px] font-bold">Contact Inquiries</h2>
+          <span className="text-xs text-purple-200">{contacts.length} inquiries</span>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[#2C333F] text-[#AFB2BF] text-xs uppercase tracking-wide">
+              <tr className="border-b border-gray-200 text-gray-600 text-xs font-bold uppercase tracking-wide bg-gray-50">
                 <th className="text-left px-5 py-3">User Details</th>
                 <th className="text-left px-5 py-3">Phone</th>
                 <th className="text-left px-5 py-3">Message</th>
@@ -110,41 +114,41 @@ function ContactsInner() {
                 <th className="text-right px-5 py-3">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-100">
               {loading ? (
                 <tr><td colSpan={6} className="px-5 py-4"><TableSkeleton rows={8} cols={5} /></td></tr>
               ) : contacts.length === 0 ? (
                 <tr><td colSpan={6}><EmptyState message="No contact inquiries found." /></td></tr>
               ) : contacts.map(c => (
-                <tr key={c.id} className="border-b border-[#2C333F] hover:bg-[#2C333F]/30 transition-colors">
+                <tr key={c.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-5 py-3.5">
-                    <p className="font-medium text-[#F1F2FF]">{c.firstName} {c.lastName}</p>
-                    <p className="text-xs text-[#585D69]">{c.email}</p>
+                    <p className="font-medium text-gray-800">{c.firstName} {c.lastName}</p>
+                    <p className="text-xs text-gray-500">{c.email}</p>
                   </td>
-                  <td className="px-5 py-3.5 text-[#AFB2BF]">
+                  <td className="px-5 py-3.5 text-gray-500">
                     {c.phoneNo ? `${c.countrycode || ''} ${c.phoneNo}` : '—'}
                   </td>
-                  <td className="px-5 py-3.5 text-[#AFB2BF] max-w-[240px] truncate">
+                  <td className="px-5 py-3.5 text-gray-500 max-w-[240px] truncate">
                     {c.message}
                   </td>
                   <td className="px-5 py-3.5">
                     <StatusBadge status={c.status} />
                   </td>
-                  <td className="px-5 py-3.5 text-[#585D69]">
+                  <td className="px-5 py-3.5 text-gray-500">
                     {new Date(c.createdAt).toLocaleDateString()}
                   </td>
                   <td className="px-5 py-3.5 text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <button onClick={() => setViewModal(c)} className="px-3 py-1 rounded-lg bg-[#2C333F] hover:bg-[#424854] text-[#AFB2BF] text-xs transition-colors">
+                      <button onClick={() => setViewModal(c)} className="px-3 py-1 rounded text-xs font-semibold bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 transition-colors cursor-pointer">
                         View
                       </button>
                       {c.status !== 'Resolved' && (
-                        <button onClick={() => handleStatusChange(c, 'Resolved')} className="px-3 py-1 rounded-lg bg-green-500/10 hover:bg-green-500/20 text-green-400 text-xs transition-colors">
+                        <button onClick={() => handleStatusChange(c, 'Resolved')} className="px-3 py-1 rounded text-xs font-semibold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 transition-colors cursor-pointer">
                           Resolve
                         </button>
                       )}
                       {isSA && (
-                        <button onClick={() => setDelModal(c.id)} className="px-3 py-1 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs transition-colors">
+                        <button onClick={() => setDelModal(c.id)} className="px-3 py-1 rounded text-xs font-semibold bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition-colors cursor-pointer">
                           Delete
                         </button>
                       )}
@@ -155,7 +159,7 @@ function ContactsInner() {
             </tbody>
           </table>
         </div>
-        <div className="px-5 py-4 border-t border-[#2C333F]">
+        <div className="px-5 py-4 border-t border-gray-200">
           <Pagination page={page} totalPages={totalPages} onChange={setPage} />
         </div>
       </div>
@@ -163,29 +167,29 @@ function ContactsInner() {
       {/* View Details Modal */}
       <AdminModal isOpen={!!viewModal} title="Inquiry Details" onClose={() => setViewModal(null)}>
         {viewModal && (
-          <div className="space-y-4 text-sm text-[#F1F2FF]">
-            <div className="grid grid-cols-2 gap-4 bg-[#000814] p-4 rounded-xl border border-[#2C333F]">
+          <div className="space-y-4 text-sm text-gray-800">
+            <div className="grid grid-cols-2 gap-4 bg-white p-4 rounded-xl border border-gray-200">
               <div>
-                <p className="text-xs text-[#AFB2BF]">Name</p>
+                <p className="text-xs text-gray-500">Name</p>
                 <p className="font-semibold">{viewModal.firstName} {viewModal.lastName}</p>
               </div>
               <div>
-                <p className="text-xs text-[#AFB2BF]">Email</p>
+                <p className="text-xs text-gray-500">Email</p>
                 <p className="font-semibold">{viewModal.email}</p>
               </div>
               <div>
-                <p className="text-xs text-[#AFB2BF]">Phone</p>
+                <p className="text-xs text-gray-500">Phone</p>
                 <p className="font-semibold">{viewModal.phoneNo ? `${viewModal.countrycode || ''} ${viewModal.phoneNo}` : '—'}</p>
               </div>
               <div>
-                <p className="text-xs text-[#AFB2BF]">Status</p>
+                <p className="text-xs text-gray-500">Status</p>
                 <StatusBadge status={viewModal.status} />
               </div>
             </div>
 
             <div>
-              <p className="text-xs text-[#AFB2BF] mb-1">Message</p>
-              <div className="bg-[#000814] p-4 rounded-xl border border-[#2C333F] whitespace-pre-wrap leading-relaxed">
+              <p className="text-xs text-gray-500 mb-1">Message</p>
+              <div className="bg-white p-4 rounded-xl border border-gray-200 whitespace-pre-wrap leading-relaxed">
                 {viewModal.message}
               </div>
             </div>
@@ -193,19 +197,19 @@ function ContactsInner() {
             <div className="flex gap-2 pt-2">
               <button
                 onClick={() => handleStatusChange(viewModal, 'Pending')}
-                className={`flex-1 py-2 rounded-lg border text-xs font-semibold ${viewModal.status === 'Pending' ? 'border-[#FFD60A] text-[#FFD60A]' : 'border-[#2C333F] text-[#AFB2BF]'}`}
+                className={`flex-1 py-2 rounded-md border text-xs font-bold transition-colors ${viewModal.status === 'Pending' ? 'bg-purple-50 border-purple-300 text-purple-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'}`}
               >
                 Mark Pending
               </button>
               <button
                 onClick={() => handleStatusChange(viewModal, 'Resolved')}
-                className={`flex-1 py-2 rounded-lg border text-xs font-semibold ${viewModal.status === 'Resolved' ? 'border-green-500 text-green-400' : 'border-[#2C333F] text-[#AFB2BF]'}`}
+                className={`flex-1 py-2 rounded-md border text-xs font-bold transition-colors ${viewModal.status === 'Resolved' ? 'bg-emerald-50 border-emerald-300 text-emerald-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'}`}
               >
                 Mark Resolved
               </button>
               <button
                 onClick={() => handleStatusChange(viewModal, 'Ignored')}
-                className={`flex-1 py-2 rounded-lg border text-xs font-semibold ${viewModal.status === 'Ignored' ? 'border-gray-500 text-gray-400' : 'border-[#2C333F] text-[#AFB2BF]'}`}
+                className={`flex-1 py-2 rounded-md border text-xs font-bold transition-colors ${viewModal.status === 'Ignored' ? 'bg-gray-100 border-gray-400 text-gray-800' : 'border-gray-300 text-gray-700 hover:bg-gray-50'}`}
               >
                 Ignore
               </button>

@@ -248,12 +248,12 @@ function InstructorsInner() {
       <div className="space-y-6 pb-12">
         
         {/* HEADER SECTION */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200/80 dark:border-gray-800 pb-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2.5">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-800 flex items-center gap-2">
               <span>👨‍🏫</span> Instructor Spotlight Manager
             </h1>
-            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-xs sm:text-sm text-gray-500 mt-1">
               Manage the world-class instructors and mentors featured on the homepage slider.
             </p>
           </div>
@@ -261,7 +261,7 @@ function InstructorsInner() {
           <div className="flex items-center gap-2.5">
             <button
               onClick={handleResetDefaults}
-              className="px-3.5 py-2 text-xs font-semibold rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
+              className="px-3.5 py-2 text-xs font-semibold rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition flex items-center gap-1.5 cursor-pointer shadow-sm"
             >
               <FiRotateCcw size={13} />
               <span>Reset Defaults</span>
@@ -269,40 +269,40 @@ function InstructorsInner() {
 
             <button
               onClick={handleOpenAdd}
-              className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer"
+              className="px-4 py-2 bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold rounded-md shadow-sm transition flex items-center gap-1.5 cursor-pointer"
             >
               <FiPlus size={15} />
-              <span>Add Instructor</span>
+              <span>+ Add Instructor</span>
             </button>
           </div>
         </div>
 
         {/* METRIC CARDS */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-white dark:bg-gray-800/90 border border-gray-200/80 dark:border-gray-800 rounded-2xl p-5 shadow-xs">
-            <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Total Spotlight Instructors</span>
-            <div className="text-2xl font-extrabold text-gray-900 dark:text-white mt-1">
+          <div className="bg-white border border-gray-200 rounded-sm p-5 shadow-sm">
+            <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Total Spotlight Instructors</span>
+            <div className="text-2xl font-bold text-gray-900 mt-1.5">
               {instructors.length}
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800/90 border border-gray-200/80 dark:border-gray-800 rounded-2xl p-5 shadow-xs">
-            <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Active on Homepage Slider</span>
-            <div className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">
+          <div className="bg-white border border-gray-200 rounded-sm p-5 shadow-sm">
+            <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Active on Homepage Slider</span>
+            <div className="text-2xl font-bold text-emerald-600 mt-1.5">
               {activeCount}
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800/90 border border-gray-200/80 dark:border-gray-800 rounded-2xl p-5 shadow-xs">
-            <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Total Mentored Count</span>
-            <div className="text-2xl font-extrabold text-blue-600 dark:text-blue-400 mt-1">
+          <div className="bg-white border border-gray-200 rounded-sm p-5 shadow-sm">
+            <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Total Mentored Count</span>
+            <div className="text-2xl font-bold text-purple-700 mt-1.5">
               83,000+
             </div>
           </div>
         </div>
   
         {/* CONTROLS BAR: SEARCH & STATUS FILTER */}
-        <div className="bg-white dark:bg-gray-800/90 border border-gray-200/80 dark:border-gray-800 rounded-2xl p-4 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="bg-white border border-gray-200 rounded-sm p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 flex-1 w-full sm:w-auto">
             <FiSearch className="text-gray-400 text-base shrink-0 ml-1" />
             <input
@@ -310,16 +310,16 @@ function InstructorsInner() {
               placeholder="Search by instructor name, role, or skill..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-transparent text-xs sm:text-sm text-gray-800 dark:text-gray-200 placeholder-gray-400 outline-none"
+              className="w-full bg-white text-sm text-gray-800 placeholder-gray-400 focus:outline-none"
             />
           </div>
 
           <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
-            <span className="text-xs text-gray-500 font-medium">Status:</span>
+            <span className="text-xs text-gray-600 font-medium">Status:</span>
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl px-3 py-1.5 text-xs text-gray-700 dark:text-gray-200 outline-none cursor-pointer"
+              className="bg-white border border-gray-300 rounded px-3 py-1.5 text-xs text-gray-800 outline-none cursor-pointer focus:border-purple-600"
             >
               <option value="All">All Statuses</option>
               <option value="Active">Active</option>
@@ -329,10 +329,14 @@ function InstructorsInner() {
         </div>
 
         {/* INSTRUCTORS LIST TABLE */}
-        <div className="bg-white dark:bg-gray-800/90 border border-gray-200/80 dark:border-gray-800 rounded-2xl shadow-xs overflow-hidden">
+        <div className="bg-white border border-gray-200 rounded-sm shadow-sm overflow-hidden mb-8">
+          <div className="px-5 py-3 bg-purple-700 text-white border-b border-gray-200 flex items-center justify-between">
+            <h2 className="text-[15px] font-bold">Instructor Spotlight Details</h2>
+            <span className="text-xs text-purple-200">{filteredInstructors.length} instructors</span>
+          </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-gray-600 dark:text-gray-300">
-              <thead className="bg-gray-50 dark:bg-gray-700/50 text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-200/80 dark:border-gray-700">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-gray-50 text-[11px] font-bold text-gray-600 uppercase tracking-wider border-b border-gray-200">
                 <tr>
                   <th className="px-5 py-3.5">Instructor</th>
                   <th className="px-5 py-3.5">Role & Experience</th>
@@ -343,12 +347,12 @@ function InstructorsInner() {
                 </tr>
               </thead>
 
-              <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+              <tbody className="divide-y divide-gray-100 text-gray-800">
                 {filteredInstructors.length > 0 ? (
                   filteredInstructors.map((inst) => (
                     <tr
                       key={inst.id}
-                      className="hover:bg-gray-50/60 dark:hover:bg-gray-700/40 transition-colors"
+                      className="hover:bg-gray-50 transition-colors"
                     >
                       {/* Avatar & Name */}
                       <td className="px-5 py-4">
@@ -356,13 +360,13 @@ function InstructorsInner() {
                           <img
                             src={inst.image}
                             alt={inst.name}
-                            className="w-11 h-11 rounded-xl object-cover border border-gray-200 shrink-0"
+                            className="w-10 h-10 rounded-lg object-cover border border-gray-200 shrink-0"
                           />
                           <div>
-                            <span className="font-bold text-sm text-gray-900 dark:text-white block">
+                            <span className="font-bold text-sm text-gray-900 block">
                               {inst.name}
                             </span>
-                            <span className="text-[11px] text-blue-600 dark:text-blue-400 font-medium">
+                            <span className="text-[11px] text-purple-700 font-semibold">
                               {inst.badgeText || "Verified Industry Lead"}
                             </span>
                           </div>
@@ -371,16 +375,16 @@ function InstructorsInner() {
 
                       {/* Role & Experience */}
                       <td className="px-5 py-4 max-w-xs">
-                        <span className="font-semibold text-gray-800 dark:text-gray-200 block truncate">
+                        <span className="font-semibold text-gray-800 block truncate">
                           {inst.role}
                         </span>
-                        <span className="text-[11px] text-gray-400 block truncate">
+                        <span className="text-[11px] text-gray-500 block truncate">
                           {inst.experience}
                         </span>
                       </td>
 
                       {/* Mentored Count */}
-                      <td className="px-5 py-4 whitespace-nowrap font-bold text-gray-900 dark:text-white">
+                      <td className="px-5 py-4 whitespace-nowrap font-bold text-gray-900">
                         {inst.studentsMentored}
                       </td>
 
@@ -390,7 +394,7 @@ function InstructorsInner() {
                           {(Array.isArray(inst.skills) ? inst.skills : (inst.skills || '').split(',')).slice(0, 3).map((s, idx) => (
                             <span
                               key={idx}
-                              className="text-[10px] bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-0.5 rounded-full font-medium"
+                              className="text-[10px] bg-purple-50 text-purple-700 border border-purple-200 px-2 py-0.5 rounded-full font-medium"
                             >
                               {typeof s === 'string' ? s.trim() : s}
                             </span>
@@ -404,8 +408,8 @@ function InstructorsInner() {
                           onClick={() => handleToggleStatus(inst.id)}
                           className={`px-2.5 py-1 rounded-full text-[11px] font-bold border transition cursor-pointer ${
                             inst.published
-                              ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400"
-                              : "bg-gray-100 text-gray-500 border-gray-200 dark:bg-gray-700 dark:text-gray-400"
+                              ? "bg-emerald-50 text-emerald-700 border-emerald-300"
+                              : "bg-gray-100 text-gray-600 border-gray-300"
                           }`}
                         >
                           {inst.published ? "Active" : "Inactive"}
@@ -417,21 +421,21 @@ function InstructorsInner() {
                         <div className="flex items-center justify-end gap-1.5">
                           <button
                             onClick={() => setPreviewInstructor(inst)}
-                            className="p-1.5 rounded-lg text-gray-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-gray-700 transition cursor-pointer"
+                            className="p-1.5 rounded-md text-gray-600 hover:text-purple-700 hover:bg-purple-50 transition cursor-pointer border border-transparent hover:border-purple-200"
                             title="Preview in Slider"
                           >
                             <FiEye size={15} />
                           </button>
                           <button
                             onClick={() => handleOpenEdit(inst)}
-                            className="p-1.5 rounded-lg text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-gray-700 transition cursor-pointer"
+                            className="p-1.5 rounded-md text-gray-600 hover:text-purple-700 hover:bg-purple-50 transition cursor-pointer border border-transparent hover:border-purple-200"
                             title="Edit Details"
                           >
                             <FiEdit size={15} />
                           </button>
                           <button
                             onClick={() => setDeleteConfirmId(inst.id)}
-                            className="p-1.5 rounded-lg text-gray-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-gray-700 transition cursor-pointer"
+                            className="p-1.5 rounded-md text-gray-600 hover:text-red-600 hover:bg-red-50 transition cursor-pointer border border-transparent hover:border-red-200"
                             title="Delete Instructor"
                           >
                             <FiTrash2 size={15} />
@@ -442,7 +446,7 @@ function InstructorsInner() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6" className="px-5 py-12 text-center text-gray-400">
+                    <td colSpan="6" className="px-5 py-12 text-center text-gray-500">
                       No spotlight instructors found.
                     </td>
                   </tr>
@@ -454,16 +458,16 @@ function InstructorsInner() {
 
         {/* ADD / EDIT MODAL */}
         {modalOpen && (
-          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 max-w-2xl w-full rounded-3xl p-6 sm:p-8 text-gray-900 dark:text-white space-y-5 shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar animate-in fade-in zoom-in-95 duration-150">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+            <div className="bg-white border border-gray-200 max-w-2xl w-full rounded-2xl p-6 sm:p-8 text-gray-800 space-y-5 shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar animate-in fade-in zoom-in-95 duration-150">
               
-              <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-700 pb-4">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+              <div className="flex items-center justify-between border-b border-gray-200 pb-4">
+                <h2 className="text-lg font-bold text-gray-900">
                   {editingId ? "Edit Instructor Spotlight" : "Add New Instructor Spotlight"}
                 </h2>
                 <button
                   onClick={() => setModalOpen(false)}
-                  className="p-1 rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-white cursor-pointer"
+                  className="p-1 rounded-lg text-gray-400 hover:text-gray-700 cursor-pointer"
                 >
                   <FiX size={18} />
                 </button>
@@ -474,77 +478,77 @@ function InstructorsInner() {
                   
                   {/* Name */}
                   <div className="space-y-1.5">
-                    <label className="font-semibold text-gray-700 dark:text-gray-300">Instructor Name *</label>
+                    <label className="font-semibold text-gray-700">Instructor Name *</label>
                     <input
                       type="text"
                       required
                       placeholder="e.g. Suraj Mishra"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white outline-none focus:border-blue-500"
+                      className="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-800 outline-none focus:border-purple-600 focus:ring-1 focus:ring-purple-600"
                     />
                   </div>
 
                   {/* Role */}
                   <div className="space-y-1.5">
-                    <label className="font-semibold text-gray-700 dark:text-gray-300">Designation / Role *</label>
+                    <label className="font-semibold text-gray-700">Designation / Role *</label>
                     <input
                       type="text"
                       required
                       placeholder="e.g. Senior Engineering Specialist & Tech Lead"
                       value={formData.role}
                       onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                      className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white outline-none focus:border-blue-500"
+                      className="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-800 outline-none focus:border-purple-600 focus:ring-1 focus:ring-purple-600"
                     />
                   </div>
 
                   {/* Experience */}
                   <div className="space-y-1.5">
-                    <label className="font-semibold text-gray-700 dark:text-gray-300">Experience Byline *</label>
+                    <label className="font-semibold text-gray-700">Experience Byline *</label>
                     <input
                       type="text"
                       required
                       placeholder="e.g. 9+ Years Building Production Systems"
                       value={formData.experience}
                       onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
-                      className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white outline-none focus:border-blue-500"
+                      className="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-800 outline-none focus:border-purple-600 focus:ring-1 focus:ring-purple-600"
                     />
                   </div>
 
                   {/* Students Mentored Metric */}
                   <div className="space-y-1.5">
-                    <label className="font-semibold text-gray-700 dark:text-gray-300">Students Mentored Metric *</label>
+                    <label className="font-semibold text-gray-700">Students Mentored Metric *</label>
                     <input
                       type="text"
                       required
                       placeholder="e.g. 38,000+"
                       value={formData.studentsMentored}
                       onChange={(e) => setFormData({ ...formData, studentsMentored: e.target.value })}
-                      className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white outline-none focus:border-blue-500"
+                      className="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-800 outline-none focus:border-purple-600 focus:ring-1 focus:ring-purple-600"
                     />
                   </div>
 
                   {/* Photo Badge Text */}
                   <div className="space-y-1.5">
-                    <label className="font-semibold text-gray-700 dark:text-gray-300">Photo Badge Text</label>
+                    <label className="font-semibold text-gray-700">Photo Badge Text</label>
                     <input
                       type="text"
                       placeholder="e.g. Verified Industry Lead"
                       value={formData.badgeText}
                       onChange={(e) => setFormData({ ...formData, badgeText: e.target.value })}
-                      className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white outline-none focus:border-blue-500"
+                      className="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-800 outline-none focus:border-purple-600 focus:ring-1 focus:ring-purple-600"
                     />
                   </div>
 
                   {/* Skills tags */}
                   <div className="space-y-1.5">
-                    <label className="font-semibold text-gray-700 dark:text-gray-300">Skills / Tags (Comma Separated)</label>
+                    <label className="font-semibold text-gray-700">Skills / Tags (Comma Separated)</label>
                     <input
                       type="text"
                       placeholder="e.g. Fullstack Architecture, Kubernetes, DevOps Pipelines"
                       value={formData.skills}
                       onChange={(e) => setFormData({ ...formData, skills: e.target.value })}
-                      className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white outline-none focus:border-blue-500"
+                      className="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-800 outline-none focus:border-purple-600 focus:ring-1 focus:ring-purple-600"
                     />
                   </div>
 
@@ -553,18 +557,18 @@ function InstructorsInner() {
                 {/* Profile Image with File Upload or URL */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <label className="font-semibold text-gray-700 dark:text-gray-300">
+                    <label className="font-semibold text-gray-700">
                       Profile Image *
                     </label>
                     {/* Tab Switcher */}
-                    <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-700/70 p-0.5 rounded-lg text-[11px]">
+                    <div className="flex items-center gap-1 bg-gray-100 p-0.5 rounded-lg text-[11px]">
                       <button
                         type="button"
                         onClick={() => setImageInputMode('file')}
                         className={`px-2.5 py-1 rounded-md font-medium transition cursor-pointer flex items-center gap-1.5 ${
                           imageInputMode === 'file'
-                            ? 'bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 shadow-xs'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                            ? 'bg-white text-purple-700 shadow-xs'
+                            : 'text-gray-500 hover:text-gray-800'
                         }`}
                       >
                         <FiUpload size={12} /> Upload from Computer
@@ -574,8 +578,8 @@ function InstructorsInner() {
                         onClick={() => setImageInputMode('url')}
                         className={`px-2.5 py-1 rounded-md font-medium transition cursor-pointer flex items-center gap-1.5 ${
                           imageInputMode === 'url'
-                            ? 'bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 shadow-xs'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                            ? 'bg-white text-purple-700 shadow-xs'
+                            : 'text-gray-500 hover:text-gray-800'
                         }`}
                       >
                         <FiLink size={12} /> Image URL
@@ -588,10 +592,10 @@ function InstructorsInner() {
                       onDragOver={handleDragOver}
                       onDragLeave={handleDragLeave}
                       onDrop={handleDrop}
-                      className={`relative border-2 border-dashed rounded-2xl p-4 transition-all flex flex-col sm:flex-row items-center gap-4 ${
+                      className={`relative border-2 border-dashed rounded-xl p-4 transition-all flex flex-col sm:flex-row items-center gap-4 ${
                         isDragging
-                          ? 'border-blue-500 bg-blue-50/50 dark:bg-blue-900/20 ring-4 ring-blue-500/10'
-                          : 'border-gray-200 dark:border-gray-600/80 bg-gray-50/70 dark:bg-gray-700/20 hover:border-blue-400'
+                          ? 'border-purple-600 bg-purple-50/50 ring-4 ring-purple-600/10'
+                          : 'border-gray-200 bg-gray-50/70 hover:border-purple-400'
                       }`}
                     >
                       <input
@@ -609,14 +613,14 @@ function InstructorsInner() {
                             <img
                               src={formData.image}
                               alt="Preview"
-                              className="w-20 h-20 rounded-2xl object-cover border-2 border-blue-500 shadow-sm"
+                              className="w-20 h-20 rounded-xl object-cover border-2 border-purple-600 shadow-sm"
                             />
-                            <span className="absolute -bottom-1 -right-1 bg-green-500 text-white p-1 rounded-full text-[10px] shadow">
+                            <span className="absolute -bottom-1 -right-1 bg-emerald-600 text-white p-1 rounded-full text-[10px] shadow">
                               <FiCheck size={10} />
                             </span>
                           </div>
                         ) : (
-                          <div className="w-20 h-20 rounded-2xl bg-gray-100 dark:bg-gray-700 flex flex-col items-center justify-center text-gray-400 border border-gray-200 dark:border-gray-600">
+                          <div className="w-20 h-20 rounded-xl bg-gray-100 flex flex-col items-center justify-center text-gray-400 border border-gray-200">
                             <FiUploadCloud size={26} />
                             <span className="text-[10px] mt-1 font-medium">No Image</span>
                           </div>
@@ -630,7 +634,7 @@ function InstructorsInner() {
                             type="button"
                             disabled={isCompressing}
                             onClick={() => fileInputRef.current?.click()}
-                            className="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-semibold rounded-xl text-xs flex items-center gap-2 shadow-xs transition cursor-pointer disabled:opacity-50"
+                            className="px-3.5 py-2 bg-purple-700 hover:bg-purple-800 active:scale-95 text-white font-semibold rounded-lg text-xs flex items-center gap-2 shadow-xs transition cursor-pointer disabled:opacity-50"
                           >
                             <FiUpload size={14} />
                             {isCompressing ? 'Processing...' : 'Browse from Computer'}
@@ -640,14 +644,14 @@ function InstructorsInner() {
                             <button
                               type="button"
                               onClick={() => setFormData({ ...formData, image: '' })}
-                              className="px-3 py-2 text-xs font-semibold text-red-500 hover:text-red-700 dark:hover:text-red-400 transition cursor-pointer"
+                              className="px-3 py-2 text-xs font-semibold text-red-500 hover:text-red-700 transition cursor-pointer"
                             >
                               Remove
                             </button>
                           )}
                         </div>
 
-                        <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                        <p className="text-[11px] text-gray-500">
                           Drag and drop an image file here, or click to browse (PNG, JPG, WEBP, GIF).
                         </p>
                       </div>
@@ -660,7 +664,7 @@ function InstructorsInner() {
                         placeholder="https://images.unsplash.com/photo-..."
                         value={formData.image}
                         onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                        className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white outline-none focus:border-blue-500 text-xs"
+                        className="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-800 outline-none focus:border-purple-600 text-xs"
                       />
                       {formData.image && (
                         <img
@@ -678,27 +682,27 @@ function InstructorsInner() {
 
                 {/* Title Quote Headline */}
                 <div className="space-y-1.5">
-                  <label className="font-semibold text-gray-700 dark:text-gray-300">Hook Title / Title Quote *</label>
+                  <label className="font-semibold text-gray-700">Hook Title / Title Quote *</label>
                   <input
                     type="text"
                     required
                     placeholder="e.g. Master deep problem-solving with real engineering rigor."
                     value={formData.titleQuote}
                     onChange={(e) => setFormData({ ...formData, titleQuote: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white outline-none focus:border-blue-500"
+                    className="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-800 outline-none focus:border-purple-600 focus:ring-1 focus:ring-purple-600"
                   />
                 </div>
 
                 {/* Full Quote / Philosophy */}
                 <div className="space-y-1.5">
-                  <label className="font-semibold text-gray-700 dark:text-gray-300">Full Quote / Educational Philosophy *</label>
+                  <label className="font-semibold text-gray-700">Full Quote / Educational Philosophy *</label>
                   <textarea
                     rows={4}
                     required
                     placeholder="Enter full engineering quote..."
                     value={formData.quote}
                     onChange={(e) => setFormData({ ...formData, quote: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white outline-none focus:border-blue-500 resize-none"
+                    className="w-full px-3.5 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-800 outline-none focus:border-purple-600 focus:ring-1 focus:ring-purple-600 resize-none"
                   />
                 </div>
 
@@ -709,25 +713,25 @@ function InstructorsInner() {
                     id="publishedCheck"
                     checked={formData.published}
                     onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
-                    className="w-4 h-4 rounded text-blue-600 cursor-pointer"
+                    className="w-4 h-4 rounded text-purple-700 cursor-pointer"
                   />
-                  <label htmlFor="publishedCheck" className="text-xs text-gray-700 dark:text-gray-300 font-medium cursor-pointer">
+                  <label htmlFor="publishedCheck" className="text-xs text-gray-700 font-medium cursor-pointer">
                     Publish immediately on Homepage Mentor Slider
                   </label>
                 </div>
 
                 {/* Submit Actions */}
-                <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
+                <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
                   <button
                     type="button"
                     onClick={() => setModalOpen(false)}
-                    className="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-xl font-semibold transition cursor-pointer"
+                    className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold transition cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition shadow-md cursor-pointer"
+                    className="px-5 py-2 bg-purple-700 hover:bg-purple-800 text-white rounded-lg font-bold transition shadow-sm cursor-pointer"
                   >
                     {editingId ? "Save Changes" : "Create Instructor"}
                   </button>
@@ -741,22 +745,22 @@ function InstructorsInner() {
 
         {/* DELETE CONFIRM MODAL */}
         {deleteConfirmId && (
-          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 max-w-sm w-full rounded-2xl p-6 text-gray-900 dark:text-white space-y-4 shadow-2xl">
-              <h3 className="font-bold text-base">Remove Instructor Spotlight?</h3>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+            <div className="bg-white border border-gray-200 max-w-sm w-full rounded-2xl p-6 text-gray-800 space-y-4 shadow-2xl">
+              <h3 className="font-bold text-base text-gray-900">Remove Instructor Spotlight?</h3>
+              <p className="text-xs text-gray-600">
                 Are you sure you want to remove this instructor from the spotlight section? You can re-add them or reset defaults anytime.
               </p>
               <div className="flex justify-end gap-2.5 pt-2">
                 <button
                   onClick={() => setDeleteConfirmId(null)}
-                  className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl font-semibold text-xs cursor-pointer"
+                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold text-xs cursor-pointer hover:bg-gray-200"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={() => handleDelete(deleteConfirmId)}
-                  className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold text-xs cursor-pointer shadow-md"
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold text-xs cursor-pointer shadow-sm"
                 >
                   Remove
                 </button>

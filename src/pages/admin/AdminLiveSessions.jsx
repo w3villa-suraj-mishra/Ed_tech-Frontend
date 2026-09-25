@@ -79,69 +79,96 @@ function LiveSessionsInner() {
         <option value="Ended">Ended</option>
       </AdminSelect>
       <div className="flex gap-3 pt-2">
-        <button type="button" onClick={() => { setCreateModal(false); setEditModal(null); }} className="flex-1 py-2.5 rounded-lg border border-[#2C333F] text-[#AFB2BF] hover:bg-[#2C333F] text-sm">Cancel</button>
-        <button type="submit" disabled={saving} className="flex-1 py-2.5 rounded-lg bg-[#FFD60A] text-[#000814] font-bold text-sm hover:bg-[#FFEE32] disabled:opacity-60">{saving ? 'Saving…' : 'Save'}</button>
+        <button type="button" onClick={() => { setCreateModal(false); setEditModal(null); }} className="flex-1 py-2.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-100 text-sm">Cancel</button>
+        <button type="submit" disabled={saving} className="flex-1 py-2.5 rounded-lg bg-purple-600 text-white font-bold text-sm hover:bg-[#FFEE32] disabled:opacity-60">{saving ? 'Saving…' : 'Save'}</button>
       </div>
     </form>
   );
 
   return (
     <AdminLayout>
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-xl font-bold text-[#F1F2FF]">Live Sessions</h1>
-          <p className="text-sm text-[#AFB2BF] mt-0.5">{total} total sessions</p>
+      <div className="space-y-6 pb-12">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-800 tracking-tight flex items-center gap-2">
+              <span>📹 Live Sessions</span>
+            </h1>
+            <p className="text-xs sm:text-sm text-gray-500 mt-1">
+              Schedule and monitor live classes ({total} total sessions)
+            </p>
+          </div>
+          <button
+            onClick={() => { setForm(EMPTY); setCreateModal(true); }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs shadow-sm transition-all cursor-pointer shrink-0"
+          >
+            <span>+ Schedule Session</span>
+          </button>
         </div>
-        <button onClick={() => { setForm(EMPTY); setCreateModal(true); }}
-          className="px-4 py-2 bg-[#FFD60A] text-[#000814] rounded-xl font-bold text-sm hover:bg-[#FFEE32] transition-colors">
-          + Schedule Session
-        </button>
-      </div>
 
-      <div className="bg-[#161D29] border border-[#2C333F] rounded-2xl overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-[#2C333F] text-[#AFB2BF] text-xs uppercase tracking-wide">
-                <th className="text-left px-5 py-3">Session</th>
-                <th className="text-left px-5 py-3">Course</th>
-                <th className="text-left px-5 py-3">Start</th>
-                <th className="text-left px-5 py-3">Status</th>
-                <th className="text-right px-5 py-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? <tr><td colSpan={5} className="px-5 py-4"><TableSkeleton rows={6} cols={4} /></td></tr>
-               : sessions.length === 0 ? <tr><td colSpan={5}><EmptyState message="No sessions found." /></td></tr>
-               : sessions.map(s => (
-                <tr key={s.id} className="border-b border-[#2C333F] hover:bg-[#2C333F]/30 transition-colors">
-                  <td className="px-5 py-3.5 font-medium text-[#F1F2FF]">{s.sessionName}</td>
-                  <td className="px-5 py-3.5 text-[#AFB2BF]">{s.Course?.courseName || '—'}</td>
-                  <td className="px-5 py-3.5 text-[#585D69]">{s.startTime ? new Date(s.startTime).toLocaleString() : '—'}</td>
-                  <td className="px-5 py-3.5"><StatusBadge status={s.status} /></td>
-                  <td className="px-5 py-3.5 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <button onClick={() => openEdit(s)} className="px-3 py-1 rounded-lg bg-[#2C333F] hover:bg-[#424854] text-[#AFB2BF] text-xs transition-colors">Edit</button>
-                      <button onClick={() => setDelModal(s.id)} className="px-3 py-1 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs transition-colors">Delete</button>
-                    </div>
-                  </td>
+        <div className="bg-white border border-gray-200 rounded-sm shadow-sm overflow-hidden mb-8">
+          <div className="px-5 py-3 bg-purple-700 text-white border-b border-gray-200 flex items-center justify-between">
+            <h2 className="text-[15px] font-bold">Upcoming & Past Sessions</h2>
+            <span className="text-xs text-purple-200">{total} sessions</span>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs">
+              <thead className="bg-gray-50 text-[11px] font-bold text-gray-600 uppercase tracking-wider border-b border-gray-200">
+                <tr>
+                  <th className="text-left px-5 py-3.5">Session</th>
+                  <th className="text-left px-5 py-3.5">Course</th>
+                  <th className="text-left px-5 py-3.5">Start</th>
+                  <th className="text-left px-5 py-3.5">Status</th>
+                  <th className="text-right px-5 py-3.5">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-100 text-gray-800">
+                {loading ? (
+                  <tr><td colSpan={5} className="px-5 py-6"><TableSkeleton rows={6} cols={5} /></td></tr>
+                ) : sessions.length === 0 ? (
+                  <tr><td colSpan={5} className="px-5 py-12"><EmptyState message="No sessions found." /></td></tr>
+                ) : (
+                  sessions.map((s) => (
+                    <tr key={s.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-5 py-3.5 font-bold text-gray-900">{s.sessionName}</td>
+                      <td className="px-5 py-3.5 text-gray-600">{s.Course?.courseName || '—'}</td>
+                      <td className="px-5 py-3.5 text-gray-600">{s.startTime ? new Date(s.startTime).toLocaleString() : '—'}</td>
+                      <td className="px-5 py-3.5"><StatusBadge status={s.status} /></td>
+                      <td className="px-5 py-3.5 text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-1.5">
+                          <button
+                            onClick={() => openEdit(s)}
+                            className="px-2.5 py-1 rounded text-xs font-semibold bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 transition-colors"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => setDelModal(s.id)}
+                            className="px-2.5 py-1 rounded text-xs font-semibold bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition-colors"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+          <div className="px-5 py-4 border-t border-gray-200 bg-gray-50">
+            <Pagination page={page} totalPages={totalPages} onChange={setPage} />
+          </div>
         </div>
-        <div className="px-5 py-4 border-t border-[#2C333F]">
-          <Pagination page={page} totalPages={totalPages} onChange={setPage} />
-        </div>
-      </div>
 
-      <AdminModal isOpen={createModal} title="Schedule Live Session" onClose={() => setCreateModal(false)}>
-        <SessionForm onSubmit={handleCreate} />
-      </AdminModal>
-      <AdminModal isOpen={!!editModal} title="Edit Live Session" onClose={() => setEditModal(null)}>
-        <SessionForm onSubmit={handleEdit} />
-      </AdminModal>
-      <DeleteConfirm isOpen={!!delModal} title="Delete Session?" message="This live session will be permanently removed." onClose={() => setDelModal(null)} onConfirm={handleDelete} loading={deleting} />
+        <AdminModal isOpen={createModal} title="Schedule Live Session" onClose={() => setCreateModal(false)}>
+          <SessionForm onSubmit={handleCreate} />
+        </AdminModal>
+        <AdminModal isOpen={!!editModal} title="Edit Live Session" onClose={() => setEditModal(null)}>
+          <SessionForm onSubmit={handleEdit} />
+        </AdminModal>
+        <DeleteConfirm isOpen={!!delModal} title="Delete Session?" message="This live session will be permanently removed." onClose={() => setDelModal(null)} onConfirm={handleDelete} loading={deleting} />
+      </div>
     </AdminLayout>
   );
 }

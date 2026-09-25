@@ -2,33 +2,50 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getNotifications } from '../../services/admin/adminAPI';
 
+import { 
+  RiDashboardLine,
+  RiGroupLine,
+  RiBookOpenLine,
+  RiPriceTag3Line,
+  RiClipboardLine,
+  RiFlashlightLine,
+  RiGlobalLine,
+  RiGraduationCapLine,
+  RiMegaphoneLine,
+  RiCoupon3Line,
+  RiStarLine,
+  RiArticleLine,
+  RiUserStarLine,
+  RiMailLine
+} from "react-icons/ri";
+
 const NAV = [
-  { label: 'Dashboard',     path: '/admin/dashboard',     icon: '📊' },
-  { label: 'Users',         path: '/admin/users',          icon: '👥' },
-  { label: 'Courses',       path: '/admin/courses',        icon: '📚' },
-  { label: 'Categories',    path: '/admin/categories',     icon: '🏷️' },
-  { label: 'Enrollments',   path: '/admin/enrollments',    icon: '📋' },
+  { label: 'Dashboard', path: '/admin/dashboard', icon: <RiDashboardLine size={18} /> },
+  { label: 'Users', path: '/admin/users', icon: <RiGroupLine size={18} /> },
+  { label: 'Courses', path: '/admin/courses', icon: <RiBookOpenLine size={18} /> },
+  { label: 'Categories', path: '/admin/categories', icon: <RiPriceTag3Line size={18} /> },
+  { label: 'Enrollments', path: '/admin/enrollments', icon: <RiClipboardLine size={18} /> },
   {
     group: 'Practice',
-    icon: '⚡',
+    icon: <RiFlashlightLine size={18} />,
     children: [
-      { label: 'Practice Bank', path: '/admin/practice-bank',  icon: '⚡' },
-      { label: 'Global Tests',  path: '/admin/global-tests',   icon: '🌐' },
-      { label: 'Course Tests',  path: '/admin/course-tests',   icon: '🎓' },
+      { label: 'Practice Bank', path: '/admin/practice-bank', icon: <RiFlashlightLine size={16} /> },
+      { label: 'Global Tests', path: '/admin/global-tests', icon: <RiGlobalLine size={16} /> },
+      { label: 'Course Tests', path: '/admin/course-tests', icon: <RiGraduationCapLine size={16} /> },
     ]
   },
   {
     group: 'Announcements & Offers',
-    icon: '📢',
+    icon: <RiMegaphoneLine size={18} />,
     children: [
-      { label: 'Announcements', path: '/admin/announcements', icon: '📢' },
-      { label: 'Offers & Coupons', path: '/admin/offers',     icon: '🏷️' },
+      { label: 'Announcements', path: '/admin/announcements', icon: <RiMegaphoneLine size={16} /> },
+      { label: 'Offers & Coupons', path: '/admin/offers', icon: <RiCoupon3Line size={16} /> },
     ]
   },
-  { label: 'Reviews',              path: '/admin/reviews',        icon: '⭐' },
-  { label: 'Articles',             path: '/admin/articles',       icon: '📰' },
-  { label: 'Instructor Spotlight', path: '/admin/instructors',    icon: '👨‍🏫' },
-  { label: 'Contact Us',           path: '/admin/contacts',       icon: '✉️' },
+  { label: 'Reviews', path: '/admin/reviews', icon: <RiStarLine size={18} /> },
+  { label: 'Articles', path: '/admin/articles', icon: <RiArticleLine size={18} /> },
+  { label: 'Instructor Spotlight', path: '/admin/instructors', icon: <RiUserStarLine size={18} /> },
+  { label: 'Contact Us', path: '/admin/contacts', icon: <RiMailLine size={18} /> },
 ];
 
 export default function AdminLayout({ children }) {
@@ -41,9 +58,9 @@ export default function AdminLayout({ children }) {
   const [openGroups, setOpenGroups] = useState(() => {
     try {
       const saved = localStorage.getItem('adminOpenGroups');
-      return saved ? JSON.parse(saved) : ['Practice', 'Announcements & Offers'];
+      return saved ? JSON.parse(saved) : ['Actions'];
     } catch {
-      return ['Practice', 'Announcements & Offers'];
+      return ['Actions'];
     }
   });
 
@@ -74,7 +91,6 @@ export default function AdminLayout({ children }) {
     localStorage.setItem('adminTheme', theme);
   }, [theme]);
 
-  // Auto-expand group if current path belongs to it
   useEffect(() => {
     NAV.forEach((item) => {
       if (item.children) {
@@ -86,7 +102,6 @@ export default function AdminLayout({ children }) {
     });
   }, [location.pathname]);
 
-  // Handle ESC key for mobile drawer
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && mobileDrawerOpen) {
@@ -97,7 +112,6 @@ export default function AdminLayout({ children }) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [mobileDrawerOpen]);
 
-  // Lock scroll when mobile drawer open
   useEffect(() => {
     if (mobileDrawerOpen) {
       document.body.style.overflow = 'hidden';
@@ -149,39 +163,37 @@ export default function AdminLayout({ children }) {
     : notifications;
 
   const renderNavLinks = (isMobile = false) => (
-    <nav className="flex-1 overflow-y-auto py-2 space-y-0.5 custom-scrollbar">
+    <nav className="flex-1 overflow-y-auto py-4 space-y-1 custom-scrollbar">
       {NAV.map((item, index) => {
         if (item.children) {
           const isExpanded = openGroups.includes(item.group);
           const hasActiveChild = item.children.some((child) => location.pathname.startsWith(child.path));
 
           return (
-            <div key={item.group || index} className="mx-1.5 mb-0.5">
+            <div key={item.group || index} className="mx-2 mb-1">
               <button
                 onClick={() => toggleGroup(item.group)}
                 title={!sidebarOpen && !isMobile ? item.group : ''}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-150 text-xs font-medium cursor-pointer ${
+                className={`w-full flex items-center justify-between px-4 py-2.5 rounded-lg transition-all duration-150 text-[15px] cursor-pointer ${
                   hasActiveChild
-                    ? 'text-[#FFD60A] font-bold'
-                    : isLight
-                      ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                      : 'text-[#AFB2BF] hover:bg-[#2C333F] hover:text-white'
+                    ? 'text-white font-medium'
+                    : 'text-gray-300 hover:text-white hover:bg-[#282B3A]'
                 }`}
               >
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <span className="text-sm flex-shrink-0">{item.icon}</span>
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className="text-[20px] flex-shrink-0 text-gray-400">{item.icon}</span>
                   {(sidebarOpen || isMobile) && <span className="truncate">{item.group}</span>}
                 </div>
                 {(sidebarOpen || isMobile) && (
-                  <span className="text-[10px] transition-transform duration-200 ml-1">
-                    {isExpanded ? '▼' : '▶'}
+                  <span className="text-[10px] text-gray-500 transition-transform duration-200 ml-1">
+                    {isExpanded ? '⌃' : '⌄'}
                   </span>
                 )}
               </button>
 
               {/* Subsections */}
               {isExpanded && (
-                <div className={`mt-0.5 space-y-0.5 ${sidebarOpen || isMobile ? 'pl-3 border-l border-[#2C333F]/60 ml-2.5' : ''}`}>
+                <div className={`mt-1 space-y-1 ${sidebarOpen || isMobile ? 'pl-8' : ''}`}>
                   {item.children.map((child) => {
                     const active = location.pathname.startsWith(child.path);
                     return (
@@ -190,15 +202,13 @@ export default function AdminLayout({ children }) {
                         to={child.path}
                         onClick={() => isMobile && setMobileDrawerOpen(false)}
                         title={!sidebarOpen && !isMobile ? child.label : ''}
-                        className={`flex items-center gap-2 px-2.5 py-1.5 rounded-md transition-all duration-150 text-xs font-medium ${
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 text-[14px] ${
                           active
-                            ? 'bg-[#FFD60A]/10 text-[#FFD60A] border border-[#FFD60A]/20 font-bold'
-                            : isLight
-                              ? 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
-                              : 'text-[#838894] hover:bg-[#2C333F] hover:text-white'
+                            ? 'bg-[#282B3A] text-white font-medium'
+                            : 'text-gray-300 hover:bg-[#282B3A] hover:text-white'
                         }`}
                       >
-                        <span className="text-xs flex-shrink-0">{child.icon}</span>
+                        <span className="text-[18px] flex-shrink-0 text-gray-400">{child.icon}</span>
                         {(sidebarOpen || isMobile) && <span className="truncate">{child.label}</span>}
                       </Link>
                     );
@@ -216,15 +226,13 @@ export default function AdminLayout({ children }) {
             to={item.path}
             onClick={() => isMobile && setMobileDrawerOpen(false)}
             title={!sidebarOpen && !isMobile ? item.label : ''}
-            className={`flex items-center gap-2.5 px-3 py-2 mx-1.5 rounded-lg mb-0.5 transition-all duration-150 text-xs font-medium
+            className={`flex items-center gap-3 px-4 py-2.5 mx-2 rounded-lg mb-1 transition-all duration-150 text-[15px]
               ${active
-                ? 'bg-[#FFD60A]/10 text-[#FFD60A] border border-[#FFD60A]/20 font-bold'
-                : isLight
-                  ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                  : 'text-[#AFB2BF] hover:bg-[#2C333F] hover:text-white'
+                ? 'bg-[#282B3A] text-white font-medium'
+                : 'text-gray-300 hover:bg-[#282B3A] hover:text-white'
               }`}
           >
-            <span className="text-sm flex-shrink-0">{item.icon}</span>
+            <span className="text-[20px] flex-shrink-0 text-gray-400">{item.icon}</span>
             {(sidebarOpen || isMobile) && <span className="truncate">{item.label}</span>}
           </Link>
         );
@@ -233,34 +241,35 @@ export default function AdminLayout({ children }) {
   );
 
   return (
-    <div className={`min-h-screen flex font-inter transition-colors duration-300 ${
-      isLight ? 'bg-slate-100 text-slate-900' : 'bg-[#090D16] text-[#F1F2FF]'
-    }`}>
+    <div className="min-h-screen flex font-inter bg-[#f4f5f8] text-gray-800">
       
       {/* ──────────────────────────────────────────────────────────── */}
       {/* 1. DESKTOP SIDEBAR (Visible on md and larger)              */}
       {/* ──────────────────────────────────────────────────────────── */}
       <aside
-        className={`hidden md:flex ${sidebarOpen ? 'w-60' : 'w-16'} flex-shrink-0 border-r flex-col transition-all duration-300 z-30 sticky top-0 h-screen ${
-          isLight ? 'bg-white border-slate-200' : 'bg-[#161D29] border-[#2C333F]'
+        className={`hidden md:flex ${sidebarOpen ? 'w-64' : 'w-20'} flex-shrink-0 border-r flex-col transition-all duration-300 z-30 sticky top-0 h-screen ${
+          isLight ? 'bg-white border-slate-200' : 'bg-[#1a1b24] border-[#262837]'
         }`}
       >
         {/* Logo */}
-        <div className={`h-16 flex items-center justify-between px-4 border-b ${
-          isLight ? 'border-slate-200' : 'border-[#2C333F]'
+        <div className={`h-24 flex items-center justify-center px-4 border-b ${
+          isLight ? 'border-slate-200' : 'border-[#262837]'
         }`}>
-          {sidebarOpen && (
-            <span className="text-base font-bold text-[#FFD60A] tracking-wide truncate">
-              ⚡ Admin Portal
-            </span>
+          {sidebarOpen ? (
+            <div className="flex items-center gap-2 cursor-pointer" onClick={() => setSidebarOpen(false)}>
+              <span className="text-[28px] text-[#FFD60A]">⚡</span>
+              <span className="text-[20px] font-extrabold text-[#FFD60A] tracking-tight">
+                Admin Portal
+              </span>
+            </div>
+          ) : (
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="text-[28px] cursor-pointer hover:scale-110 transition-transform text-[#FFD60A]"
+            >
+              ⚡
+            </button>
           )}
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className={`hover:text-white transition-colors ml-auto ${isLight ? 'text-slate-500' : 'text-[#999DAA]'}`}
-            title="Toggle Sidebar"
-          >
-            {sidebarOpen ? '◀' : '▶'}
-          </button>
         </div>
 
         {/* Desktop Nav */}
@@ -274,7 +283,7 @@ export default function AdminLayout({ children }) {
               <span className={`inline-block mt-1 text-[10px] px-2 py-0.5 rounded-full font-bold ${
                 adminUser.accountType === 'Superadmin'
                   ? 'bg-[#FFD60A]/20 text-[#FFD60A]'
-                  : 'bg-blue-500/20 text-blue-400'
+                  : 'bg-purple-100 text-purple-700'
               }`}>
                 {adminUser.accountType}
               </span>
@@ -302,12 +311,17 @@ export default function AdminLayout({ children }) {
           />
 
           {/* Fixed Drawer Panel */}
-          <div className={`fixed top-0 left-0 bottom-0 w-64 border-r z-50 flex flex-col justify-between py-4 px-2 shadow-2xl transition-transform duration-300 overflow-y-auto custom-scrollbar ${
-            isLight ? 'bg-white border-slate-200' : 'bg-[#161D29] border-[#2C333F]'
+          <div className={`fixed top-0 left-0 bottom-0 w-64 border-r z-50 flex flex-col justify-between py-4 shadow-2xl transition-transform duration-300 overflow-y-auto custom-scrollbar ${
+            isLight ? 'bg-white border-slate-200' : 'bg-[#1a1b24] border-[#262837]'
           }`}>
             <div>
-              <div className="flex items-center justify-between px-4 pb-3 border-b border-[#2C333F]">
-                <span className="text-base font-bold text-[#FFD60A]">⚡ Admin Portal</span>
+              <div className="flex items-center justify-between px-6 pb-6 pt-2 border-b border-[#262837]">
+                <div className="flex items-center gap-2">
+                  <span className="text-[24px] text-[#FFD60A]">⚡</span>
+                  <span className="text-[18px] font-extrabold text-[#FFD60A] tracking-tight">
+                    Admin Portal
+                  </span>
+                </div>
                 <button
                   onClick={() => setMobileDrawerOpen(false)}
                   className="p-1 rounded-lg text-[#AFB2BF] hover:text-white"
@@ -319,7 +333,7 @@ export default function AdminLayout({ children }) {
               {renderNavLinks(true)}
             </div>
 
-            <div className="border-t p-4 border-[#2C333F] mt-4">
+            <div className="border-t p-4 border-[#262837] mt-4">
               <div className="mb-3">
                 <p className="text-xs truncate text-[#999DAA]">{adminUser.email}</p>
                 <span className="inline-block mt-1 text-[10px] px-2 py-0.5 rounded-full font-bold bg-[#FFD60A]/20 text-[#FFD60A]">
@@ -344,56 +358,28 @@ export default function AdminLayout({ children }) {
       {/* ──────────────────────────────────────────────────────────── */}
       {/* MAIN CONTENT CONTAINER                                       */}
       {/* ──────────────────────────────────────────────────────────── */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 bg-[#f4f5f8]">
         
         {/* Topbar */}
-        <header className={`h-16 border-b flex items-center justify-between px-4 sm:px-6 flex-shrink-0 ${
-          isLight ? 'bg-white border-slate-200' : 'bg-[#161D29] border-[#2C333F]'
-        }`}>
+        <header className="h-[52px] bg-white border-b border-gray-200 flex items-center justify-between px-4 flex-shrink-0">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileDrawerOpen(true)}
-              className="md:hidden p-2 rounded-lg text-[#AFB2BF] hover:text-white bg-[#2C333F] cursor-pointer"
+              className="p-1.5 rounded text-gray-500 hover:text-gray-800 transition-colors"
               aria-label="Open Admin Menu"
             >
-              ☰
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
             </button>
-            <div className={`text-sm capitalize font-medium ${isLight ? 'text-slate-600' : 'text-[#AFB2BF]'}`}>
-              {location.pathname.replace('/admin/', '').replace(/-/g, ' ') || 'Dashboard'}
-            </div>
           </div>
 
-          <div className="flex items-center gap-5">
-            {/* Theme Toggle */}
-            <button
-              onClick={() => setTheme(isLight ? 'dark' : 'light')}
-              title={`Switch to ${isLight ? 'Dark' : 'Light'} Mode`}
-              className={`p-2 rounded-full transition-all duration-200 border ${
-                isLight 
-                  ? 'bg-slate-100 border-slate-300 text-amber-600 hover:bg-slate-200' 
-                  : 'bg-[#2C333F] border-[#3E4553] text-[#FFD60A] hover:bg-[#3E4553]'
-              }`}
-            >
-              {isLight ? (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-              ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
-              )}
-            </button>
-
+          <div className="flex items-center gap-4">
             {/* Notification Bell */}
             <div className="relative" ref={notifRef}>
               <button
                 onClick={() => setNotifOpen(!notifOpen)}
-                className={`p-2 rounded-full relative transition-colors border ${
-                  isLight 
-                    ? 'bg-slate-100 border-slate-300 text-slate-700 hover:bg-slate-200' 
-                    : 'bg-[#2C333F] border-[#3E4553] text-[#F1F2FF] hover:bg-[#3E4553]'
-                }`}
+                className="p-1.5 rounded-full text-gray-500 hover:text-gray-800 transition-colors relative"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -406,23 +392,21 @@ export default function AdminLayout({ children }) {
               </button>
 
               {notifOpen && (
-                <div className={`absolute right-0 mt-3 w-80 rounded-2xl shadow-2xl border z-50 overflow-hidden ${
-                  isLight ? 'bg-white border-slate-200 text-slate-900' : 'bg-[#12161F] border-[#252C3A] text-white'
-                }`}>
-                  <div className="px-5 py-4 flex items-center justify-between border-b border-[#252C3A]">
+                <div className="absolute right-0 mt-3 w-80 rounded-xl shadow-xl border bg-white border-gray-200 text-gray-800 z-50 overflow-hidden">
+                  <div className="px-5 py-4 flex items-center justify-between border-b border-gray-100">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-bold text-base">Notifications</h3>
-                      <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                      <h3 className="font-bold text-sm">Notifications</h3>
+                      <span className="w-2 h-2 rounded-full bg-purple-600"></span>
                     </div>
                   </div>
 
-                  <div className="flex border-b border-[#252C3A] px-4 pt-2 text-xs font-semibold text-[#8E95A5]">
+                  <div className="flex border-b border-gray-100 px-4 pt-2 text-xs font-semibold text-gray-500">
                     <button
                       onClick={() => setTabFilter('all')}
                       className={`pb-2.5 px-3 border-b-2 transition-all ${
                         tabFilter === 'all'
-                          ? 'border-blue-500 text-white font-bold'
-                          : 'border-transparent hover:text-slate-300'
+                          ? 'border-purple-600 text-purple-700 font-bold'
+                          : 'border-transparent text-gray-500 hover:text-gray-700'
                       }`}
                     >
                       All
@@ -431,24 +415,24 @@ export default function AdminLayout({ children }) {
                       onClick={() => setTabFilter('unread')}
                       className={`pb-2.5 px-3 border-b-2 transition-all ${
                         tabFilter === 'unread'
-                          ? 'border-blue-500 text-white font-bold'
-                          : 'border-transparent hover:text-slate-300'
+                          ? 'border-purple-600 text-purple-700 font-bold'
+                          : 'border-transparent text-gray-500 hover:text-gray-700'
                       }`}
                     >
                       Unread ({unreadCount})
                     </button>
                   </div>
 
-                  <div className="max-h-72 overflow-y-auto divide-y divide-[#252C3A]">
+                  <div className="max-h-72 overflow-y-auto divide-y divide-gray-100">
                     {displayedNotifs.length === 0 ? (
                       <div className="py-12 px-6 flex flex-col items-center justify-center text-center">
-                        <div className="w-14 h-14 rounded-full bg-[#1C2230] flex items-center justify-center text-[#6C7589] mb-4">
-                          <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 mb-3">
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                           </svg>
                         </div>
-                        <h4 className="text-sm font-bold text-white mb-1">All caught up!</h4>
-                        <p className="text-xs text-[#8E95A5]">You have no new notifications</p>
+                        <h4 className="text-xs font-bold text-gray-700 mb-1">All caught up!</h4>
+                        <p className="text-[11px] text-gray-500">You have no new notifications</p>
                       </div>
                     ) : (
                       displayedNotifs.map((n) => (
@@ -456,25 +440,25 @@ export default function AdminLayout({ children }) {
                           key={n.id}
                           to={n.link}
                           onClick={() => setNotifOpen(false)}
-                          className="block px-4 py-3.5 hover:bg-[#1A202C] transition-colors"
+                          className="block px-4 py-3 hover:bg-gray-50 transition-colors"
                         >
                           <div className="flex justify-between items-start mb-1">
-                            <span className="font-semibold text-xs text-[#FFD60A]">{n.title}</span>
-                            <span className="text-[10px] text-[#8E95A5]">
+                            <span className="font-semibold text-xs text-purple-600">{n.title}</span>
+                            <span className="text-[10px] text-gray-400">
                               {new Date(n.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </span>
                           </div>
-                          <p className="text-xs text-[#999DAA] line-clamp-2">{n.message}</p>
+                          <p className="text-[11px] text-gray-600 line-clamp-2">{n.message}</p>
                         </Link>
                       ))
                     )}
                   </div>
 
-                  <div className="px-5 py-3 border-t border-[#252C3A] flex items-center justify-between text-xs text-[#8E95A5] bg-[#0E121A]">
+                  <div className="px-5 py-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500 bg-gray-50">
                     <Link
                       to="/admin/contacts"
                       onClick={() => setNotifOpen(false)}
-                      className="flex items-center gap-1.5 hover:text-white transition-colors"
+                      className="flex items-center gap-1.5 hover:text-purple-700 transition-colors font-medium"
                     >
                       <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -483,7 +467,7 @@ export default function AdminLayout({ children }) {
                     </Link>
                     <button
                       onClick={() => loadNotifications()}
-                      className="flex items-center gap-1.5 hover:text-white transition-colors"
+                      className="flex items-center gap-1.5 hover:text-purple-700 transition-colors font-medium"
                     >
                       Refresh
                     </button>
@@ -492,19 +476,28 @@ export default function AdminLayout({ children }) {
               )}
             </div>
 
-            {/* Profile Badge */}
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-full bg-[#EF4444] text-white flex items-center justify-center font-bold text-sm shadow-md">
-                {((adminUser.firstName || 'S')[0] + (adminUser.lastName || 'U')[0]).toUpperCase()}
-              </div>
+            {/* Profile Avatar (Generic gray circle like reference) */}
+            <div className="w-8 h-8 rounded-full bg-gray-200 border-2 border-gray-300 flex items-center justify-center overflow-hidden mr-2">
+              <svg className="w-5 h-5 text-gray-400 mt-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+              </svg>
             </div>
           </div>
         </header>
 
+        {/* Breadcrumb Bar */}
+        <div className="bg-white border-b border-gray-200 px-6 py-2.5 text-[13px] shadow-sm flex items-center">
+          <Link to="/admin/dashboard" className="text-purple-600 font-semibold hover:underline decoration-1 underline-offset-2">
+            Home
+          </Link>
+          <span className="mx-2 text-gray-400">/</span>
+          <span className="text-gray-500 capitalize">
+            {location.pathname.replace('/admin/', '').replace(/-/g, ' ') || 'Dashboard'}
+          </span>
+        </div>
+
         {/* Content */}
-        <main className={`flex-1 overflow-y-auto p-6 transition-colors duration-300 ${
-          isLight ? 'bg-slate-50 text-slate-900' : 'bg-[#000814] text-[#F1F2FF]'
-        }`}>
+        <main className="flex-1 overflow-y-auto p-6 text-gray-800">
           {children}
         </main>
       </div>
