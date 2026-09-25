@@ -206,8 +206,9 @@ export function useMessages(conversationId, explicitToken = null) {
         console.error('Attachment upload failed, attempting text delivery:', err);
         if (caption && caption.trim()) {
           await handleSendMessage(caption.trim(), 'TEXT', null);
+        } else {
+          throw err;
         }
-        throw err;
       }
     },
     [conversationId, token, handleSendMessage]

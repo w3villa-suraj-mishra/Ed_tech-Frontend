@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 import AdminLayout from '../../../components/admin/AdminLayout';
+import { AdminProtectedRoute } from '../../../components/admin/AdminUI';
 import ConversationFilters from '../components/ConversationFilters';
 import ConversationList from '../components/ConversationList';
 import MessageList from '../components/MessageList';
@@ -18,13 +19,21 @@ import { FiArrowLeft, FiUserCheck, FiBookOpen } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 
 export default function AdminChatPage() {
+  return (
+    <AdminProtectedRoute>
+      <AdminChatPageInner />
+    </AdminProtectedRoute>
+  );
+}
+
+function AdminChatPageInner() {
   const reduxToken = useSelector((state) => state?.auth?.token);
   const reduxUser = useSelector((state) => state?.profile?.user);
 
   const token =
     (typeof window !== 'undefined' ? localStorage.getItem('adminToken') : null) ||
-    reduxToken ||
-    (typeof window !== 'undefined' ? localStorage.getItem('token') : null);
+    (typeof window !== 'undefined' ? localStorage.getItem('token') : null) ||
+    reduxToken;
 
   const adminStoredUser = React.useMemo(() => {
     try {
@@ -52,6 +61,9 @@ export default function AdminChatPage() {
   const [selectedAdminFilter, setSelectedAdminFilter] = useState('');
   const [adminsList, setAdminsList] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
+  const hasLoadedOnceRef = useRef(false);
+  const selectedIdRef = useRef(null);
+  const initialUrlIdRef = useRef(searchParams.get('id'));
 
   // Mobile navigation state
   const [showMobileChat, setShowMobileChat] = useState(false);
@@ -83,50 +95,73 @@ export default function AdminChatPage() {
   } = useTypingIndicator(activeConversationId, adminName);
 
   // Fetch admin conversations list
-  const loadConversations = useCallback(async () => {
-    if (!token) return;
-    try {
-      setLoadingList(true);
-      const params = { limit: 50 };
-
-      if (activeFilter === 'MY_CHATS') {
-        params.myChatsOnly = 'true';
-      } else if (activeFilter !== 'ALL') {
-        params.status = activeFilter;
-      }
-
-      if (selectedAdminFilter) {
-        params.assignedTo = selectedAdminFilter;
-      }
-
-      if (searchTerm.trim()) {
-        params.search = searchTerm.trim();
-      }
-
-      const data = await fetchAdminConversations(params, token);
-      const list = data.conversations || [];
-      setConversations(list);
-
-      // Auto-select conversation if query param provided or keep current active updated
-      const urlId = searchParams.get('id');
-      if (urlId) {
-        const found = list.find((c) => String(c.id) === String(urlId));
-        if (found) {
-          setSelectedConversation(found);
-          setShowMobileChat(true);
+  const loadConversations = useCallback(
+    async (isSilent = false) => {
+      if (!token) return;
+      try {
+        if (!isSilent && !hasLoadedOnceRef.current) {
+          setLoadingList(true);
         }
-      } else if (selectedConversation) {
-        const updated = list.find((c) => c.id === selectedConversation.id);
-        if (updated) setSelectedConversation(updated);
+        const params = { limit: 50 };
+
+        if (activeFilter === 'MY_CHATS') {
+          params.myChatsOnly = 'true';
+        } else if (activeFilter !== 'ALL') {
+          params.status = activeFilter;
+        }
+
+        if (selectedAdminFilter) {
+          params.assignedTo = selectedAdminFilter;
+        }
+
+        if (searchTerm.trim()) {
+          params.search = searchTerm.trim();
+        }
+
+        const data = await fetchAdminConversations(params, token);
+        const list = data.conversations || [];
+        setConversations(list);
+        hasLoadedOnceRef.current = true;
+
+        // Auto-select conversation on initial load or preserve current active selection
+        const targetId = selectedIdRef.current || initialUrlIdRef.current;
+        if (initialUrlIdRef.current) {
+          initialUrlIdRef.current = null;
+        }
+        if (targetId && !selectedIdRef.current) {
+          selectedIdRef.current = targetId;
+        }
+
+        setSelectedConversation((prev) => {
+          const effectiveId = selectedIdRef.current || prev?.id;
+          if (!effectiveId) return prev;
+          const updated = list.find((c) => String(c.id) === String(effectiveId));
+          if (!updated) return prev;
+          if (
+            prev &&
+            prev.id === updated.id &&
+            prev.status === updated.status &&
+            prev.assignedTo === updated.assignedTo &&
+            prev.lastMessageAt === updated.lastMessageAt &&
+            prev.unreadCount === updated.unreadCount
+          ) {
+            return prev;
+          }
+          return updated;
+        });
+      } catch (err) {
+        console.error('Error fetching admin conversations:', err);
+      } finally {
+        if (!isSilent) {
+          setLoadingList(false);
+        }
       }
-    } catch (err) {
-      console.error('Error fetching admin conversations:', err);
-    } finally {
-      setLoadingList(false);
-    }
-  }, [token, activeFilter, selectedAdminFilter, searchTerm, searchParams]);
+    },
+    [token, activeFilter, selectedAdminFilter, searchTerm]
+  );
 
   useEffect(() => {
+    hasLoadedOnceRef.current = false;
     loadConversations();
   }, [loadConversations]);
 
@@ -149,24 +184,24 @@ export default function AdminChatPage() {
           updated.splice(index, 1);
           return [conv, ...updated];
         } else {
-          // If conversation wasn't in current list, reload from API
-          loadConversations();
+          // If conversation wasn't in current list, reload from API silently
+          loadConversations(true);
           return prev;
         }
       });
     };
 
     const handleUnreadUpdate = () => {
-      loadConversations();
+      loadConversations(true);
     };
 
     const handleStatusUpdate = ({ conversationId, status }) => {
       setConversations((prev) =>
         prev.map((c) => (String(c.id) === String(conversationId) ? { ...c, status } : c))
       );
-      if (selectedConversation && String(selectedConversation.id) === String(conversationId)) {
-        setSelectedConversation((prev) => (prev ? { ...prev, status } : prev));
-      }
+      setSelectedConversation((prev) =>
+        prev && String(prev.id) === String(conversationId) ? { ...prev, status } : prev
+      );
     };
 
     socket.on(SOCKET_EVENTS.MESSAGE_NEW, handleIncomingMessage);
@@ -178,16 +213,16 @@ export default function AdminChatPage() {
       socket.off(SOCKET_EVENTS.UNREAD_UPDATE, handleUnreadUpdate);
       socket.off(SOCKET_EVENTS.CONVERSATION_STATUS, handleStatusUpdate);
     };
-  }, [socket, activeConversationId, selectedConversation, loadConversations]);
+  }, [socket, activeConversationId, loadConversations]);
 
-  // Auto-refresh conversations in REST mode
+  // Auto-refresh conversations silently in REST mode without flashing skeletons
   useEffect(() => {
     if (!token) return;
 
     const interval = setInterval(() => {
       if (typeof document !== 'undefined' && document.hidden) return;
       if (!socket?.socket?.connected || socket?.isRestFallback) {
-        loadConversations();
+        loadConversations(true);
       }
     }, 4500);
 
@@ -239,6 +274,7 @@ export default function AdminChatPage() {
   };
 
   const handleSelectConversation = (conv) => {
+    selectedIdRef.current = conv?.id || null;
     setSelectedConversation(conv);
     setShowMobileChat(true);
   };

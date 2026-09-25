@@ -42,10 +42,10 @@ export function useChat() {
   }, [location.pathname]);
 
   // Load user's conversations
-  const loadConversations = useCallback(async () => {
+  const loadConversations = useCallback(async (isSilent = false) => {
     if (!token) return;
     try {
-      setLoading(true);
+      if (!isSilent) setLoading(true);
       const data = await fetchUserConversations({ limit: 10 }, token);
       const convs = data.conversations || [];
       setConversations(convs);
@@ -55,15 +55,13 @@ export function useChat() {
       setUnreadTotal(total);
 
       // If no active conversation selected yet, pick the latest one
-      if (convs.length > 0 && !activeConversation) {
-        setActiveConversation(convs[0]);
-      }
+      setActiveConversation((prev) => prev || (convs.length > 0 ? convs[0] : null));
     } catch (err) {
       console.error('Error fetching conversations:', err);
     } finally {
-      setLoading(false);
+      if (!isSilent) setLoading(false);
     }
-  }, [token, activeConversation]);
+  }, [token]);
 
   useEffect(() => {
     loadConversations();
