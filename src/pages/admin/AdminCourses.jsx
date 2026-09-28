@@ -309,10 +309,15 @@ function CoursesInner() {
           <AdminInput label="Course Name" value={form.courseName || ''} onChange={setF('courseName')} />
           <AdminTextarea label="Description" value={form.courseDescription || ''} onChange={setF('courseDescription')} rows={3} />
           <AdminTextarea label="What You Will Learn" value={form.whatYouWillLearn || ''} onChange={setF('whatYouWillLearn')} rows={2} />
-          <div className="grid grid-cols-2 gap-3">
-            <AdminInput label="Price (₹)" type="number" value={form.price ?? ''} onChange={setF('price')} />
-            <AdminInput label="Tag" value={form.tag || ''} onChange={setF('tag')} />
+          <div className="p-3 bg-purple-50/50 rounded-xl border border-purple-100 space-y-2">
+            <span className="text-xs font-bold text-purple-900 uppercase">Subscription Plan Prices (₹)</span>
+            <div className="grid grid-cols-3 gap-2">
+              <AdminInput label="Basic (1 Mo)" type="number" value={form.basicPrice ?? 499} onChange={setF('basicPrice')} />
+              <AdminInput label="Plus (1 Yr)" type="number" value={form.price ?? 4999} onChange={setF('price')} />
+              <AdminInput label="Pro (2 Yrs)" type="number" value={form.proPrice ?? 6999} onChange={setF('proPrice')} />
+            </div>
           </div>
+          <AdminInput label="Tag" value={form.tag || ''} onChange={setF('tag')} />
           <div className="grid grid-cols-2 gap-3 p-3 bg-white rounded-xl border border-gray-200">
             <div>
               <AdminSelect label="Discount Type" value={form.discountType || 'none'} onChange={setF('discountType')}>

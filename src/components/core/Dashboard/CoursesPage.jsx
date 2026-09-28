@@ -5,6 +5,7 @@ import { getAllCourses } from "../../../services/operations/courseDetailsAPI";
 import { buyCourse } from "../../../services/operations/studentFeaturesAPI";
 import { addToCart } from "../../../services/slices/cartSlice";
 import { useNavigate } from "react-router-dom";
+import CourseCard from "../Course/CourseCard";
 import {
   FiBookOpen,
   FiClock,
@@ -16,13 +17,18 @@ import {
   FiArrowRight,
   FiPlay,
   FiMoreVertical,
-  FiAward
+  FiAward,
+  FiChevronLeft,
+  FiChevronRight
 } from "react-icons/fi";
 import { FaFire, FaGraduationCap } from "react-icons/fa";
+
+const ITEMS_PER_PAGE = 10;
 
 const CoursesPage = ({ defaultTab = "your-courses" }) => {
   const { token } = useSelector((state) => state.auth);
   const { user } = useSelector((state) => state.profile);
+  const { cart = [] } = useSelector((state) => state.cart);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -32,8 +38,13 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("recently-accessed");
-  const [viewMode, setViewMode] = useState("list"); // 'list' or 'grid'
+  const [viewMode, setViewMode] = useState("grid"); // 'grid' or 'list'
   const [openMenuId, setOpenMenuId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeSubTab, searchQuery, sortOption]);
 
   useEffect(() => {
     if (defaultTab === "buy-courses") {
@@ -156,6 +167,10 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
   };
 
   const displayedCourses = getDisplayedCourses();
+  const totalCourses = displayedCourses.length;
+  const totalPages = Math.ceil(totalCourses / ITEMS_PER_PAGE) || 1;
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedCourses = displayedCourses.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   return (
     <div className="w-full space-y-6 text-gray-800 pb-10 font-sans">
@@ -335,155 +350,90 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
       {loading ? (
         <div className="py-20 text-center text-xs text-gray-400">Loading courses...</div>
       ) : displayedCourses.length > 0 ? (
-        <div className={viewMode === "grid" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" : "space-y-4"}>
-          {displayedCourses.map((course) => {
-            const courseId = course._id || course.id;
-            const progressPct = course.progressPercentage || 0;
-            const totalLecturesCount = course.courseContent?.reduce((acc, sec) => acc + (sec.subSection?.length || 0), 0) || course.totalLessons || 20;
-            const completedCount = course.completedVideos?.length || Math.round((progressPct / 100) * totalLecturesCount);
-            
-            // Resolve course-specific user enrollment & plan
-            const enrollmentRecord = course.userEnrollment || enrolledCourses.find((c) => String(c._id || c.id) === String(courseId));
-            const isSilverExpired = enrollmentRecord?.plan === 'silver' && enrollmentRecord?.expiresAt && new Date(enrollmentRecord.expiresAt) <= new Date();
-            const currentPlan = isSilverExpired ? 'expired' : (enrollmentRecord?.plan || (course.studentsEnrolled?.includes(token ? user?._id || user?.id : null) ? 'gold' : 'free'));
-            const isEnrolled = currentPlan === 'silver' || currentPlan === 'gold' || currentPlan === 'free';
-            const formattedExpiryDate = enrollmentRecord?.expiresAt ? new Date(enrollmentRecord.expiresAt).toLocaleDateString('en-GB') : null;
+        <div className="space-y-6">
+          <div className={viewMode === "grid" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" : "space-y-4"}>
+            {paginatedCourses.map((course) => {
+              const courseId = course._id || course.id;
+              
+              // Resolve course-specific user enrollment & plan
+              const enrollmentRecord = course.userEnrollment || enrolledCourses.find((c) => String(c._id || c.id) === String(courseId));
+              const isSilverExpired = enrollmentRecord?.plan === 'silver' && enrollmentRecord?.expiresAt && new Date(enrollmentRecord.expiresAt) <= new Date();
+              const currentPlan = isSilverExpired ? 'expired' : (enrollmentRecord?.plan || (course.studentsEnrolled?.includes(token ? user?._id || user?.id : null) ? 'gold' : null));
+              const isEnrolled = activeSubTab === "buy" ? false : (currentPlan === 'silver' || currentPlan === 'gold' || currentPlan === 'pro' || currentPlan === 'plus' || currentPlan === 'basic' || (user?.courses?.some(c => String(c._id || c.id || c) === String(courseId))));
 
-            return (
-              <div
-                key={courseId}
-                className="bg-white border border-gray-200/80 hover:border-indigo-200 rounded-2xl p-4 sm:p-5 transition-all duration-300 shadow-xs hover:shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-5 relative group"
-              >
-                {/* Course Thumbnail & Details Left Column */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 min-w-0 flex-1">
-                  <div 
-                    onClick={() => navigate(`/courses/${courseId}`)}
-                    className="relative aspect-video w-full sm:w-44 rounded-xl overflow-hidden bg-gray-100 border border-gray-200 shrink-0 cursor-pointer"
-                  >
-                    <img
-                      src={course.thumbnail}
-                      alt={course.courseName}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
+              return (
+                <CourseCard
+                  key={courseId}
+                  course={course}
+                  isEnrolled={isEnrolled}
+                  userEnrollment={enrollmentRecord}
+                  viewMode={viewMode}
+                />
+              );
+            })}
+          </div>
 
-                  <div className="space-y-1.5 min-w-0 flex-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className={`inline-block text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full border ${
-                        currentPlan === 'gold' ? 'bg-[#FEF3C7] text-[#D97706] border-[#FDE68A]' :
-                        currentPlan === 'silver' ? 'bg-[#13AA92]/10 text-[#3BA7F2] border-[#13AA92]/30' :
-                        currentPlan === 'expired' ? 'bg-[#FEE2E2] text-[#DC2626] border-[#FECACA]' :
-                        'bg-gray-100 text-gray-600 border-gray-200'
-                      }`}>
-                        {currentPlan === 'gold' ? 'GOLD • ACTIVE' :
-                         currentPlan === 'silver' ? 'SILVER • ACTIVE' :
-                         currentPlan === 'expired' ? 'SILVER • EXPIRED' :
-                         'FREE'}
-                      </span>
+          {/* PAGINATION CONTROLS */}
+          {totalPages > 1 && (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 mt-4 border-t border-gray-200/80">
+              <span className="text-xs text-gray-500 font-medium">
+                Showing <span className="font-bold text-gray-800">{startIndex + 1}</span> to{" "}
+                <span className="font-bold text-gray-800">{Math.min(startIndex + ITEMS_PER_PAGE, totalCourses)}</span> of{" "}
+                <span className="font-bold text-gray-800">{totalCourses}</span> courses
+              </span>
 
-                      {currentPlan === 'silver' && formattedExpiryDate && (
-                        <span className="text-[10px] text-gray-500 font-semibold bg-gray-50 px-2 py-0.5 rounded border border-gray-200/60">
-                          Valid Until: {formattedExpiryDate}
-                        </span>
-                      )}
-                      {currentPlan === 'gold' && (
-                        <span className="text-[10px] text-amber-600 font-semibold bg-amber-50 px-2 py-0.5 rounded border border-amber-200/60">
-                          Lifetime Access
-                        </span>
-                      )}
-                    </div>
+              <div className="flex items-center gap-1.5">
+                {/* Previous Button */}
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => {
+                    setCurrentPage((prev) => Math.max(prev - 1, 1));
+                    window.scrollTo({ top: 300, behavior: "smooth" });
+                  }}
+                  className="flex items-center gap-1 px-3.5 py-2 rounded-xl border border-gray-200 text-xs font-semibold text-gray-600 hover:bg-gray-50 hover:text-gray-900 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer bg-white"
+                >
+                  <FiChevronLeft className="text-sm" />
+                  <span>Previous</span>
+                </button>
 
-                    <h3 
-                      onClick={() => navigate(`/courses/${courseId}`)}
-                      className="font-bold text-sm sm:text-base text-[#0F172A] hover:text-[#3BA7F2] cursor-pointer transition-colors truncate max-w-full"
-                    >
-                      {course.courseName}
-                    </h3>
-
-                    <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed font-normal">
-                      {course.courseDescription}
-                    </p>
-
-                    <div className="flex items-center gap-4 text-[11px] text-gray-400 flex-wrap pt-0.5 font-medium">
-                      <span className="flex items-center gap-1">
-                        <FiClock /> <span>{course?.totalDuration || "8h 30m"}</span>
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <FiBookOpen /> <span>{totalLecturesCount} Lessons</span>
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <FiAward /> <span>{course.instructions?.[0] || "Beginner"}</span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Progress Bar & Continue CTA Right Column */}
-                <div className="flex flex-col sm:flex-row md:flex-col items-start sm:items-center md:items-end justify-between md:justify-center gap-3 shrink-0 border-t md:border-t-0 border-gray-100 pt-3 md:pt-0">
-                  <div className="w-full sm:w-44 md:text-right space-y-1">
-                    <div className="flex items-center justify-between md:justify-end gap-2 text-xs font-bold text-[#3BA7F2]">
-                      <span>{progressPct}% Complete</span>
-                    </div>
-                    <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                      <div
-                        className="bg-[#3BA7F2] h-full rounded-full transition-all duration-300"
-                        style={{ width: `${progressPct}%` }}
-                      />
-                    </div>
-                    <span className="text-[10px] text-gray-400 font-medium block">
-                      {completedCount} / {totalLecturesCount} lessons
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-2 w-full sm:w-auto flex-wrap sm:flex-nowrap">
-                    <button
-                      onClick={() => navigate(`/s/courses/${courseId}/take`)}
-                      className="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-[#3BA7F2] hover:bg-[#3BA7F2] text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm shadow-indigo-500/20 cursor-pointer"
-                    >
-                      <span>Continue Learning</span>
-                      <FiPlay className="text-[10px]" />
-                    </button>
-
-                    {/* Three Dots Menu */}
-                    <div className="relative">
+                {/* Page Number Buttons */}
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: totalPages }).map((_, idx) => {
+                    const pageNum = idx + 1;
+                    return (
                       <button
-                        onClick={() => setOpenMenuId(openMenuId === courseId ? null : courseId)}
-                        className="p-2.5 rounded-xl bg-gray-50 border border-gray-200 text-gray-500 hover:text-gray-800 transition-colors cursor-pointer"
+                        key={pageNum}
+                        onClick={() => {
+                          setCurrentPage(pageNum);
+                          window.scrollTo({ top: 300, behavior: "smooth" });
+                        }}
+                        className={`w-8 h-8 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                          currentPage === pageNum
+                            ? "bg-[#3BA7F2] text-white shadow-xs"
+                            : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                        }`}
                       >
-                        <FiMoreVertical />
+                        {pageNum}
                       </button>
-
-                      {openMenuId === courseId && (
-                        <div className="absolute right-0 bottom-full mb-2 w-48 bg-white border border-gray-200 rounded-xl p-2 shadow-xl z-20 space-y-1 text-xs">
-                          <button
-                            onClick={() => {
-                              setOpenMenuId(null);
-                              navigate(`/courses/${courseId}`);
-                            }}
-                            className="w-full text-left px-2.5 py-1.5 text-gray-700 hover:bg-gray-50 rounded-lg font-medium cursor-pointer"
-                          >
-                            View Details
-                          </button>
-                          {isEnrolled && (
-                            <button
-                              onClick={() => {
-                                setOpenMenuId(null);
-                                navigate(`/s/courses/${courseId}/certificate`);
-                              }}
-                              className="w-full text-left px-2.5 py-1.5 text-[#3BA7F2] hover:bg-indigo-50 rounded-lg font-medium cursor-pointer"
-                            >
-                              View Certificate
-                            </button>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                    );
+                  })}
                 </div>
 
+                {/* Next Button */}
+                <button
+                  disabled={currentPage === totalPages}
+                  onClick={() => {
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+                    window.scrollTo({ top: 300, behavior: "smooth" });
+                  }}
+                  className="flex items-center gap-1 px-3.5 py-2 rounded-xl border border-gray-200 text-xs font-semibold text-gray-600 hover:bg-gray-50 hover:text-gray-900 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer bg-white"
+                >
+                  <span>Next</span>
+                  <FiChevronRight className="text-sm" />
+                </button>
               </div>
-            );
-          })}
+            </div>
+          )}
         </div>
       ) : (
         /* 4. CLEAN EMPTY STATE (EXACT MATCH TO REFERENCE SCREENSHOT) */

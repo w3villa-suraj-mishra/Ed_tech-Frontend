@@ -33,7 +33,45 @@ const Footer = () => {
               Empowering the next generation of engineers through structured curriculums, interactive coding playgrounds, and real-world project portfolios.
             </p>
 
-            {/* Social Icons moved to footer bottom */}
+            {/* Blue Social Icon Pill directly below paragraph */}
+            <div className="mt-1 flex items-center justify-center gap-3.5 bg-[#6EA8FE] px-6 py-2.5 rounded-full w-fit shadow-xs">
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noreferrer"
+                className="w-7 h-7 rounded-full bg-white flex items-center justify-center text-[#3B82F6] font-bold text-xs shadow-xs hover:scale-110 transition-transform"
+                aria-label="Twitter"
+              >
+                <FaTwitter />
+              </a>
+              <a
+                href="https://github.com"
+                target="_blank"
+                rel="noreferrer"
+                className="w-7 h-7 rounded-full bg-white flex items-center justify-center text-[#3B82F6] font-bold text-xs shadow-xs hover:scale-110 transition-transform"
+                aria-label="GitHub"
+              >
+                <FaGithub />
+              </a>
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noreferrer"
+                className="w-7 h-7 rounded-full bg-white flex items-center justify-center text-[#3B82F6] font-bold text-xs shadow-xs hover:scale-110 transition-transform"
+                aria-label="LinkedIn"
+              >
+                <FaLinkedinIn />
+              </a>
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                rel="noreferrer"
+                className="w-7 h-7 rounded-full bg-white flex items-center justify-center text-[#3B82F6] font-bold text-xs shadow-xs hover:scale-110 transition-transform"
+                aria-label="YouTube"
+              >
+                <FaYoutube />
+              </a>
+            </div>
           </div>
 
           {/* Col 2: Platform */}
@@ -64,23 +102,6 @@ const Footer = () => {
 
         </div>
 
-        {/* Social Pill */}
-        <div className="mt-6 flex justify-center">
-          <div className="flex items-center justify-center gap-4 bg-blue-50/70 px-8 py-3 rounded-full w-full max-w-sm md:max-w-[320px]">
-            <a href="https://twitter.com" target="_blank" rel="noreferrer" className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-blue-700 font-bold text-[13px] shadow-sm hover:scale-105 transition-transform">
-              <FaTwitter />
-            </a>
-            <a href="https://github.com" target="_blank" rel="noreferrer" className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-blue-700 font-bold text-[13px] shadow-sm hover:scale-105 transition-transform">
-              <FaGithub />
-            </a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-blue-700 font-bold text-[13px] shadow-sm hover:scale-105 transition-transform">
-              <FaLinkedinIn />
-            </a>
-            <a href="https://youtube.com" target="_blank" rel="noreferrer" className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-blue-700 font-bold text-[13px] shadow-sm hover:scale-105 transition-transform">
-              <FaYoutube />
-            </a>
-          </div>
-        </div>
         {/* Bottom Bar: Copyright & Links */}
         <div className="mt-4 flex flex-row items-center justify-between gap-4 text-xs text-gray-500">
           <p className="whitespace-nowrap sm:whitespace-normal">© {currentYear} CodeLearn Inc.</p>

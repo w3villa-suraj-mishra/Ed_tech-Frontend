@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { AiOutlineDown } from "react-icons/ai"
 import CourseSubSectionAccordion from "./CourseSubSectionAccordion"
 
-export default function CourseAccordionBar({ course, isActive, handleActive, courseId, isEnrolled }) {
+export default function CourseAccordionBar({ course, isActive, handleActive, courseId, isEnrolled, handlePromptBuy }) {
   const contentRef = useRef(null)
   const [active, setActive] = useState(false)
   const [height, setHeight] = useState(0)
@@ -16,35 +16,35 @@ export default function CourseAccordionBar({ course, isActive, handleActive, cou
   }, [active])
 
   return (
-    <div className="mb-4 rounded-2xl border border-white/10 bg-gradient-to-br from-[#0f172a] to-[#020617] shadow-xl backdrop-blur-xl transition-all duration-300 hover:shadow-2xl">
+    <div className="mb-3 rounded-2xl border border-gray-200/90 bg-white shadow-2xs transition-all duration-300 hover:border-[#3BA7F2]/40 overflow-hidden">
 
       {/* HEADER */}
       <div
         onClick={() => handleActive(course._id)}
-        className="flex cursor-pointer items-center justify-between px-6 py-5 group"
+        className="flex cursor-pointer items-center justify-between px-5 py-4 group bg-white hover:bg-gray-50/60 transition"
       >
         <div className="flex items-center gap-3">
 
           {/* ICON */}
           <div
             style={{ transform: active ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }}
-            className="flex items-center justify-center rounded-full bg-white/10 p-2 text-white group-hover:bg-blue-500/20"
+            className="flex items-center justify-center rounded-xl bg-gray-100 p-2 text-gray-600 group-hover:bg-[#3BA7F2]/10 group-hover:text-[#3BA7F2]"
           >
-            <AiOutlineDown size={18} />
+            <AiOutlineDown size={16} />
           </div>
 
           {/* TITLE */}
-          <h3 className="text-lg font-semibold text-white group-hover:text-blue-400 transition-all">
+          <h3 className="text-sm sm:text-base font-bold text-[#0F172A] group-hover:text-[#3BA7F2] transition-colors">
             {course?.sectionName}
           </h3>
         </div>
 
         {/* LECTURE COUNT & DURATION */}
         <div className="flex items-center gap-3">
-          <div className="text-sm font-medium text-yellow-400 bg-yellow-400/10 px-3 py-1 rounded-full">
+          <div className="text-xs font-semibold text-[#3BA7F2] bg-sky-50 px-2.5 py-1 rounded-lg border border-sky-100">
             {course?.subSection?.length || 0} Lectures
           </div>
-          <div className="text-sm font-medium text-richblack-300">
+          <div className="text-xs font-medium text-gray-400">
             {course?.totalDuration}
           </div>
         </div>
@@ -69,6 +69,8 @@ export default function CourseAccordionBar({ course, isActive, handleActive, cou
                 subSec={subSec} 
                 courseId={courseId}
                 sectionId={course._id}
+                isEnrolled={isEnrolled}
+                handlePromptBuy={handlePromptBuy}
               />
             </div>
           ))}

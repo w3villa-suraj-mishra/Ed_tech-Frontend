@@ -150,61 +150,74 @@ const Catalog = () => {
   const currentCourses = sortedCourses.slice(indexOfFirstCourse, indexOfLastCourse);
 
   // Dynamic Button Action Handler based on User state
+  const { cart } = useSelector((state) => state.cart);
+
   const renderAccessButton = (course) => {
     const courseId = String(course._id || course.id);
     const isEnrolled = enrolledCourseIds.has(courseId);
-    const isFree = Number(course.price) === 0;
+    const isInCart = cart.some((item) => String(item._id || item.id) === courseId);
 
     if (isEnrolled) {
       return (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/view-course/${courseId}/section/${course.courseContent?.[0]?._id || "1"}/sub-section/${course.courseContent?.[0]?.subSection?.[0]?._id || "1"}`);
-          }}
-          className="w-full py-3 bg-[#EFF6FF] border border-blue-200 text-blue-700 rounded-xl text-xs font-bold transition-all hover:bg-blue-600 hover:border-blue-600 hover:text-white flex items-center justify-center gap-1.5 shadow-sm"
-        >
-          <span>Continue Learning</span>
-          <VscArrowRight />
-        </button>
-      );
-    }
-
-    if (isFree) {
-      return (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!token) {
-              navigate("/login");
-            } else {
+        <div className="flex items-center gap-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
               navigate(`/courses/${courseId}`);
-            }
-          }}
-          className="w-full py-3 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-xs font-bold transition-all hover:bg-emerald-600 hover:border-emerald-600 hover:text-white flex items-center justify-center gap-1.5 shadow-sm"
-        >
-          <span>Start Learning</span>
-          <VscArrowRight />
-        </button>
+            }}
+            className="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-xl text-xs font-bold transition-all border border-gray-200"
+          >
+            Preview
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/view-course/${courseId}`);
+            }}
+            className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1"
+          >
+            <span>Go to Course</span>
+            <VscArrowRight />
+          </button>
+        </div>
       );
     }
 
     return (
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          if (!token) {
-            navigate("/login");
-          } else {
-            dispatch(addToCart(course));
-            navigate("/dashboard/cart");
-          }
-        }}
-        className="w-full py-3 bg-white text-[#4F8FF7] border border-blue-200 rounded-xl text-xs font-bold transition-all hover:bg-blue-600 hover:text-white hover:border-blue-600 shadow-sm flex items-center justify-center gap-1.5"
-      >
-        <span>Enroll Now</span>
-        <VscArrowRight />
-      </button>
+      <div className="flex items-center gap-2">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate(`/courses/${courseId}`);
+          }}
+          className="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-xl text-xs font-bold transition-all border border-gray-200"
+        >
+          Preview
+        </button>
+
+        {isInCart ? (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate("/cart");
+            }}
+            className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1"
+          >
+            <span>Go to Cart</span>
+            <VscArrowRight />
+          </button>
+        ) : (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              dispatch(addToCart(course));
+            }}
+            className="flex-1 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1"
+          >
+            <span>Add to Cart</span>
+          </button>
+        )}
+      </div>
     );
   };
 

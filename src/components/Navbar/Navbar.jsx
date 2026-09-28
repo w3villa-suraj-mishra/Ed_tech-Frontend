@@ -19,6 +19,7 @@ import { fetchCourseCategories, getAllCourses } from "../../services/operations/
 import NotificationBell from './NotificationBell';
 import { sidebarLinks } from '../../data/dashboard-links';
 import SidebarLink from '../core/Dashboard/SidebarLink';
+import CartPreview from '../../modules/cart/components/CartPreview';
 
 const Navbar = () => {
   const { token } = useSelector((state) => state.auth);
@@ -34,6 +35,7 @@ const Navbar = () => {
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [isCoursesOpen, setIsCoursesOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [isCartPreviewOpen, setIsCartPreviewOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -374,20 +376,28 @@ const Navbar = () => {
             {/* Real-time Notification Bell */}
             <NotificationBell />
 
-            {/* Cart Icon for Students */}
-            {token && user && user?.account_type === "Student" && (
-              <Link 
-                to="/dashboard/cart" 
-                className="relative p-2 rounded-xl text-gray-600 hover:text-[#3B82F6] hover:bg-gray-100 transition-colors"
-                title="Cart"
-              >
-                <AiOutlineShoppingCart className="text-xl" />
-                {totalItems > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 bg-blue-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                    {totalItems}
-                  </span>
-                )}
-              </Link>
+            {/* Cart Icon & Quick Preview Dropdown */}
+            {(!userRole || userRole === "Student") && (
+              <div className="relative">
+                <button
+                  onClick={() => setIsCartPreviewOpen(!isCartPreviewOpen)}
+                  className="relative p-2 rounded-xl text-gray-600 hover:text-[#3B82F6] hover:bg-gray-100 transition-colors cursor-pointer flex items-center justify-center"
+                  title="Cart"
+                  aria-label="View Cart"
+                >
+                  <AiOutlineShoppingCart className="text-xl" />
+                  {totalItems > 0 && (
+                    <span className="absolute -top-0.5 -right-0.5 bg-blue-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
+                      {totalItems}
+                    </span>
+                  )}
+                </button>
+
+                <CartPreview
+                  isOpen={isCartPreviewOpen}
+                  onClose={() => setIsCartPreviewOpen(false)}
+                />
+              </div>
             )}
 
             {/* Unauthenticated Login / Sign Up */}

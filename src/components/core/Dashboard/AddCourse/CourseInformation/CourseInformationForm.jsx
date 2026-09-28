@@ -147,6 +147,11 @@ export default function CourseInformationForm() {
       formData.append("courseName", data.courseTitle)
       formData.append("courseDescription", data.courseShortDesc)
       formData.append("price", data.coursePrice)
+      formData.append("planPrices", JSON.stringify({
+        basic: Number(data.basicPrice || 499),
+        plus: Number(data.coursePrice || 4999),
+        pro: Number(data.proPrice || 6999)
+      }))
       formData.append("tag", JSON.stringify(data.courseTags))
       formData.append("whatYouWillLearn", data.courseBenefits)
       formData.append("category", data.courseCategory)
@@ -214,44 +219,79 @@ export default function CourseInformationForm() {
       )}
     </div>
 
-    {/* PRICE & CATEGORY */}
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {/* PRICE */}
-      <div className="flex flex-col gap-2">
-        <label className="text-[13px] font-semibold text-slate-700">
-          Course Price <sup className="text-red-500">*</sup>
-        </label>
-        <div className="relative">
-          <input
-            {...register("coursePrice", { required: true })}
-            placeholder="0.00"
-            className="w-full rounded-xl bg-white px-10 py-3 text-[13px] text-slate-900 border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition placeholder:text-slate-400 shadow-sm"
-          />
-          <HiOutlineCurrencyRupee className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg" />
+    {/* 3 PLAN PRICING INPUTS (BASIC, PLUS, PRO) */}
+    <div className="space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+      <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-700">
+        Course Subscription Plan Pricing <sup className="text-red-500">*</sup>
+      </h3>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* BASIC PLAN */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[12px] font-bold text-slate-700">
+            Basic Plan (1 Mo) <sup className="text-red-500">*</sup>
+          </label>
+          <div className="relative">
+            <input
+              {...register("basicPrice", { required: true })}
+              placeholder="e.g. 499"
+              defaultValue={course?.planPrices?.basic || course?.pricing?.basicPrice || 499}
+              className="w-full rounded-xl bg-white pl-8 pr-3 py-2.5 text-[13px] text-slate-900 border border-slate-200 focus:border-blue-500 outline-none shadow-xs font-semibold"
+            />
+            <HiOutlineCurrencyRupee className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-base" />
+          </div>
         </div>
-        {errors.coursePrice && (
-          <span className="text-[11px] font-semibold text-red-500">Price is required</span>
-        )}
-      </div>
 
-      {/* CATEGORY */}
-      <div className="flex flex-col gap-2">
-        <label className="text-[13px] font-semibold text-slate-700">
-          Course Category <sup className="text-red-500">*</sup>
-        </label>
-        <select
-          {...register("courseCategory", { required: true })}
-          className="w-full rounded-xl bg-white px-4 py-3 text-[13px] text-slate-900 border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition shadow-sm appearance-none"
-        >
-          <option value="">Choose Category</option>
-          {courseCategories?.map((cat, i) => (
-            <option key={i} value={cat._id}>{cat.name}</option>
-          ))}
-        </select>
-        {errors.courseCategory && (
-          <span className="text-[11px] font-semibold text-red-500">Category is required</span>
-        )}
+        {/* PLUS PLAN */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[12px] font-bold text-slate-700">
+            Plus Plan (1 Yr) <sup className="text-red-500">*</sup>
+          </label>
+          <div className="relative">
+            <input
+              {...register("coursePrice", { required: true })}
+              placeholder="e.g. 4999"
+              defaultValue={course?.price || course?.planPrices?.plus || 4999}
+              className="w-full rounded-xl bg-white pl-8 pr-3 py-2.5 text-[13px] text-slate-900 border border-slate-200 focus:border-blue-500 outline-none shadow-xs font-semibold"
+            />
+            <HiOutlineCurrencyRupee className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-base" />
+          </div>
+        </div>
+
+        {/* PRO PLAN */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[12px] font-bold text-slate-700">
+            Pro Plan (2 Yrs) <sup className="text-red-500">*</sup>
+          </label>
+          <div className="relative">
+            <input
+              {...register("proPrice", { required: true })}
+              placeholder="e.g. 6999"
+              defaultValue={course?.planPrices?.pro || course?.pricing?.proPrice || 6999}
+              className="w-full rounded-xl bg-white pl-8 pr-3 py-2.5 text-[13px] text-slate-900 border border-slate-200 focus:border-blue-500 outline-none shadow-xs font-semibold"
+            />
+            <HiOutlineCurrencyRupee className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-base" />
+          </div>
+        </div>
       </div>
+    </div>
+
+    {/* CATEGORY */}
+    <div className="flex flex-col gap-2">
+      <label className="text-[13px] font-semibold text-slate-700">
+        Course Category <sup className="text-red-500">*</sup>
+      </label>
+      <select
+        {...register("courseCategory", { required: true })}
+        className="w-full rounded-xl bg-white px-4 py-3 text-[13px] text-slate-900 border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition shadow-sm appearance-none"
+      >
+        <option value="">Choose Category</option>
+        {courseCategories?.map((cat, i) => (
+          <option key={i} value={cat._id}>{cat.name}</option>
+        ))}
+      </select>
+      {errors.courseCategory && (
+        <span className="text-[11px] font-semibold text-red-500">Category is required</span>
+      )}
     </div>
 
     {/* TAGS */}

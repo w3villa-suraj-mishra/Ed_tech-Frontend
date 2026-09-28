@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { getUserEnrolledCourses } from "../../../services/operations/profileAPI"
 import ProgressBar from '@ramonak/react-progress-bar'
 import { useNavigate } from "react-router-dom"
@@ -9,6 +9,7 @@ import { FiClock } from 'react-icons/fi'
 export default function EnrolledCourses() {
   const { token } = useSelector((state) => state.auth)
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const [enrolledCourses, setEnrolledCourses] = useState(null)
   
@@ -29,10 +30,19 @@ export default function EnrolledCourses() {
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
     const sessionId = query.get("session_id");
+    const rawCourses = query.get("courses");
+    let coursesList = [];
+    if (rawCourses) {
+      try {
+        coursesList = JSON.parse(rawCourses);
+      } catch {
+        coursesList = [];
+      }
+    }
     if (sessionId && token) {
       (async () => {
         const { verifyPayment } = await import("../../../services/operations/studentFeaturesAPI");
-        await verifyPayment(sessionId, [], token, navigate, null);
+        await verifyPayment(sessionId, coursesList, token, navigate, dispatch);
         getEnrolledCourses();
       })();
     } else if (token) {

@@ -33,6 +33,8 @@ import VerifyOtp from "./pages/VerifyOtp.jsx";
 import OAuthSuccess from "./pages/OAuthSuccess.jsx";
 import CourseDetails from "./pages/CourseDetails.jsx";
 import ViewCourse from "./pages/ViewCourse.jsx";
+import CartPage from "./modules/cart/pages/CartPage";
+import CheckoutPage from "./modules/checkout/pages/CheckoutPage";
 import VideoDetails from "./components/core/ViewCourse/videoDetails.jsx";
 
 import PracticeCenter from "./pages/PracticeCenter";
@@ -42,6 +44,7 @@ import PreviousAttempts from "./pages/PreviousAttempts";
 import InstructorPracticeBuilder from "./pages/InstructorPracticeBuilder";
 import StudentCoursePracticePage from "./pages/StudentCoursePracticePage.jsx";
 import StudentCourseTestRunner from "./pages/StudentCourseTestRunner.jsx";
+import UpgradePlanPage from "./pages/UpgradePlanPage.jsx";
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -164,7 +167,11 @@ function App() {
           <Route path="/practice/daily-quiz"   element={<DailyQuiz />} />
           <Route path="/practice/topic font-sans" element={<TopicPractice />} />
           <Route path="/practice/topic"        element={<TopicPractice />} />
-          <Route path="/practice/attempts"    element={<PreviousAttempts />} />
+          <Route path="/cart font-sans"        element={<CartPage />} />
+          <Route path="/cart font-sans"        element={<CartPage />} />
+          <Route path="/cart"                 element={<CartPage />} />
+          <Route path="/checkout font-sans text-white" element={<CheckoutPage />} />
+          <Route path="/checkout"             element={<CheckoutPage />} />
 
           <Route path="/student-dashboard"    element={<StudentDashboard />} />
           <Route path="/instructor-dashboard" element={<InstructorDashboard />} />
@@ -172,7 +179,9 @@ function App() {
             <Route index                      element={<GlobalDashboard />} />
             <Route path="global"              element={<GlobalDashboard />} />
             <Route path="my-profile"          element={<MyProfile />} />
-            <Route path="cart"                element={<Cart />} />
+            <Route path="cart"                element={<CartPage />} />
+            <Route path="checkout font-sans text-white" element={<CheckoutPage />} />
+            <Route path="checkout"            element={<CheckoutPage />} />
             <Route path="courses"             element={<CoursesPage defaultTab="your-courses" />} />
             <Route path="enrolled-courses"    element={<CoursesPage defaultTab="your-courses" />} />
             <Route path="buy-courses"         element={<CoursesPage defaultTab="buy-courses" />} />
@@ -204,6 +213,9 @@ function App() {
           <Route path="/courses/:courseId/take/pratice-test/:testId/review/:attemptId" element={<StudentCourseTestRunner />} />
           <Route path="/s/courses/:courseId/certificate" element={<CourseCertificatePage />} />
           <Route path="/certificate/verify/:certificateId" element={<CourseCertificatePage />} />
+          <Route path="/upgrade"              element={<UpgradePlanPage />} />
+          <Route path="/upgrade-plan"         element={<UpgradePlanPage />} />
+          <Route path="/courses/:courseId/upgrade" element={<UpgradePlanPage />} />
           <Route path="/courses/:courseId"    element={<CourseDetails />} />
           <Route path="/view-course/:courseId" element={<ViewCourse />}>
             <Route
