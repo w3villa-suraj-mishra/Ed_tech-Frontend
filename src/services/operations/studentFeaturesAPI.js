@@ -18,7 +18,7 @@ export async function buyCourse(token, courses, userDetails, navigate, dispatch,
     }
 }
 
-export async function verifyPayment(sessionId, courses, token, navigate, dispatch) {
+export async function verifyPayment(sessionId, courses, token, navigate, dispatch, plan = 'gold', offerId = null) {
     const toastId = toast.loading("Verifying Payment....");
     if (typeof dispatch === 'function') {
         dispatch(setPaymentLoading(true));
@@ -29,7 +29,7 @@ export async function verifyPayment(sessionId, courses, token, navigate, dispatc
         const response = await apiConnector(
             "POST",
             COURSE_VERIFY_API,
-            { sessionId, courses },
+            { sessionId, courses, plan, offerId },
             {
                 Authorization: `Bearer ${token}`,
             }

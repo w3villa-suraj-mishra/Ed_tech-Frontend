@@ -27,22 +27,35 @@ export default function EnrolledCourses() {
     }
   };
 
+  const { cart = [] } = useSelector((state) => state.cart || {});
+
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
     const sessionId = query.get("session_id");
     const rawCourses = query.get("courses");
+    const plan = query.get("plan") || "gold";
+    const offerId = query.get("offerId") || null;
     let coursesList = [];
     if (rawCourses) {
       try {
-        coursesList = JSON.parse(rawCourses);
+        coursesList = JSON.parse(decodeURIComponent(rawCourses));
+        if (!Array.isArray(coursesList)) coursesList = [coursesList];
       } catch {
-        coursesList = [];
+        try {
+          coursesList = JSON.parse(rawCourses);
+          if (!Array.isArray(coursesList)) coursesList = [coursesList];
+        } catch {
+          coursesList = rawCourses.split(",").map(c => c.trim()).filter(Boolean);
+        }
       }
+    }
+    if ((!coursesList || coursesList.length === 0) && cart && cart.length > 0) {
+      coursesList = cart.map((c) => c._id || c.id).filter(Boolean);
     }
     if (sessionId && token) {
       (async () => {
         const { verifyPayment } = await import("../../../services/operations/studentFeaturesAPI");
-        await verifyPayment(sessionId, coursesList, token, navigate, dispatch);
+        await verifyPayment(sessionId, coursesList, token, navigate, dispatch, plan, offerId);
         getEnrolledCourses();
       })();
     } else if (token) {

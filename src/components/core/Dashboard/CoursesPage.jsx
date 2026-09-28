@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserEnrolledCourses } from "../../../services/operations/profileAPI";
 import { getAllCourses } from "../../../services/operations/courseDetailsAPI";
-import { buyCourse } from "../../../services/operations/studentFeaturesAPI";
+import { buyCourse, verifyPayment } from "../../../services/operations/studentFeaturesAPI";
 import { addToCart } from "../../../services/slices/cartSlice";
 import { useNavigate } from "react-router-dom";
 import CourseCard from "../Course/CourseCard";
@@ -60,9 +60,32 @@ const CoursesPage = ({ defaultTab = "your-courses" }) => {
       try {
         const queryParams = new URLSearchParams(window.location.search);
         const sessionId = queryParams.get("session_id");
+        const rawCourses = queryParams.get("courses");
+        const plan = queryParams.get("plan") || "gold";
+        const offerId = queryParams.get("offerId") || null;
+
+        let coursesList = [];
+        if (rawCourses) {
+          try {
+            coursesList = JSON.parse(decodeURIComponent(rawCourses));
+            if (!Array.isArray(coursesList)) coursesList = [coursesList];
+          } catch {
+            try {
+              coursesList = JSON.parse(rawCourses);
+              if (!Array.isArray(coursesList)) coursesList = [coursesList];
+            } catch {
+              coursesList = rawCourses.split(",").map(c => c.trim()).filter(Boolean);
+            }
+          }
+        }
+
+        // Fallback to items in cart if courses was not passed in the redirect URL
+        if ((!coursesList || coursesList.length === 0) && cart && cart.length > 0) {
+          coursesList = cart.map((c) => c._id || c.id).filter(Boolean);
+        }
+
         if (sessionId && token) {
-          const { verifyPayment } = require("../../../services/operations/studentFeaturesAPI");
-          await verifyPayment(sessionId, [], token, navigate, dispatch);
+          await verifyPayment(sessionId, coursesList, token, navigate, dispatch, plan, offerId);
         }
 
         if (token) {
