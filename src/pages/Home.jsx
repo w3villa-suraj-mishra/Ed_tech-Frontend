@@ -9,8 +9,10 @@ import LearningLanguageSection from '../components/core/HomePage/LearningLanguag
 import InstructorSection from '../components/core/HomePage/InstructorSection';
 import ExploreMore from '../components/core/HomePage/ExploreMore';
 import Reviewslider from '../components/Common/Reviewslider';
-import HeroStudentImg from "../assests/Images/hero_student_learning.jpg";
-import CTAIllustrationImg from "../assests/Images/cta_illustration.png";
+import HeroStudentImgWebp from "../assests/Images/hero_student_learning.webp";
+import HeroStudentImgJpg from "../assests/Images/hero_student_learning.jpg";
+import CTAIllustrationImgWebp from "../assests/Images/cta_illustration.webp";
+import CTAIllustrationImgPng from "../assests/Images/cta_illustration.png";
 import InstructorSlider from '../components/core/HomePage/InstructorSlider';
 import { getUserEnrolledCourses } from '../services/operations/profileAPI';
 import { getHomePageStats, fetchCourseCategories, getAllCourses } from '../services/operations/courseDetailsAPI';
@@ -486,11 +488,19 @@ const Home = () => {
 
               {/* Main Photo Card */}
               <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white aspect-[4/3.2] max-w-[530px] w-full bg-slate-100">
-                <img
-                  src={HeroStudentImg}
-                  alt="Student learning coding on CodeLearn"
-                  className="w-full h-full object-cover transform hover:scale-102 transition-transform duration-700"
-                />
+                <picture className="w-full h-full block">
+                  <source type="image/webp" srcSet={HeroStudentImgWebp} />
+                  <img
+                    src={HeroStudentImgJpg}
+                    alt="Student learning coding on CodeLearn"
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
+                    width="530"
+                    height="424"
+                    className="w-full h-full object-cover transform hover:scale-102 transition-transform duration-700"
+                  />
+                </picture>
               </div>
 
               {/* Floating Badge 1 (Top Left Overlapping Main Photo): Keep Learning Progress */}
@@ -991,6 +1001,8 @@ export default function InteractiveCounter() {
                       <img
                         src={course.thumbnail}
                         alt={course.courseName}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
@@ -1215,11 +1227,16 @@ export default function InteractiveCounter() {
 
             {/* Right Column: 3D Workspace Composition & Badges Artwork */}
             <div className="w-full lg:w-[52%] flex items-center justify-center lg:justify-end">
-              <img
-                src={CTAIllustrationImg}
-                alt="Accelerate Your Tech Career Today"
-                className="w-full h-auto max-h-[290px] sm:max-h-[320px] object-contain max-w-[540px] drop-shadow-sm pointer-events-none select-none -hue-rotate-60"
-              />
+              <picture className="w-full flex items-center justify-center lg:justify-end">
+                <source type="image/webp" srcSet={CTAIllustrationImgWebp} />
+                <img
+                  src={CTAIllustrationImgPng}
+                  alt="Accelerate Your Tech Career Today"
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-auto max-h-[290px] sm:max-h-[320px] object-contain max-w-[540px] drop-shadow-sm pointer-events-none select-none -hue-rotate-60"
+                />
+              </picture>
             </div>
 
           </div>
