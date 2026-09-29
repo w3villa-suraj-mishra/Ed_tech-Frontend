@@ -300,7 +300,7 @@ export default function PracticeTestsPage({ defaultType }) {
               {selectedCategory !== 'All' && (
                 <button
                   onClick={() => handleCategoryChange('All')}
-                  className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-[#3BA7F2] hover:text-[#13AA92] bg-blue-50 hover:bg-blue-100/70 border border-blue-100 px-4 py-2 rounded-xl transition-all cursor-pointer"
+                  className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-white hover:text-[#13AA92] bg-blue-50 hover:bg-blue-100/70 border border-blue-100 px-4 py-2 rounded-xl transition-all cursor-pointer"
                 >
                   <FiSliders className="text-xs" />
                   <span>View All Categories</span>
@@ -309,7 +309,7 @@ export default function PracticeTestsPage({ defaultType }) {
             </div>
 
             {/* QUICK ALTERNATIVES CARDS (3 Interactive Shortcuts) */}
-            <div className="relative z-10 pt-4">
+            {/* <div className="relative z-10 pt-4">
               <div className="text-left mb-4">
                 <span className="text-[11px] font-extrabold uppercase tracking-wider text-gray-400">
                   Recommended Learning & Practice Alternatives
@@ -318,7 +318,7 @@ export default function PracticeTestsPage({ defaultType }) {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
                 {/* 1. Daily Quiz Shortcut */}
-                <div
+                {/* <div
                   onClick={() => navigate('/practice/daily-quiz')}
                   className="p-5 rounded-2xl border border-gray-200/90 hover:border-amber-300 bg-gradient-to-b from-white to-amber-50/20 hover:to-amber-50/40 transition-all duration-200 shadow-2xs hover:shadow-xs cursor-pointer flex flex-col justify-between group"
                 >
@@ -337,10 +337,10 @@ export default function PracticeTestsPage({ defaultType }) {
                     <span>Take Today's Quiz</span>
                     <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
                   </div>
-                </div>
+                </div> */}
 
                 {/* 2. Topic Practice Shortcut */}
-                <div
+                {/* <div
                   onClick={() => navigate('/practice/topic')}
                   className="p-5 rounded-2xl border border-gray-200/90 hover:border-emerald-300 bg-gradient-to-b from-white to-emerald-50/20 hover:to-emerald-50/40 transition-all duration-200 shadow-2xs hover:shadow-xs cursor-pointer flex flex-col justify-between group"
                 >
@@ -359,10 +359,10 @@ export default function PracticeTestsPage({ defaultType }) {
                     <span>Practice by Topic</span>
                     <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
                   </div>
-                </div>
+                </div> */}
 
                 {/* 3. Browse Courses Shortcut */}
-                <div
+                {/* <div
                   onClick={() => navigate('/courses')}
                   className="p-5 rounded-2xl border border-gray-200/90 hover:border-blue-300 bg-gradient-to-b from-white to-blue-50/20 hover:to-blue-50/40 transition-all duration-200 shadow-2xs hover:shadow-xs cursor-pointer flex flex-col justify-between group"
                 >
@@ -381,12 +381,12 @@ export default function PracticeTestsPage({ defaultType }) {
                     <span>Browse All Courses</span>
                     <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
                   </div>
-                </div>
-              </div>
-            </div>
+                </div> */}
+              {/* </div> */}
+            {/* </div>  */}
 
             {/* Back to Center Button */}
-            <div className="pt-2">
+            {/* <div className="pt-2">
               <button
                 onClick={() => navigate('/practice')}
                 className="inline-flex items-center gap-2 bg-[#0F172A] hover:bg-slate-800 text-white font-bold text-xs px-6 py-3 rounded-full transition-all shadow-xs hover:shadow-md cursor-pointer"
@@ -394,7 +394,7 @@ export default function PracticeTestsPage({ defaultType }) {
                 <FiArrowLeft className="text-sm" />
                 <span>Return to Practice Center</span>
               </button>
-            </div>
+            </div> */}
 
           </div>
         )}
