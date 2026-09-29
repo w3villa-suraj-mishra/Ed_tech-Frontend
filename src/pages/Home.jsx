@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import HighLightText from '../components/core/HomePage/HighLightText';
@@ -218,6 +218,14 @@ const Home = () => {
   const [showAllCatModal, setShowAllCatModal] = useState(false);
   const [categorySearch, setCategorySearch] = useState("");
   const [activeFaq, setActiveFaq] = useState(null);
+  const [isHeroImgLoaded, setIsHeroImgLoaded] = useState(false);
+  const heroImgRef = useRef(null);
+
+  useEffect(() => {
+    if (heroImgRef.current && heroImgRef.current.complete) {
+      setIsHeroImgLoaded(true);
+    }
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -487,10 +495,23 @@ const Home = () => {
               </div>
 
               {/* Main Photo Card */}
-              <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white aspect-[4/3.2] max-w-[530px] w-full bg-slate-100">
-                <picture className="w-full h-full block">
+              <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white aspect-[4/3.2] max-w-[530px] w-full bg-slate-200">
+                {/* Instant Blurred LQIP Placeholder (renders in 0ms with zero blank flash) */}
+                <img
+                  src="data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAAAwBQCdASoYABIAPzmQu1gvKaWjqAqp4CcJQBUegYs7bxtOW9fVxH5/z9wltc/OLKnIQAD+1Z1CK6bU+cKSy19EVqSkIlnV33q84M9+4ZVqTWecXaMUZvEQIZ5GopbtucZ/M/dlh2EsNLaI845B727iwh8SmxMK/hRpzaY5HLE0Y9sc44igkwFLjlna0xSXOTEIIAQAAAA="
+                  alt=""
+                  aria-hidden="true"
+                  className={`absolute inset-0 w-full h-full object-cover filter blur-md scale-105 pointer-events-none transition-opacity duration-500 ${
+                    isHeroImgLoaded ? "opacity-0" : "opacity-100"
+                  }`}
+                />
+
+                {/* Full Resolution Preloaded WebP with Fallback */}
+                <picture className="w-full h-full block relative z-10">
+                  <source type="image/webp" srcSet={`${process.env.PUBLIC_URL || ""}/hero_student_learning.webp`} />
                   <source type="image/webp" srcSet={HeroStudentImgWebp} />
                   <img
+                    ref={heroImgRef}
                     src={HeroStudentImgJpg}
                     alt="Student learning coding on CodeLearn"
                     loading="eager"
@@ -498,7 +519,10 @@ const Home = () => {
                     decoding="async"
                     width="530"
                     height="424"
-                    className="w-full h-full object-cover transform hover:scale-102 transition-transform duration-700"
+                    onLoad={() => setIsHeroImgLoaded(true)}
+                    className={`w-full h-full object-cover transform hover:scale-102 transition-opacity duration-300 ${
+                      isHeroImgLoaded ? "opacity-100" : "opacity-0"
+                    }`}
                   />
                 </picture>
               </div>
