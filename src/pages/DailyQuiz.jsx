@@ -259,8 +259,30 @@ export default function DailyQuiz() {
             </div>
           </div>
         ) : (
-          <div className="bg-[#111422] border border-white/10 rounded-2xl p-12 text-center text-richblack-300">
-            No questions available for this quiz.
+          <div className="bg-[#111422] border border-white/10 rounded-2xl p-10 sm:p-14 text-center space-y-5">
+            <div className="w-16 h-16 rounded-2xl bg-amber-400/10 text-amber-400 border border-amber-400/20 flex items-center justify-center text-2xl mx-auto">
+              ⚡
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-xl font-bold text-white">No Daily Quiz Questions Available Right Now</h3>
+              <p className="text-xs sm:text-sm text-richblack-300 max-w-md mx-auto">
+                Today's quiz challenges are being refreshed. You can continue sharpening your skills with our Topic Practice or full-length Practice Tests!
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <button
+                onClick={() => navigate('/practice/topic')}
+                className="px-5 py-2.5 bg-[#3BA7F2] hover:bg-[#1d4ed8] text-white text-xs font-bold rounded-xl transition shadow-md"
+              >
+                Start Topic Practice
+              </button>
+              <button
+                onClick={() => navigate('/practice')}
+                className="px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-bold rounded-xl transition"
+              >
+                Back to Practice Center
+              </button>
+            </div>
           </div>
         )}
       </div>

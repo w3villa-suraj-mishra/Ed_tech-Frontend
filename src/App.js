@@ -38,6 +38,7 @@ import CheckoutPage from "./modules/checkout/pages/CheckoutPage";
 import VideoDetails from "./components/core/ViewCourse/videoDetails.jsx";
 
 import PracticeCenter from "./pages/PracticeCenter";
+import PracticeTestsPage from "./pages/PracticeTestsPage";
 import DailyQuiz from "./pages/DailyQuiz";
 import TopicPractice from "./pages/TopicPractice";
 import PreviousAttempts from "./pages/PreviousAttempts";
@@ -45,6 +46,7 @@ import InstructorPracticeBuilder from "./pages/InstructorPracticeBuilder";
 import StudentCoursePracticePage from "./pages/StudentCoursePracticePage.jsx";
 import StudentCourseTestRunner from "./pages/StudentCourseTestRunner.jsx";
 import UpgradePlanPage from "./pages/UpgradePlanPage.jsx";
+import NotFoundPage from "./pages/NotFoundPage";
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";

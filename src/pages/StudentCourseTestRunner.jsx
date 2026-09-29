@@ -135,15 +135,21 @@ export default function StudentCourseTestRunner() {
     setNotEnrolled(false);
     setErrorMessage('');
     try {
+      const isCourseSpecific = courseId && courseId !== 'global' && !isNaN(Number(courseId));
+      const url = isCourseSpecific
+        ? `${practiceEndpoints.GET_COURSE_PRACTICE}/${courseId}?testId=${testId}`
+        : `${practiceEndpoints.GET_PRACTICE_TESTS}?id=${testId}`;
+
       const res = await apiConnector(
         'GET',
-        `${practiceEndpoints.GET_COURSE_PRACTICE}/${courseId}?testId=${testId}`,
+        url,
         null,
         { Authorization: `Bearer ${token}` }
       );
 
       if (res.data?.success) {
-        const testsList = res.data.data || [];
+        const rawData = res.data.data;
+        const testsList = Array.isArray(rawData) ? rawData : (rawData ? [rawData] : []);
         if (testsList.length === 0) {
           setErrorMessage('Practice Test not found or not published.');
         } else {
@@ -181,9 +187,14 @@ export default function StudentCourseTestRunner() {
     setLoading(true);
     setErrorMessage('');
     try {
+      const isCourseSpecific = courseId && courseId !== 'global' && !isNaN(Number(courseId));
+      const url = isCourseSpecific
+        ? `${practiceEndpoints.GET_ATTEMPT_DETAILS}${targetAttemptId}?courseId=${courseId}&testId=${testId}`
+        : `${practiceEndpoints.GET_ATTEMPT_DETAILS}${targetAttemptId}`;
+
       const res = await apiConnector(
         'GET',
-        `${practiceEndpoints.GET_ATTEMPT_DETAILS}${targetAttemptId}?courseId=${courseId}&testId=${testId}`,
+        url,
         null,
         { Authorization: `Bearer ${token}` }
       );
