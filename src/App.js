@@ -164,15 +164,16 @@ function App() {
           
           {/* Practice Center Routes */}
           <Route path="/practice"             element={<PracticeCenter />} />
-          <Route path="/practice/daily-quiz text-white" element={<DailyQuiz />} />
-          <Route path="/practice/daily-quiz text-white" element={<DailyQuiz />} />
-          <Route path="/practice/daily-quiz"   element={<DailyQuiz />} />
-          <Route path="/practice/topic font-sans" element={<TopicPractice />} />
-          <Route path="/practice/topic"        element={<TopicPractice />} />
-          <Route path="/cart font-sans"        element={<CartPage />} />
-          <Route path="/cart font-sans"        element={<CartPage />} />
+          <Route path="/practice/tests"       element={<PracticeTestsPage />} />
+          <Route path="/practice/coding"      element={<PracticeTestsPage defaultType="Coding" />} />
+          <Route path="/practice/interview"   element={<PracticeTestsPage defaultType="Interview Test" />} />
+          <Route path="/practice/mock-tests"  element={<PracticeTestsPage defaultType="Mock Test" />} />
+          <Route path="/practice/daily-quiz"  element={<DailyQuiz />} />
+          <Route path="/practice/topic"       element={<TopicPractice />} />
+          <Route path="/practice/attempts"    element={<PreviousAttempts />} />
+          <Route path="/practice/take/:testId" element={<StudentCourseTestRunner />} />
+
           <Route path="/cart"                 element={<CartPage />} />
-          <Route path="/checkout font-sans text-white" element={<CheckoutPage />} />
           <Route path="/checkout"             element={<CheckoutPage />} />
 
           <Route path="/student-dashboard"    element={<StudentDashboard />} />
@@ -225,6 +226,7 @@ function App() {
               element={<VideoDetails />}
             />
           </Route>
+          <Route path="*"                     element={<NotFoundPage />} />
         </Routes>
       </div>
       <StudentChatWidget />
