@@ -89,7 +89,31 @@ const NotificationBell = () => {
       }
     }
     setIsOpen(false);
+
+    // Check if notification is a chat message / support conversation
+    const isChatMessage =
+      notif.type === "CHAT_MESSAGE" ||
+      notif.type === "CHAT_ASSIGNMENT" ||
+      notif.entityType === "CONVERSATION" ||
+      (notif.link && notif.link.includes("conversations"));
+
+    if (isChatMessage) {
+      // If student or non-admin user, open the floating student chat widget on screen
+      if (user?.accountType !== "Admin") {
+        window.dispatchEvent(
+          new CustomEvent("OPEN_STUDENT_CHAT", {
+            detail: { conversationId: notif.entityId }
+          })
+        );
+        return;
+      }
+    }
+
     if (notif.link) {
+      // Security & UX guard: Never redirect non-admins to admin routes
+      if (notif.link.startsWith("/admin") && user?.accountType !== "Admin") {
+        return;
+      }
       navigate(notif.link);
     }
   };

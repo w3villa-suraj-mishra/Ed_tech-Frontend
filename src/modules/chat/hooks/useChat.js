@@ -112,6 +112,39 @@ export function useChat() {
     [token, extractContext, loadConversations]
   );
 
+  // Listen for open chat event from notifications or external triggers
+  useEffect(() => {
+    const handleOpenChatEvent = async (e) => {
+      const convId = e.detail?.conversationId;
+      setIsOpen(true);
+      if (convId) {
+        let currentConvs = conversations;
+        if (currentConvs.length === 0 && token) {
+          try {
+            const data = await fetchUserConversations({ limit: 10 }, token);
+            currentConvs = data.conversations || [];
+            setConversations(currentConvs);
+          } catch (err) {
+            console.error('Error fetching conversations on chat open:', err);
+          }
+        }
+        const found = currentConvs.find((c) => String(c.id) === String(convId));
+        if (found) {
+          setActiveConversation(found);
+          return;
+        }
+      }
+      if (!activeConversation) {
+        startOrOpenChat();
+      }
+    };
+
+    window.addEventListener('OPEN_STUDENT_CHAT', handleOpenChatEvent);
+    return () => {
+      window.removeEventListener('OPEN_STUDENT_CHAT', handleOpenChatEvent);
+    };
+  }, [conversations, activeConversation, startOrOpenChat, token]);
+
   return {
     isOpen,
     setIsOpen,
