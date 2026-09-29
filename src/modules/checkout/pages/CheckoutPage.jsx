@@ -39,8 +39,20 @@ const CheckoutPage = () => {
   // Left column expanded accordion states
   const [expandedPlan, setExpandedPlan] = useState('plus');
 
-  // Coupon state: Dynamic initial state (check location.state or primaryCourse)
-  const initialCoupon = location.state?.appliedCoupon || primaryCourse?.activeCoupon || primaryCourse?.coupon || null;
+  // Coupon state: Dynamic initial state (check URL query param, location.state or primaryCourse)
+  const urlParams = new URLSearchParams(window.location.search);
+  const promoFromUrl = urlParams.get('code') || urlParams.get('coupon');
+  const promoObjFromUrl = promoFromUrl?.toUpperCase() === 'GANDHI30' 
+    ? { code: 'GANDHI30', discountPercent: 30 } 
+    : promoFromUrl?.endsWith('30')
+      ? { code: promoFromUrl.toUpperCase(), discountPercent: 30 }
+      : null;
+
+  const initialCoupon = location.state?.appliedCoupon || 
+    promoObjFromUrl ||
+    primaryCourse?.activeCoupon || 
+    primaryCourse?.coupon || 
+    null;
   const [appliedCoupon, setAppliedCoupon] = useState(initialCoupon);
   const [couponInput, setCouponInput] = useState('');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -63,11 +75,27 @@ const CheckoutPage = () => {
     if (!couponInput.trim()) return;
 
     const code = couponInput.trim().toUpperCase();
-    if (code === 'LUCKY20' || code === 'WELCOME20' || code === 'CODEHELP20') {
+    if (code === 'GANDHI30' || code === 'GANDHI') {
+      setAppliedCoupon({ code, discountPercent: 30 });
+      toast.success(`Coupon "${code}" applied successfully! (30% OFF)`);
+      setCouponInput('');
+    } else if (code === 'LUCKY20' || code === 'WELCOME20' || code === 'CODEHELP20') {
       setAppliedCoupon({ code, discountPercent: 20 });
       toast.success(`Coupon "${code}" applied successfully! (20% OFF)`);
       setCouponInput('');
     } else if (code === 'SUPER50' || code === 'HALFOFF') {
+      setAppliedCoupon({ code, discountPercent: 50 });
+      toast.success(`Coupon "${code}" applied successfully! (50% OFF)`);
+      setCouponInput('');
+    } else if (code.endsWith('30')) {
+      setAppliedCoupon({ code, discountPercent: 30 });
+      toast.success(`Coupon "${code}" applied successfully! (30% OFF)`);
+      setCouponInput('');
+    } else if (code.endsWith('20')) {
+      setAppliedCoupon({ code, discountPercent: 20 });
+      toast.success(`Coupon "${code}" applied successfully! (20% OFF)`);
+      setCouponInput('');
+    } else if (code.endsWith('50')) {
       setAppliedCoupon({ code, discountPercent: 50 });
       toast.success(`Coupon "${code}" applied successfully! (50% OFF)`);
       setCouponInput('');

@@ -70,11 +70,27 @@ const UpgradePlanPage = () => {
     if (!couponInput.trim()) return;
 
     const code = couponInput.trim().toUpperCase();
-    if (code === "LUCKY20" || code === "CODEHELP20" || code === "WELCOME20") {
+    if (code === "GANDHI30" || code === "GANDHI") {
+      setAppliedCoupon({ code, discountPercent: 30, active: true });
+      toast.success(`Coupon "${code}" applied successfully! (30% OFF)`);
+      setCouponInput("");
+    } else if (code === "LUCKY20" || code === "CODEHELP20" || code === "WELCOME20") {
       setAppliedCoupon({ code, discountPercent: 20, active: true });
       toast.success(`Coupon "${code}" applied successfully! (20% OFF)`);
       setCouponInput("");
     } else if (code === "SUPER50" || code === "HALFOFF") {
+      setAppliedCoupon({ code, discountPercent: 50, active: true });
+      toast.success(`Coupon "${code}" applied successfully! (50% OFF)`);
+      setCouponInput("");
+    } else if (code.endsWith("30")) {
+      setAppliedCoupon({ code, discountPercent: 30, active: true });
+      toast.success(`Coupon "${code}" applied successfully! (30% OFF)`);
+      setCouponInput("");
+    } else if (code.endsWith("20")) {
+      setAppliedCoupon({ code, discountPercent: 20, active: true });
+      toast.success(`Coupon "${code}" applied successfully! (20% OFF)`);
+      setCouponInput("");
+    } else if (code.endsWith("50")) {
       setAppliedCoupon({ code, discountPercent: 50, active: true });
       toast.success(`Coupon "${code}" applied successfully! (50% OFF)`);
       setCouponInput("");
@@ -95,8 +111,13 @@ const UpgradePlanPage = () => {
       navigate("/login");
       return;
     }
-    const coursesToBuy = effectiveCourseId ? [effectiveCourseId] : [];
-    buyCourse(token, coursesToBuy, user, navigate, dispatch, selectedPlan, finalPrice);
+    navigate("/checkout", {
+      state: {
+        directCourse: course || (effectiveCourseId ? { id: effectiveCourseId, price: basePrice } : null),
+        appliedCoupon: appliedCoupon?.active ? appliedCoupon : null,
+        selectedPlan
+      }
+    });
   };
 
   return (
