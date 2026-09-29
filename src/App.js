@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Common/Footer.jsx";
 import Home from "./pages/Home";
 import Catalog from "./pages/Catalog";
+import CategoriesPage from "./pages/CategoriesPage";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Signup from "./components/core/Auth/Signup.jsx";
@@ -154,6 +155,8 @@ function App() {
       <div className="main-content bg-[#F8FAFC]" style={{ flex: 1, minHeight: 0 }}>
         <Routes>
           <Route path="/"                     element={<Home />} />
+          <Route path="/categories"           element={<CategoriesPage />} />
+          <Route path="/all-categories"       element={<CategoriesPage />} />
           <Route path="/courses"              element={<Catalog />} />
           <Route path="/catalog"              element={<Catalog />} />
           <Route path="/catalog/:categoryId"  element={<Catalog />} />

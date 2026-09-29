@@ -675,13 +675,13 @@ const Home = () => {
 
         {/* View All Categories Button & Sketched Doodle */}
         <div className="mt-12 flex flex-col items-center justify-center relative z-10">
-          <button
-            onClick={() => setShowAllCatModal(true)}
+          <Link
+            to="/categories"
             className="relative inline-flex items-center gap-2.5 bg-[#181B26] hover:bg-[#0F172A] text-white text-xs sm:text-sm font-semibold px-7 sm:px-8 py-3.5 rounded-full shadow-[0_12px_28px_rgba(24,27,38,0.25)] hover:shadow-[0_16px_32px_rgba(59,167,242,0.35)] transition-all duration-300 hover:scale-[1.03] group"
           >
             <span>View All Categories ({dbCategories.length > 0 ? dbCategories.length : 17})</span>
             <FiArrowRight className="text-sm group-hover:translate-x-1 transition-transform" />
-          </button>
+          </Link>
 
           {/* Sketched text below button */}
           <div className="flex items-center justify-center gap-2 mt-3.5 text-xs text-[#3BA7F2]/90 font-serif italic select-none">
