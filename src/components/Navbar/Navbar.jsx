@@ -120,23 +120,33 @@ const Navbar = () => {
   };
 
   const [searchedCategories, setSearchedCategories] = useState([]);
+  const [searchedCourses, setSearchedCourses] = useState([]);
 
   useEffect(() => {
     let isMounted = true;
     const q = searchQuery.trim();
     if (!q) {
       setSearchedCategories([]);
+      setSearchedCourses([]);
       return;
     }
 
     const timer = setTimeout(async () => {
       try {
-        const res = await fetchCourseCategories(1, 5, q);
-        if (isMounted && res && Array.isArray(res)) {
-          setSearchedCategories(res);
+        const [catRes, courseRes] = await Promise.all([
+          fetchCourseCategories(1, 5, q),
+          getAllCourses(1, 5, null, q)
+        ]);
+        if (isMounted) {
+          if (catRes && Array.isArray(catRes)) {
+            setSearchedCategories(catRes);
+          }
+          if (courseRes && Array.isArray(courseRes.data)) {
+            setSearchedCourses(courseRes.data);
+          }
         }
       } catch (err) {
-        console.error("Live category search failed", err);
+        console.error("Live navbar search failed", err);
       }
     }, 200);
 
@@ -146,25 +156,8 @@ const Navbar = () => {
     };
   }, [searchQuery]);
 
-  const searchTrimmed = searchQuery.trim().toLowerCase();
-
-  const filteredCategories = searchedCategories.length > 0
-    ? searchedCategories
-    : (searchTrimmed
-        ? categories.filter((cat) =>
-            (cat.name || '').toLowerCase().includes(searchTrimmed) ||
-            (cat.description || '').toLowerCase().includes(searchTrimmed)
-          ).slice(0, 4)
-        : []);
-
-  const filteredCourses = searchTrimmed 
-    ? courses.filter(c => 
-        c.courseName?.toLowerCase().includes(searchTrimmed) ||
-        c.courseDescription?.toLowerCase().includes(searchTrimmed) ||
-        c.category?.name?.toLowerCase().includes(searchTrimmed) ||
-        (c.instructor && `${c.instructor.firstName || ''} ${c.instructor.lastName || ''}`.toLowerCase().includes(searchTrimmed))
-      ).slice(0, 5)
-    : [];
+  const filteredCategories = searchedCategories;
+  const filteredCourses = searchedCourses;
 
   const hasSearchMatches = filteredCategories.length > 0 || filteredCourses.length > 0;
 
@@ -271,9 +264,9 @@ const Navbar = () => {
                         </div>
                         <ul>
                           {filteredCourses.map((course) => (
-                            <li key={course._id}>
+                            <li key={course._id || course.id}>
                               <Link
-                                to={`/courses/${course._id}`}
+                                to={`/courses/${course._id || course.id}`}
                                 onClick={() => setSearchQuery("")}
                                 className="block px-4 py-2 hover:bg-blue-50/60 text-xs text-gray-700 hover:text-blue-600 transition-colors"
                               >
