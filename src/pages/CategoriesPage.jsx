@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { fetchCourseCategories } from '../services/operations/courseDetailsAPI';
 import PaginationControls from '../components/Common/PaginationControls';
 import {
@@ -92,9 +92,10 @@ const renderCategoryIcon = (type) => {
 };
 
 export default function CategoriesPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || searchParams.get('category') || '');
   
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
@@ -146,9 +147,15 @@ export default function CategoriesPage() {
   };
 
   useEffect(() => {
-    loadCategories(currentPage, itemsPerPage, searchQuery);
+    const urlQuery = searchParams.get('search') || searchParams.get('category') || '';
+    if (urlQuery !== searchQuery) {
+      setSearchQuery(urlQuery);
+      loadCategories(1, itemsPerPage, urlQuery);
+    } else {
+      loadCategories(currentPage, itemsPerPage, searchQuery);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, itemsPerPage]);
+  }, [searchParams, currentPage, itemsPerPage]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();

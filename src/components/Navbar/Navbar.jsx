@@ -238,9 +238,7 @@ const Navbar = () => {
                         <ul>
                           {filteredCategories.map((cat) => {
                             const catId = cat._id || cat.id;
-                            const targetLink = catId
-                              ? `/courses?category=${catId}`
-                              : `/courses?search=${encodeURIComponent(cat.name)}`;
+                            const targetLink = `/categories?search=${encodeURIComponent(cat.name)}`;
                             return (
                               <li key={catId || cat.name}>
                                 <Link
@@ -413,7 +411,7 @@ const Navbar = () => {
                         categories.map((subLink, i) => (
                           <Link
                             key={subLink._id || i}
-                            to={`/courses?category=${subLink._id || subLink.name.split(" ").join("-").toLowerCase()}`}
+                            to={`/categories?search=${encodeURIComponent(subLink.name)}`}
                             onClick={() => setIsCatalogOpen(false)}
                             className="flex items-center justify-between p-2 rounded-xl text-xs font-medium text-gray-700 hover:bg-[#EFF6FF] hover:text-[#3B82F6] transition-colors group/item"
                           >
@@ -428,6 +426,17 @@ const Navbar = () => {
                           No Categories Found
                         </p>
                       )}
+                    </div>
+
+                    <div className="mt-2 pt-2 border-t border-gray-100 text-center">
+                      <Link 
+                        to="/categories" 
+                        onClick={() => setIsCatalogOpen(false)}
+                        className="text-xs font-semibold text-[#3B82F6] hover:text-blue-700 transition-colors inline-flex items-center gap-1"
+                      >
+                        <span>View All Categories</span>
+                        <span>→</span>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -810,9 +819,7 @@ const Navbar = () => {
                         <span className="text-[10px] font-bold uppercase tracking-wider text-purple-600 px-1">Categories</span>
                         {filteredCategories.map(cat => {
                           const catId = cat._id || cat.id;
-                          const targetLink = catId
-                            ? `/courses?category=${catId}`
-                            : `/courses?search=${encodeURIComponent(cat.name)}`;
+                          const targetLink = `/categories?search=${encodeURIComponent(cat.name)}`;
                           return (
                             <Link
                               key={catId || cat.name}
