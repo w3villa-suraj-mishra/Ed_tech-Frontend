@@ -114,12 +114,22 @@ const Catalog = () => {
 
   // 2. Filter & Sort Logic
   const filteredCourses = courses.filter((course) => {
-    // Search query filter
-    const matchesSearch =
-      course.courseName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      course.courseDescription?.toLowerCase().includes(searchQuery.toLowerCase());
+    const q = searchQuery.toLowerCase().trim();
 
-    if (!matchesSearch) return false;
+    // Search query filter: check courseName, courseDescription, category name, instructor, tags
+    if (q) {
+      const courseCatName = course.category?.name || "";
+      const instructorName = course.instructor ? `${course.instructor.firstName || ''} ${course.instructor.lastName || ''}` : "";
+      const matchesSearch =
+        course.courseName?.toLowerCase().includes(q) ||
+        course.courseDescription?.toLowerCase().includes(q) ||
+        courseCatName.toLowerCase().includes(q) ||
+        instructorName.toLowerCase().includes(q) ||
+        (typeof course.tag === 'string' && course.tag.toLowerCase().includes(q)) ||
+        (Array.isArray(course.tag) && course.tag.some(t => String(t).toLowerCase().includes(q)));
+
+      if (!matchesSearch) return false;
+    }
 
     // Category filter
     if (!selectedCategory || selectedCategory === "all") return true;

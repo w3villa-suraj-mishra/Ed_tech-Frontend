@@ -108,9 +108,54 @@ const Navbar = () => {
     }
   };
 
-  const filteredCourses = searchQuery 
-    ? courses.filter(c => c.courseName?.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 5)
+  const [searchedCategories, setSearchedCategories] = useState([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    const q = searchQuery.trim();
+    if (!q) {
+      setSearchedCategories([]);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetchCourseCategories(1, 5, q);
+        if (isMounted && res && Array.isArray(res)) {
+          setSearchedCategories(res);
+        }
+      } catch (err) {
+        console.error("Live category search failed", err);
+      }
+    }, 200);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
+  }, [searchQuery]);
+
+  const searchTrimmed = searchQuery.trim().toLowerCase();
+
+  const filteredCategories = searchedCategories.length > 0
+    ? searchedCategories
+    : (searchTrimmed
+        ? categories.filter((cat) =>
+            (cat.name || '').toLowerCase().includes(searchTrimmed) ||
+            (cat.description || '').toLowerCase().includes(searchTrimmed)
+          ).slice(0, 4)
+        : []);
+
+  const filteredCourses = searchTrimmed 
+    ? courses.filter(c => 
+        c.courseName?.toLowerCase().includes(searchTrimmed) ||
+        c.courseDescription?.toLowerCase().includes(searchTrimmed) ||
+        c.category?.name?.toLowerCase().includes(searchTrimmed) ||
+        (c.instructor && `${c.instructor.firstName || ''} ${c.instructor.lastName || ''}`.toLowerCase().includes(searchTrimmed))
+      ).slice(0, 5)
     : [];
+
+  const hasSearchMatches = filteredCategories.length > 0 || filteredCourses.length > 0;
 
   return (
     <>
@@ -151,7 +196,7 @@ const Navbar = () => {
               <VscSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none" />
               <input
                 type="text"
-                placeholder="Search courses, skills, instructors..."
+                placeholder="Search courses, categories, instructors..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-14 py-1.5 bg-gray-50 hover:bg-gray-100 focus:bg-white border border-gray-200 focus:border-blue-500 rounded-xl text-xs text-gray-800 placeholder-gray-400 outline-none transition-all focus:ring-2 focus:ring-blue-500/15"
@@ -169,31 +214,84 @@ const Navbar = () => {
 
             {/* SEARCH SUGGESTIONS DROPDOWN */}
             {searchQuery.length > 0 && (
-              <div className="absolute top-full left-0 w-full mt-1.5 bg-white border border-gray-200 rounded-xl shadow-premium-light overflow-hidden z-[100] opacity-0 invisible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200">
-                {filteredCourses.length > 0 ? (
-                  <ul className="py-2">
-                    {filteredCourses.map((course) => (
-                      <li key={course._id}>
-                        <Link
-                          to={`/courses/${course._id}`}
-                          onClick={() => {
-                            setSearchQuery("");
-                          }}
-                          className="block px-4 py-2 hover:bg-[#EFF6FF] text-sm text-gray-700 hover:text-[#3B82F6] transition-colors"
-                        >
-                          <div className="font-medium truncate">{course.courseName}</div>
-                          {course.instructor && course.instructor.firstName && (
-                            <div className="text-xs text-gray-500 mt-0.5 truncate">
-                              By {course.instructor.firstName} {course.instructor.lastName}
-                            </div>
-                          )}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+              <div className="absolute top-full left-0 w-full mt-1.5 bg-white border border-gray-200 rounded-xl shadow-premium-light overflow-hidden z-[100] opacity-0 invisible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 max-h-[75vh] overflow-y-auto">
+                {hasSearchMatches ? (
+                  <div className="py-2 divide-y divide-gray-100">
+                    
+                    {/* CATEGORIES MATCHES */}
+                    {filteredCategories.length > 0 && (
+                      <div className="py-1">
+                        <div className="px-4 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-purple-600 flex items-center gap-1.5">
+                          <span>Categories</span>
+                        </div>
+                        <ul>
+                          {filteredCategories.map((cat) => {
+                            const catId = cat._id || cat.id;
+                            const targetLink = catId
+                              ? `/courses?category=${catId}`
+                              : `/courses?search=${encodeURIComponent(cat.name)}`;
+                            return (
+                              <li key={catId || cat.name}>
+                                <Link
+                                  to={targetLink}
+                                  onClick={() => setSearchQuery("")}
+                                  className="flex items-center justify-between px-4 py-2 hover:bg-purple-50/60 text-xs text-gray-800 hover:text-purple-700 transition-colors group/item"
+                                >
+                                  <div className="flex items-center gap-2 truncate">
+                                    <span className="w-6 h-6 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center text-[10px] font-bold shrink-0">
+                                      📁
+                                    </span>
+                                    <span className="font-semibold truncate">{cat.name}</span>
+                                  </div>
+                                  <span className="text-[10px] font-medium text-purple-500 opacity-0 group-hover/item:opacity-100 transition-opacity">
+                                    Browse →
+                                  </span>
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* COURSES MATCHES */}
+                    {filteredCourses.length > 0 && (
+                      <div className="py-1">
+                        <div className="px-4 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-blue-600 flex items-center gap-1.5">
+                          <span>Courses</span>
+                        </div>
+                        <ul>
+                          {filteredCourses.map((course) => (
+                            <li key={course._id}>
+                              <Link
+                                to={`/courses/${course._id}`}
+                                onClick={() => setSearchQuery("")}
+                                className="block px-4 py-2 hover:bg-blue-50/60 text-xs text-gray-700 hover:text-blue-600 transition-colors"
+                              >
+                                <div className="font-semibold truncate text-gray-900">{course.courseName}</div>
+                                <div className="flex items-center gap-2 text-[10px] text-gray-500 mt-0.5 truncate">
+                                  {course.category?.name && (
+                                    <span className="bg-gray-100 px-1.5 py-0.5 rounded font-medium text-gray-600">
+                                      {course.category.name}
+                                    </span>
+                                  )}
+                                  {course.instructor && course.instructor.firstName && (
+                                    <span>
+                                      By {course.instructor.firstName} {course.instructor.lastName}
+                                    </span>
+                                  )}
+                                </div>
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                  </div>
                 ) : (
-                  <div className="px-4 py-3 text-sm text-gray-500 text-center">
-                    No matching courses found.
+                  <div className="px-4 py-3 text-xs text-gray-500 text-center">
+                    No matching categories or courses found.
                   </div>
                 )}
               </div>
@@ -674,7 +772,7 @@ const Navbar = () => {
                 <VscSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg pointer-events-none" />
                 <input
                   type="text"
-                  placeholder="Search courses..."
+                  placeholder="Search courses, categories, instructors..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   autoFocus
@@ -692,28 +790,68 @@ const Navbar = () => {
             
             {/* Results Dropdown */}
             {searchQuery && (
-              <div className="max-h-[60vh] overflow-y-auto bg-gray-50 p-4 border-t border-gray-100 shadow-inner">
-                {filteredCourses.length > 0 ? (
-                  <div className="flex flex-col gap-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1 px-1">Results</span>
-                    {filteredCourses.map(course => (
-                      <Link
-                        key={course._id}
-                        to={`/courses/${course._id}`}
-                        onClick={() => {
-                          setIsMobileSearchOpen(false);
-                          setSearchQuery("");
-                        }}
-                        className="p-3.5 bg-white rounded-xl border border-gray-100 shadow-2xs flex items-center justify-between group active:scale-[0.98] transition-all hover:border-blue-200"
-                      >
-                        <span className="text-sm font-medium text-gray-800 truncate pr-4">{course.courseName}</span>
-                        <span className="text-gray-300 group-hover:text-[#3BA7F2] transition-colors">→</span>
-                      </Link>
-                    ))}
-                  </div>
+              <div className="max-h-[60vh] overflow-y-auto bg-gray-50 p-4 border-t border-gray-100 shadow-inner space-y-4">
+                {hasSearchMatches ? (
+                  <>
+                    {/* Categories */}
+                    {filteredCategories.length > 0 && (
+                      <div className="flex flex-col gap-2">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-purple-600 px-1">Categories</span>
+                        {filteredCategories.map(cat => {
+                          const catId = cat._id || cat.id;
+                          const targetLink = catId
+                            ? `/courses?category=${catId}`
+                            : `/courses?search=${encodeURIComponent(cat.name)}`;
+                          return (
+                            <Link
+                              key={catId || cat.name}
+                              to={targetLink}
+                              onClick={() => {
+                                setIsMobileSearchOpen(false);
+                                setSearchQuery("");
+                              }}
+                              className="p-3 bg-white rounded-xl border border-gray-100 shadow-2xs flex items-center justify-between group active:scale-[0.98] transition-all hover:border-purple-200"
+                            >
+                              <div className="flex items-center gap-2 truncate">
+                                <span className="w-6 h-6 rounded bg-purple-100 text-purple-600 flex items-center justify-center text-xs font-bold shrink-0">📁</span>
+                                <span className="text-xs font-semibold text-gray-800 truncate">{cat.name}</span>
+                              </div>
+                              <span className="text-xs font-medium text-purple-500">Browse →</span>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* Courses */}
+                    {filteredCourses.length > 0 && (
+                      <div className="flex flex-col gap-2">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 px-1">Courses</span>
+                        {filteredCourses.map(course => (
+                          <Link
+                            key={course._id}
+                            to={`/courses/${course._id}`}
+                            onClick={() => {
+                              setIsMobileSearchOpen(false);
+                              setSearchQuery("");
+                            }}
+                            className="p-3.5 bg-white rounded-xl border border-gray-100 shadow-2xs flex items-center justify-between group active:scale-[0.98] transition-all hover:border-blue-200"
+                          >
+                            <div className="flex flex-col truncate pr-2">
+                              <span className="text-sm font-medium text-gray-800 truncate">{course.courseName}</span>
+                              {course.category?.name && (
+                                <span className="text-[10px] text-gray-500">{course.category.name}</span>
+                              )}
+                            </div>
+                            <span className="text-gray-300 group-hover:text-[#3BA7F2] transition-colors">→</span>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </>
                 ) : (
                   <div className="text-center py-6 text-sm text-gray-500">
-                    No matching courses found.
+                    No matching categories or courses found.
                   </div>
                 )}
               </div>
