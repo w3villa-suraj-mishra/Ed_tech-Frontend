@@ -147,6 +147,7 @@ export default function CategoriesPage() {
 
   useEffect(() => {
     loadCategories(currentPage, itemsPerPage, searchQuery);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, itemsPerPage]);
 
   const handleSearchSubmit = (e) => {

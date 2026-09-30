@@ -48,7 +48,7 @@ const Navbar = () => {
     let isMounted = true;
     const getCategories = async () => {
       try {
-        const res = await fetchCourseCategories();
+        const res = await fetchCourseCategories(1, 20);
         if (isMounted && res && Array.isArray(res)) {
           setCategories(res);
         }
@@ -56,18 +56,7 @@ const Navbar = () => {
         console.log("Could not fetch categories list", error);
       }
     };
-    const getCoursesList = async () => {
-      try {
-        const res = await getAllCourses();
-        if (isMounted && res && Array.isArray(res)) {
-          setCourses(res);
-        }
-      } catch (error) {
-        console.log("Could not fetch courses list", error);
-      }
-    };
     getCategories();
-    getCoursesList();
     return () => {
       isMounted = false;
     };
