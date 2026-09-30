@@ -26,12 +26,32 @@ const {
   LECTURE_COMPLETION_API,
 } = courseEndpoints
 
-export const getAllCourses = async () => {
-  let result = []
+export const getAllCourses = async (page, limit, category, search, sortBy) => {
+  let result = {
+    data: [],
+    totalCourses: 0,
+    totalPages: 1,
+    currentPage: 1,
+    limit: 12
+  }
   try {
-    const response = await apiConnector("GET", GET_ALL_COURSE_API)
+    const params = {}
+    if (page) params.page = page
+    if (limit) params.limit = limit
+    if (category) params.category = category
+    if (search) params.search = search
+    if (sortBy) params.sortBy = sortBy
+
+    const response = await apiConnector("GET", GET_ALL_COURSE_API, null, null, params)
     if (response?.data?.success) {
-      result = response?.data?.data || []
+      const coursesList = Array.isArray(response.data.data) ? response.data.data : []
+      result = {
+        data: coursesList,
+        totalCourses: response.data.totalCourses || coursesList.length,
+        totalPages: response.data.totalPages || 1,
+        currentPage: response.data.currentPage || 1,
+        limit: response.data.limit || coursesList.length
+      }
     }
   } catch (error) {
     console.log("GET_ALL_COURSE_API API ERROR............", error)

@@ -44,19 +44,30 @@ const Navbar = () => {
 
   const userRole = user?.accountType || user?.account_type;
 
+  const [totalCourses, setTotalCourses] = useState(0);
+
   useEffect(() => {
     let isMounted = true;
-    const getCategories = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetchCourseCategories(1, 20);
-        if (isMounted && res && Array.isArray(res)) {
-          setCategories(res);
+        const [catRes, courseRes] = await Promise.all([
+          fetchCourseCategories(1, 20),
+          getAllCourses(1, 10)
+        ]);
+        if (isMounted) {
+          if (catRes && Array.isArray(catRes)) {
+            setCategories(catRes);
+          }
+          if (courseRes && Array.isArray(courseRes.data)) {
+            setCourses(courseRes.data);
+            setTotalCourses(courseRes.totalCourses || courseRes.data.length);
+          }
         }
       } catch (error) {
-        console.log("Could not fetch categories list", error);
+        console.log("Could not fetch navbar data", error);
       }
     };
-    getCategories();
+    fetchData();
     return () => {
       isMounted = false;
     };
@@ -323,7 +334,7 @@ const Navbar = () => {
                         Top Curated Courses
                       </span>
                       <span className="text-[10px] bg-[#EFF6FF] text-[#3B82F6] px-2 py-0.5 rounded-full font-bold border border-[#DBEAFE]">
-                        {courses.length} Available
+                        {totalCourses > 1000 ? `${(totalCourses / 1000).toFixed(1)}K Available` : `${totalCourses || courses.length} Available`}
                       </span>
                     </div>
 

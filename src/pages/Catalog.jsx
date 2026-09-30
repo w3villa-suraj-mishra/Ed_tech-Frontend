@@ -4,13 +4,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { getAllCourses, fetchCourseCategories } from "../services/operations/courseDetailsAPI";
 import { getUserEnrolledCourses } from "../services/operations/profileAPI";
 import { addToCart } from "../services/slices/cartSlice";
+import PaginationControls from "../components/Common/PaginationControls";
 import {
   VscSearch,
   VscListFilter,
-  VscChevronLeft,
-  VscChevronRight,
   VscBook,
-  VscClock,
   VscStarFull,
   VscArrowRight,
   VscChevronDown
@@ -24,9 +22,11 @@ const Catalog = () => {
   const queryCategoryParam = searchParams.get("category") || "";
 
   const { token } = useSelector((state) => state.auth);
-  const { user } = useSelector((state) => state.profile);
+  const { cart } = useSelector((state) => state.cart);
 
   const [courses, setCourses] = useState([]);
+  const [totalCoursesCount, setTotalCoursesCount] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
   const [categories, setCategories] = useState([]);
   const [enrolledCourseIds, setEnrolledCourseIds] = useState(new Set());
   const [selectedCategory, setSelectedCategory] = useState(pathCategoryId || queryCategoryParam || "all");
@@ -35,6 +35,10 @@ const Catalog = () => {
   const [loading, setLoading] = useState(true);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const coursesPerPage = 6;
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -47,59 +51,76 @@ const Catalog = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Fetch initial categories & enrolled courses
   useEffect(() => {
-    const querySearch = searchParams.get("search");
-    if (querySearch !== null) {
-      setSearchQuery(querySearch);
-    }
-  }, [searchParams]);
-
-  // Pagination State
-  const [currentPage, setCurrentPage] = useState(1);
-  const coursesPerPage = 6;
-
-  // 1. Fetch courses & categories
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
+    let isMounted = true;
+    const fetchInitialData = async () => {
       try {
-        const [coursesData, categoriesData] = await Promise.all([
-          getAllCourses(),
-          fetchCourseCategories(),
-        ]);
-
-        if (coursesData && Array.isArray(coursesData)) {
-          setCourses(coursesData);
+        const catRes = await fetchCourseCategories();
+        if (isMounted && Array.isArray(catRes)) {
+          setCategories(catRes);
         }
 
-        if (categoriesData && Array.isArray(categoriesData)) {
-          setCategories(categoriesData);
-        }
-
-        // If user logged in, fetch enrolled courses
         if (token) {
           const enrolled = await getUserEnrolledCourses(token);
-          if (enrolled && Array.isArray(enrolled)) {
+          if (isMounted && enrolled && Array.isArray(enrolled)) {
             const eIds = new Set(enrolled.map((c) => String(c._id || c.id)));
             setEnrolledCourseIds(eIds);
           }
         }
       } catch (error) {
-        console.error("Error fetching catalog data", error);
-      } finally {
-        setLoading(false);
+        console.error("Error fetching catalog initial data", error);
       }
     };
 
-    fetchData();
+    fetchInitialData();
+    return () => { isMounted = false; };
   }, [token]);
 
-  // Sync category param
+  // Sync category & search params from URL
   useEffect(() => {
     const activeCategory = pathCategoryId || queryCategoryParam || "all";
     setSelectedCategory(activeCategory);
-    setCurrentPage(1);
-  }, [pathCategoryId, queryCategoryParam]);
+    const querySearch = searchParams.get("search");
+    if (querySearch !== null) {
+      setSearchQuery(querySearch);
+    }
+  }, [pathCategoryId, queryCategoryParam, searchParams]);
+
+  // Fetch Courses with server-side pagination, search, category, sortBy
+  useEffect(() => {
+    let isMounted = true;
+    const fetchCoursesData = async () => {
+      setLoading(true);
+      try {
+        const res = await getAllCourses(
+          currentPage,
+          coursesPerPage,
+          selectedCategory,
+          searchQuery,
+          sortBy
+        );
+        if (isMounted && res) {
+          setCourses(res.data || []);
+          setTotalCoursesCount(res.totalCourses || 0);
+          setTotalPages(res.totalPages || 1);
+        }
+      } catch (error) {
+        console.error("Error fetching courses catalog", error);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+
+    const timer = setTimeout(() => {
+      fetchCoursesData();
+    }, 200);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
+  }, [currentPage, selectedCategory, searchQuery, sortBy]);
 
   // Handle Category selection
   const handleCategorySelect = (catId) => {
@@ -111,56 +132,6 @@ const Catalog = () => {
       setSearchParams({ category: catId });
     }
   };
-
-  // 2. Filter & Sort Logic
-  const filteredCourses = courses.filter((course) => {
-    const q = searchQuery.toLowerCase().trim();
-
-    // Search query filter: check courseName, courseDescription, category name, instructor, tags
-    if (q) {
-      const courseCatName = course.category?.name || "";
-      const instructorName = course.instructor ? `${course.instructor.firstName || ''} ${course.instructor.lastName || ''}` : "";
-      const matchesSearch =
-        course.courseName?.toLowerCase().includes(q) ||
-        course.courseDescription?.toLowerCase().includes(q) ||
-        courseCatName.toLowerCase().includes(q) ||
-        instructorName.toLowerCase().includes(q) ||
-        (typeof course.tag === 'string' && course.tag.toLowerCase().includes(q)) ||
-        (Array.isArray(course.tag) && course.tag.some(t => String(t).toLowerCase().includes(q)));
-
-      if (!matchesSearch) return false;
-    }
-
-    // Category filter
-    if (!selectedCategory || selectedCategory === "all") return true;
-
-    const courseCatId = course.categoryId || course.category?._id || course.category?.id;
-    const courseCatName = course.category?.name || "";
-    const courseCatSlug = courseCatName.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
-
-    return (
-      String(courseCatId) === String(selectedCategory) ||
-      courseCatSlug === String(selectedCategory).toLowerCase() ||
-      courseCatName.toLowerCase() === String(selectedCategory).toLowerCase()
-    );
-  });
-
-  // Sort Courses
-  const sortedCourses = [...filteredCourses].sort((a, b) => {
-    if (sortBy === "price-low") return (a.price || 0) - (b.price || 0);
-    if (sortBy === "price-high") return (b.price || 0) - (a.price || 0);
-    if (sortBy === "rating") return (b.averageRating || 4.5) - (a.averageRating || 4.5);
-    return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
-  });
-
-  // Pagination Math
-  const totalPages = Math.ceil(sortedCourses.length / coursesPerPage) || 1;
-  const indexOfLastCourse = currentPage * coursesPerPage;
-  const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
-  const currentCourses = sortedCourses.slice(indexOfFirstCourse, indexOfLastCourse);
-
-  // Dynamic Button Action Handler based on User state
-  const { cart } = useSelector((state) => state.cart);
 
   const renderAccessButton = (course) => {
     const courseId = String(course._id || course.id);
@@ -302,9 +273,7 @@ const Catalog = () => {
           </div>
         </div>
 
-
-
-        {/* 4. COURSE GRID */}
+        {/* 3. COURSE GRID */}
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {Array.from({ length: 6 }).map((_, idx) => (
@@ -316,9 +285,9 @@ const Catalog = () => {
               </div>
             ))}
           </div>
-        ) : currentCourses.length > 0 ? (
+        ) : courses.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {currentCourses.map((course) => {
+            {courses.map((course) => {
               const courseId = course._id || course.id;
               const origPrice = Number(course?.pricing?.originalPrice || course?.originalPrice || course?.price || 0);
               const currentPrice = Number(course?.pricing?.finalPrice || course?.price || 0);
@@ -414,6 +383,7 @@ const Catalog = () => {
                 setSelectedCategory("all");
                 setSearchParams({});
                 setSearchQuery("");
+                setCurrentPage(1);
               }}
               className="px-6 py-2.5 mt-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition-all shadow-md inline-block"
             >
@@ -422,43 +392,14 @@ const Catalog = () => {
           </div>
         )}
 
-        {/* 5. PAGINATION CONTROLS */}
+        {/* 4. PAGINATION CONTROLS */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2 pt-6">
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-              className="w-10 h-10 rounded-xl bg-white border border-gray-200 hover:border-blue-300 hover:bg-[#EFF6FF] flex items-center justify-center text-gray-500 hover:text-[#3B82F6] disabled:opacity-50 disabled:pointer-events-none transition-all shadow-sm"
-            >
-              <VscChevronLeft className="text-lg" />
-            </button>
-
-            {Array.from({ length: totalPages }).map((_, idx) => {
-              const pageNum = idx + 1;
-              const isActive = currentPage === pageNum;
-              return (
-                <button
-                  key={pageNum}
-                  onClick={() => setCurrentPage(pageNum)}
-                  className={`w-10 h-10 rounded-xl font-bold text-sm transition-all shadow-sm ${
-                    isActive
-                      ? "bg-blue-600 text-white shadow-blue-500/20"
-                      : "bg-white border border-gray-200 text-gray-600 hover:text-[#3B82F6] hover:border-blue-300 hover:bg-[#EFF6FF]"
-                  }`}
-                >
-                  {pageNum}
-                </button>
-              );
-            })}
-
-            <button
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-              disabled={currentPage === totalPages}
-              className="w-10 h-10 rounded-xl bg-white border border-gray-200 hover:border-blue-300 hover:bg-[#EFF6FF] flex items-center justify-center text-gray-500 hover:text-[#3B82F6] disabled:opacity-50 disabled:pointer-events-none transition-all shadow-sm"
-            >
-              <VscChevronRight className="text-lg" />
-            </button>
-          </div>
+          <PaginationControls
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={totalCoursesCount}
+            onPageChange={(p) => setCurrentPage(p)}
+          />
         )}
 
       </div>
