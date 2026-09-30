@@ -8,6 +8,7 @@ import { courseEndpoints, ratingsEndpoints } from "../apis"
 const {
   COURSE_DETAILS_API,
   COURSE_CATEGORIES_API,
+  GET_CATEGORIES_COUNT_API,
   GET_ALL_COURSE_API,
   CREATE_COURSE_API,
   EDIT_COURSE_API,
@@ -62,16 +63,39 @@ export const fetchCourseDetails = async (courseId) => {
   return result
 }
 
-// fetching the available course categories
-export const fetchCourseCategories = async () => {
+// fetching total count of categories (Ultra fast count query)
+export const fetchCategoriesCount = async () => {
+  try {
+    const response = await apiConnector("GET", GET_CATEGORIES_COUNT_API)
+    if (response?.data?.success) {
+      return response.data.count || 0
+    }
+  } catch (error) {
+    console.log("FETCH_CATEGORIES_COUNT_API ERROR............", error)
+  }
+  return 0
+}
+
+// fetching the available course categories (with pagination support)
+export const fetchCourseCategories = async (page, limit, search) => {
   let result = []
   try {
-    const response = await apiConnector("GET", COURSE_CATEGORIES_API)
+    const params = {}
+    if (page) params.page = page
+    if (limit) params.limit = limit
+    if (search) params.search = search
+
+    const response = await apiConnector("GET", COURSE_CATEGORIES_API, null, null, params)
     console.log("COURSE_CATEGORIES_API API RESPONSE............", response)
     if (!response?.data?.success) {
       throw new Error("Could Not Fetch Course Categories")
     }
-    result = response?.data?.data
+    const dataArr = Array.isArray(response?.data?.data) ? response.data.data : []
+    result = [...dataArr]
+    result.totalCategories = response.data.totalCategories || dataArr.length
+    result.totalPages = response.data.totalPages || 1
+    result.currentPage = response.data.currentPage || 1
+    result.limit = response.data.limit || dataArr.length
   } catch (error) {
     console.log("COURSE_CATEGORY_API API ERROR............", error)
     if (!error.message?.includes('Network Error')) {

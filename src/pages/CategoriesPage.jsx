@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchCourseCategories } from '../services/operations/courseDetailsAPI';
+import PaginationControls from '../components/Common/PaginationControls';
 import {
   FiBarChart2,
   FiSmartphone,
   FiArrowRight,
   FiSearch,
   FiClock,
-  FiDatabase,
   FiRefreshCw,
   FiCheckCircle,
   FiGrid,
@@ -95,31 +95,40 @@ export default function CategoriesPage() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCategories, setTotalCategories] = useState(0);
+
   const [apiMetrics, setApiMetrics] = useState({
     responseTimeMs: null,
     endpoint: '/api/v1/course/showAllCategories',
     httpMethod: 'GET',
     status: null,
-    fetchedAt: null,
-    itemCount: 0
+    fetchedAt: null
   });
 
-  const loadCategories = async () => {
+  const loadCategories = async (page = currentPage, limit = itemsPerPage, search = searchQuery) => {
     setLoading(true);
     const startTime = performance.now();
     try {
-      const data = await fetchCourseCategories();
+      const data = await fetchCourseCategories(page, limit, search);
       const endTime = performance.now();
       const duration = Math.round(endTime - startTime);
 
       setCategories(Array.isArray(data) ? data : []);
+      setTotalCategories(data.totalCategories || data.length || 0);
+      setTotalPages(data.totalPages || 1);
+      setCurrentPage(data.currentPage || page);
+
       setApiMetrics({
         responseTimeMs: duration,
-        endpoint: '/api/v1/course/showAllCategories',
+        endpoint: `/api/v1/course/showAllCategories?page=${page}&limit=${limit}${search ? `&search=${search}` : ''}`,
         httpMethod: 'GET',
         status: '200 OK',
-        fetchedAt: new Date().toLocaleTimeString(),
-        itemCount: Array.isArray(data) ? data.length : 0
+        fetchedAt: new Date().toLocaleTimeString()
       });
     } catch (error) {
       const endTime = performance.now();
@@ -129,8 +138,7 @@ export default function CategoriesPage() {
         endpoint: '/api/v1/course/showAllCategories',
         httpMethod: 'GET',
         status: 'Error / Failed',
-        fetchedAt: new Date().toLocaleTimeString(),
-        itemCount: 0
+        fetchedAt: new Date().toLocaleTimeString()
       });
     } finally {
       setLoading(false);
@@ -138,13 +146,14 @@ export default function CategoriesPage() {
   };
 
   useEffect(() => {
-    loadCategories();
-  }, []);
+    loadCategories(currentPage, itemsPerPage, searchQuery);
+  }, [currentPage, itemsPerPage]);
 
-  const filteredCategories = (categories.length > 0 ? categories : categoryDesignPresets).filter(cat => {
-    const q = searchQuery.toLowerCase();
-    return (cat.name || '').toLowerCase().includes(q) || (cat.description || '').toLowerCase().includes(q);
-  });
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    setCurrentPage(1);
+    loadCategories(1, itemsPerPage, searchQuery);
+  };
 
   const getLatencyBadgeColor = (ms) => {
     if (!ms) return 'bg-gray-100 text-gray-700 border-gray-200';
@@ -170,12 +179,12 @@ export default function CategoriesPage() {
                 Explore All <span className="text-[#3BA7F2]">Course Categories</span>
               </h1>
               <p className="text-sm text-gray-600 mt-1">
-                Discover learning paths across technology, design, business, and science domains.
+                Paginated DB categories with real-time performance metrics and search filters.
               </p>
             </div>
             
             <button
-              onClick={loadCategories}
+              onClick={() => loadCategories(currentPage, itemsPerPage, searchQuery)}
               disabled={loading}
               className="inline-flex items-center gap-2 bg-white border border-gray-200 hover:border-[#3BA7F2] text-gray-700 hover:text-[#3BA7F2] font-semibold text-xs px-4 py-2.5 rounded-xl shadow-xs transition-all disabled:opacity-50"
             >
@@ -222,12 +231,12 @@ export default function CategoriesPage() {
 
             {/* API Endpoint */}
             <div className="bg-gray-50/80 rounded-xl p-3.5 border border-gray-100 flex flex-col justify-between">
-              <span className="text-[11px] font-medium text-gray-500 mb-1">API Endpoint</span>
+              <span className="text-[11px] font-medium text-gray-500 mb-1">Paginated Route</span>
               <div className="font-mono text-xs font-bold text-gray-800 truncate" title={apiMetrics.endpoint}>
                 <span className="text-purple-600 font-extrabold mr-1">{apiMetrics.httpMethod}</span>
                 {apiMetrics.endpoint}
               </div>
-              <span className="text-[10px] text-gray-500 mt-2">Database Query Route</span>
+              <span className="text-[10px] text-gray-500 mt-2">Page {currentPage} of {totalPages}</span>
             </div>
 
             {/* Status Code */}
@@ -237,38 +246,59 @@ export default function CategoriesPage() {
                 <FiCheckCircle className="text-emerald-500" />
                 <span>{apiMetrics.status || (loading ? 'Calling...' : '200 OK')}</span>
               </div>
-              <span className="text-[10px] text-gray-500 mt-2">Backend Connection</span>
+              <span className="text-[10px] text-gray-500 mt-2">Database Connection</span>
             </div>
 
             {/* Category Count */}
             <div className="bg-gray-50/80 rounded-xl p-3.5 border border-gray-100 flex flex-col justify-between">
-              <span className="text-[11px] font-medium text-gray-500 mb-1">Items Received</span>
+              <span className="text-[11px] font-medium text-gray-500 mb-1">Items Page / Total</span>
               <div className="flex items-baseline gap-1.5">
                 <span className="text-xl font-extrabold text-gray-900">
                   {categories.length}
                 </span>
-                <span className="text-xs text-gray-500">Categories</span>
+                <span className="text-xs text-gray-500">/ {totalCategories} DB Rows</span>
               </div>
-              <span className="text-[10px] text-gray-500 mt-2">Direct DB Result</span>
+              <span className="text-[10px] text-gray-500 mt-2">Paginated DB Result</span>
             </div>
           </div>
         </div>
 
-        {/* Search & Filter Bar */}
+        {/* Search & Items Per Page Controls */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="relative w-full sm:w-96">
-            <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
-            <input
-              type="text"
-              placeholder="Search category by name or topic..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-[#3BA7F2] focus:ring-1 focus:ring-[#3BA7F2] transition-colors shadow-2xs"
-            />
-          </div>
+          <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-96 flex items-center gap-2">
+            <div className="relative flex-1">
+              <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
+              <input
+                type="text"
+                placeholder="Search category by name..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-[#3BA7F2] transition-colors shadow-2xs"
+              />
+            </div>
+            <button
+              type="submit"
+              className="bg-[#3BA7F2] hover:bg-blue-600 text-white font-semibold text-xs px-4 py-2.5 rounded-xl transition-colors shrink-0"
+            >
+              Search
+            </button>
+          </form>
 
-          <div className="text-xs text-gray-500 font-medium self-end sm:self-center">
-            Showing <span className="font-bold text-gray-900">{filteredCategories.length}</span> categories
+          <div className="flex items-center gap-3 self-end sm:self-center">
+            <span className="text-xs text-gray-500 font-medium">Per Page:</span>
+            <select
+              value={itemsPerPage}
+              onChange={(e) => {
+                const val = Number(e.target.value);
+                setItemsPerPage(val);
+                setCurrentPage(1);
+              }}
+              className="bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-semibold text-gray-700 outline-none focus:border-[#3BA7F2]"
+            >
+              <option value={5}>5 per page</option>
+              <option value={10}>10 per page</option>
+              <option value={20}>20 per page</option>
+            </select>
           </div>
         </div>
 
@@ -284,15 +314,15 @@ export default function CategoriesPage() {
               </div>
             ))}
           </div>
-        ) : filteredCategories.length === 0 ? (
+        ) : categories.length === 0 ? (
           <div className="bg-white border border-gray-200 rounded-2xl p-12 text-center space-y-3">
             <FiBookOpen className="text-4xl text-gray-300 mx-auto" />
             <h3 className="text-base font-bold text-gray-800">No categories found</h3>
-            <p className="text-xs text-gray-500">Try searching for a different term or keyword.</p>
+            <p className="text-xs text-gray-500">Try adjusting your search criteria or page offset.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {filteredCategories.map((cat, idx) => {
+            {categories.map((cat, idx) => {
               const preset = categoryDesignPresets.find(
                 (p) => (p.name || '').toLowerCase() === (cat.name || '').toLowerCase()
               ) || categoryDesignPresets[idx % categoryDesignPresets.length];
@@ -307,7 +337,7 @@ export default function CategoriesPage() {
                 ? `/courses?category=${categoryId}`
                 : `/courses?category=${categorySlug}`;
 
-              const count = cat.courseCount !== undefined ? cat.courseCount : (cat.courses?.length || 0);
+              const count = cat.coursesCount !== undefined ? cat.coursesCount : (cat.courses?.length || 0);
 
               return (
                 <div
@@ -336,7 +366,7 @@ export default function CategoriesPage() {
 
                   <div className="pt-2 border-t border-gray-100 flex items-center justify-between">
                     <span className="text-[11px] text-gray-400 font-mono">
-                      ID: {categoryId ? categoryId.substring(0, 10) + '...' : 'Preset'}
+                      ID: {categoryId ? String(categoryId).substring(0, 10) + '...' : 'Preset'}
                     </span>
                     <Link
                       to={targetLink}
@@ -350,6 +380,16 @@ export default function CategoriesPage() {
               );
             })}
           </div>
+        )}
+
+        {/* Enterprise Pagination Bar */}
+        {!loading && (
+          <PaginationControls
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={totalCategories}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
         )}
 
       </div>

@@ -15,7 +15,7 @@ import CTAIllustrationImgWebp from "../assests/Images/cta_illustration.webp";
 import CTAIllustrationImgPng from "../assests/Images/cta_illustration.png";
 import InstructorSlider from '../components/core/HomePage/InstructorSlider';
 import { getUserEnrolledCourses } from '../services/operations/profileAPI';
-import { getHomePageStats, fetchCourseCategories, getAllCourses } from '../services/operations/courseDetailsAPI';
+import { getHomePageStats, fetchCourseCategories, fetchCategoriesCount, getAllCourses } from '../services/operations/courseDetailsAPI';
 
 import {
   FiPlayCircle,
@@ -214,6 +214,7 @@ const Home = () => {
     averageRating: null
   });
   const [dbCategories, setDbCategories] = useState([]);
+  const [categoryCount, setCategoryCount] = useState(null);
   const [featuredCourses, setFeaturedCourses] = useState([]);
   const [showAllCatModal, setShowAllCatModal] = useState(false);
   const [categorySearch, setCategorySearch] = useState("");
@@ -229,32 +230,45 @@ const Home = () => {
 
   useEffect(() => {
     let isMounted = true;
-    const fetchStatsAndCategories = async () => {
-      const [statsData, catData, coursesData] = await Promise.all([
-        getHomePageStats(),
-        fetchCourseCategories(),
-        getAllCourses()
-      ]);
-      if (isMounted) {
-        if (statsData) {
-          setStats({
-            learnersCount: statsData.learnersCount,
-            coursesCount: statsData.coursesCount,
-            projectsCount: statsData.projectsCount,
-            certificationsCount: statsData.certificationsCount,
-            hoursLearned: statsData.hoursLearned,
-            averageRating: statsData.averageRating
-          });
-        }
-        if (catData && Array.isArray(catData)) {
-          setDbCategories(catData);
-        }
-        if (coursesData && Array.isArray(coursesData)) {
-          setFeaturedCourses(coursesData.slice(0, 4));
+
+    // 1. Fetch category count immediately (Ultra fast DB count: ~50ms)
+    fetchCategoriesCount().then(count => {
+      if (isMounted && count !== null && count !== undefined) {
+        setCategoryCount(count);
+      }
+    });
+
+    // 2. Fetch homepage stats
+    getHomePageStats().then(statsData => {
+      if (isMounted && statsData) {
+        setStats({
+          learnersCount: statsData.learnersCount,
+          coursesCount: statsData.coursesCount,
+          projectsCount: statsData.projectsCount,
+          certificationsCount: statsData.certificationsCount,
+          hoursLearned: statsData.hoursLearned,
+          averageRating: statsData.averageRating
+        });
+      }
+    });
+
+    // 3. Fetch top categories for homepage display
+    fetchCourseCategories(1, 6).then(catData => {
+      if (isMounted && catData && Array.isArray(catData)) {
+        setDbCategories(catData);
+        if (catData.totalCategories) {
+          setCategoryCount(catData.totalCategories);
         }
       }
-    };
-    fetchStatsAndCategories();
+    });
+
+    // 4. Fetch featured courses independently
+    getAllCourses().then(coursesData => {
+      if (isMounted && coursesData && Array.isArray(coursesData)) {
+        setFeaturedCourses(coursesData.slice(0, 4));
+      }
+    });
+
     return () => {
       isMounted = false;
     };
@@ -679,7 +693,7 @@ const Home = () => {
             to="/categories"
             className="relative inline-flex items-center gap-2.5 bg-[#181B26] hover:bg-[#0F172A] text-white text-xs sm:text-sm font-semibold px-7 sm:px-8 py-3.5 rounded-full shadow-[0_12px_28px_rgba(24,27,38,0.25)] hover:shadow-[0_16px_32px_rgba(59,167,242,0.35)] transition-all duration-300 hover:scale-[1.03] group"
           >
-            <span>View All Categories ({dbCategories.length > 0 ? dbCategories.length : 17})</span>
+            <span>View All Categories {categoryCount !== null ? `(${categoryCount})` : (dbCategories.length > 0 ? `(${dbCategories.length})` : '')}</span>
             <FiArrowRight className="text-sm group-hover:translate-x-1 transition-transform" />
           </Link>
 
