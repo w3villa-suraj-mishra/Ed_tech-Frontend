@@ -97,7 +97,7 @@ const InstructorSlider = ({ dynamicInstructors = [] }) => {
       {/* Section Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
         <div>
-          <div className="inline-flex items-center gap-1.5 bg-[#13AA92]/10 text-[#13AA92] text-xs font-semibold px-3.5 py-1 rounded-full border border-[#13AA92]/30 shadow-2xs">
+          <div className="inline-flex items-center gap-1.5 glass-pill text-[#13AA92] text-xs font-semibold px-4 py-1.5 rounded-full border border-white/80 shadow-sm">
             <FiAward className="text-xs text-[#13AA92]" />
             <span>World-Class Faculty</span>
           </div>
@@ -110,20 +110,20 @@ const InstructorSlider = ({ dynamicInstructors = [] }) => {
         </div>
       </div>
 
-      {/* Main Mentor Card */}
-      <div className="rounded-3xl bg-white border border-gray-200/90 shadow-sm p-6 sm:p-10 lg:p-12 transition-all duration-300">
+      {/* Main Mentor Card - Frosted Glass Card */}
+      <div className="rounded-3xl glass-card border border-white/80 shadow-2xl p-6 sm:p-10 lg:p-12 transition-all duration-300">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-14">
           
           {/* Left Column: Mentor Portrait & Credibility */}
           <div className="w-full lg:w-[40%] flex flex-col items-center text-center">
-            <div className="relative w-52 h-52 sm:w-64 sm:h-64 rounded-3xl overflow-hidden border-2 border-gray-100 shadow-md">
+            <div className="relative w-52 h-52 sm:w-64 sm:h-64 rounded-3xl overflow-hidden border-4 border-white/80 shadow-xl glass-card">
               <img
                 src={activeMentor.image}
                 alt={activeMentor.name}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute bottom-3 left-3 right-3 bg-white/90 backdrop-blur-md rounded-xl py-1.5 px-3 border border-gray-100 shadow-xs flex items-center justify-center gap-1.5 text-xs font-bold text-gray-900">
-                <FiCheckCircle className="text-blue-600 text-xs" />
+              <div className="absolute bottom-3 left-3 right-3 glass-card rounded-xl py-1.5 px-3 border border-white/80 shadow-md flex items-center justify-center gap-1.5 text-xs font-bold text-gray-900 backdrop-blur-xl">
+                <FiCheckCircle className="text-[#3BA7F2] text-xs" />
                 <span>{activeMentor.badgeText || "Verified Industry Lead"}</span>
               </div>
             </div>
@@ -131,7 +131,7 @@ const InstructorSlider = ({ dynamicInstructors = [] }) => {
             <h3 className="text-xl font-bold text-gray-900 mt-4">
               {activeMentor.name}
             </h3>
-            <p className="text-xs font-semibold text-blue-600 mt-0.5">
+            <p className="text-xs font-semibold text-[#3BA7F2] mt-0.5">
               {activeMentor.role}
             </p>
             <p className="text-[11px] text-gray-500 mt-1">
@@ -141,7 +141,7 @@ const InstructorSlider = ({ dynamicInstructors = [] }) => {
             {/* Skills Pills */}
             <div className="flex flex-wrap items-center justify-center gap-1.5 mt-3">
               {(Array.isArray(activeMentor.skills) ? activeMentor.skills : (activeMentor.skills || '').split(',')).map((skill, i) => (
-                <span key={i} className="text-[10px] bg-gray-100 text-gray-700 px-2.5 py-0.5 rounded-full font-medium">
+                <span key={i} className="text-[10px] glass-pill text-gray-700 px-3 py-0.5 rounded-full font-medium border border-white/80 shadow-2xs">
                   {typeof skill === 'string' ? skill.trim() : skill}
                 </span>
               ))}
@@ -150,7 +150,7 @@ const InstructorSlider = ({ dynamicInstructors = [] }) => {
 
           {/* Right Column: Quote & Insight */}
           <div className="w-full lg:w-[60%] flex flex-col justify-center">
-            <span className="text-5xl text-blue-500/20 font-serif leading-none select-none">“</span>
+            <span className="text-5xl text-[#3BA7F2]/25 font-serif leading-none select-none">“</span>
             
             <h4 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 tracking-tight leading-snug -mt-4">
               {activeMentor.titleQuote}
@@ -160,7 +160,7 @@ const InstructorSlider = ({ dynamicInstructors = [] }) => {
               {activeMentor.quote}
             </p>
 
-            <div className="mt-8 pt-6 border-t border-gray-100 flex items-center justify-between">
+            <div className="mt-8 pt-6 border-t border-white/60 flex items-center justify-between">
               <div>
                 <span className="block text-sm font-bold text-gray-900">{activeMentor.name}</span>
                 <span className="text-xs text-gray-500">{activeMentor.experience}</span>
@@ -175,8 +175,8 @@ const InstructorSlider = ({ dynamicInstructors = [] }) => {
                       onClick={() => setCurrent(idx)}
                       className={`h-2 rounded-full transition-all duration-300 ${
                         current === idx
-                          ? "w-6 bg-blue-600"
-                          : "w-2 bg-gray-200 hover:bg-gray-300"
+                          ? "w-6 bg-[#3BA7F2]"
+                          : "w-2 bg-gray-300 hover:bg-gray-400"
                       }`}
                       aria-label={`Go to mentor ${idx + 1}`}
                     />
@@ -193,14 +193,14 @@ const InstructorSlider = ({ dynamicInstructors = [] }) => {
       <div className="flex justify-end items-center gap-3 mt-6 pr-2">
         <button
           onClick={handlePrev}
-          className="w-12 h-12 rounded-full border border-gray-200 bg-white hover:bg-gray-50 flex items-center justify-center text-gray-700 hover:text-blue-600 shadow-sm transition-colors"
+          className="w-12 h-12 rounded-full glass-card hover:bg-white text-gray-700 hover:text-[#3BA7F2] border border-white/80 flex items-center justify-center shadow-md transition-all hover:scale-105 active:scale-95"
           aria-label="Previous Mentor"
         >
           <FiChevronLeft className="text-xl" />
         </button>
         <button
           onClick={handleNext}
-          className="w-12 h-12 rounded-full border border-gray-200 bg-white hover:bg-gray-50 flex items-center justify-center text-gray-700 hover:text-blue-600 shadow-sm transition-colors"
+          className="w-12 h-12 rounded-full glass-card hover:bg-white text-gray-700 hover:text-[#3BA7F2] border border-white/80 flex items-center justify-center shadow-md transition-all hover:scale-105 active:scale-95"
           aria-label="Next Mentor"
         >
           <FiChevronRight className="text-xl" />

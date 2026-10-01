@@ -378,20 +378,26 @@ const Home = () => {
   );
 
   return (
-    <div className="w-full bg-[#F8FAFC] text-[#111827] font-sans antialiased overflow-hidden flex flex-col gap-[20px]">
+    <div className="w-full homepage_bg text-[#111827] font-sans antialiased overflow-hidden flex flex-col gap-[30px] relative">
       
+      {/* Dynamic Floating Ambient Glass Orbs in Background */}
+      <div className="absolute top-10 left-10 w-[500px] h-[500px] bg-blue-400/20 rounded-full blur-[120px] pointer-events-none animate-orb-1 -z-10" />
+      <div className="absolute top-[600px] right-5 w-[600px] h-[600px] bg-purple-400/15 rounded-full blur-[140px] pointer-events-none animate-orb-2 -z-10" />
+      <div className="absolute top-[1500px] left-1/4 w-[550px] h-[550px] bg-teal-400/15 rounded-full blur-[130px] pointer-events-none animate-orb-3 -z-10" />
+      <div className="absolute top-[2600px] right-10 w-[500px] h-[500px] bg-indigo-400/20 rounded-full blur-[120px] pointer-events-none animate-orb-1 -z-10" />
+
       {/* ========================================================
-          HERO / TOP SECTION (MATCHING REFERENCE DESIGN)
+          HERO / TOP SECTION (GLASSMORPHISM REDESIGN)
       ======================================================== */}
-      <section className="relative bg-white border-b border-gray-100 py-[15px]">
-        {/* Subtle Background Watermark / Contour Lines Pattern */}
-        <div className="absolute inset-0 pointer-events-none -z-10 opacity-35 overflow-hidden">
+      <section className="relative py-8 sm:py-12">
+        {/* Subtle Contour Background Overlay */}
+        <div className="absolute inset-0 pointer-events-none -z-10 opacity-30 overflow-hidden">
           <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <pattern id="contour-lines" width="160" height="160" patternUnits="userSpaceOnUse">
-                <path d="M 0 80 Q 40 50, 80 80 T 160 80" fill="none" stroke="#CBD5E1" strokeWidth="1" strokeDasharray="3 3" />
-                <path d="M 0 130 Q 40 100, 80 130 T 160 130" fill="none" stroke="#E2E8F0" strokeWidth="0.8" />
-                <circle cx="80" cy="80" r="1.5" fill="#94A3B8" />
+                <path d="M 0 80 Q 40 50, 80 80 T 160 80" fill="none" stroke="#94A3B8" strokeWidth="1" strokeDasharray="3 3" />
+                <path d="M 0 130 Q 40 100, 80 130 T 160 130" fill="none" stroke="#CBD5E1" strokeWidth="0.8" />
+                <circle cx="80" cy="80" r="1.5" fill="#3BA7F2" />
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#contour-lines)" />
@@ -405,7 +411,7 @@ const Home = () => {
             <div className="w-full lg:w-[48%] flex flex-col items-start text-left">
               
               {/* Top Badge: #1 Platform to Learn Coding */}
-              <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#13AA92]/10 text-[#13AA92] border border-[#13AA92]/30 text-xs font-semibold shadow-2xs mb-5">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-pill text-[#13AA92] text-xs font-semibold shadow-sm mb-6 border border-white/80">
                 <FaCrown className="text-xs text-[#13AA92]" />
                 <span>#1 Platform to Learn Coding</span>
               </div>
@@ -413,35 +419,35 @@ const Home = () => {
               {/* Main Headline */}
               <h1 className="text-4xl sm:text-5xl lg:text-[3.25rem] xl:text-[3.5rem] font-black text-gray-900 tracking-tight leading-[1.12]">
                 Empower Your Future <br className="hidden sm:block" />
-                With <span className="text-[#3BA7F2]">Coding Skills</span>
+                With <span className="accent-gradient-text">Coding Skills</span>
               </h1>
 
               {/* Supporting Subtitle */}
-              <p className="mt-5 text-base sm:text-lg text-[#64748B] font-normal leading-relaxed max-w-lg">
+              <p className="mt-5 text-base sm:text-lg text-[#475569] font-normal leading-relaxed max-w-lg">
                 Learn from industry experts, build real projects, and accelerate your career with our hands-on coding courses.
               </p>
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 mt-8 w-full sm:w-auto">
                 <Link to={primaryLink} className="w-full sm:w-auto">
-                  <button className="w-full sm:w-auto flex justify-center items-center gap-2 bg-[#3BA7F2] hover:bg-[#3BA7F2] text-white font-bold text-sm sm:text-base px-7 py-3.5 rounded-2xl shadow-lg shadow-indigo-500/25 transition-all duration-200 hover:-translate-y-0.5 active:scale-95">
+                  <button className="w-full sm:w-auto flex justify-center items-center gap-2 bg-[#3BA7F2]/90 hover:bg-[#3BA7F2] backdrop-blur-md text-white font-bold text-sm sm:text-base px-8 py-3.5 rounded-2xl border border-white/30 shadow-[0_8px_25px_rgba(59,167,242,0.35)] transition-all duration-300 hover:scale-105 active:scale-95">
                     <span>{primaryText}</span>
                     <span>→</span>
                   </button>
                 </Link>
 
                 <Link to="/courses" className="w-full sm:w-auto">
-                  <button className="w-full sm:w-auto flex justify-center items-center gap-2 bg-white hover:bg-indigo-50/50 text-[#3BA7F2] font-bold text-sm sm:text-base px-7 py-3.5 rounded-2xl border-2 border-[#3BA7F2] shadow-xs transition-all duration-200 hover:-translate-y-0.5 active:scale-95">
+                  <button className="w-full sm:w-auto flex justify-center items-center gap-2 bg-white/70 hover:bg-white/90 backdrop-blur-md text-[#3BA7F2] font-bold text-sm sm:text-base px-8 py-3.5 rounded-2xl border border-white/80 shadow-sm transition-all duration-300 hover:scale-105 active:scale-95">
                     <span>Explore Courses</span>
                   </button>
                 </Link>
               </div>
 
-              {/* Horizontal Stats Row directly below buttons */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 pt-8 mt-8 border-t border-gray-100 w-full">
+              {/* Horizontal Stats Row directly below buttons - Frosted Glass Container */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-4 pb-4 px-5 mt-8 glass-card rounded-2xl border border-white/70 w-full shadow-sm">
                 {/* Stat 1: Students */}
                 <div className="flex items-center gap-3 group cursor-default">
-                  <div className="w-9 h-9 rounded-xl bg-gray-50 text-gray-400 flex items-center justify-center text-base shrink-0 group-hover:bg-[#3BA7F2] group-hover:text-white transition-all duration-300">
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-[#3BA7F2] flex items-center justify-center text-base shrink-0 group-hover:bg-[#3BA7F2] group-hover:text-white transition-all duration-300 shadow-2xs">
                     <FiUsers />
                   </div>
                   <div className="flex flex-col">
@@ -454,11 +460,11 @@ const Home = () => {
 
                 {/* Stat 2: Courses */}
                 <div className="flex items-center gap-3 group cursor-default">
-                  <div className="w-9 h-9 rounded-xl bg-gray-50 text-gray-400 flex items-center justify-center text-base shrink-0 group-hover:bg-[#3BA7F2] group-hover:text-white transition-all duration-300">
+                  <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-600 flex items-center justify-center text-base shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-all duration-300 shadow-2xs">
                     <FiBookOpen />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-base sm:text-lg font-black text-gray-900 leading-tight group-hover:text-[#3BA7F2] transition-colors">
+                    <span className="text-base sm:text-lg font-black text-gray-900 leading-tight group-hover:text-purple-600 transition-colors">
                       {stats.coursesCount !== null && stats.coursesCount !== undefined ? formatStatNumber(stats.coursesCount, "0") : "0"}
                     </span>
                     <span className="text-[11px] text-gray-500 font-medium">Courses</span>
@@ -467,11 +473,11 @@ const Home = () => {
 
                 {/* Stat 3: Hours Learned */}
                 <div className="flex items-center gap-3 group cursor-default">
-                  <div className="w-9 h-9 rounded-xl bg-gray-50 text-gray-400 flex items-center justify-center text-base shrink-0 group-hover:bg-[#3BA7F2] group-hover:text-white transition-all duration-300">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-base shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 shadow-2xs">
                     <FiPlayCircle />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-base sm:text-lg font-black text-gray-900 leading-tight group-hover:text-[#3BA7F2] transition-colors">
+                    <span className="text-base sm:text-lg font-black text-gray-900 leading-tight group-hover:text-emerald-600 transition-colors">
                       {stats.hoursLearned !== null && stats.hoursLearned !== undefined ? formatStatNumber(stats.hoursLearned, "0") : "0"}
                     </span>
                     <span className="text-[11px] text-gray-500 font-medium">Hours Learned</span>
@@ -480,11 +486,11 @@ const Home = () => {
 
                 {/* Stat 4: Student Rating */}
                 <div className="flex items-center gap-3 group cursor-default">
-                  <div className="w-9 h-9 rounded-xl bg-gray-50 text-gray-400 flex items-center justify-center text-base shrink-0 group-hover:bg-[#3BA7F2] group-hover:text-white transition-all duration-300">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center text-base shrink-0 group-hover:bg-amber-500 group-hover:text-white transition-all duration-300 shadow-2xs">
                     <FiStar className="group-hover:fill-white fill-transparent transition-colors" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-base sm:text-lg font-black text-gray-900 leading-tight group-hover:text-[#3BA7F2] transition-colors">
+                    <span className="text-base sm:text-lg font-black text-gray-900 leading-tight group-hover:text-amber-500 transition-colors">
                       {stats.averageRating !== null && stats.averageRating !== undefined ? stats.averageRating : "0.0"}
                     </span>
                     <span className="text-[11px] text-gray-500 font-medium">Average Rating</span>
@@ -494,7 +500,7 @@ const Home = () => {
 
             </div>
 
-            {/* Right Column: Hero Visual with Overlapping Floating Badges */}
+            {/* Right Column: Hero Visual with Overlapping Floating Glass Badges */}
             <div className="w-full lg:w-[50%] relative flex justify-center items-center mt-6 lg:mt-0">
               
               {/* Playful Doodle Annotation (Top Right) */}
@@ -503,14 +509,14 @@ const Home = () => {
                   <path d="M5 25 C 15 5, 35 5, 45 20" strokeWidth="2" strokeDasharray="3 3" />
                   <path d="M40 22 L 46 20 L 44 14" strokeWidth="2" />
                 </svg>
-                <div className="text-[11px] font-bold text-indigo-700 bg-indigo-50/95 backdrop-blur-xs border border-indigo-100 px-3 py-1 rounded-full shadow-2xs rotate-6">
+                <div className="text-[11px] font-bold text-indigo-800 glass-pill px-3 py-1 rounded-full shadow-md rotate-6 border border-white/80">
                   Your Future Starts Here
                 </div>
               </div>
 
-              {/* Main Photo Card */}
-              <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white aspect-[4/3.2] max-w-[530px] w-full bg-slate-200">
-                {/* Instant Blurred LQIP Placeholder (renders in 0ms with zero blank flash) */}
+              {/* Main Photo Card with Glass Glow Border */}
+              <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white/80 backdrop-blur-md aspect-[4/3.2] max-w-[530px] w-full bg-slate-200/50">
+                {/* Instant Blurred LQIP Placeholder */}
                 <img
                   src="data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAAAwBQCdASoYABIAPzmQu1gvKaWjqAqp4CcJQBUegYs7bxtOW9fVxH5/z9wltc/OLKnIQAD+1Z1CK6bU+cKSy19EVqSkIlnV33q84M9+4ZVqTWecXaMUZvEQIZ5GopbtucZ/M/dlh2EsNLaI845B727iwh8SmxMK/hRpzaY5HLE0Y9sc44igkwFLjlna0xSXOTEIIAQAAAA="
                   alt=""
@@ -541,12 +547,12 @@ const Home = () => {
                 </picture>
               </div>
 
-              {/* Floating Badge 1 (Top Left Overlapping Main Photo): Keep Learning Progress */}
-              <div className="absolute -top-4 left-0 sm:-top-6 sm:-left-6 bg-white/95 backdrop-blur-md rounded-2xl p-3 sm:p-3.5 shadow-xl border border-gray-100 flex items-center gap-3 z-20">
+              {/* Floating Badge 1 (Top Left Overlapping Main Photo): Glass Progress Card */}
+              <div className="absolute -top-4 left-0 sm:-top-6 sm:-left-6 glass-card rounded-2xl p-3 sm:p-3.5 shadow-2xl border border-white/80 flex items-center gap-3 z-20">
                 <div className="relative w-11 h-11 shrink-0 flex items-center justify-center">
                   <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                     <path
-                      className="text-indigo-100"
+                      className="text-indigo-100/60"
                       strokeWidth="3.5"
                       stroke="currentColor"
                       fill="none"
@@ -571,9 +577,9 @@ const Home = () => {
                 </div>
               </div>
 
-              {/* Floating Badge 2 (Bottom Left Overlapping Main Photo): Dark Mini Code Snippet */}
-              <div className="absolute -bottom-6 left-0 sm:-left-6 bg-[#181B26] text-white rounded-2xl p-3.5 sm:p-4 shadow-2xl border border-gray-800 z-20 font-mono text-xs w-[210px] sm:w-[230px] text-left">
-                <div className="flex items-center gap-1.5 pb-2 mb-2 border-b border-gray-800/80">
+              {/* Floating Badge 2 (Bottom Left Overlapping Main Photo): Frosted Dark Code Snippet */}
+              <div className="absolute -bottom-6 left-0 sm:-left-6 glass-card-dark text-white rounded-2xl p-3.5 sm:p-4 shadow-2xl border border-white/10 z-20 font-mono text-xs w-[210px] sm:w-[230px] text-left">
+                <div className="flex items-center gap-1.5 pb-2 mb-2 border-b border-white/10">
                   <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
                   <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
@@ -585,9 +591,9 @@ const Home = () => {
                 </div>
               </div>
 
-              {/* Floating Badge 3 (Bottom Right Overlapping Main Photo): Build Create Grow */}
-              <div className="absolute bottom-4 right-0 sm:-right-6 bg-white/95 backdrop-blur-md rounded-2xl p-3 sm:p-3.5 shadow-xl border border-gray-100 z-20 flex flex-col items-center justify-center text-center w-[85px] sm:w-[95px]">
-                <div className="w-6 h-6 rounded-full bg-indigo-50 text-[#3BA7F2] flex items-center justify-center text-xs mb-1.5 shadow-2xs">
+              {/* Floating Badge 3 (Bottom Right Overlapping Main Photo): Frosted Glass Build Card */}
+              <div className="absolute bottom-4 right-0 sm:-right-6 glass-card rounded-2xl p-3 sm:p-3.5 shadow-2xl border border-white/80 z-20 flex flex-col items-center justify-center text-center w-[85px] sm:w-[95px]">
+                <div className="w-7 h-7 rounded-full bg-indigo-50 text-[#3BA7F2] flex items-center justify-center text-xs mb-1.5 shadow-2xs">
                   📍
                 </div>
                 <span className="text-xs font-black text-gray-900 leading-tight">Build</span>
@@ -630,13 +636,13 @@ const Home = () => {
 
         {/* Header Content */}
         <div className="max-w-2xl mx-auto space-y-2.5 relative z-10 pt-[60px]">
-          <div className="inline-flex items-center gap-1.5 bg-[#13AA92]/10 text-[#13AA92] text-xs font-semibold px-3.5 py-1 rounded-full border border-[#13AA92]/30 mb-2 shadow-2xs">
+          <div className="inline-flex items-center gap-1.5 glass-pill text-[#13AA92] text-xs font-semibold px-4 py-1.5 rounded-full mb-2 shadow-sm border border-white/80">
             <FiGrid className="text-xs text-[#13AA92]" />
             <span>Domain Specializations</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-[#0F172A] tracking-tight leading-tight">
-            Explore Popular <span className="text-[#3BA7F2]">Categories</span>
+            Explore Popular <span className="accent-gradient-text">Categories</span>
           </h2>
 
           <p className="text-sm sm:text-base text-gray-500 max-w-xl mx-auto font-normal leading-relaxed">
@@ -644,14 +650,14 @@ const Home = () => {
           </p>
         </div>
 
-        {/* 6 Category Cards Grid */}
+        {/* 6 Category Cards Grid - Glassmorphism cards */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-4 xl:gap-5 mt-8 sm:mt-12 relative z-10">
           {popularCategoriesList.map((cat, idx) => {
             return (
               <Link
                 key={cat._id || idx}
                 to={cat.link}
-                className="group bg-white rounded-2xl sm:rounded-3xl border border-gray-100 p-3 sm:p-5 flex flex-col justify-between text-left shadow-[0_4px_20px_-4px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_35px_-5px_rgba(0,0,0,0.08)] hover:-translate-y-1.5 transition-all duration-300 relative"
+                className="group glass-card glass-card-hover rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 flex flex-col justify-between text-left shadow-lg hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-2 transition-all duration-300 relative border border-white/80"
               >
                 <div>
                   {/* Top Squircle Icon */}
@@ -678,7 +684,7 @@ const Home = () => {
                   <span className={`text-[9px] sm:text-[11px] font-semibold px-2 py-0.5 sm:px-2.5 sm:py-0.5 rounded-full border ${cat.pillBg} whitespace-nowrap`}>
                     {cat.courseCount}
                   </span>
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 shrink-0 rounded-full bg-white border border-gray-200/90 flex items-center justify-center text-gray-600 shadow-2xs group-hover:border-gray-400 group-hover:text-gray-900 group-hover:translate-x-0.5 transition-all ml-1">
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 shrink-0 rounded-full bg-white/80 border border-white/90 flex items-center justify-center text-gray-600 shadow-2xs group-hover:bg-[#3BA7F2] group-hover:text-white group-hover:translate-x-0.5 transition-all ml-1">
                     <FiArrowRight className="text-[10px] sm:text-xs" />
                   </div>
                 </div>
@@ -691,7 +697,7 @@ const Home = () => {
         <div className="mt-12 flex flex-col items-center justify-center relative z-10">
           <Link
             to="/categories"
-            className="relative inline-flex items-center gap-2.5 bg-[#181B26] hover:bg-[#0F172A] text-white text-xs sm:text-sm font-semibold px-7 sm:px-8 py-3.5 rounded-full shadow-[0_12px_28px_rgba(24,27,38,0.25)] hover:shadow-[0_16px_32px_rgba(59,167,242,0.35)] transition-all duration-300 hover:scale-[1.03] group"
+            className="relative inline-flex items-center gap-2.5 bg-slate-900/90 hover:bg-slate-900 backdrop-blur-md text-white text-xs sm:text-sm font-semibold px-8 py-3.5 rounded-full border border-white/20 shadow-[0_12px_28px_rgba(15,23,42,0.2)] hover:shadow-[0_16px_36px_rgba(59,167,242,0.35)] transition-all duration-300 hover:scale-105 group"
           >
             <span>View All Categories {categoryCount !== null ? `(${categoryCount})` : (dbCategories.length > 0 ? `(${dbCategories.length})` : '')}</span>
             <FiArrowRight className="text-sm group-hover:translate-x-1 transition-transform" />
@@ -735,18 +741,18 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ALL CATEGORIES MODAL */}
+      {/* ALL CATEGORIES MODAL (GLASSMORPHISM REDESIGN) */}
       {showAllCatModal && (
-        <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white border border-gray-100 max-w-4xl w-full rounded-3xl p-6 sm:p-8 text-gray-900 space-y-6 shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar animate-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-white/85 backdrop-blur-2xl border border-white/80 max-w-4xl w-full rounded-3xl p-6 sm:p-8 text-gray-900 space-y-6 shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar animate-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-gray-200/60 pb-4">
               <div>
                 <h2 className="text-xl font-bold text-gray-900">All Course Categories</h2>
                 <p className="text-xs text-gray-500 mt-0.5">Explore tech domains, career pathways, and languages</p>
               </div>
               <button
                 onClick={() => setShowAllCatModal(false)}
-                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center text-sm transition-colors"
+                className="w-8 h-8 rounded-full bg-white/80 hover:bg-white text-gray-600 border border-gray-200/80 flex items-center justify-center text-sm transition-colors shadow-2xs"
                 aria-label="Close modal"
               >
                 <FiX className="text-base" />
@@ -761,7 +767,7 @@ const Home = () => {
                 placeholder="Search categories by keyword..."
                 value={categorySearch}
                 onChange={(e) => setCategorySearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white text-xs outline-none focus:border-purple-500 transition-colors"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl glass-input text-xs outline-none focus:border-blue-500 transition-colors"
               />
             </div>
 
@@ -778,7 +784,7 @@ const Home = () => {
                     key={categoryId || idx}
                     to={targetLink}
                     onClick={() => setShowAllCatModal(false)}
-                    className="bg-gray-50/70 hover:bg-white border border-gray-100 hover:border-purple-200 rounded-2xl p-4 flex items-center gap-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md group"
+                    className="glass-card hover:bg-white border border-white/80 rounded-2xl p-4 flex items-center gap-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md group"
                   >
                     <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${preset.gradient} ${preset.glowShadow} flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform`}>
                       {renderCategoryIcon(preset.type)}
@@ -803,15 +809,15 @@ const Home = () => {
       )}
 
       {/* ========================================================
-          3 SIMPLE STEPS SECTION (MATCHING REFERENCE DESIGN)
+          3 SIMPLE STEPS SECTION (GLASSMORPHISM REDESIGN)
       ======================================================== */}
       <section className="w-11/12 max-w-maxContent mx-auto py-[15px]">
-        <div className="rounded-3xl sm:rounded-[2.5rem] bg-white border border-gray-100 shadow-sm p-[15px] text-center w-full mx-auto">
+        <div className="rounded-3xl sm:rounded-[2.5rem] glass-card border border-white/80 shadow-xl p-8 sm:p-12 text-center w-full mx-auto">
           
           {/* Section Header */}
           <div className="max-w-xl mx-auto mb-12 sm:mb-16">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
-              Start Learning in <span className="text-[#3BA7F2]">3 Simple Steps</span>
+              Start Learning in <span className="accent-gradient-text">3 Simple Steps</span>
             </h2>
             <p className="text-sm sm:text-base text-gray-500 mt-2 font-normal">
               Your coding journey begins here.
@@ -822,15 +828,15 @@ const Home = () => {
           <div className="relative flex flex-col md:flex-row items-center justify-between gap-10 md:gap-6 w-full px-4 lg:px-20 mx-auto">
             
             {/* Desktop Dotted Connector Line */}
-            <div className="hidden md:block absolute top-8 left-[18%] right-[18%] h-[2px] border-b-2 border-dotted border-indigo-200 z-0 pointer-events-none"></div>
+            <div className="hidden md:block absolute top-8 left-[18%] right-[18%] h-[2px] border-b-2 border-dotted border-blue-300 z-0 pointer-events-none"></div>
 
             {/* Step 1: Create Your Account */}
             <div className="relative z-10 flex flex-col items-center text-center w-full max-w-[320px]">
-              <div className="w-16 h-16 rounded-full bg-[#13AA92]/10 border border-[#13AA92]/30 flex items-center justify-center text-[#3BA7F2] text-2xl shadow-2xs transition-transform duration-300 hover:scale-110 mb-5">
+              <div className="w-16 h-16 rounded-full glass-card border border-white/90 flex items-center justify-center text-[#3BA7F2] text-2xl shadow-lg transition-transform duration-300 hover:scale-110 mb-5">
                 <FiUser />
               </div>
               <div className="flex items-center justify-center gap-1.5 mb-2">
-                <span className="w-5 h-5 rounded-full bg-[#181B26] text-white text-[10px] font-extrabold flex items-center justify-center">
+                <span className="w-5 h-5 rounded-full bg-slate-900 text-white text-[10px] font-extrabold flex items-center justify-center">
                   1
                 </span>
                 <h3 className="font-bold text-gray-900 text-sm sm:text-base">
@@ -844,11 +850,11 @@ const Home = () => {
 
             {/* Step 2: Explore Courses */}
             <div className="relative z-10 flex flex-col items-center text-center w-full max-w-[320px]">
-              <div className="w-16 h-16 rounded-full bg-[#13AA92]/10 border border-[#13AA92]/30 flex items-center justify-center text-[#3BA7F2] text-2xl shadow-2xs transition-transform duration-300 hover:scale-110 mb-5">
+              <div className="w-16 h-16 rounded-full glass-card border border-white/90 flex items-center justify-center text-purple-600 text-2xl shadow-lg transition-transform duration-300 hover:scale-110 mb-5">
                 <FiBookOpen />
               </div>
               <div className="flex items-center justify-center gap-1.5 mb-2">
-                <span className="w-5 h-5 rounded-full bg-[#181B26] text-white text-[10px] font-extrabold flex items-center justify-center">
+                <span className="w-5 h-5 rounded-full bg-slate-900 text-white text-[10px] font-extrabold flex items-center justify-center">
                   2
                 </span>
                 <h3 className="font-bold text-gray-900 text-sm sm:text-base">
@@ -862,11 +868,11 @@ const Home = () => {
 
             {/* Step 3: Start & Grow */}
             <div className="relative z-10 flex flex-col items-center text-center w-full max-w-[320px]">
-              <div className="w-16 h-16 rounded-full bg-[#13AA92]/10 border border-[#13AA92]/30 flex items-center justify-center text-[#3BA7F2] text-2xl shadow-2xs transition-transform duration-300 hover:scale-110 mb-5">
+              <div className="w-16 h-16 rounded-full glass-card border border-white/90 flex items-center justify-center text-emerald-600 text-2xl shadow-lg transition-transform duration-300 hover:scale-110 mb-5">
                 <FaRocket className="text-xl" />
               </div>
               <div className="flex items-center justify-center gap-1.5 mb-2">
-                <span className="w-5 h-5 rounded-full bg-[#181B26] text-white text-[10px] font-extrabold flex items-center justify-center">
+                <span className="w-5 h-5 rounded-full bg-slate-900 text-white text-[10px] font-extrabold flex items-center justify-center">
                   3
                 </span>
                 <h3 className="font-bold text-gray-900 text-sm sm:text-base">
@@ -1000,19 +1006,19 @@ export default function InteractiveCounter() {
       <LearningLanguageSection />
 
       {/* ========================================================
-          FEATURED COURSES SECTION (MATCHING REFERENCE DESIGN)
+          FEATURED COURSES SECTION (GLASSMORPHISM REDESIGN)
       ======================================================== */}
       <section className="w-11/12 max-w-maxContent mx-auto text-center py-[15px]">
         
         {/* Header Content */}
         <div className="max-w-2xl mx-auto space-y-2.5 mb-12 text-center">
-          <div className="inline-flex items-center gap-1.5 bg-[#13AA92]/10 text-[#13AA92] text-xs font-semibold px-3.5 py-1 rounded-full border border-[#13AA92]/30 shadow-2xs">
+          <div className="inline-flex items-center gap-1.5 glass-pill text-[#13AA92] text-xs font-semibold px-4 py-1.5 rounded-full mb-2 shadow-sm border border-white/80">
             <FaCrown className="text-xs text-[#13AA92]" />
             <span>Top Rated</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-[#0F172A] tracking-tight leading-tight">
-            Featured <span className="text-[#3BA7F2]">Courses</span>
+            Featured <span className="accent-gradient-text">Courses</span>
           </h2>
 
           <p className="text-sm sm:text-base text-gray-600 font-normal max-w-xl mx-auto leading-relaxed">
@@ -1028,12 +1034,12 @@ export default function InteractiveCounter() {
                 <div
                   key={course.id}
                   onClick={() => navigate(course.id && !course.id.startsWith('feat-') ? `/courses/${course.id}` : '/courses')}
-                  className="bg-white rounded-2xl border border-gray-100 shadow-xs hover:shadow-xl hover:border-gray-200 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer group"
+                  className="glass-card glass-card-hover rounded-3xl border border-white/80 shadow-lg hover:shadow-2xl hover:border-blue-400/40 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer group"
                 >
                   <div>
                     {/* Top Image & Badge */}
-                    <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-gray-100">
-                      <span className={`absolute top-3 left-3 px-2.5 py-0.5 rounded-md text-[10px] font-black z-10 text-white tracking-wider uppercase shadow-xs ${course.badgeColor || 'bg-[#3BA7F2]'}`}>
+                    <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-slate-100/50">
+                      <span className={`absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-black z-10 text-white tracking-wider uppercase shadow-md glass-pill border border-white/40 ${course.badgeColor || 'bg-[#3BA7F2]'}`}>
                         {course.badge}
                       </span>
                       <img
@@ -1079,8 +1085,8 @@ export default function InteractiveCounter() {
             })}
           </div>
         ) : (
-          <div className="w-full flex flex-col items-center justify-center py-16 px-4 bg-gray-50/80 rounded-3xl border border-gray-100">
-            <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 text-2xl mb-4 shadow-2xs">
+          <div className="w-full flex flex-col items-center justify-center py-16 px-4 glass-card rounded-3xl border border-white/80">
+            <div className="w-16 h-16 rounded-full glass-card border border-white/90 flex items-center justify-center text-gray-400 text-2xl mb-4 shadow-sm">
               <FiBookOpen />
             </div>
             <h3 className="text-lg font-bold text-gray-800 mb-1.5">No Featured Courses Yet</h3>
@@ -1094,7 +1100,7 @@ export default function InteractiveCounter() {
         <div className="mt-12 flex justify-center">
           <Link
             to="/courses"
-            className="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-800 border border-gray-200 text-xs sm:text-sm font-semibold px-7 py-2.5 rounded-full shadow-2xs hover:shadow-xs transition-all duration-200 group"
+            className="inline-flex items-center gap-2 bg-white/70 hover:bg-white backdrop-blur-md text-gray-800 border border-white/80 text-xs sm:text-sm font-semibold px-8 py-3 rounded-full shadow-sm hover:shadow-md transition-all duration-200 group"
           >
             <span>View All Courses</span>
             <FiArrowRight className="text-xs group-hover:translate-x-1 transition-transform" />
@@ -1118,11 +1124,11 @@ export default function InteractiveCounter() {
       <Reviewslider />
 
       {/* ========================================================
-          FAQ ACCORDION SECTION
+          FAQ ACCORDION SECTION (GLASSMORPHISM REDESIGN)
       ======================================================== */}
-      <section className="w-11/12 max-w-maxContent mx-auto text-center border-t border-gray-200/60 py-[15px]">
+      <section className="w-11/12 max-w-maxContent mx-auto text-center border-t border-white/40 py-[15px]">
         <div className="max-w-2xl mx-auto space-y-3 mb-10">
-          <div className="inline-flex items-center gap-1.5 bg-[#13AA92]/10 text-[#13AA92] text-xs font-semibold px-3.5 py-1 rounded-full border border-[#13AA92]/30 shadow-2xs">
+          <div className="inline-flex items-center gap-1.5 glass-pill text-[#13AA92] text-xs font-semibold px-4 py-1.5 rounded-full shadow-sm border border-white/80">
             <FiHelpCircle className="text-xs text-[#13AA92]" />
             <span>Frequently Asked Questions</span>
           </div>
@@ -1140,11 +1146,11 @@ export default function InteractiveCounter() {
             return (
               <div
                 key={idx}
-                className="bg-white rounded-2xl border border-gray-200/90 overflow-hidden shadow-2xs transition-colors"
+                className="glass-card rounded-2xl border border-white/80 overflow-hidden shadow-sm transition-all duration-200"
               >
                 <button
                   onClick={() => setActiveFaq(isOpen ? null : idx)}
-                  className="w-full p-5 sm:p-6 flex items-center justify-between text-left gap-4 hover:bg-gray-50/60 transition-colors"
+                  className="w-full p-5 sm:p-6 flex items-center justify-between text-left gap-4 hover:bg-white/40 transition-colors"
                 >
                   <span className="font-bold text-sm sm:text-base text-gray-900">
                     {faq.question}
@@ -1157,7 +1163,7 @@ export default function InteractiveCounter() {
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 sm:px-6 pb-6 pt-1 text-xs sm:text-sm text-gray-600 leading-relaxed border-t border-gray-100">
+                  <div className="px-5 sm:px-6 pb-6 pt-1 text-xs sm:text-sm text-gray-600 leading-relaxed border-t border-white/60">
                     {faq.answer}
                   </div>
                 )}
@@ -1168,14 +1174,14 @@ export default function InteractiveCounter() {
       </section>
 
       {/* ========================================================
-          BOTTOM CONVERSION CTA BANNER (MATCHING REFERENCE DESIGN)
+          BOTTOM CONVERSION CTA BANNER (GLASSMORPHISM REDESIGN)
       ======================================================== */}
       <section className="w-11/12 max-w-maxContent mx-auto py-[15px]">
-        <div className="rounded-3xl lg:rounded-[2.2rem] bg-gradient-to-r from-[#F0F8FF] via-[#F4FAFF] to-[#E6F4FF] border border-blue-100/90 p-[15px] relative overflow-hidden shadow-xs">
+        <div className="rounded-3xl lg:rounded-[2.5rem] bg-gradient-to-r from-blue-500/15 via-indigo-500/15 to-purple-500/15 backdrop-blur-2xl border border-white/80 p-8 sm:p-12 relative overflow-hidden shadow-2xl">
           
           {/* Ambient Glowing Background Blurs */}
-          <div className="absolute -top-20 -right-20 w-96 h-96 bg-[#3BA7F2]/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-[#3BA7F2]/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -top-20 -right-20 w-96 h-96 bg-[#3BA7F2]/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl pointer-events-none" />
 
           <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8 relative z-10">
             
@@ -1183,7 +1189,7 @@ export default function InteractiveCounter() {
             <div className="w-full lg:w-[48%] flex flex-col items-start text-left">
               
               {/* Pill Badge */}
-              <div className="inline-flex items-center gap-2 bg-[#13AA92]/10 text-[#13AA92] text-xs font-semibold px-3.5 py-1 rounded-full shadow-2xs mb-3 select-none">
+              <div className="inline-flex items-center gap-2 glass-pill text-[#13AA92] text-xs font-semibold px-4 py-1.5 rounded-full shadow-sm mb-4 border border-white/80 select-none">
                 <FaRocket className="text-xs text-[#13AA92]" />
                 <span>Your Future Starts Here</span>
               </div>
@@ -1191,27 +1197,27 @@ export default function InteractiveCounter() {
               {/* Main Headline */}
               <h2 className="text-2xl sm:text-3xl lg:text-[38px] font-black text-[#0F172A] tracking-tight leading-[1.12]">
                 Accelerate Your <br />
-                <span className="text-[#3BA7F2]">
+                <span className="accent-gradient-text">
                   Tech Career Today
                 </span>
               </h2>
 
               {/* Subtitle */}
-              <p className="mt-2 text-xs sm:text-sm text-gray-500 font-normal leading-relaxed max-w-md">
+              <p className="mt-2 text-xs sm:text-sm text-gray-600 font-normal leading-relaxed max-w-md">
                 Join thousands of engineers who leveled up their skills, built production-grade apps, and landed top tech roles.
               </p>
 
               {/* Dual Action Buttons */}
-              <div className="flex flex-col sm:flex-row items-center gap-3 mt-5 w-full sm:w-auto">
+              <div className="flex flex-col sm:flex-row items-center gap-3 mt-6 w-full sm:w-auto">
                 <Link to={token ? "/courses" : "/signup"} className="w-full sm:w-auto">
-                  <button className="w-full sm:w-auto flex justify-center items-center gap-2 bg-[#3BA7F2] hover:bg-[#13AA92] text-white font-bold text-xs sm:text-sm px-6 py-2.5 sm:py-3 rounded-full shadow-[0_8px_25px_rgba(59,167,242,0.45)] transition-all duration-200 hover:scale-105 active:scale-95">
+                  <button className="w-full sm:w-auto flex justify-center items-center gap-2 bg-[#3BA7F2]/90 hover:bg-[#3BA7F2] backdrop-blur-md text-white font-bold text-xs sm:text-sm px-7 py-3 rounded-full border border-white/30 shadow-[0_8px_25px_rgba(59,167,242,0.45)] transition-all duration-300 hover:scale-105 active:scale-95">
                     <span>Get Started Free</span>
                     <FiArrowRight className="text-sm" />
                   </button>
                 </Link>
 
                 <Link to="/courses" className="w-full sm:w-auto">
-                  <button className="w-full sm:w-auto flex justify-center items-center gap-2 bg-white hover:bg-blue-50/50 text-[#3BA7F2] border-2 border-[#3BA7F2] font-bold text-xs sm:text-sm px-6 py-2.5 sm:py-3 rounded-full shadow-xs transition-all duration-200 hover:scale-105 active:scale-95">
+                  <button className="w-full sm:w-auto flex justify-center items-center gap-2 bg-white/70 hover:bg-white/90 backdrop-blur-md text-[#3BA7F2] border border-white/80 font-bold text-xs sm:text-sm px-7 py-3 rounded-full shadow-sm transition-all duration-300 hover:scale-105 active:scale-95">
                     <span>Browse All Courses</span>
                     <FiArrowRight className="text-sm" />
                   </button>
@@ -1219,9 +1225,9 @@ export default function InteractiveCounter() {
               </div>
 
               {/* 4 Feature Micro-Metrics */}
-              <div className="flex flex-wrap items-center gap-4 sm:gap-6 mt-6 w-full">
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6 mt-8 w-full">
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-[#3BA7F2]/10 text-[#3BA7F2] flex items-center justify-center text-xs shrink-0 shadow-2xs">
+                  <div className="w-8 h-8 rounded-full glass-card text-[#3BA7F2] flex items-center justify-center text-xs shrink-0 shadow-sm border border-white/80">
                     <FaGraduationCap />
                   </div>
                   <div className="text-left leading-tight">
@@ -1231,7 +1237,7 @@ export default function InteractiveCounter() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-[#3BA7F2]/10 text-[#3BA7F2] flex items-center justify-center text-xs shrink-0 shadow-2xs">
+                  <div className="w-8 h-8 rounded-full glass-card text-purple-600 flex items-center justify-center text-xs shrink-0 shadow-sm border border-white/80">
                     <FiBarChart2 />
                   </div>
                   <div className="text-left leading-tight">
@@ -1241,7 +1247,7 @@ export default function InteractiveCounter() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-[#3BA7F2]/10 text-[#3BA7F2] flex items-center justify-center text-xs shrink-0 shadow-2xs">
+                  <div className="w-8 h-8 rounded-full glass-card text-emerald-600 flex items-center justify-center text-xs shrink-0 shadow-sm border border-white/80">
                     <FiBriefcase />
                   </div>
                   <div className="text-left leading-tight">
@@ -1251,7 +1257,7 @@ export default function InteractiveCounter() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-[#3BA7F2]/10 text-[#3BA7F2] flex items-center justify-center text-xs shrink-0 shadow-2xs">
+                  <div className="w-8 h-8 rounded-full glass-card text-amber-500 flex items-center justify-center text-xs shrink-0 shadow-sm border border-white/80">
                     <FiStar />
                   </div>
                   <div className="text-left leading-tight">
@@ -1272,7 +1278,7 @@ export default function InteractiveCounter() {
                   alt="Accelerate Your Tech Career Today"
                   loading="lazy"
                   decoding="async"
-                  className="w-full h-auto max-h-[290px] sm:max-h-[320px] object-contain max-w-[540px] drop-shadow-sm pointer-events-none select-none -hue-rotate-60"
+                  className="w-full h-auto max-h-[290px] sm:max-h-[320px] object-contain max-w-[540px] drop-shadow-md pointer-events-none select-none -hue-rotate-60"
                 />
               </picture>
             </div>

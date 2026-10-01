@@ -169,8 +169,8 @@ const ExploreMore = () => {
       
       {/* Header */}
       <div className="max-w-2xl mx-auto space-y-3">
-        <div className="inline-flex items-center gap-1.5 bg-[#7FE7D6]/10 text-[#7FE7D6] text-xs font-semibold px-3.5 py-1 rounded-full border border-[#7FE7D6]/30 shadow-2xs">
-          <FiCompass className="text-xs text-[#7FE7D6]" />
+        <div className="inline-flex items-center gap-1.5 glass-pill text-[#13AA92] text-xs font-semibold px-4 py-1.5 rounded-full border border-white/80 shadow-sm">
+          <FiCompass className="text-xs text-[#13AA92]" />
           <span>Curated Pathways</span>
         </div>
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
@@ -181,17 +181,17 @@ const ExploreMore = () => {
         </p>
       </div>
 
-      {/* Tabs Switcher */}
+      {/* Tabs Switcher - Frosted Glass Container */}
       <div className="mt-8 flex justify-center">
-        <div className="inline-flex flex-wrap items-center justify-center gap-1.5 p-1.5 bg-gray-100/80 rounded-2xl border border-gray-200">
+        <div className="inline-flex flex-wrap items-center justify-center gap-1.5 p-2 glass-pill rounded-2xl border border-white/80 shadow-md">
           {tabsName.map((element, index) => (
             <button
               key={index}
               onClick={() => setMyCards(element)}
-              className={`px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 ${
+              className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 ${
                 currentTab === element
-                  ? "bg-white text-blue-600 shadow-xs border border-gray-200/80"
-                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-200/50"
+                  ? "bg-white text-[#3BA7F2] shadow-md border border-white/90 scale-105"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-white/40"
               }`}
             >
               {element}
@@ -208,21 +208,21 @@ const ExploreMore = () => {
             <div
               key={index}
               onClick={() => handleCardClick(element.heading)}
-              className={`rounded-2xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 cursor-pointer ${
+              className={`rounded-3xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 cursor-pointer ${
                 isSelected
-                  ? "bg-white border-2 border-blue-500 shadow-lg -translate-y-1"
-                  : "bg-white border border-gray-200 shadow-2xs hover:shadow-md hover:border-gray-300 hover:-translate-y-0.5"
+                  ? "glass-card border-2 border-[#3BA7F2] shadow-2xl shadow-blue-500/15 -translate-y-1.5 bg-white/85"
+                  : "glass-card glass-card-hover border border-white/80 shadow-md"
               }`}
             >
               <div>
                 {/* Card Tag Pill */}
                 <div className="flex items-center justify-between mb-4">
-                  <span className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${
+                  <span className={`text-[11px] font-semibold px-3 py-0.5 rounded-full border glass-pill ${
                     element.level === 'Beginner' 
-                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
+                      ? 'bg-emerald-50/80 text-emerald-700 border-emerald-200/80'
                       : element.level === 'Intermediate'
-                      ? 'bg-blue-50 text-blue-700 border border-blue-200/60'
-                      : 'bg-purple-50 text-purple-700 border border-purple-200/60'
+                      ? 'bg-blue-50/80 text-blue-700 border-blue-200/80'
+                      : 'bg-purple-50/80 text-purple-700 border-purple-200/80'
                   }`}>
                     {element.level}
                   </span>
@@ -233,7 +233,7 @@ const ExploreMore = () => {
                   )}
                 </div>
 
-                <h3 className="font-bold text-lg text-gray-900 mb-2 leading-snug group-hover:text-blue-600 transition-colors">
+                <h3 className="font-bold text-lg text-gray-900 mb-2 leading-snug group-hover:text-[#3BA7F2] transition-colors">
                   {element.heading}
                 </h3>
                 <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
@@ -242,13 +242,13 @@ const ExploreMore = () => {
               </div>
 
               {/* Card Footer */}
-              <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+              <div className="mt-6 pt-4 border-t border-white/60 flex items-center justify-between text-xs text-gray-500">
                 <div className="flex items-center gap-1.5 font-medium">
-                  <FiBookOpen className="text-blue-600" />
+                  <FiBookOpen className="text-[#3BA7F2]" />
                   <span>{element.lessionNumber} Lessons</span>
                 </div>
 
-                <div className="flex items-center gap-1 font-semibold text-blue-600 group-hover:translate-x-1 transition-transform">
+                <div className="flex items-center gap-1 font-semibold text-[#3BA7F2] group-hover:translate-x-1 transition-transform">
                   <span>Explore</span>
                   <FiArrowRight />
                 </div>

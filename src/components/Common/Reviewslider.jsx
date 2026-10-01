@@ -104,7 +104,7 @@ const Reviewslider = () => {
       
       {/* Header */}
       <div className="max-w-2xl mx-auto space-y-3 mb-10">
-        <div className="inline-flex items-center gap-1.5 bg-[#13AA92]/10 text-[#13AA92] text-xs font-semibold px-3.5 py-1 rounded-full border border-[#13AA92]/30 shadow-2xs">
+        <div className="inline-flex items-center gap-1.5 glass-pill text-[#13AA92] text-xs font-semibold px-4 py-1.5 rounded-full border border-white/80 shadow-sm">
           <FiStar className="text-xs text-[#13AA92]" />
           <span>Learner Community</span>
         </div>
@@ -116,18 +116,18 @@ const Reviewslider = () => {
         </p>
       </div>
 
-      {/* Testimonials Grid */}
+      {/* Testimonials Grid - Frosted Glass Cards */}
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
           {Array.from({ length: itemsPerPage }).map((_, idx) => (
-            <div key={idx} className="bg-white rounded-2xl p-6 h-52 border border-gray-200 animate-pulse flex flex-col justify-between">
-              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-              <div className="h-4 bg-gray-100 rounded w-1/2"></div>
+            <div key={idx} className="glass-card rounded-3xl p-6 sm:p-7 h-52 border border-white/80 animate-pulse flex flex-col justify-between">
+              <div className="h-4 bg-white/40 rounded w-3/4 mb-2"></div>
+              <div className="h-4 bg-white/20 rounded w-1/2"></div>
               <div className="flex items-center gap-3 mt-6">
-                <div className="w-10 h-10 rounded-full bg-gray-200"></div>
+                <div className="w-10 h-10 rounded-full bg-white/40"></div>
                 <div className="space-y-1.5">
-                  <div className="h-3 bg-gray-200 rounded w-20"></div>
-                  <div className="h-2 bg-gray-100 rounded w-16"></div>
+                  <div className="h-3 bg-white/40 rounded w-20"></div>
+                  <div className="h-2 bg-white/20 rounded w-16"></div>
                 </div>
               </div>
             </div>
@@ -146,7 +146,7 @@ const Reviewslider = () => {
               return (
                 <div
                   key={item._id || item.id || idx}
-                  className="bg-white rounded-2xl p-6 sm:p-7 border border-gray-200 shadow-2xs hover:shadow-md hover:border-gray-300 hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between"
+                  className="glass-card glass-card-hover rounded-3xl p-6 sm:p-7 border border-white/80 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between"
                 >
                   <div>
                     {/* 5-Star Rating */}
@@ -154,7 +154,7 @@ const Reviewslider = () => {
                       {[...Array(5)].map((_, i) => (
                         <FiStar key={i} className="fill-amber-400" />
                       ))}
-                      <span className="text-gray-400 font-medium text-[11px] ml-1.5">5.0</span>
+                      <span className="text-gray-500 font-medium text-[11px] ml-1.5">5.0</span>
                     </div>
 
                     <p className="text-xs sm:text-sm text-gray-700 leading-relaxed font-normal line-clamp-4">
@@ -162,18 +162,18 @@ const Reviewslider = () => {
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-3 pt-5 border-t border-gray-100 mt-6">
+                  <div className="flex items-center gap-3 pt-5 border-t border-white/60 mt-6">
                     <img
                       src={image}
                       alt={name}
-                      className="w-10 h-10 rounded-full object-cover border border-gray-200"
+                      className="w-10 h-10 rounded-full object-cover border-2 border-white/80 shadow-sm"
                     />
                     <div className="overflow-hidden">
                       <div className="flex items-center gap-1">
                         <h4 className="text-xs font-bold text-gray-900 truncate">
                           {name}
                         </h4>
-                        <FiCheckCircle className="text-blue-600 text-xs shrink-0" title="Verified Learner" />
+                        <FiCheckCircle className="text-[#3BA7F2] text-xs shrink-0" title="Verified Learner" />
                       </div>
                       <p className="text-[11px] text-gray-500 font-medium truncate mt-0.5">
                         {designation}
@@ -195,8 +195,8 @@ const Reviewslider = () => {
                   aria-label={`Go to slide ${idx + 1}`}
                   className={`h-2 rounded-full transition-all duration-300 ${
                     currentSlide === idx
-                      ? "w-6 bg-blue-600"
-                      : "w-2 bg-gray-200 hover:bg-gray-300"
+                      ? "w-6 bg-[#3BA7F2]"
+                      : "w-2 bg-gray-300 hover:bg-gray-400"
                   }`}
                 />
               ))}
